@@ -37,7 +37,7 @@
         <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.1"/>
 
         <!-- Data Utilities -->
-        <PackageVersion Include="Bogus" Version="35.6.3"/>
+        <PackageVersion Include="Bogus" Version="35.6.5"/>
         <PackageVersion Include="Riok.Mapperly" Version="4.2.1"/>
 
         <!-- Build Automation -->
