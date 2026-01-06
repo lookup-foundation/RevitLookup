@@ -41,7 +41,7 @@
         <PackageVersion Include="Riok.Mapperly" Version="4.2.1"/>
 
         <!-- Build Automation -->
-        <PackageVersion Include="Autodesk.PackageBuilder" Version="2.0.1"/>
+        <PackageVersion Include="Autodesk.PackageBuilder" Version="2.0.2"/>
         <PackageVersion Include="AzureSignTool" Version="7.0.1"/>
         <PackageVersion Include="Sourcy.DotNet" Version="0.7.9"/>
         <PackageVersion Include="ModularPipelines" Version="2.48.30"/>
