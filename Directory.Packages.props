@@ -43,7 +43,7 @@
         <!-- Build Automation -->
         <PackageVersion Include="Autodesk.PackageBuilder" Version="2.0.2"/>
         <PackageVersion Include="AzureSignTool" Version="7.0.1"/>
-        <PackageVersion Include="Sourcy.DotNet" Version="1.0.0"/>
+        <PackageVersion Include="Sourcy.DotNet" Version="1.0.1"/>
         <PackageVersion Include="ModularPipelines" Version="2.48.30"/>
         <PackageVersion Include="ModularPipelines.Git" Version="2.48.30"/>
         <PackageVersion Include="ModularPipelines.GitHub" Version="2.48.30"/>
