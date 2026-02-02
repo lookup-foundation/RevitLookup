@@ -1,4 +1,4 @@
-﻿<Project Sdk="Nice3point.Revit.Sdk/6.0.2">
+﻿<Project Sdk="Nice3point.Revit.Sdk/6.1.0">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
