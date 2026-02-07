@@ -13,6 +13,7 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using System.Reflection;
+using System.Text;
 using Nice3point.TUnit.Revit;
 using Nice3point.TUnit.Revit.Executors;
 using TUnit.Core.Executors;
@@ -23,11 +24,11 @@ public sealed class UtilsMethodsTests : RevitApiTest
 {
     [Test]
     [TestExecutor<RevitThreadExecutor>]
-    public void Report_RevitAPI_StaticMethods()
+    public async Task Report_RevitAPI_StaticMethods()
     {
-        var testOutput = TestContext.Current!.Output;
+        var outputBuilder = new StringBuilder();
         var assembly = AppDomain.CurrentDomain.GetAssemblies().First(assembly => assembly.GetName().Name == "RevitAPI");
-
+        
         var types = assembly.GetTypes()
             .Where(type => type is {IsPublic: true, IsClass: true})
             .OrderBy(type => type.Name);
@@ -36,6 +37,12 @@ public sealed class UtilsMethodsTests : RevitApiTest
         {
             var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
                 .Where(method => !method.IsSpecialName)
+                .Where(method => !method.Name.Contains("Create", StringComparison.OrdinalIgnoreCase))
+                .Where(method => !method.Name.Contains("Save", StringComparison.OrdinalIgnoreCase))
+                .Where(method => !method.Name.Contains("Register", StringComparison.OrdinalIgnoreCase))
+                .Where(method => !method.Name.Contains("Relinquish", StringComparison.OrdinalIgnoreCase))
+                .Where(method => !method.Name.Contains("Checkout", StringComparison.OrdinalIgnoreCase))
+                .Where(method => method.ReturnType != typeof(void))
                 .OrderBy(method => method.Name)
                 .ToList();
 
@@ -44,8 +51,25 @@ public sealed class UtilsMethodsTests : RevitApiTest
             foreach (var method in methods)
             {
                 var parameters = string.Join(", ", method.GetParameters().Select(parameter => parameter.ParameterType.Name));
-                testOutput.WriteLine($"- {type.Name}.{method.Name}({parameters})");
+                outputBuilder
+                    .Append("- ")
+                    .Append(type.Name)
+                    .Append('.')
+                    .Append(method.Name)
+                    .Append('(')
+                    .Append(parameters)
+                    .Append(')')
+                    .AppendLine();
             }
         }
+        
+        var reportPath = $"RevitAPI-StaticMethods-{Application.VersionNumber}.txt";
+        await File.WriteAllTextAsync(reportPath, outputBuilder.ToString());
+
+        TestContext.Current!.Output.AttachArtifact(
+            reportPath,
+            displayName: "Application Logs",
+            description: "Logs captured during test execution"
+        );
     }
 }
