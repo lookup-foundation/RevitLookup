@@ -17,6 +17,7 @@ using Autodesk.Revit.DB.ExternalService;
 using RevitLookup.Core.Visualization.Buffers;
 using RevitLookup.Core.Visualization.Events;
 using RevitLookup.Core.Visualization.Helpers;
+using RevitLookup.Services.Application;
 
 namespace RevitLookup.Core.Visualization
 {

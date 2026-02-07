@@ -5,9 +5,9 @@ using LookupEngine.Options;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Decomposition;
 using RevitLookup.Abstractions.Services.Settings;
-using RevitLookup.Core;
 using RevitLookup.Core.Decomposition;
 using RevitLookup.Mappers;
+using RevitLookup.Services.Application;
 
 namespace RevitLookup.Services.Decomposition;
 

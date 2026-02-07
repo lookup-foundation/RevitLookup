@@ -24,6 +24,7 @@ using Microsoft.Extensions.Logging;
 using RevitLookup.Abstractions.Configuration;
 using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.ViewModels.Decomposition;
+using RevitLookup.Services.Application;
 using RevitLookup.UI.Framework.Extensions;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;

@@ -6,8 +6,8 @@ using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Decomposition;
 using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.ViewModels.Decomposition;
-using RevitLookup.Core;
 using RevitLookup.Core.Decomposition;
+using RevitLookup.Services.Application;
 using OperationCanceledException = Autodesk.Revit.Exceptions.OperationCanceledException;
 using Visibility = System.Windows.Visibility;
 

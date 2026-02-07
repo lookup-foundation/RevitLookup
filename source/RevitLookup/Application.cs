@@ -18,7 +18,6 @@ using Nice3point.Revit.Toolkit.External;
 using RevitLookup.Abstractions.Services.Appearance;
 using RevitLookup.Abstractions.Services.Application;
 using RevitLookup.Abstractions.Services.Settings;
-using RevitLookup.Core;
 using RevitLookup.Services.Application;
 
 namespace RevitLookup;

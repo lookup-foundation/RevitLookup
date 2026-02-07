@@ -16,7 +16,7 @@ using System.Diagnostics;
 using System.Reflection;
 using Autodesk.Revit.UI;
 using Microsoft.Extensions.Logging;
-using RevitLookup.Core;
+using RevitLookup.Services.Application;
 
 namespace RevitLookup.Services.Decomposition;
 

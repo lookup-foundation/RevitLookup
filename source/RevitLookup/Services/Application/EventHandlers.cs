@@ -16,7 +16,7 @@ using System.Collections;
 using Nice3point.Revit.Toolkit.External;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 
-namespace RevitLookup.Core;
+namespace RevitLookup.Services.Application;
 
 public static class EventHandlers
 {
