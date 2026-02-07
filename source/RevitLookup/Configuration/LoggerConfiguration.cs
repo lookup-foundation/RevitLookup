@@ -44,52 +44,54 @@ public static class LoggerConfiguration
             .CreateLogger();
     }
 
-    private static Serilog.LoggerConfiguration ConfigureSinks(this Serilog.LoggerConfiguration loggerConfiguration)
-    {
-        loggerConfiguration.WriteTo.Console(LogEventLevel.Information, outputTemplate: LogTemplate);
-
-        if (Debugger.IsAttached)
-        {
-            loggerConfiguration.WriteTo.Debug(LogEventLevel.Debug, outputTemplate: LogTemplate);
-        }
-        else
-        {
-            loggerConfiguration.WriteTo.RevitJournal(RevitContext.UiApplication, false, LogTemplate, LogEventLevel.Error);
-        }
-
-        return loggerConfiguration;
-    }
-
-    private static Serilog.LoggerConfiguration ConfigureMinimumLevel(this Serilog.LoggerConfiguration loggerConfiguration, IHostEnvironment environment)
-    {
-        loggerConfiguration.MinimumLevel.Verbose();
-        if (Debugger.IsAttached) return loggerConfiguration;
-
-        if (environment.IsDevelopment())
-        {
-            loggerConfiguration.MinimumLevel.Override("System.Net.Http.HttpClient.OpenSearchClient.LogicalHandler", LogEventLevel.Information);
-            loggerConfiguration.MinimumLevel.Override("System.Net.Http.HttpClient.OpenSearchClient.ClientHandler", LogEventLevel.Information);
-        }
-        else
-        {
-            loggerConfiguration.MinimumLevel.Override("System.Net.Http.HttpClient.OpenSearchClient.LogicalHandler", LogEventLevel.Warning);
-            loggerConfiguration.MinimumLevel.Override("System.Net.Http.HttpClient.OpenSearchClient.ClientHandler", LogEventLevel.Warning);
-        }
-
-        loggerConfiguration.MinimumLevel.Override("Microsoft.Extensions.Http.DefaultHttpClientFactory", LogEventLevel.Warning);
-
-        return loggerConfiguration;
-    }
-
-    private static Serilog.LoggerConfiguration ConfigureEnrichers(this Serilog.LoggerConfiguration loggerConfiguration, IHostEnvironment environment)
-    {
-        return loggerConfiguration.Enrich.FromLogContext();
-    }
-
     private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs args)
     {
         var exception = (Exception) args.ExceptionObject;
         var logger = Host.GetService<ILogger<AppDomain>>();
         logger.LogCritical(exception, "Domain unhandled exception");
+    }
+
+    extension(Serilog.LoggerConfiguration loggerConfiguration)
+    {
+        private Serilog.LoggerConfiguration ConfigureSinks()
+        {
+            loggerConfiguration.WriteTo.Console(LogEventLevel.Information, outputTemplate: LogTemplate);
+
+            if (Debugger.IsAttached)
+            {
+                loggerConfiguration.WriteTo.Debug(LogEventLevel.Debug, outputTemplate: LogTemplate);
+                return loggerConfiguration;
+            }
+
+            loggerConfiguration.WriteTo.RevitJournal(RevitContext.UiApplication, false, LogTemplate, LogEventLevel.Error);
+
+            return loggerConfiguration;
+        }
+
+        private Serilog.LoggerConfiguration ConfigureMinimumLevel(IHostEnvironment environment)
+        {
+            loggerConfiguration.MinimumLevel.Verbose();
+            if (Debugger.IsAttached) return loggerConfiguration;
+
+            if (environment.IsDevelopment())
+            {
+                loggerConfiguration.MinimumLevel.Override("System.Net.Http.HttpClient.OpenSearchClient.LogicalHandler", LogEventLevel.Information);
+                loggerConfiguration.MinimumLevel.Override("System.Net.Http.HttpClient.OpenSearchClient.ClientHandler", LogEventLevel.Information);
+            }
+            else
+            {
+                loggerConfiguration.MinimumLevel.Override("System.Net.Http.HttpClient.OpenSearchClient.LogicalHandler", LogEventLevel.Warning);
+                loggerConfiguration.MinimumLevel.Override("System.Net.Http.HttpClient.OpenSearchClient.ClientHandler", LogEventLevel.Warning);
+            }
+
+            loggerConfiguration.MinimumLevel.Override("Microsoft.Extensions.Http.DefaultHttpClientFactory", LogEventLevel.Warning);
+
+            return loggerConfiguration;
+        }
+
+        private Serilog.LoggerConfiguration ConfigureEnrichers(IHostEnvironment environment)
+        {
+            return loggerConfiguration.Enrich.FromLogContext();
+        }
     }
 }
