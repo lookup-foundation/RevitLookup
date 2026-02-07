@@ -1,4 +1,4 @@
-RevitLookup provides functionality to display methods in the user interface that do not exist in the Revit API or implemented as a Util classes. 
+RevitLookup provides functionality to display methods in the user interface that do not exist in the Revit API or implemented as a Util classes.
 These extensions expose useful functionality in the context of specific objects.
 
 > [!NOTE]  
@@ -14,10 +14,11 @@ The table below lists the extensions that are available in RevitLookup:
 | UIApplication  | CurrentTheme                              | UIThemeManager.CurrentTheme                                                      |
 | UIApplication  | CurrentCanvasTheme                        | UIThemeManager.CurrentCanvasTheme                                                |
 | UIApplication  | FollowSystemColorTheme                    | UIThemeManager.FollowSystemColorTheme                                            |
+| Document       | GetAllGlobalParameters                    | GlobalParametersManager.GetAllGlobalParameters                                   |
 | Document       | GetLightGroupManager                      | LightGroupManager.GetLightGroupManager                                           |
 | Document       | GetTemporaryGraphicsManager               | TemporaryGraphicsManager.GetTemporaryGraphicsManager                             |
 | Document       | GetAnalyticalToPhysicalAssociationManager | AnalyticalToPhysicalAssociationManager.GetAnalyticalToPhysicalAssociationManager |
-| Document       | GetFamilySizeTableManager                 | FamilySizeTableManager.GetFamilySizeTableManager                                 |
+| Document       | CreateFamilySizeTableManager              | FamilySizeTableManager.CreateFamilySizeTableManager                              |
 | Document       | GetLightFamily                            | LightFamily.GetLightFamily                                                       |
 | Document       | GetMacroManager                           | MacroManager.GetMacroManager                                                     |
 | Element        | CanBeMirrored                             | ElementTransformUtils.CanBeMirrored                                              |
@@ -36,33 +37,57 @@ The table below lists the extensions that are available in RevitLookup:
 | Family         | GetFamilySizeTableManager                 | FamilySizeTableManager.GetFamilySizeTableManager                                 |
 | Family         | FamilyCanConvertToFaceHostBased           | FamilyUtils.FamilyCanConvertToFaceHostBased                                      |
 | Family         | GetProfileSymbols                         | FamilyUtils.GetProfileSymbols                                                    |
-| LightFamily    | GetLightTypeName                          | LightFamily.GetLightTypeName                                                     |
-| LightFamily    | GetLightType                              | LightFamily.GetLightType                                                         |
 | HostObject     | GetBottomFaces                            | HostObjectUtils.GetBottomFaces                                                   |
 | HostObject     | GetTopFaces                               | HostObjectUtils.GetTopFaces                                                      |
 | HostObject     | GetSideFaces                              | HostObjectUtils.GetSideFaces                                                     |
 | View           | GetSpatialFieldManager                    | SpatialFieldManager.GetSpatialFieldManager                                       |
 | View           | GetAllPlacedInstances                     | -                                                                                |
 | Pipe           | HasOpenConnector                          | PlumbingUtils.HasOpenConnector                                                   |
+| Wall           | IsWallJoinAllowedAtEnd                    | WallUtils.IsWallJoinAllowedAtEnd                                                 |
 | Parameter      | AsBool                                    | -                                                                                |
 | Parameter      | AsColor                                   | -                                                                                |
 | Parameter      | GetAssociatedFamilyParameter              | FamilyManager.GetAssociatedFamilyParameter                                       |
-| ForgeTypeId    | ToLabel                                   | Returns user visible label                                                       |
+| ForgeTypeId    | ToUnitLabel                               | Returns user visible label for unit                                              |
+| ForgeTypeId    | ToSpecLabel                               | Returns user visible label for spec                                              |
+| ForgeTypeId    | ToSymbolLabel                             | Returns user visible label for symbol                                            |
+| ForgeTypeId    | ToGroupLabel                              | Returns user visible label for group                                             |
+| ForgeTypeId    | ToDisciplineLabel                         | Returns user visible label for discipline                                        |
+| ForgeTypeId    | ToParameterLabel                          | Returns user visible label for parameter                                         |
 | ForgeTypeId    | IsSymbol                                  | UnitUtils.IsSymbol                                                               |
 | ForgeTypeId    | IsUnit                                    | UnitUtils.IsUnit                                                                 |
 | ForgeTypeId    | IsSpec                                    | UnitUtils.IsSpec                                                                 |
+| ForgeTypeId    | IsMeasurableSpec                          | UnitUtils.IsMeasurableSpec                                                       |
+| ForgeTypeId    | IsBuiltInParameter                        | ParameterUtils.IsBuiltInParameter                                                |
+| ForgeTypeId    | IsBuiltInGroup                            | ParameterUtils.IsBuiltInGroup                                                    |
+| Category       | BuiltInCategory                           | -                                                                                |
 | Category       | GetElements                               | -                                                                                |
 | Schema         | GetElements                               | -                                                                                |
 | Color          | Name                                      | -                                                                                |
 | Color          | HEX                                       | -                                                                                |
+| Color          | HEX int                                   | -                                                                                |
+| Color          | RGB                                       | -                                                                                |
 | Color          | HSL                                       | -                                                                                |
+| Color          | HSV                                       | -                                                                                |
 | Color          | CMYK                                      | -                                                                                |
+| Color          | HSB                                       | -                                                                                |
+| Color          | HSI                                       | -                                                                                |
+| Color          | HWB                                       | -                                                                                |
+| Color          | NCol                                      | -                                                                                |
+| Color          | CIELAB                                    | -                                                                                |
+| Color          | CIEXYZ                                    | -                                                                                |
+| Color          | VEC4                                      | -                                                                                |
+| Color          | Decimal                                   | -                                                                                |
 | Solid          | SplitVolumes                              | SolidUtils.SplitVolumes                                                          |
 | Solid          | IsValidForTessellation                    | SolidUtils.IsValidForTessellation                                                |
 | BoundingBoxXYZ | Centroid                                  | -                                                                                |
 | BoundingBoxXYZ | Vertices                                  | -                                                                                |
 | BoundingBoxXYZ | Volume                                    | -                                                                                |
 | BoundingBoxXYZ | SurfaceArea                               | -                                                                                |
+| ModelPath      | ConvertModelPathToUserVisiblePath         | ModelPathUtils.ConvertModelPathToUserVisiblePath                                 |
+| ModelPath      | IsDocumentTransmitted                     | TransmissionData.IsDocumentTransmitted                                           |
+| ModelPath      | DocumentIsNotTransmitted                  | TransmissionData.DocumentIsNotTransmitted                                        |
+| ModelPath      | ReadTransmissionData                      | TransmissionData.ReadTransmissionData                                            |
+| ModelPath      | GetUserWorksetInfo                        | WorksharingUtils.GetUserWorksetInfo                                              |
 | Part           | IsMergedPart                              | PartUtils.IsMergedPart                                                           |
 | Part           | IsPartDerivedFromLink                     | PartUtils.IsPartDerivedFromLink                                                  |
 | Part           | GetChainLengthToOriginal                  | PartUtils.GetChainLengthToOriginal                                               |
