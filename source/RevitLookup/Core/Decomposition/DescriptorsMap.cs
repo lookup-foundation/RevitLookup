@@ -135,6 +135,7 @@ public static class DescriptorsMap
             PerformanceAdviser value when type is null || type == typeof(PerformanceAdviser) => new PerformanceAdviserDescriptor(value),
             SchedulableField value when type is null || type == typeof(SchedulableField) => new SchedulableFieldDescriptor(value),
             CompoundStructureLayer value when type is null || type == typeof(CompoundStructureLayer) => new CompoundStructureLayerDescriptor(value),
+            ModelPath value when type is null || type == typeof(ModelPath) => new ModelPathDescriptor(value),
             Workset value when type is null || type == typeof(Workset) => new WorksetDescriptor(value),
             WorksetTable when type is null || type == typeof(WorksetTable) => new WorksetTableDescriptor(),
             BoundarySegment value when type is null || type == typeof(BoundarySegment) => new BoundarySegmentDescriptor(value),

@@ -1,5 +1,20 @@
 # Changelog
 
+# **2027.0.0**
+
+## General
+
+- Revit 2027 support.
+
+## Improvements
+
+- Added new **ModelPath** extensions:
+  - `ModelPathUtils.ConvertModelPathToUserVisiblePath`
+  - `TransmissionData.IsDocumentTransmitted`
+  - `TransmissionData.DocumentIsNotTransmitted`
+  - `TransmissionData.ReadTransmissionData`
+  - `WorksharingUtils.GetUserWorksetInfo`
+
 # 2025-07-26 **2026.0.1**
 
 A new minor release with a few bug fixes and improvements.
