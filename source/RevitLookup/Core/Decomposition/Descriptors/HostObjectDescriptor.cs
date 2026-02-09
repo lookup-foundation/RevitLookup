@@ -36,11 +36,11 @@ public sealed class HostObjectDescriptor(HostObject hostObject) : ElementDescrip
 
     public override void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(HostObjectUtils.GetBottomFaces), () => Variants.Value(hostObject.GetBottomFaces()));
-        manager.Register(nameof(HostObjectUtils.GetTopFaces), () => Variants.Value(hostObject.GetTopFaces()));
+        manager.Register(nameof(HostObjectUtils.GetBottomFaces), () => Variants.Value(HostObjectUtils.GetBottomFaces(hostObject)));
+        manager.Register(nameof(HostObjectUtils.GetTopFaces), () => Variants.Value(HostObjectUtils.GetTopFaces(hostObject)));
         manager.Register(nameof(HostObjectUtils.GetSideFaces), () => Variants.Values<IList<Reference>>(2)
-            .Add(hostObject.GetSideFaces(ShellLayerType.Interior), "Interior")
-            .Add(hostObject.GetSideFaces(ShellLayerType.Exterior), "Exterior")
+            .Add(HostObjectUtils.GetSideFaces(hostObject, ShellLayerType.Interior), "Interior")
+            .Add(HostObjectUtils.GetSideFaces(hostObject, ShellLayerType.Exterior), "Exterior")
             .Consume());
     }
 }

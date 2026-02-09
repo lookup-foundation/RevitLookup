@@ -141,9 +141,7 @@ public sealed class FamilyInstanceDescriptor(FamilyInstance familyInstance) : El
 
     public override void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(AdaptiveComponentInstanceUtils.GetInstancePlacementPointElementRefIds),
-            () => Variants.Value(AdaptiveComponentInstanceUtils.GetInstancePlacementPointElementRefIds(familyInstance)));
-        manager.Register(nameof(AdaptiveComponentInstanceUtils.IsAdaptiveComponentInstance),
-            () => Variants.Value(AdaptiveComponentInstanceUtils.IsAdaptiveComponentInstance(familyInstance)));
+        manager.Register(nameof(AdaptiveComponentInstanceUtils.GetInstancePlacementPointElementRefIds), () => Variants.Value(AdaptiveComponentInstanceUtils.GetInstancePlacementPointElementRefIds(familyInstance)));
+        manager.Register(nameof(AdaptiveComponentInstanceUtils.IsAdaptiveComponentInstance), () => Variants.Value(AdaptiveComponentInstanceUtils.IsAdaptiveComponentInstance(familyInstance)));
     }
 }
