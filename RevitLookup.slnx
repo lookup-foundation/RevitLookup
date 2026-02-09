@@ -205,7 +205,6 @@
         <Project Path="tests\RevitLookup.Tests.Unit\RevitLookup.Tests.Unit.csproj">
             <BuildType Solution="Debug.Playground|*" Project="Debug.R26" />
             <BuildType Solution="Release.Playground|*" Project="Release.R26" />
-            <BuildType Solution="Release.R21|*" Project="Release.R22" />
             <Build Solution="Debug.Playground|*" Project="false" />
             <Build Solution="Release.Playground|*" Project="false" />
         </Project>
