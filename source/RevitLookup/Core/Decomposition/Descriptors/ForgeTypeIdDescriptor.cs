@@ -39,21 +39,21 @@ public sealed class ForgeTypeIdDescriptor : Descriptor, IDescriptorResolver, IDe
 
     public void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register("ToUnitLabel", () => Variants.Value(_typeId.ToUnitLabel()));
-        manager.Register("ToSpecLabel", () => Variants.Value(_typeId.ToSpecLabel()));
-        manager.Register("ToSymbolLabel", () => Variants.Value(_typeId.ToSymbolLabel()));
+        manager.Register(nameof(LabelUtils.GetLabelForUnit), () => Variants.Value(LabelUtils.GetLabelForUnit(_typeId)));
+        manager.Register(nameof(LabelUtils.GetLabelForSpec), () => Variants.Value(LabelUtils.GetLabelForSpec(_typeId)));
+        manager.Register(nameof(LabelUtils.GetLabelForSymbol), () => Variants.Value(LabelUtils.GetLabelForSymbol(_typeId)));
 #if REVIT2022_OR_GREATER
-        manager.Register("ToGroupLabel", () => Variants.Value(_typeId.ToGroupLabel()));
-        manager.Register("ToDisciplineLabel", () => Variants.Value(_typeId.ToDisciplineLabel()));
-        manager.Register("ToParameterLabel", () => Variants.Value(_typeId.ToParameterLabel()));
+        manager.Register(nameof(LabelUtils.GetLabelForGroup), () => Variants.Value(LabelUtils.GetLabelForGroup(_typeId)));
+        manager.Register(nameof(LabelUtils.GetLabelForDiscipline), () => Variants.Value(LabelUtils.GetLabelForDiscipline(_typeId)));
+        manager.Register(nameof(LabelUtils.GetLabelForBuiltInParameter), () => Variants.Value(LabelUtils.GetLabelForBuiltInParameter(_typeId)));
 #endif
-        manager.Register("IsUnit", () => Variants.Value(UnitUtils.IsUnit(_typeId)));
-        manager.Register("IsSymbol", () => Variants.Value(UnitUtils.IsSymbol(_typeId)));
+        manager.Register(nameof(UnitUtils.IsUnit), () => Variants.Value(UnitUtils.IsUnit(_typeId)));
+        manager.Register(nameof(UnitUtils.IsSymbol), () => Variants.Value(UnitUtils.IsSymbol(_typeId)));
 #if REVIT2022_OR_GREATER
-        manager.Register("IsSpec", () => Variants.Value(SpecUtils.IsSpec(_typeId)));
-        manager.Register("IsMeasurableSpec", () => Variants.Value(UnitUtils.IsMeasurableSpec(_typeId)));
-        manager.Register("IsBuiltInParameter", () => Variants.Value(ParameterUtils.IsBuiltInParameter(_typeId)));
-        manager.Register("IsBuiltInGroup", () => Variants.Value(ParameterUtils.IsBuiltInGroup(_typeId)));
+        manager.Register(nameof(SpecUtils.IsSpec), () => Variants.Value(SpecUtils.IsSpec(_typeId)));
+        manager.Register(nameof(UnitUtils.IsMeasurableSpec), () => Variants.Value(UnitUtils.IsMeasurableSpec(_typeId)));
+        manager.Register(nameof(ParameterUtils.IsBuiltInParameter), () => Variants.Value(ParameterUtils.IsBuiltInParameter(_typeId)));
+        manager.Register(nameof(ParameterUtils.IsBuiltInGroup), () => Variants.Value(ParameterUtils.IsBuiltInGroup(_typeId)));
 #endif
     }
 }
