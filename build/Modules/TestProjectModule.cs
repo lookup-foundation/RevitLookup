@@ -36,7 +36,11 @@ public sealed class TestProjectModule : Module
         return await context.DotNet().Test(new DotNetTestOptions
         {
             Solution = Solutions.RevitLookup.FullName,
-            Configuration = configuration
+            Configuration = configuration,
+            Properties =
+            [
+                ("IsRepackable", "false")
+            ]
         }, cancellationToken: cancellationToken);
     }
 }
