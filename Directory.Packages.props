@@ -29,7 +29,7 @@
         <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="10.0.2"/>
 
         <!-- Logging -->
-        <PackageVersion Include="Serilog" Version="4.3.0"/>
+        <PackageVersion Include="Serilog" Version="4.3.1"/>
         <PackageVersion Include="Serilog.Sinks.Debug" Version="3.0.0"/>
         <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1"/>
         <PackageVersion Include="Serilog.Extensions.Hosting" Version="10.0.0"/>
