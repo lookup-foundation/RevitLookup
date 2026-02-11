@@ -26,50 +26,220 @@ public sealed class UtilsMethodsTests : RevitApiTest
     [TestExecutor<RevitThreadExecutor>]
     public async Task Report_RevitAPI_StaticMethods()
     {
-        var outputBuilder = new StringBuilder();
-        var assembly = AppDomain.CurrentDomain.GetAssemblies().First(assembly => assembly.GetName().Name == "RevitAPI");
-        
-        var types = assembly.GetTypes()
-            .Where(type => type is {IsPublic: true, IsClass: true})
-            .OrderBy(type => type.Name);
+        var sourceIndex = BuildSourceIndex();
+        var types = GetRevitTypes();
+        var methods = new List<StaticMethodEntry>();
 
         foreach (var type in types)
         {
-            var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
-                .Where(method => !method.IsSpecialName)
-                .Where(method => !method.Name.Contains("Create", StringComparison.OrdinalIgnoreCase))
-                .Where(method => !method.Name.Contains("Save", StringComparison.OrdinalIgnoreCase))
-                .Where(method => !method.Name.Contains("Register", StringComparison.OrdinalIgnoreCase))
-                .Where(method => !method.Name.Contains("Relinquish", StringComparison.OrdinalIgnoreCase))
-                .Where(method => !method.Name.Contains("Checkout", StringComparison.OrdinalIgnoreCase))
-                .Where(method => method.ReturnType != typeof(void))
-                .OrderBy(method => method.Name)
-                .ToList();
+            var staticMethods = GetQualifyingMethods(type);
+            if (staticMethods.Count == 0) continue;
 
-            if (methods.Count == 0) continue;
-
-            foreach (var method in methods)
+            foreach (var method in staticMethods)
             {
-                var parameters = string.Join(", ", method.GetParameters().Select(parameter => parameter.ParameterType.Name));
-                outputBuilder
-                    .Append("- ")
-                    .Append(type.Name)
-                    .Append('.')
-                    .Append(method.Name)
-                    .Append('(')
-                    .Append(parameters)
-                    .Append(')')
-                    .AppendLine();
+                var entry = CreateMethodEntry(type, method, sourceIndex);
+                methods.Add(entry);
             }
         }
-        
-        var reportPath = $"RevitAPI-StaticMethods-{Application.VersionNumber}.txt";
-        await File.WriteAllTextAsync(reportPath, outputBuilder.ToString());
+
+        var report = GenerateMarkdownReport(methods);
+        await SaveAndAttachReportAsync(report);
+    }
+
+    private async Task SaveAndAttachReportAsync(string content)
+    {
+        var reportPath = $"PublicStaticApiMethods-{Application.VersionNumber}.md";
+        await File.WriteAllTextAsync(reportPath, content);
 
         TestContext.Current!.Output.AttachArtifact(
             reportPath,
-            displayName: "Application Logs",
-            description: "Logs captured during test execution"
+            displayName: "Static Methods Report",
+            description: "RevitAPI static methods with extension mapping"
         );
+    }
+
+    private static SourceIndex BuildSourceIndex()
+    {
+        var descriptorsDirectory = FindDescriptorsDirectory();
+        if (descriptorsDirectory is null) return new SourceIndex([]);
+
+        var entries = new List<SourceFileEntry>();
+
+        foreach (var filePath in Directory.EnumerateFiles(descriptorsDirectory, "*.cs", SearchOption.AllDirectories))
+        {
+            var content = File.ReadAllText(filePath);
+            var fileName = Path.GetFileName(filePath);
+
+            entries.Add(new SourceFileEntry
+            {
+                FileName = fileName,
+                Content = content,
+            });
+        }
+
+        return new SourceIndex(entries);
+    }
+
+    private static string? FindDescriptorsDirectory()
+    {
+        var directory = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+
+        while (directory is not null)
+        {
+            var rootFolder = Path.Combine(directory.FullName, ".git");
+            if (Directory.Exists(rootFolder))
+            {
+                return Path.Combine(directory.FullName, "source", "RevitLookup", "Core", "Decomposition", "Descriptors");
+            }
+
+            directory = directory.Parent;
+        }
+
+        return null;
+    }
+
+    private static IEnumerable<Type> GetRevitTypes()
+    {
+        var revitApiAssembly = AppDomain.CurrentDomain.GetAssemblies().First(assembly => assembly.GetName().Name == "RevitAPI");
+
+        return revitApiAssembly.GetTypes()
+            .Where(IsUtilityRevitType)
+            .OrderBy(type => type.Name);
+    }
+
+    private static bool IsUtilityRevitType(Type type)
+    {
+        if (!IsPublicClass(type)) return false;
+        if (!HasPublicDeclaredStaticMethods(type)) return false;
+
+        return IsStaticClass(type) || IsGeneratedUtilityWrapper(type);
+    }
+
+    private static bool IsPublicClass(Type type) => type is {IsPublic: true, IsClass: true};
+
+    private static bool IsStaticClass(Type type) => type is {IsAbstract: true, IsSealed: true};
+
+    private static bool HasPublicDeclaredStaticMethods(Type type)
+    {
+        return type.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
+            .Any(method => !method.IsSpecialName);
+    }
+
+    private static bool IsGeneratedUtilityWrapper(Type type)
+    {
+        if (IsStaticClass(type)) return false;
+        if (HasPublicDeclaredInstanceConstructors(type)) return false;
+        if (HasUnexpectedPublicInstanceMethods(type)) return false;
+        if (HasUnexpectedPublicStaticMethods(type)) return false;
+        if (HasUnexpectedPublicInstanceProperties(type)) return false;
+
+        return true;
+    }
+
+    private static bool HasPublicDeclaredInstanceConstructors(Type type)
+    {
+        return type.GetConstructors(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Length > 0;
+    }
+
+    private static bool HasUnexpectedPublicInstanceMethods(Type type)
+    {
+        return type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+            .Where(method => !method.IsSpecialName)
+            .Any(method => method.Name != nameof(IDisposable.Dispose));
+    }
+
+    private static bool HasUnexpectedPublicStaticMethods(Type type)
+    {
+        return type.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
+            .Where(method => !method.IsSpecialName)
+            .Any(method => method.Name == "Create");
+    }
+
+    private static bool HasUnexpectedPublicInstanceProperties(Type type)
+    {
+        return type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+            .Where(property => property.GetIndexParameters().Length == 0)
+            .Any(property => property.Name != "IsValidObject");
+    }
+
+    private static List<MethodInfo> GetQualifyingMethods(Type type)
+    {
+        return type.GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
+            .Where(method => !method.IsSpecialName)
+            .OrderBy(method => method.Name)
+            .ToList();
+    }
+
+    private static StaticMethodEntry CreateMethodEntry(Type type, MethodInfo method, SourceIndex sourceIndex)
+    {
+        var parameters = method.GetParameters();
+
+        var returnType = method.ReturnType.Name;
+        var qualifiedName = $"{type.Name}.{method.Name}";
+        var descriptors = sourceIndex.FindDescriptors(qualifiedName);
+        var parameterSignature = string.Join(", ", parameters.Select(parameter => $"{parameter.ParameterType.Name} {parameter.Name}"));
+
+        return new StaticMethodEntry
+        {
+            ReturnType = returnType,
+            Method = qualifiedName,
+            Parameters = parameterSignature,
+            Descriptors = descriptors,
+        };
+    }
+
+    private static string GenerateMarkdownReport(List<StaticMethodEntry> methods)
+    {
+        var outputBuilder = new StringBuilder();
+        outputBuilder.AppendLine("| Return type | Method | Parameters | Implementation |");
+        outputBuilder.AppendLine("| ----------- | ------ | ---------- | -------------- |");
+
+        foreach (var entry in methods)
+        {
+            outputBuilder
+                .Append("| ")
+                .Append(entry.ReturnType)
+                .Append(" | ")
+                .Append(entry.Method)
+                .Append(" | ")
+                .Append(entry.Parameters)
+                .Append(" | ")
+                .Append(string.Join(", ", entry.Descriptors))
+                .AppendLine(" |");
+        }
+
+        return outputBuilder.ToString();
+    }
+
+    private sealed record StaticMethodEntry
+    {
+        public required string ReturnType { get; init; }
+        public required string Method { get; init; }
+        public required string Parameters { get; init; }
+        public required List<string> Descriptors { get; init; }
+    }
+
+    private sealed record SourceFileEntry
+    {
+        public required string FileName { get; init; }
+        public required string Content { get; init; }
+    }
+
+    private sealed class SourceIndex(List<SourceFileEntry> entries)
+    {
+        public List<string> FindDescriptors(string qualifiedName)
+        {
+            var results = new List<string>();
+
+            foreach (var entry in entries)
+            {
+                if (entry.Content.Contains(qualifiedName, StringComparison.Ordinal))
+                {
+                    results.Add(entry.FileName);
+                }
+            }
+
+            return results;
+        }
     }
 }
