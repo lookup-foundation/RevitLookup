@@ -13,7 +13,6 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using System.Reflection;
-using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
@@ -112,9 +111,5 @@ public sealed class DatumPlaneDescriptor(DatumPlane datumPlane) : ElementDescrip
                 .Add(datumPlane.GetLeader(DatumEnds.End1, RevitContext.ActiveView), "End 1, Active view")
                 .Consume();
         }
-    }
-
-    public override void RegisterExtensions(IExtensionManager manager)
-    {
     }
 }

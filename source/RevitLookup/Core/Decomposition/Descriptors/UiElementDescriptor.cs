@@ -14,7 +14,6 @@
 
 using System.Reflection;
 using System.Windows;
-using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
@@ -37,9 +36,5 @@ public sealed class UiElementDescriptor(UIElement uiElement) : DependencyObjectD
         {
             return Variants.Empty<LocalValueEnumerator>();
         }
-    }
-    
-    public override void RegisterExtensions(IExtensionManager manager)
-    {
     }
 }

@@ -13,7 +13,6 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using System.Reflection;
-using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
@@ -231,9 +230,5 @@ public sealed class ViewScheduleDescriptor(ViewSchedule viewSchedule) : ElementD
         {
             return Variants.Value(ViewSchedule.GetValidFamiliesForNoteBlock(viewSchedule.Document));
         }
-    }
-
-    public override void RegisterExtensions(IExtensionManager manager)
-    {
     }
 }

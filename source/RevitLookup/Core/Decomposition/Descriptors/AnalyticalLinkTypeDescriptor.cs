@@ -14,7 +14,6 @@
 
 using System.Reflection;
 using Autodesk.Revit.DB.Structure;
-using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
@@ -41,9 +40,5 @@ public sealed class AnalyticalLinkTypeDescriptor(AnalyticalLinkType analyticalLi
 
             return variants.Consume();
         }
-    }
-
-    public override void RegisterExtensions(IExtensionManager manager)
-    {
     }
 }

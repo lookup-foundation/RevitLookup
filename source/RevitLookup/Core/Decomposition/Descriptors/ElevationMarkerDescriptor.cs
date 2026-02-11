@@ -13,7 +13,6 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using System.Reflection;
-using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
@@ -56,9 +55,5 @@ public sealed class ElevationMarkerDescriptor(ElevationMarker elevationMarker) :
 
             return variants.Consume();
         }
-    }
-
-    public override void RegisterExtensions(IExtensionManager manager)
-    {
     }
 }

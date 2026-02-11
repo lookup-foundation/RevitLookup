@@ -14,7 +14,6 @@
 
 using System.Reflection;
 using Autodesk.Revit.DB.Structure;
-using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
@@ -33,9 +32,5 @@ public sealed class StructuralSettingsDescriptor(StructuralSettings structuralSe
         {
             return Variants.Value(StructuralSettings.GetStructuralSettings(structuralSettings.Document));
         }
-    }
-
-    public override void RegisterExtensions(IExtensionManager manager)
-    {
     }
 }

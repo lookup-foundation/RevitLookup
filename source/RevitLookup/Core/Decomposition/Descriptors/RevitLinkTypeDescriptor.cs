@@ -13,7 +13,6 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using System.Reflection;
-using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
@@ -34,9 +33,5 @@ public sealed class RevitLinkTypeDescriptor(RevitLinkType element) : ElementDesc
         {
             return Variants.Value(RevitLinkType.IsLoaded(element.Document, element.Id));
         }
-    }
-
-    public override void RegisterExtensions(IExtensionManager manager)
-    {
     }
 }
