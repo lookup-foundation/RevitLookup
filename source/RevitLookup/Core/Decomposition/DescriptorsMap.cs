@@ -90,6 +90,7 @@ public static class DescriptorsMap
             //Elements
             Panel value when type is null || type == typeof(Panel) => new PanelDescriptor(value),
             FamilyInstance value when type is null || type == typeof(FamilyInstance) => new FamilyInstanceDescriptor(value),
+            FamilySymbol value when type is null || type == typeof(FamilySymbol) => new FamilySymbolDescriptor(value),
             Family value when type is null || type == typeof(Family) => new FamilyDescriptor(value),
             ViewSchedule value when type is null || type == typeof(ViewSchedule) => new ViewScheduleDescriptor(value),
             TableView value when type is null || type == typeof(TableView) => new TableViewDescriptor(value),
@@ -110,6 +111,7 @@ public static class DescriptorsMap
             StructuralSettings value when type is null || type == typeof(StructuralSettings) => new StructuralSettingsDescriptor(value),
             AreaVolumeSettings value when type is null || type == typeof(AreaVolumeSettings) => new AreaVolumeSettingsDescriptor(value),
             CurveElement value when type is null || type == typeof(CurveElement) => new CurveElementDescriptor(value),
+            ReferencePoint value when type is null || type == typeof(ReferencePoint) => new ReferencePointDescriptor(value),
             DatumPlane value when type is null || type == typeof(DatumPlane) => new DatumPlaneDescriptor(value),
             Part value when type is null || type == typeof(Part) => new PartDescriptor(value),
             PartMaker value when type is null || type == typeof(PartMaker) => new PartMakerDescriptor(value),
