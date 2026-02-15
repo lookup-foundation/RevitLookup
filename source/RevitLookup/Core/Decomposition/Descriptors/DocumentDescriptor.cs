@@ -121,6 +121,8 @@ public sealed class DocumentDescriptor : Descriptor, IDescriptorResolver, IDescr
             manager.Register(nameof(LightFamily.GetLightFamily), () => Variants.Value(LightFamily.GetLightFamily(_document)));
         }
 
+        manager.Register(nameof(AssemblyCodeTable.GetAssemblyCodeTable), () => Variants.Value(AssemblyCodeTable.GetAssemblyCodeTable(_document)));
+
         // Disabled: slow performance.
         // manager.Register(nameof(WorksharingUtils.GetUserWorksetInfo), context =>
         // {
