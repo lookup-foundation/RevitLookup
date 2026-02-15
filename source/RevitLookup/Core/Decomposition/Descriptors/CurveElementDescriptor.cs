@@ -13,6 +13,7 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using System.Reflection;
+using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
@@ -119,5 +120,14 @@ public sealed class CurveElementDescriptor(CurveElement element) : ElementDescri
 
             return variants.Consume();
         }
+    }
+
+    public override void RegisterExtensions(IExtensionManager manager)
+    {
+        manager.Register(nameof(CurveByPointsUtils.GetHostFace), () => Variants.Value(CurveByPointsUtils.GetHostFace(element)));
+        manager.Register(nameof(CurveByPointsUtils.GetProjectionType), () => Variants.Value(CurveByPointsUtils.GetProjectionType(element)));
+        manager.Register(nameof(CurveByPointsUtils.GetSketchOnSurface), () => Variants.Value(CurveByPointsUtils.GetSketchOnSurface(element)));
+        manager.Register(nameof(CurveByPointsUtils.SetProjectionType), Variants.NotSupported);
+        manager.Register(nameof(CurveByPointsUtils.SetSketchOnSurface), Variants.NotSupported);
     }
 }

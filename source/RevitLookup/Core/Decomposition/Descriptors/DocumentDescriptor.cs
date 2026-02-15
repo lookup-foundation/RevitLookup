@@ -13,6 +13,7 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using System.Reflection;
+using Autodesk.Revit.DB.ExternalData;
 using Autodesk.Revit.DB.Lighting;
 using Autodesk.Revit.DB.Structure;
 using LookupEngine.Abstractions.Configuration;
@@ -122,6 +123,19 @@ public sealed class DocumentDescriptor : Descriptor, IDescriptorResolver, IDescr
         }
 
         manager.Register(nameof(AssemblyCodeTable.GetAssemblyCodeTable), () => Variants.Value(AssemblyCodeTable.GetAssemblyCodeTable(_document)));
+        manager.Register(nameof(CoordinationModelLinkUtils.GetAllCoordinationModelInstanceIds), () => Variants.Value(CoordinationModelLinkUtils.GetAllCoordinationModelInstanceIds(_document)));
+        manager.Register(nameof(CoordinationModelLinkUtils.GetAllCoordinationModelTypeIds), () => Variants.Value(CoordinationModelLinkUtils.GetAllCoordinationModelTypeIds(_document)));
+        manager.Register(nameof(CoordinationModelLinkUtils.Link3DViewFromAutodeskDocs), Variants.NotSupported);
+        manager.Register(nameof(CoordinationModelLinkUtils.LinkCoordinationModelFromLocalPath), Variants.NotSupported);
+        manager.Register(nameof(ExportUtils.GetGBXMLDocumentId), () => Variants.Value(ExportUtils.GetGBXMLDocumentId(_document)));
+        manager.Register(nameof(ExternalFileUtils.GetAllExternalFileReferences), () => Variants.Value(ExternalFileUtils.GetAllExternalFileReferences(_document)));
+        manager.Register(nameof(ExternalResourceUtils.GetAllExternalResourceReferences), () => Variants.Value(ExternalResourceUtils.GetAllExternalResourceReferences(_document)));
+        manager.Register(nameof(GlobalParametersManager.AreGlobalParametersAllowed), () => Variants.Value(GlobalParametersManager.AreGlobalParametersAllowed(_document)));
+        manager.Register(nameof(GlobalParametersManager.GetGlobalParametersOrdered), () => Variants.Value(GlobalParametersManager.GetGlobalParametersOrdered(_document)));
+        manager.Register(nameof(GlobalParametersManager.FindByName), Variants.NotSupported);
+        manager.Register(nameof(GlobalParametersManager.IsUniqueName), Variants.NotSupported);
+        manager.Register(nameof(GlobalParametersManager.SortParameters), Variants.Disabled);
+        manager.Register(nameof(ParameterFilterUtilities.RemoveUnfilterableCategories), Variants.NotSupported);
 
         // Disabled: slow performance.
         // manager.Register(nameof(WorksharingUtils.GetUserWorksetInfo), context =>

@@ -16,7 +16,9 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Autodesk.Revit.DB.DirectContext3D;
 using Autodesk.Revit.DB.ExtensibleStorage;
+using Autodesk.Revit.DB.ExternalData;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 using Microsoft.Extensions.DependencyInjection;
@@ -296,6 +298,32 @@ public class ElementDescriptor : Descriptor, IDescriptorResolver, IDescriptorExt
         manager.Register(nameof(AnnotationMultipleAlignmentUtils.ElementSupportsMultiAlign), () => Variants.Value(AnnotationMultipleAlignmentUtils.ElementSupportsMultiAlign(_element)));
         manager.Register(nameof(AnnotationMultipleAlignmentUtils.GetAnnotationOutlineWithoutLeaders), () => Variants.Value(AnnotationMultipleAlignmentUtils.GetAnnotationOutlineWithoutLeaders(_element)));
         manager.Register(nameof(AnnotationMultipleAlignmentUtils.MoveWithAnchoredLeaders), Variants.NotSupported);
+        manager.Register(nameof(CoordinationModelLinkUtils.IsCoordinationModelInstance), () => Variants.Value(CoordinationModelLinkUtils.IsCoordinationModelInstance(_element.Document, _element)));
+        manager.Register(nameof(CoordinationModelLinkUtils.IsCoordinationModelType), () => Variants.Value(CoordinationModelLinkUtils.IsCoordinationModelType(_element.Document, _element)));
+        manager.Register(nameof(CoordinationModelLinkUtils.GetAllPropertiesForReferenceInsideCoordinationModel), Variants.NotSupported);
+        manager.Register(nameof(CoordinationModelLinkUtils.GetCategoryForReferenceInsideCoordinationModel), Variants.NotSupported);
+        manager.Register("GetCoordinationModelColorOverride", Variants.NotSupported); //CoordinationModelLinkUtils.GetColorOverride
+        manager.Register("GetCoordinationModelTransparencyOverride", Variants.NotSupported); //CoordinationModelLinkUtils.GetTransparencyOverride
+        manager.Register("GetCoordinationModelVisibilityOverride", Variants.NotSupported); //CoordinationModelLinkUtils.GetVisibilityOverride
+        manager.Register("GetCoordinationModelVisibilityOverrideForReference", Variants.NotSupported); //CoordinationModelLinkUtils.GetVisibilityOverrideForReferenceInsideCoordinationModel
+        manager.Register("SetCoordinationModelColorOverride", Variants.NotSupported); //CoordinationModelLinkUtils.SetColorOverride
+        manager.Register("SetCoordinationModelTransparencyOverride", Variants.NotSupported); //CoordinationModelLinkUtils.SetTransparencyOverride
+        manager.Register("SetCoordinationModelVisibilityOverride", Variants.NotSupported); //CoordinationModelLinkUtils.SetVisibilityOverride
+        manager.Register("SetCoordinationModelVisibilityOverrideForReference", Variants.NotSupported); //CoordinationModelLinkUtils.SetVisibilityOverrideForReferenceInsideCoordinationModel
+        manager.Register(nameof(DirectContext3DDocumentUtils.IsADirectContext3DHandleInstance), () => Variants.Value(DirectContext3DDocumentUtils.IsADirectContext3DHandleInstance(_element.Document, _element.Id)));
+        manager.Register(nameof(DirectContext3DDocumentUtils.IsADirectContext3DHandleType), () => Variants.Value(DirectContext3DDocumentUtils.IsADirectContext3DHandleType(_element.Document, _element.Id)));
+        manager.Register("IsCategorySupportedByElementIntersectsFilter", () => Variants.Value(ElementIntersectsFilter.IsCategorySupported(_element)));
+        manager.Register("IsElementSupportedByElementIntersectsFilter", () => Variants.Value(ElementIntersectsFilter.IsElementSupported(_element)));
+        manager.Register(nameof(ExportUtils.GetExportId), () => Variants.Value(ExportUtils.GetExportId(_element.Document, _element.Id)));
+        manager.Register(nameof(ExternalFileUtils.GetExternalFileReference), () => Variants.Value(ExternalFileUtils.GetExternalFileReference(_element.Document, _element.Id)));
+        manager.Register(nameof(ExternalFileUtils.IsExternalFileReference), () => Variants.Value(ExternalFileUtils.IsExternalFileReference(_element.Document, _element.Id)));
+        manager.Register(nameof(InstanceVoidCutUtils.CanBeCutWithVoid), () => Variants.Value(InstanceVoidCutUtils.CanBeCutWithVoid(_element)));
+        manager.Register(nameof(InstanceVoidCutUtils.GetCuttingVoidInstances), () => Variants.Value(InstanceVoidCutUtils.GetCuttingVoidInstances(_element)));
+        manager.Register(nameof(InstanceVoidCutUtils.GetElementsBeingCut), () => Variants.Value(InstanceVoidCutUtils.GetElementsBeingCut(_element)));
+        manager.Register(nameof(InstanceVoidCutUtils.IsVoidInstanceCuttingElement), () => Variants.Value(InstanceVoidCutUtils.IsVoidInstanceCuttingElement(_element)));
+        manager.Register(nameof(InstanceVoidCutUtils.AddInstanceVoidCut), Variants.NotSupported);
+        manager.Register(nameof(InstanceVoidCutUtils.InstanceVoidCutExists), Variants.NotSupported);
+        manager.Register(nameof(InstanceVoidCutUtils.RemoveInstanceVoidCut), Variants.NotSupported);
     }
 
     public virtual void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)

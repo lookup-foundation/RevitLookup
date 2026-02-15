@@ -73,10 +73,12 @@ public static class DescriptorsMap
             Curve value when type is null || type == typeof(Curve) => new CurveDescriptor(value),
             Edge value when type is null || type == typeof(Edge) => new EdgeDescriptor(value),
             Solid value when type is null || type == typeof(Solid) => new SolidDescriptor(value),
+            Surface value when type is null || type == typeof(Surface) => new SurfaceDescriptor(value),
             Mesh value when type is null || type == typeof(Mesh) => new MeshDescriptor(value),
             CylindricalFace value when type is null || type == typeof(CylindricalFace) => new CylindricalFaceDescriptor(value),
             CurveLoop value when type is null || type == typeof(CurveLoop) => new CurveLoopDescriptor(value),
             Face value when type is null || type == typeof(Face) => new FaceDescriptor(value),
+            GeometryObject value when type is null || type == typeof(GeometryObject) => new GeometryObjectDescriptor(value),
             City value when type is null || type == typeof(City) => new CityDescriptor(value),
             PaperSize value when type is null || type == typeof(PaperSize) => new PaperSizeDescriptor(value),
             PrintManager value when type is null || type == typeof(PrintManager) => new PrintManagerDescriptor(value),
@@ -100,6 +102,7 @@ public static class DescriptorsMap
             Wall value when type is null || type == typeof(Wall) => new WallDescriptor(value),
             HostObject value when type is null || type == typeof(HostObject) => new HostObjectDescriptor(value),
             ElevationMarker value when type is null || type == typeof(ElevationMarker) => new ElevationMarkerDescriptor(value),
+            AssemblyInstance value when type is null || type == typeof(AssemblyInstance) => new AssemblyInstanceDescriptor(value),
             RevitLinkType value when type is null || type == typeof(RevitLinkType) => new RevitLinkTypeDescriptor(value),
             AnalyticalLinkType value when type is null || type == typeof(AnalyticalLinkType) => new AnalyticalLinkTypeDescriptor(value),
             SpatialElement value when type is null || type == typeof(SpatialElement) => new SpatialElementDescriptor(value),
@@ -111,6 +114,7 @@ public static class DescriptorsMap
             StructuralSettings value when type is null || type == typeof(StructuralSettings) => new StructuralSettingsDescriptor(value),
             AreaVolumeSettings value when type is null || type == typeof(AreaVolumeSettings) => new AreaVolumeSettingsDescriptor(value),
             CurveElement value when type is null || type == typeof(CurveElement) => new CurveElementDescriptor(value),
+            GlobalParameter value when type is null || type == typeof(GlobalParameter) => new GlobalParameterDescriptor(value),
             ReferencePoint value when type is null || type == typeof(ReferencePoint) => new ReferencePointDescriptor(value),
             DatumPlane value when type is null || type == typeof(DatumPlane) => new DatumPlaneDescriptor(value),
             Part value when type is null || type == typeof(Part) => new PartDescriptor(value),
@@ -118,6 +122,7 @@ public static class DescriptorsMap
 #if REVIT2022_OR_GREATER
             RevisionNumberingSequence value when type is null || type == typeof(RevisionNumberingSequence) => new RevisionNumberingSequenceDescriptor(value),
 #endif
+            ElementType value when type is null || type == typeof(ElementType) => new ElementTypeDescriptor(value),
             Element value when type is null || type == typeof(Element) => new ElementDescriptor(value),
 
             //IDisposables
@@ -129,6 +134,8 @@ public static class DescriptorsMap
             Schema value when type is null || type == typeof(Schema) => new SchemaDescriptor(value),
             FailureMessage value when type is null || type == typeof(FailureMessage) => new FailureMessageDescriptor(value),
             UpdaterInfo value when type is null || type == typeof(UpdaterInfo) => new UpdaterInfoDescriptor(value),
+            Subelement value when type is null || type == typeof(Subelement) => new SubelementDescriptor(value),
+            ExternalResourceReference value when type is null || type == typeof(ExternalResourceReference) => new ExternalResourceReferenceDescriptor(value),
             ExternalService value when type is null || type == typeof(ExternalService) => new ExternalServiceDescriptor(value),
             LightFamily value when type is null || type == typeof(LightFamily) => new LightFamilyDescriptor(value),
             Autodesk.Revit.ApplicationServices.Application value when type is null || type == typeof(Autodesk.Revit.ApplicationServices.Application) => new ApplicationDescriptor(value),

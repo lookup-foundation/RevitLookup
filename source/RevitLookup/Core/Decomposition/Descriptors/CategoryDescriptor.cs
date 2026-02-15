@@ -13,6 +13,7 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using System.Reflection;
+using Autodesk.Revit.DB.DirectContext3D;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
@@ -80,6 +81,7 @@ public sealed class CategoryDescriptor : Descriptor, IDescriptorResolver, IDescr
 #if !REVIT2023_OR_GREATER
         manager.Register("BuiltInCategory", () => Variants.Value((BuiltInCategory) _category.Id.IntegerValue));
 #endif
+        manager.Register(nameof(DirectContext3DDocumentUtils.IsADirectContext3DHandleCategory), () => Variants.Value(DirectContext3DDocumentUtils.IsADirectContext3DHandleCategory(_category.Id)));
     }
 
     public void RegisterExtensions(IExtensionManager<Document> manager)
@@ -93,5 +95,7 @@ public sealed class CategoryDescriptor : Descriptor, IDescriptorResolver, IDescr
                 .GetInstances((BuiltInCategory) _category.Id.IntegerValue));
 #endif
         });
+        manager.Register(nameof(DirectContext3DDocumentUtils.GetDirectContext3DHandleInstances), context => Variants.Value(DirectContext3DDocumentUtils.GetDirectContext3DHandleInstances(context, _category.Id)));
+        manager.Register(nameof(DirectContext3DDocumentUtils.GetDirectContext3DHandleTypes), context => Variants.Value(DirectContext3DDocumentUtils.GetDirectContext3DHandleTypes(context, _category.Id)));
     }
 }
