@@ -27,7 +27,6 @@ public static class ParameterExtensions
                 StorageType.Double => parameter.AsValueString(),
                 StorageType.String => parameter.AsString(),
                 StorageType.ElementId => parameter.AsElementId().ToString(),
-                StorageType.None => parameter.AsValueString(),
                 _ => parameter.AsValueString()
             };
         }
@@ -53,7 +52,7 @@ public static class ParameterExtensions
 #if REVIT2024_OR_GREATER
                     result = long.TryParse(value, out var idValue);
 #else
-                result = int.TryParse(value, out var idValue);
+                    result = int.TryParse(value, out var idValue);
 #endif
                     if (!result) break;
 

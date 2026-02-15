@@ -29,7 +29,6 @@ using LookupEngine.Abstractions.Decomposition;
 using LookupEngine.Descriptors;
 using RevitLookup.Core.Decomposition.Descriptors;
 using EnumerableDescriptor = RevitLookup.Core.Decomposition.Descriptors.EnumerableDescriptor;
-using RevitApplication = Autodesk.Revit.ApplicationServices.Application;
 using RibbonItem = Autodesk.Revit.UI.RibbonItem;
 using RibbonPanel = Autodesk.Revit.UI.RibbonPanel;
 
@@ -130,7 +129,7 @@ public static class DescriptorsMap
             UpdaterInfo value when type is null || type == typeof(UpdaterInfo) => new UpdaterInfoDescriptor(value),
             ExternalService value when type is null || type == typeof(ExternalService) => new ExternalServiceDescriptor(value),
             LightFamily value when type is null || type == typeof(LightFamily) => new LightFamilyDescriptor(value),
-            RevitApplication value when type is null || type == typeof(RevitApplication) => new ApplicationDescriptor(value),
+            Autodesk.Revit.ApplicationServices.Application value when type is null || type == typeof(Autodesk.Revit.ApplicationServices.Application) => new ApplicationDescriptor(value),
             UIApplication when type is null || type == typeof(UIApplication) => new UiApplicationDescriptor(),
             PerformanceAdviser value when type is null || type == typeof(PerformanceAdviser) => new PerformanceAdviserDescriptor(value),
             SchedulableField value when type is null || type == typeof(SchedulableField) => new SchedulableFieldDescriptor(value),
