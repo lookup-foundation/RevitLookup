@@ -267,6 +267,6 @@ public sealed class ViewDescriptor(View view) : ElementDescriptor(view)
     public override void RegisterExtensions(IExtensionManager manager)
     {
         manager.Register(nameof(SpatialFieldManager.GetSpatialFieldManager), () => Variants.Value(SpatialFieldManager.GetSpatialFieldManager(view)));
-        manager.Register("GetAllPlacedInstances", () => Variants.Value(view.Document.GetInstances(view.Id)));
+        manager.Register("GetInstances", () => Variants.Value(view.Document.GetInstances(view.Id)));
     }
 }
