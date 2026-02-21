@@ -21,6 +21,7 @@ using Autodesk.Revit.DB.ExternalService;
 using Autodesk.Revit.DB.Lighting;
 using Autodesk.Revit.DB.Mechanical;
 using Autodesk.Revit.DB.Plumbing;
+using Autodesk.Revit.DB.PointClouds;
 using Autodesk.Revit.DB.Structure;
 using Autodesk.Revit.DB.Visual;
 using Autodesk.Revit.UI;
@@ -56,6 +57,7 @@ public static class DescriptorsMap
             //Root
             ElementId value when type is null || type == typeof(ElementId) => new ElementIdDescriptor(value),
             GuidEnum value when type is null || type == typeof(GuidEnum) => new GuidEnumDescriptor(value),
+            ExternalDefinition value when type is null || type == typeof(ExternalDefinition) => new ExternalDefinitionDescriptor(value),
             Definition value when type is null || type == typeof(Definition) => new DefinitionDescriptor(value),
             XYZ value when type is null || type == typeof(XYZ) => new XyzDescriptor(value),
 
@@ -72,6 +74,7 @@ public static class DescriptorsMap
             Color value when type is null || type == typeof(Color) => new ColorDescriptor(value),
             Curve value when type is null || type == typeof(Curve) => new CurveDescriptor(value),
             Edge value when type is null || type == typeof(Edge) => new EdgeDescriptor(value),
+            EdgeEndPoint value when type is null || type == typeof(EdgeEndPoint) => new EdgeEndPointDescriptor(value),
             Solid value when type is null || type == typeof(Solid) => new SolidDescriptor(value),
             Surface value when type is null || type == typeof(Surface) => new SurfaceDescriptor(value),
             Mesh value when type is null || type == typeof(Mesh) => new MeshDescriptor(value),
@@ -98,6 +101,7 @@ public static class DescriptorsMap
             TableView value when type is null || type == typeof(TableView) => new TableViewDescriptor(value),
             View value when type is null || type == typeof(View) => new ViewDescriptor(value),
             Wire value when type is null || type == typeof(Wire) => new WireDescriptor(value),
+            Duct value when type is null || type == typeof(Duct) => new DuctDescriptor(value),
             Pipe value when type is null || type == typeof(Pipe) => new PipeDescriptor(value),
             Wall value when type is null || type == typeof(Wall) => new WallDescriptor(value),
             HostObject value when type is null || type == typeof(HostObject) => new HostObjectDescriptor(value),
@@ -113,6 +117,8 @@ public static class DescriptorsMap
             InternalOrigin value when type is null || type == typeof(InternalOrigin) => new InternalOriginDescriptor(value),
             StructuralSettings value when type is null || type == typeof(StructuralSettings) => new StructuralSettingsDescriptor(value),
             AreaVolumeSettings value when type is null || type == typeof(AreaVolumeSettings) => new AreaVolumeSettingsDescriptor(value),
+            Rebar value when type is null || type == typeof(Rebar) => new RebarDescriptor(value),
+            SketchPlane value when type is null || type == typeof(SketchPlane) => new SketchPlaneDescriptor(value),
             CurveElement value when type is null || type == typeof(CurveElement) => new CurveElementDescriptor(value),
             GlobalParameter value when type is null || type == typeof(GlobalParameter) => new GlobalParameterDescriptor(value),
             ReferencePoint value when type is null || type == typeof(ReferencePoint) => new ReferencePointDescriptor(value),
@@ -122,6 +128,7 @@ public static class DescriptorsMap
 #if REVIT2022_OR_GREATER
             RevisionNumberingSequence value when type is null || type == typeof(RevisionNumberingSequence) => new RevisionNumberingSequenceDescriptor(value),
 #endif
+            WallType value when type is null || type == typeof(WallType) => new WallTypeDescriptor(value),
             ElementType value when type is null || type == typeof(ElementType) => new ElementTypeDescriptor(value),
             Element value when type is null || type == typeof(Element) => new ElementDescriptor(value),
 
@@ -149,6 +156,7 @@ public static class DescriptorsMap
             BoundarySegment value when type is null || type == typeof(BoundarySegment) => new BoundarySegmentDescriptor(value),
             AssetProperties value when type is null || type == typeof(AssetProperties) => new AssetPropertiesDescriptor(value),
             AssetProperty value when type is null || type == typeof(AssetProperty) => new AssetPropertyDescriptor(value),
+            Connector value when type is null || type == typeof(Connector) => new ConnectorDescriptor(value),
             ConnectorManager value when type is null || type == typeof(ConnectorManager) => new ConnectorManagerDescriptor(value),
             ScheduleDefinition value when type is null || type == typeof(ScheduleDefinition) => new ScheduleDefinitionDescriptor(value),
             TableData value when type is null || type == typeof(TableData) => new TableDataDescriptor(value),
@@ -156,6 +164,9 @@ public static class DescriptorsMap
             FamilySizeTableManager value when type is null || type == typeof(FamilySizeTableManager) => new FamilySizeTableManagerDescriptor(value),
             FamilySizeTable value when type is null || type == typeof(FamilySizeTable) => new FamilySizeTableDescriptor(value),
             FamilySizeTableColumn value when type is null || type == typeof(FamilySizeTableColumn) => new FamilySizeTableColumnDescriptor(value),
+            PointCloudFilter value when type is null || type == typeof(PointCloudFilter) => new PointCloudFilterDescriptor(value),
+            TriangulationInterface value when type is null || type == typeof(TriangulationInterface) => new TriangulationInterfaceDescriptor(value),
+            Autodesk.Revit.DB.Units value when type is null || type == typeof(Autodesk.Revit.DB.Units) => new UnitsDescriptor(value),
             CompoundStructure value when type is null || type == typeof(CompoundStructure) => new CompoundStructureDescriptor(value),
 #if REVIT2024_OR_GREATER
             EvaluatedParameter value when type is null || type == typeof(EvaluatedParameter) => new EvaluatedParameterDescriptor(value),

@@ -33,7 +33,7 @@ public sealed class EvaluatedParameterDescriptor : Descriptor, IDescriptorResolv
     {
         return target switch
         {
-            nameof(EvaluatedParameter.AsValueString) when parameters!.Length == 1 => ResolveAsValueString,
+            nameof(EvaluatedParameter.AsValueString) when parameters.Length == 1 => ResolveAsValueString,
             nameof(EvaluatedParameter.AsValueString) when parameters.Length == 2 => ResolveAsValueStringFormat,
             _ => null
         };

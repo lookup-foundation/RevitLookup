@@ -30,9 +30,15 @@ public sealed class ModelPathDescriptor : Descriptor, IDescriptorExtension
     public void RegisterExtensions(IExtensionManager manager)
     {
         manager.Register(nameof(ModelPathUtils.ConvertModelPathToUserVisiblePath), () => Variants.Value(ModelPathUtils.ConvertModelPathToUserVisiblePath(_modelPath)));
+        manager.Register(nameof(ModelPathUtils.ConvertUserVisiblePathToModelPath), Variants.NotSupported);
+        manager.Register(nameof(ModelPathUtils.IsValidUserVisibleFullServerPath), Variants.NotSupported);
+        manager.Register(nameof(ModelPathUtils.ConvertCloudGUIDsToCloudPath), Variants.NotSupported);
         manager.Register(nameof(TransmissionData.IsDocumentTransmitted), () => Variants.Value(TransmissionData.IsDocumentTransmitted(_modelPath)));
         manager.Register(nameof(TransmissionData.DocumentIsNotTransmitted), () => Variants.Value(TransmissionData.DocumentIsNotTransmitted(_modelPath)));
         manager.Register(nameof(TransmissionData.ReadTransmissionData), () => Variants.Value(TransmissionData.ReadTransmissionData(_modelPath)));
         manager.Register(nameof(WorksharingUtils.GetUserWorksetInfo), () => Variants.Value(WorksharingUtils.GetUserWorksetInfo(_modelPath)));
+#if REVIT2026_OR_GREATER
+        manager.Register(nameof(ModelPathUtils.GetAllCloudRegions), () => Variants.Value(ModelPathUtils.GetAllCloudRegions()));
+#endif
     }
 }

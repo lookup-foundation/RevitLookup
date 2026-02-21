@@ -23,7 +23,7 @@ using RevitLookup.UI.Framework.Extensions;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class ReferenceDescriptor : Descriptor, IDescriptorResolver<Document>, IContextMenuConnector
+public sealed class ReferenceDescriptor : Descriptor, IDescriptorResolver<Document>, IDescriptorExtension<Document>, IContextMenuConnector
 {
     private readonly Reference _reference;
 
@@ -61,5 +61,10 @@ public sealed class ReferenceDescriptor : Descriptor, IDescriptorResolver<Docume
             EventHandlers.ActionEventHandler.Raise(_ => RevitContext.ActiveUiDocument.Selection.SetReferences([reference]));
         }
 #endif
+    }
+
+    public void RegisterExtensions(IExtensionManager<Document> manager)
+    {
+        manager.Register(nameof(CurveByPointsUtils.GetFaceRegions), context => Variants.Value(CurveByPointsUtils.GetFaceRegions(context, _reference)));
     }
 }

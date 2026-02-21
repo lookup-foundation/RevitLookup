@@ -18,7 +18,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Autodesk.Revit.DB.DirectContext3D;
 using Autodesk.Revit.DB.ExtensibleStorage;
-using Autodesk.Revit.DB.ExternalData;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +27,11 @@ using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.ViewModels.Decomposition;
 using RevitLookup.Services.Application;
 using RevitLookup.UI.Framework.Extensions;
+#if REVIT2024_OR_GREATER
+using Autodesk.Revit.DB.Structure;
+#endif
+#if REVIT2026_OR_GREATER
+#endif
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
@@ -295,24 +299,11 @@ public class ElementDescriptor : Descriptor, IDescriptorResolver, IDescriptorExt
         manager.Register(nameof(WorksharingUtils.GetModelUpdatesStatus), () => Variants.Value(WorksharingUtils.GetModelUpdatesStatus(_element.Document, _element.Id)));
         manager.Register(nameof(PartUtils.AreElementsValidForCreateParts), () => Variants.Value(PartUtils.AreElementsValidForCreateParts(_element.Document, [_element.Id])));
         manager.Register(nameof(DocumentValidation.CanDeleteElement), () => Variants.Value(DocumentValidation.CanDeleteElement(_element.Document, _element.Id)));
-        manager.Register(nameof(AnnotationMultipleAlignmentUtils.ElementSupportsMultiAlign), () => Variants.Value(AnnotationMultipleAlignmentUtils.ElementSupportsMultiAlign(_element)));
-        manager.Register(nameof(AnnotationMultipleAlignmentUtils.GetAnnotationOutlineWithoutLeaders), () => Variants.Value(AnnotationMultipleAlignmentUtils.GetAnnotationOutlineWithoutLeaders(_element)));
-        manager.Register(nameof(AnnotationMultipleAlignmentUtils.MoveWithAnchoredLeaders), Variants.NotSupported);
-        manager.Register(nameof(CoordinationModelLinkUtils.IsCoordinationModelInstance), () => Variants.Value(CoordinationModelLinkUtils.IsCoordinationModelInstance(_element.Document, _element)));
-        manager.Register(nameof(CoordinationModelLinkUtils.IsCoordinationModelType), () => Variants.Value(CoordinationModelLinkUtils.IsCoordinationModelType(_element.Document, _element)));
-        manager.Register(nameof(CoordinationModelLinkUtils.GetAllPropertiesForReferenceInsideCoordinationModel), Variants.NotSupported);
-        manager.Register(nameof(CoordinationModelLinkUtils.GetCategoryForReferenceInsideCoordinationModel), Variants.NotSupported);
-        manager.Register("GetCoordinationModelColorOverride", Variants.NotSupported); //CoordinationModelLinkUtils.GetColorOverride
-        manager.Register("GetCoordinationModelTransparencyOverride", Variants.NotSupported); //CoordinationModelLinkUtils.GetTransparencyOverride
-        manager.Register("GetCoordinationModelVisibilityOverride", Variants.NotSupported); //CoordinationModelLinkUtils.GetVisibilityOverride
-        manager.Register("GetCoordinationModelVisibilityOverrideForReference", Variants.NotSupported); //CoordinationModelLinkUtils.GetVisibilityOverrideForReferenceInsideCoordinationModel
-        manager.Register("SetCoordinationModelColorOverride", Variants.NotSupported); //CoordinationModelLinkUtils.SetColorOverride
-        manager.Register("SetCoordinationModelTransparencyOverride", Variants.NotSupported); //CoordinationModelLinkUtils.SetTransparencyOverride
-        manager.Register("SetCoordinationModelVisibilityOverride", Variants.NotSupported); //CoordinationModelLinkUtils.SetVisibilityOverride
-        manager.Register("SetCoordinationModelVisibilityOverrideForReference", Variants.NotSupported); //CoordinationModelLinkUtils.SetVisibilityOverrideForReferenceInsideCoordinationModel
-        manager.Register(nameof(DirectContext3DDocumentUtils.IsADirectContext3DHandleInstance), () => Variants.Value(DirectContext3DDocumentUtils.IsADirectContext3DHandleInstance(_element.Document, _element.Id)));
-        manager.Register(nameof(DirectContext3DDocumentUtils.IsADirectContext3DHandleType), () => Variants.Value(DirectContext3DDocumentUtils.IsADirectContext3DHandleType(_element.Document, _element.Id)));
-        manager.Register("IsCategorySupportedByElementIntersectsFilter", () => Variants.Value(ElementIntersectsFilter.IsCategorySupported(_element)));
+        manager.Register(nameof(DirectContext3DDocumentUtils.IsADirectContext3DHandleInstance),
+            () => Variants.Value(DirectContext3DDocumentUtils.IsADirectContext3DHandleInstance(_element.Document, _element.Id)));
+        manager.Register(nameof(DirectContext3DDocumentUtils.IsADirectContext3DHandleType),
+            () => Variants.Value(DirectContext3DDocumentUtils.IsADirectContext3DHandleType(_element.Document, _element.Id)));
+        manager.Register("IsElementCategorySupportedByElementIntersectsFilter", () => Variants.Value(ElementIntersectsFilter.IsCategorySupported(_element)));
         manager.Register("IsElementSupportedByElementIntersectsFilter", () => Variants.Value(ElementIntersectsFilter.IsElementSupported(_element)));
         manager.Register(nameof(ExportUtils.GetExportId), () => Variants.Value(ExportUtils.GetExportId(_element.Document, _element.Id)));
         manager.Register(nameof(ExternalFileUtils.GetExternalFileReference), () => Variants.Value(ExternalFileUtils.GetExternalFileReference(_element.Document, _element.Id)));
@@ -324,6 +315,39 @@ public class ElementDescriptor : Descriptor, IDescriptorResolver, IDescriptorExt
         manager.Register(nameof(InstanceVoidCutUtils.AddInstanceVoidCut), Variants.NotSupported);
         manager.Register(nameof(InstanceVoidCutUtils.InstanceVoidCutExists), Variants.NotSupported);
         manager.Register(nameof(InstanceVoidCutUtils.RemoveInstanceVoidCut), Variants.NotSupported);
+        manager.Register(nameof(ElementTransformUtils.CopyElement), Variants.NotSupported);
+        manager.Register(nameof(ElementTransformUtils.MirrorElement), Variants.NotSupported);
+        manager.Register(nameof(ElementTransformUtils.MoveElement), Variants.NotSupported);
+        manager.Register(nameof(ElementTransformUtils.RotateElement), Variants.NotSupported);
+        manager.Register(nameof(ParameterFilterUtilities.IsParameterApplicable), Variants.NotSupported);
+        manager.Register(nameof(PartUtils.GetAssociatedParts), () => Variants.Value(PartUtils.GetAssociatedParts(_element.Document, _element.Id, true, true)));
+
+        manager.Register(nameof(SolidSolidCutUtils.AddCutBetweenSolids), Variants.NotSupported);
+        manager.Register(nameof(SolidSolidCutUtils.RemoveCutBetweenSolids), Variants.NotSupported);
+        manager.Register(nameof(SolidSolidCutUtils.CanElementCutElement), Variants.NotSupported);
+        manager.Register(nameof(SolidSolidCutUtils.CutExistsBetweenElements), Variants.NotSupported);
+        manager.Register(nameof(SolidSolidCutUtils.SplitFacesOfCuttingSolid), Variants.NotSupported);
+        manager.Register(nameof(JoinGeometryUtils.AreElementsJoined), Variants.NotSupported);
+        manager.Register(nameof(JoinGeometryUtils.IsCuttingElementInJoin), Variants.NotSupported);
+        manager.Register(nameof(JoinGeometryUtils.JoinGeometry), Variants.NotSupported);
+        manager.Register(nameof(JoinGeometryUtils.SwitchJoinOrder), Variants.NotSupported);
+        manager.Register(nameof(JoinGeometryUtils.UnjoinGeometry), Variants.NotSupported);
+#if REVIT2024_OR_GREATER
+        manager.Register(nameof(RebarBendingDetail.IsBendingDetail), () => Variants.Value(RebarBendingDetail.IsBendingDetail(_element)));
+        manager.Register("GetBendingDetailHost", () => Variants.Value(RebarBendingDetail.GetHost(_element)));
+        manager.Register("GetBendingDetailPosition", () => Variants.Value(RebarBendingDetail.GetPosition(_element)));
+        manager.Register("GetBendingDetailRotation", () => Variants.Value(RebarBendingDetail.GetRotation(_element)));
+#endif
+#if REVIT2025_OR_GREATER
+        manager.Register(nameof(AnnotationMultipleAlignmentUtils.ElementSupportsMultiAlign), () => Variants.Value(AnnotationMultipleAlignmentUtils.ElementSupportsMultiAlign(_element)));
+        manager.Register(nameof(AnnotationMultipleAlignmentUtils.GetAnnotationOutlineWithoutLeaders), () => Variants.Value(AnnotationMultipleAlignmentUtils.GetAnnotationOutlineWithoutLeaders(_element)));
+        manager.Register(nameof(AnnotationMultipleAlignmentUtils.MoveWithAnchoredLeaders), Variants.NotSupported);
+        manager.Register(nameof(RebarBendingDetail.IsRealisticBendingDetail), () => Variants.Value(RebarBendingDetail.IsRealisticBendingDetail(_element)));
+        manager.Register(nameof(RebarBendingDetail.IsSchematicBendingDetail), () => Variants.Value(RebarBendingDetail.IsSchematicBendingDetail(_element)));
+        manager.Register("GetBendingDetailHosts", () => Variants.Value(RebarBendingDetail.GetHosts(_element)));
+        manager.Register("GetBendingDetailTagRelativePosition", () => Variants.Value(RebarBendingDetail.GetTagRelativePosition(_element)));
+        manager.Register("GetBendingDetailTagRelativeRotation", () => Variants.Value(RebarBendingDetail.GetTagRelativeRotation(_element)));
+#endif
     }
 
     public virtual void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)

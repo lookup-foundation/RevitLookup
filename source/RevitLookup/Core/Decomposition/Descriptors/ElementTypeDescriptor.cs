@@ -12,9 +12,12 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using Autodesk.Revit.DB.ExternalData;
+using Autodesk.Revit.DB.Structure;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
+#if REVIT2026_OR_GREATER
+using Autodesk.Revit.DB.ExternalData;
+#endif
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
@@ -22,15 +25,34 @@ public sealed class ElementTypeDescriptor(ElementType elementType) : ElementDesc
 {
     public override void RegisterExtensions(IExtensionManager manager)
     {
+#if REVIT2025_OR_GREATER
+        manager.Register("GetRebarSpliceLapLengthMultiplier", () => Variants.Value(RebarSpliceTypeUtils.GetLapLengthMultiplier(elementType.Document, elementType.Id)));
+        manager.Register("GetRebarSpliceShiftOption", () => Variants.Value(RebarSpliceTypeUtils.GetShiftOption(elementType.Document, elementType.Id)));
+        manager.Register("GetRebarSpliceStaggerLengthMultiplier", () => Variants.Value(RebarSpliceTypeUtils.GetStaggerLengthMultiplier(elementType.Document, elementType.Id)));
+        
+        _ = nameof(RebarSpliceTypeUtils.SetLapLengthMultiplier); //Api compile-time compability check
+        manager.Register("SetRebarSpliceLapLengthMultiplier", Variants.NotSupported);
+        
+        _ = nameof(RebarSpliceTypeUtils.SetShiftOption); //Api compile-time compability check
+        manager.Register("SetRebarSpliceShiftOption", Variants.NotSupported);
+        
+        _ = nameof(RebarSpliceTypeUtils.SetStaggerLengthMultiplier); //Api compile-time compability check
+        manager.Register("SetRebarSpliceStaggerLengthMultiplier", Variants.NotSupported);
+#endif
+#if REVIT2026_OR_GREATER
         manager.Register(nameof(CoordinationModelLinkUtils.GetCoordinationModelTypeData), () => Variants.Value(CoordinationModelLinkUtils.GetCoordinationModelTypeData(elementType.Document, elementType)));
-        manager.Register("ContainsCoordinationModelCategory", Variants.NotSupported); //CoordinationModelLinkUtils.ContainsCategory
-        manager.Register("GetCoordinationModelColorOverrideForCategory", Variants.NotSupported); //CoordinationModelLinkUtils.GetColorOverrideForCategory
-        manager.Register("GetCoordinationModelVisibilityOverrideForCategory", Variants.NotSupported); //CoordinationModelLinkUtils.GetVisibilityOverrideForCategory
-        manager.Register("ReloadCoordinationModel", Variants.NotSupported); //CoordinationModelLinkUtils.Reload
-        manager.Register("ReloadCoordinationModelFromAutodeskDocs", Variants.NotSupported); //CoordinationModelLinkUtils.ReloadAutodeskDocsCoordinationModelFrom
-        manager.Register("ReloadLocalCoordinationModel", Variants.NotSupported); //CoordinationModelLinkUtils.ReloadLocalCoordinationModelFrom
-        manager.Register("SetCoordinationModelColorOverrideForCategory", Variants.NotSupported); //CoordinationModelLinkUtils.SetColorOverrideForCategory
-        manager.Register("SetCoordinationModelVisibilityOverrideForCategory", Variants.NotSupported); //CoordinationModelLinkUtils.SetVisibilityOverrideForCategory
-        manager.Register("UnloadCoordinationModel", Variants.NotSupported); //CoordinationModelLinkUtils.Unload
+        manager.Register("GetRebarCrankLengthMultiplier", () => Variants.Value(RebarCrankTypeUtils.GetCrankLengthMultiplier(elementType.Document, elementType.Id)));
+        manager.Register("GetRebarCrankOffsetMultiplier", () => Variants.Value(RebarCrankTypeUtils.GetCrankOffsetMultiplier(elementType.Document, elementType.Id)));
+        manager.Register("GetRebarCrankRatio", () => Variants.Value(RebarCrankTypeUtils.GetCrankRatio(elementType.Document, elementType.Id)));
+        
+        _ = nameof(RebarCrankTypeUtils.SetCrankLengthMultiplier); //Api compile-time compability check
+        manager.Register("SetRebarCrankLengthMultiplier", Variants.NotSupported);
+        
+        _ = nameof(RebarCrankTypeUtils.SetCrankOffsetMultiplier); //Api compile-time compability check
+        manager.Register("SetRebarCrankOffsetMultiplier", Variants.NotSupported);
+        
+        _ = nameof(RebarCrankTypeUtils.SetCrankRatio); //Api compile-time compability check
+        manager.Register("SetRebarCrankRatio", Variants.NotSupported);
+#endif
     }
 }

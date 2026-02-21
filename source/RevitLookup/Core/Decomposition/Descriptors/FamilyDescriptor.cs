@@ -30,6 +30,7 @@ public sealed class FamilyDescriptor(Family family) : ElementDescriptor(family)
         manager.Register(nameof(FamilySizeTableManager.GetFamilySizeTableManager), RegisterGetFamilySizeTableManager);
         manager.Register(nameof(FamilyUtils.FamilyCanConvertToFaceHostBased), RegisterFamilyCanConvertToFaceHostBased);
         manager.Register(nameof(FamilyUtils.GetProfileSymbols), RegisterProfileSymbols);
+        manager.Register(nameof(FamilyUtils.ConvertFamilyToFaceHostBased), Variants.NotSupported);
         manager.Register(nameof(AdaptiveComponentFamilyUtils.GetNumberOfAdaptivePoints), () => Variants.Value(AdaptiveComponentFamilyUtils.GetNumberOfAdaptivePoints(family)));
         manager.Register(nameof(AdaptiveComponentFamilyUtils.GetNumberOfPlacementPoints), () => Variants.Value(AdaptiveComponentFamilyUtils.GetNumberOfPlacementPoints(family)));
         manager.Register(nameof(AdaptiveComponentFamilyUtils.GetNumberOfShapeHandlePoints), () => Variants.Value(AdaptiveComponentFamilyUtils.GetNumberOfShapeHandlePoints(family)));

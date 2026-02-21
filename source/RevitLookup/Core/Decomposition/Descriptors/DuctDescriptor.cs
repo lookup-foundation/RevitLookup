@@ -12,21 +12,20 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using Autodesk.Revit.DB.Structure.StructuralSections;
+using Autodesk.Revit.DB.Mechanical;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class FamilySymbolDescriptor(FamilySymbol familySymbol) : ElementDescriptor(familySymbol)
+public sealed class DuctDescriptor(Duct duct) : ElementDescriptor(duct)
 {
     public override void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(AdaptiveComponentInstanceUtils.IsAdaptiveFamilySymbol), () => Variants.Value(AdaptiveComponentInstanceUtils.IsAdaptiveFamilySymbol(familySymbol)));
-        manager.Register(nameof(AdaptiveComponentInstanceUtils.CreateAdaptiveComponentInstance), Variants.NotSupported);
-        manager.Register(nameof(StructuralSectionUtils.SetStructuralSection), Variants.NotSupported);
-#if REVIT2024_OR_GREATER
-        manager.Register(nameof(MEPSupportUtils.CreateDuctworkStiffener), Variants.NotSupported);
-#endif
+        manager.Register(nameof(MechanicalUtils.BreakCurve), Variants.NotSupported);
+        manager.Register(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtCross), Variants.NotSupported);
+        manager.Register(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtElbow), Variants.NotSupported);
+        manager.Register(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtTee), Variants.NotSupported);
+        manager.Register(nameof(MechanicalUtils.ConnectAirTerminalOnDuct), Variants.NotSupported);
     }
 }

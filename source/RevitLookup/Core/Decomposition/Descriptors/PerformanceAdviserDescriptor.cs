@@ -24,17 +24,17 @@ public sealed class PerformanceAdviserDescriptor(PerformanceAdviser adviser) : D
     {
         return target switch
         {
-            nameof(PerformanceAdviser.GetRuleDescription) when parameters!.Length == 1 &&
+            nameof(PerformanceAdviser.GetRuleDescription) when parameters.Length == 1 &&
                                                                parameters[0].ParameterType == typeof(int) => ResolveGetRuleDescription,
-            nameof(PerformanceAdviser.GetRuleId) when parameters!.Length == 1 &&
+            nameof(PerformanceAdviser.GetRuleId) when parameters.Length == 1 &&
                                                       parameters[0].ParameterType == typeof(int) => ResolveGetRuleId,
-            nameof(PerformanceAdviser.GetRuleName) when parameters!.Length == 1 &&
+            nameof(PerformanceAdviser.GetRuleName) when parameters.Length == 1 &&
                                                         parameters[0].ParameterType == typeof(int) => ResolveGetRuleName,
-            nameof(PerformanceAdviser.IsRuleEnabled) when parameters!.Length == 1 &&
+            nameof(PerformanceAdviser.IsRuleEnabled) when parameters.Length == 1 &&
                                                           parameters[0].ParameterType == typeof(int) => ResolveIsRuleEnabled,
-            nameof(PerformanceAdviser.WillRuleCheckElements) when parameters!.Length == 1 &&
+            nameof(PerformanceAdviser.WillRuleCheckElements) when parameters.Length == 1 &&
                                                                   parameters[0].ParameterType == typeof(int) => ResolveWillRuleCheckElements,
-            nameof(PerformanceAdviser.GetElementFilterFromRule) when parameters!.Length == 2 &&
+            nameof(PerformanceAdviser.GetElementFilterFromRule) when parameters.Length == 2 &&
                                                                      parameters[0].ParameterType == typeof(int) => ResolveGetElementFilterFromRule,
             _ => null
         };
@@ -43,7 +43,11 @@ public sealed class PerformanceAdviserDescriptor(PerformanceAdviser adviser) : D
         {
             var rules = adviser.GetNumberOfRules();
             var variants = Variants.Values<KeyValuePair<int, ElementFilter>>(rules);
-            for (var i = 0; i < rules; i++) variants.Add(new KeyValuePair<int, ElementFilter>(i, adviser.GetElementFilterFromRule(i, RevitContext.ActiveDocument)));
+            for (var i = 0; i < rules; i++)
+            {
+                variants.Add(new KeyValuePair<int, ElementFilter>(i, adviser.GetElementFilterFromRule(i, RevitContext.ActiveDocument)));
+            }
+
             return variants.Consume();
         }
 
@@ -75,7 +79,11 @@ public sealed class PerformanceAdviserDescriptor(PerformanceAdviser adviser) : D
         {
             var rules = adviser.GetNumberOfRules();
             var variants = Variants.Values<KeyValuePair<int, string>>(rules);
-            for (var i = 0; i < rules; i++) variants.Add(new KeyValuePair<int, string>(i, adviser.GetRuleName(i)));
+            for (var i = 0; i < rules; i++)
+            {
+                variants.Add(new KeyValuePair<int, string>(i, adviser.GetRuleName(i)));
+            }
+
             return variants.Consume();
         }
 
@@ -108,7 +116,7 @@ public sealed class PerformanceAdviserDescriptor(PerformanceAdviser adviser) : D
     {
         return target switch
         {
-            nameof(PerformanceAdviser.ExecuteAllRules) when parameters!.Length == 1 &&
+            nameof(PerformanceAdviser.ExecuteAllRules) when parameters.Length == 1 &&
                                                             parameters[0].ParameterType == typeof(Document) => ResolveExecuteAllRules,
             _ => null
         };

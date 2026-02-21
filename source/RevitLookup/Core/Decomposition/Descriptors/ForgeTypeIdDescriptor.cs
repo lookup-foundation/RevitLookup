@@ -18,7 +18,7 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class ForgeTypeIdDescriptor : Descriptor, IDescriptorResolver, IDescriptorExtension
+public sealed class ForgeTypeIdDescriptor : Descriptor, IDescriptorResolver, IDescriptorExtension, IDescriptorExtension<Document>
 {
     private readonly ForgeTypeId _typeId;
 
@@ -42,18 +42,58 @@ public sealed class ForgeTypeIdDescriptor : Descriptor, IDescriptorResolver, IDe
         manager.Register(nameof(LabelUtils.GetLabelForUnit), () => Variants.Value(LabelUtils.GetLabelForUnit(_typeId)));
         manager.Register(nameof(LabelUtils.GetLabelForSpec), () => Variants.Value(LabelUtils.GetLabelForSpec(_typeId)));
         manager.Register(nameof(LabelUtils.GetLabelForSymbol), () => Variants.Value(LabelUtils.GetLabelForSymbol(_typeId)));
+        manager.Register(nameof(UnitUtils.IsUnit), () => Variants.Value(UnitUtils.IsUnit(_typeId)));
+        manager.Register(nameof(UnitUtils.IsSymbol), () => Variants.Value(UnitUtils.IsSymbol(_typeId)));
+        manager.Register(nameof(UnitUtils.GetAllUnits), () => Variants.Value(UnitUtils.GetAllUnits()));
+        manager.Register(nameof(UnitUtils.GetTypeCatalogStringForSpec), () => Variants.Value(UnitUtils.GetTypeCatalogStringForSpec(_typeId)));
+        manager.Register(nameof(UnitUtils.GetTypeCatalogStringForUnit), () => Variants.Value(UnitUtils.GetTypeCatalogStringForUnit(_typeId)));
+        manager.Register(nameof(UnitUtils.GetValidUnits), () => Variants.Value(UnitUtils.GetValidUnits(_typeId)));
+        manager.Register(nameof(UnitUtils.Convert), Variants.NotSupported);
+        manager.Register(nameof(UnitUtils.ConvertFromInternalUnits), Variants.NotSupported);
+        manager.Register(nameof(UnitUtils.ConvertToInternalUnits), Variants.NotSupported);
+        manager.Register(nameof(UnitUtils.IsValidUnit), ResolveIsValidUnit);
 #if REVIT2022_OR_GREATER
         manager.Register(nameof(LabelUtils.GetLabelForGroup), () => Variants.Value(LabelUtils.GetLabelForGroup(_typeId)));
         manager.Register(nameof(LabelUtils.GetLabelForDiscipline), () => Variants.Value(LabelUtils.GetLabelForDiscipline(_typeId)));
         manager.Register(nameof(LabelUtils.GetLabelForBuiltInParameter), () => Variants.Value(LabelUtils.GetLabelForBuiltInParameter(_typeId)));
-#endif
-        manager.Register(nameof(UnitUtils.IsUnit), () => Variants.Value(UnitUtils.IsUnit(_typeId)));
-        manager.Register(nameof(UnitUtils.IsSymbol), () => Variants.Value(UnitUtils.IsSymbol(_typeId)));
-#if REVIT2022_OR_GREATER
-        manager.Register(nameof(SpecUtils.IsSpec), () => Variants.Value(SpecUtils.IsSpec(_typeId)));
-        manager.Register(nameof(UnitUtils.IsMeasurableSpec), () => Variants.Value(UnitUtils.IsMeasurableSpec(_typeId)));
         manager.Register(nameof(ParameterUtils.IsBuiltInParameter), () => Variants.Value(ParameterUtils.IsBuiltInParameter(_typeId)));
         manager.Register(nameof(ParameterUtils.IsBuiltInGroup), () => Variants.Value(ParameterUtils.IsBuiltInGroup(_typeId)));
+        manager.Register(nameof(ParameterUtils.GetBuiltInParameter), () => Variants.Value(ParameterUtils.GetBuiltInParameter(_typeId)));
+        manager.Register(nameof(UnitUtils.IsMeasurableSpec), () => Variants.Value(UnitUtils.IsMeasurableSpec(_typeId)));
+        manager.Register(nameof(UnitUtils.GetDiscipline), () => Variants.Value(UnitUtils.GetDiscipline(_typeId)));
+        manager.Register(nameof(SpecUtils.IsSpec), () => Variants.Value(SpecUtils.IsSpec(_typeId)));
+        manager.Register(nameof(SpecUtils.IsValidDataType), () => Variants.Value(SpecUtils.IsValidDataType(_typeId)));
+#endif
+#if REVIT2024_OR_GREATER
+        manager.Register(nameof(ParameterUtils.DownloadCompanyName), () => Variants.Value(ParameterUtils.GetBuiltInParameter(_typeId)));
+        manager.Register(nameof(ParameterUtils.DownloadParameterOptions), () => Variants.Value(ParameterUtils.DownloadParameterOptions(_typeId)));
+#endif
+#if REVIT2026_OR_GREATER
+        manager.Register(nameof(ParameterUtils.GetBuiltInParameterGroupTypeId), () => Variants.Value(ParameterUtils.GetBuiltInParameterGroupTypeId(_typeId)));
+#endif
+
+        IVariant ResolveIsValidUnit()
+        {
+            if (!SpecUtils.IsSpec(_typeId)) return Variants.Empty<bool>();
+
+            var unitProperties = typeof(UnitTypeId).GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.DeclaredOnly);
+            var values = Variants.Values<bool>(unitProperties.Length);
+
+            foreach (var property in unitProperties)
+            {
+                var propertyValue = (ForgeTypeId) property.GetValue(null)!;
+                var isValidUnit = UnitUtils.IsValidUnit(_typeId, propertyValue);
+                values.Add(isValidUnit, $"{property.Name}: {isValidUnit}");
+            }
+            
+            return values.Consume();
+        }
+    }
+
+    public void RegisterExtensions(IExtensionManager<Document> manager)
+    {
+#if REVIT2024_OR_GREATER
+        manager.Register(nameof(ParameterUtils.DownloadParameter), context => Variants.Value(ParameterUtils.DownloadParameter(context, new ParameterDownloadOptions(), _typeId)));
 #endif
     }
 }

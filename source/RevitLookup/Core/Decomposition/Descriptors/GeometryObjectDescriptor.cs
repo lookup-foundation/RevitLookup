@@ -21,8 +21,12 @@ public sealed class GeometryObjectDescriptor(GeometryObject geometryObject) : De
 {
     public void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register("IsExternallyTaggedNonSolid", () => Variants.Value(ExternallyTaggedGeometryValidation.IsNonSolid(geometryObject)));
-        manager.Register("IsExternallyTaggedSolid", () => Variants.Value(ExternallyTaggedGeometryValidation.IsSolid(geometryObject)));
-        manager.Register("LacksExternallyTaggedSubnodes", () => Variants.Value(ExternallyTaggedGeometryValidation.LacksSubnodes(geometryObject)));
+#if REVIT2022_OR_GREATER 
+        manager.Register(nameof(ExternallyTaggedGeometryValidation.IsNonSolid), () => Variants.Value(ExternallyTaggedGeometryValidation.IsNonSolid(geometryObject)));
+        manager.Register(nameof(ExternallyTaggedGeometryValidation.IsSolid), () => Variants.Value(ExternallyTaggedGeometryValidation.IsSolid(geometryObject)));
+#endif
+#if REVIT2024_OR_GREATER
+        manager.Register(nameof(ExternallyTaggedGeometryValidation.LacksSubnodes), () => Variants.Value(ExternallyTaggedGeometryValidation.LacksSubnodes(geometryObject)));
+#endif
     }
 }

@@ -72,16 +72,10 @@ public sealed class ParameterDescriptor : Descriptor, IDescriptorResolver, IDesc
             manager.Register(nameof(ParameterExtensions.AsColor), () => Variants.Value(_parameter.AsColor()));
         }
 
+        // Memory corrupted if the Element is null
         if (_parameter.Element is not null && _parameter.Element.Document.IsFamilyDocument)
         {
-            manager.Register(nameof(FamilyManager.GetAssociatedFamilyParameter), RegisterGetAssociatedFamilyParameter);
-        }
-
-        return;
-
-        IVariant RegisterGetAssociatedFamilyParameter()
-        {
-            return Variants.Value(_parameter.Element.Document.FamilyManager.GetAssociatedFamilyParameter(_parameter));
+            manager.Register(nameof(FamilyManager.GetAssociatedFamilyParameter), () => Variants.Value(_parameter.Element.Document.FamilyManager.GetAssociatedFamilyParameter(_parameter)));
         }
     }
 

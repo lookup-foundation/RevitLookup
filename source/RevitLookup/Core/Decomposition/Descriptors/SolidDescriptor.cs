@@ -42,14 +42,16 @@ public sealed class SolidDescriptor : Descriptor, IDescriptorExtension, IContext
         manager.Register(nameof(SolidUtils.SplitVolumes), () => Variants.Value(SolidUtils.SplitVolumes(_solid)));
         manager.Register(nameof(SolidUtils.IsValidForTessellation), () => Variants.Value(SolidUtils.IsValidForTessellation(_solid)));
         manager.Register(nameof(SolidUtils.Clone), Variants.Disabled);
-        manager.Register(nameof(SolidUtils.ComputeIsGeometricallyClosed), () => Variants.Value(SolidUtils.ComputeIsGeometricallyClosed(_solid)));
-        manager.Register(nameof(SolidUtils.ComputeIsTopologicallyClosed), () => Variants.Value(SolidUtils.ComputeIsTopologicallyClosed(_solid)));
         manager.Register(nameof(SolidUtils.CreateTransformed), Variants.Disabled);
         manager.Register(nameof(SolidUtils.TessellateSolidOrShell), ResolveTessellateSolidOrShell);
         manager.Register(nameof(BooleanOperationsUtils.CutWithHalfSpace), Variants.NotSupported);
         manager.Register(nameof(BooleanOperationsUtils.CutWithHalfSpaceModifyingOriginalSolid), Variants.NotSupported);
         manager.Register(nameof(BooleanOperationsUtils.ExecuteBooleanOperation), Variants.NotSupported);
         manager.Register(nameof(BooleanOperationsUtils.ExecuteBooleanOperationModifyingOriginalSolid), Variants.NotSupported);
+#if REVIT2026_OR_GREATER
+        manager.Register(nameof(SolidUtils.ComputeIsGeometricallyClosed), () => Variants.Value(SolidUtils.ComputeIsGeometricallyClosed(_solid)));
+        manager.Register(nameof(SolidUtils.ComputeIsTopologicallyClosed), () => Variants.Value(SolidUtils.ComputeIsTopologicallyClosed(_solid)));
+#endif
         return;
 
         IVariant ResolveTessellateSolidOrShell()

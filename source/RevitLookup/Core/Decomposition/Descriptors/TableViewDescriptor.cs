@@ -24,7 +24,7 @@ public sealed class TableViewDescriptor(TableView tableView) : ElementDescriptor
     {
         return target switch
         {
-            // nameof(TableView.GetAvailableParameterCategories) => ResolveAvailableParameterCategories, disabled, long computation time
+            // nameof(TableView.GetAvailableParameterCategories) => ResolveAvailableParameterCategories, //TODO disabled, long computation time
             nameof(TableView.GetAvailableParameters) => ResolveAvailableParameters,
             nameof(TableView.GetCalculatedValueName) => ResolveCalculatedValueName,
             nameof(TableView.GetCalculatedValueText) => ResolveCalculatedValueText,

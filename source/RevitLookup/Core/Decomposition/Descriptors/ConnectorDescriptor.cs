@@ -1,0 +1,43 @@
+// Copyright (c) Lookup Foundation and Contributors
+// 
+// Permission to use, copy, modify, and distribute this software in
+// object code form for any purpose and without fee is hereby granted,
+// provided that the above copyright notice appears in all copies and
+// that both that copyright notice and the limited warranty and
+// restricted rights notice below appear in all supporting
+// documentation.
+// 
+// THIS PROGRAM IS PROVIDED "AS IS" AND WITH ALL FAULTS.
+// NO IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR USE IS PROVIDED.
+// THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
+// UNINTERRUPTED OR ERROR FREE.
+
+using Autodesk.Revit.DB.Fabrication;
+using Autodesk.Revit.DB.Mechanical;
+using Autodesk.Revit.DB.Plumbing;
+using LookupEngine.Abstractions.Configuration;
+using LookupEngine.Abstractions.Decomposition;
+
+namespace RevitLookup.Core.Decomposition.Descriptors;
+
+public sealed class ConnectorDescriptor : Descriptor, IDescriptorExtension
+{
+    public ConnectorDescriptor(Connector connector)
+    {
+        Name = connector.Id.ToString();
+    }
+
+    public void RegisterExtensions(IExtensionManager manager)
+    {
+        manager.Register(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtElbow), Variants.NotSupported);
+        manager.Register(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtTee), Variants.NotSupported);
+        manager.Register(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtCross), Variants.NotSupported);
+        manager.Register(nameof(PlumbingUtils.ConnectPipePlaceholdersAtElbow), Variants.NotSupported);
+        manager.Register(nameof(PlumbingUtils.ConnectPipePlaceholdersAtTee), Variants.NotSupported);
+        manager.Register(nameof(PlumbingUtils.ConnectPipePlaceholdersAtCross), Variants.NotSupported);
+        manager.Register(nameof(FabricationUtils.ValidateConnectivity), Variants.NotSupported);
+        
+        _ = nameof(FabricationPartRouteEnd.CreateFromConnector); //Api compile-time compability check
+        manager.Register("CreateFabricationPartRouteEnd", Variants.NotSupported);
+    }
+}

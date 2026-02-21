@@ -14,6 +14,7 @@
 
 using System.Reflection;
 using Autodesk.Revit.DB.Analysis;
+using Autodesk.Revit.DB.Structure;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
@@ -268,5 +269,21 @@ public sealed class ViewDescriptor(View view) : ElementDescriptor(view)
     {
         manager.Register(nameof(SpatialFieldManager.GetSpatialFieldManager), () => Variants.Value(SpatialFieldManager.GetSpatialFieldManager(view)));
         manager.Register("GetInstances", () => Variants.Value(view.Document.GetInstances(view.Id)));
+        manager.Register(nameof(ReferenceableViewUtils.GetReferencedViewId), () => Variants.Value(ReferenceableViewUtils.GetReferencedViewId(view.Document, view.Id)));
+        manager.Register(nameof(ReferenceableViewUtils.ChangeReferencedView), Variants.NotSupported);
+
+        _ = nameof(ElementTransformUtils.GetTransformFromViewToView); //Api compile-time compability check
+        manager.Register("GetTransformFromViewToView", Variants.NotSupported);
+
+        _ = nameof(ElementTransformUtils.CopyElements); //Api compile-time compability check
+        manager.Register("CopyElementsBetweenViews", Variants.NotSupported);
+#if REVIT2023_OR_GREATER
+        manager.Register(nameof(BoundaryValidation.IsValidBoundaryOnView), Variants.NotSupported);
+#endif
+#if REVIT2024_OR_GREATER
+        _ = nameof(RebarBendingDetail.Create); //Api compile-time compability check
+        manager.Register("CreateBendingDetail", Variants.NotSupported);
+
+#endif
     }
 }
