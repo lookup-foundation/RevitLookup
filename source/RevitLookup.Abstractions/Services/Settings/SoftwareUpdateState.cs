@@ -12,7 +12,7 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-namespace RevitLookup.Abstractions.Enums.AboutProgram;
+namespace RevitLookup.Abstractions.Services.Settings;
 
 /// <summary>
 ///     The state of the application update.

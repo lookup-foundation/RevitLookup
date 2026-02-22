@@ -10,17 +10,17 @@ public interface ISettingsService
     /// <summary>
     ///     Represents the application settings.
     /// </summary>
-    public ApplicationSettings ApplicationSettings { get; }
+    ApplicationSettings ApplicationSettings { get; }
     
     /// <summary>
     ///     Represents the LookupEngine settings.
     /// </summary>
-    public DecompositionSettings DecompositionSettings { get; }
+    DecompositionSettings DecompositionSettings { get; }
     
     /// <summary>
     ///     Represents the visualization settings.
     /// </summary>
-    public VisualizationSettings VisualizationSettings { get; }
+    VisualizationSettings VisualizationSettings { get; }
     
     /// <summary>
     ///     Save the settings to the storage.

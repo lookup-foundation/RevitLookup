@@ -7,7 +7,7 @@ using System.Windows.Threading;
 using Autodesk.Revit.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using RevitLookup.Abstractions.Enums.Decomposition;
+using RevitLookup.Abstractions.Decomposition;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Application;
 using RevitLookup.Abstractions.Services.Decomposition;

@@ -69,10 +69,10 @@ public interface IPolylineVisualizationViewModel
     /// <summary>
     ///     Register Polyline visualization server.
     /// </summary>
-    public void RegisterServer(object curveOrEdge);
+    void RegisterServer(object curveOrEdge);
 
     /// <summary>
     ///     Unregister Polyline visualization server.
     /// </summary>
-    public void UnregisterServer();
+    void UnregisterServer();
 }

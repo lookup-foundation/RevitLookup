@@ -8,7 +8,7 @@
     xmlns:converters="clr-namespace:RevitLookup.UI.Framework.Converters"
     xmlns:valueConverters="clr-namespace:RevitLookup.UI.Framework.Converters.ValueConverters"
     xmlns:aboutProgram="clr-namespace:RevitLookup.UI.Framework.Views.AboutProgram"
-    xmlns:states="clr-namespace:RevitLookup.Abstractions.Enums.AboutProgram;assembly=RevitLookup.Abstractions"
+    xmlns:settings="clr-namespace:RevitLookup.Abstractions.Services.Settings;assembly=RevitLookup.Abstractions"
     mc:Ignorable="d"
     d:DesignWidth="800"
     d:DataContext="{d:DesignInstance aboutProgram:AboutPage}"
@@ -82,7 +82,7 @@
                 Margin="0,4,0,0"
                 Visibility="{Binding ViewModel.State, 
                         Converter={valueConverters:SoftwareUpdateStateCollapsedVisibilityConverter},
-                        ConverterParameter={x:Static states:SoftwareUpdateState.ReadyToDownload}}">
+                        ConverterParameter={x:Static settings:SoftwareUpdateState.ReadyToDownload}}">
                 <StackPanel
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
@@ -152,7 +152,7 @@
                 Margin="0 4 0 0"
                 IsOpen="{Binding ViewModel.State, 
                         Converter={valueConverters:SoftwareUpdateStateBooleanConverter},
-                        ConverterParameter={x:Static states:SoftwareUpdateState.ReadyToInstall},
+                        ConverterParameter={x:Static settings:SoftwareUpdateState.ReadyToInstall},
                         FallbackValue=True}" />
             <ui:InfoBar
                 Severity="Success"
@@ -160,7 +160,7 @@
                 Message="RevitLookup is up to date"
                 IsOpen="{Binding ViewModel.State, 
                         Converter={valueConverters:SoftwareUpdateStateBooleanConverter},
-                        ConverterParameter={x:Static states:SoftwareUpdateState.UpToDate},
+                        ConverterParameter={x:Static settings:SoftwareUpdateState.UpToDate},
                         FallbackValue=True}" />
             <ui:InfoBar
                 Margin="0,4,0,0"
@@ -169,7 +169,7 @@
                         FallbackValue='Error message'}"
                 IsOpen="{Binding ViewModel.State, 
                         Converter={valueConverters:SoftwareUpdateStateBooleanConverter},
-                        ConverterParameter={x:Static states:SoftwareUpdateState.Error},
+                        ConverterParameter={x:Static settings:SoftwareUpdateState.Error},
                         FallbackValue=True}" />
             <ui:TextBlock
                 Margin="0,12,0,0"

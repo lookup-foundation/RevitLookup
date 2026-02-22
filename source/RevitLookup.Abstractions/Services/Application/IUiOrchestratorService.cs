@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Windows.Controls;
-using RevitLookup.Abstractions.Enums.Decomposition;
+using RevitLookup.Abstractions.Decomposition;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 
 namespace RevitLookup.Abstractions.Services.Application;

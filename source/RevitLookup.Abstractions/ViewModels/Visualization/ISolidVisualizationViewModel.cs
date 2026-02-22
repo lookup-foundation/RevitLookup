@@ -54,10 +54,10 @@ public interface ISolidVisualizationViewModel
     /// <summary>
     ///     Register Solid visualization server.
     /// </summary>
-    public void RegisterServer(object solid);
+    void RegisterServer(object solid);
 
     /// <summary>
     ///     Unregister Solid visualization server.
     /// </summary>
-    public void UnregisterServer();
+    void UnregisterServer();
 }

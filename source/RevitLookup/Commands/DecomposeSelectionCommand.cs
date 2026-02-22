@@ -14,7 +14,7 @@
 
 using Autodesk.Revit.Attributes;
 using Nice3point.Revit.Toolkit.External;
-using RevitLookup.Abstractions.Enums.Decomposition;
+using RevitLookup.Abstractions.Decomposition;
 using RevitLookup.Abstractions.Services.Application;
 using RevitLookup.UI.Framework.Views.Decomposition;
 

@@ -16,7 +16,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Extensions.Logging;
-using RevitLookup.Abstractions.Configuration;
+using RevitLookup.Abstractions.Decomposition;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.UI.Framework.Extensions;
 using RevitLookup.UI.Framework.Utils;

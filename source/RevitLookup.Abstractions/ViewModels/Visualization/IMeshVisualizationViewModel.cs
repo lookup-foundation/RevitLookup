@@ -24,7 +24,7 @@ public interface IMeshVisualizationViewModel
     /// <summary>
     ///     The minimum extrusion value for mesh.
     /// </summary>
-    public double MinExtrusion { get; }
+    double MinExtrusion { get; }
 
     /// <summary>
     ///     The extrusion value for mesh.
@@ -69,10 +69,10 @@ public interface IMeshVisualizationViewModel
     /// <summary>
     ///     Register Mesh visualization server.
     /// </summary>
-    public void RegisterServer(object mesh);
+    void RegisterServer(object mesh);
 
     /// <summary>
     ///     Unregister Mesh visualization server.
     /// </summary>
-    public void UnregisterServer();
+    void UnregisterServer();
 }

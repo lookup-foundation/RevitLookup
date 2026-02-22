@@ -17,7 +17,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
-using RevitLookup.Abstractions.Configuration;
+using RevitLookup.Abstractions.Decomposition;
 using RevitLookup.Services.Application;
 using RevitLookup.UI.Framework.Extensions;
 

@@ -24,7 +24,7 @@ public interface IXyzVisualizationViewModel
     /// <summary>
     ///     The minimum length of coordinate axes.
     /// </summary>
-    public double MinAxisLength { get; }
+    double MinAxisLength { get; }
 
     /// <summary>
     ///     The length of coordinate axes.
@@ -74,10 +74,10 @@ public interface IXyzVisualizationViewModel
     /// <summary>
     ///     Register XYZ server.
     /// </summary>
-    public void RegisterServer(object xyz);
+    void RegisterServer(object xyz);
 
     /// <summary>
     ///     Unregister XYZ server.
     /// </summary>
-    public void UnregisterServer();
+    void UnregisterServer();
 }

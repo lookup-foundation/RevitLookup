@@ -24,7 +24,7 @@ public interface IFaceVisualizationViewModel
     /// <summary>
     ///     The minimum extrusion value for face.
     /// </summary>
-    public double MinExtrusion { get; }
+    double MinExtrusion { get; }
 
     /// <summary>
     ///     The extrusion value for face.
@@ -69,10 +69,10 @@ public interface IFaceVisualizationViewModel
     /// <summary>
     ///     Register Face visualization server.
     /// </summary>
-    public void RegisterServer(object face);
+    void RegisterServer(object face);
 
     /// <summary>
     ///     Unregister Face visualization server.
     /// </summary>
-    public void UnregisterServer();
+    void UnregisterServer();
 }

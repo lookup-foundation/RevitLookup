@@ -14,7 +14,7 @@
 
 using System.Windows.Controls;
 
-namespace RevitLookup.Abstractions.Configuration;
+namespace RevitLookup.Abstractions.Decomposition;
 
 /// <summary>
 ///     Defines a method to expand the context menu of a UI component.
