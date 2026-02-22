@@ -198,17 +198,23 @@ public sealed class FamilyInstanceDescriptor(FamilyInstance familyInstance) : El
 
         IVariant ResolveIsJoinAllowedAtEnd()
         {
+            var isJoinAllowedAtEnd0 = StructuralFramingUtils.IsJoinAllowedAtEnd(familyInstance, 0);
+            var isJoinAllowedAtEnd1 = StructuralFramingUtils.IsJoinAllowedAtEnd(familyInstance, 1);
+            
             return Variants.Values<bool>(2)
-                .Add(StructuralFramingUtils.IsJoinAllowedAtEnd(familyInstance, 0), "End 0")
-                .Add(StructuralFramingUtils.IsJoinAllowedAtEnd(familyInstance, 1), "End 1")
+                .Add(isJoinAllowedAtEnd0, $"End 0: {isJoinAllowedAtEnd0}")
+                .Add(isJoinAllowedAtEnd1, $"End 1: {isJoinAllowedAtEnd1}")
                 .Consume();
         }
 
         IVariant ResolveCanSetEndReference()
         {
+            var canSetEndReference0 = StructuralFramingUtils.CanSetEndReference(familyInstance, 0);
+            var canSetEndReference1 = StructuralFramingUtils.CanSetEndReference(familyInstance, 1);
+            
             return Variants.Values<bool>(2)
-                .Add(StructuralFramingUtils.CanSetEndReference(familyInstance, 0), "End 0")
-                .Add(StructuralFramingUtils.CanSetEndReference(familyInstance, 1), "End 1")
+                .Add(canSetEndReference0, $"End 0: {canSetEndReference0}")
+                .Add(canSetEndReference1, $"End 1: {canSetEndReference1}")
                 .Consume();
         }
 
