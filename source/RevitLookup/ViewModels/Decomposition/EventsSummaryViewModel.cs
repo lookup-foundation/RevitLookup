@@ -76,13 +76,13 @@ public sealed partial class EventsSummaryViewModel(
 
     public Task OnNavigatedToAsync()
     {
-        monitoringService.RegisterEventInvocationCallback(OnEventInvoked);
+        monitoringService.EventInvoked += OnEventInvoked;
         return Task.CompletedTask;
     }
 
     public Task OnNavigatedFromAsync()
     {
-        monitoringService.Unregister();
+        monitoringService.EventInvoked -= OnEventInvoked;
         return Task.CompletedTask;
     }
 

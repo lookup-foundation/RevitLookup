@@ -12,7 +12,6 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Diagnostics;
 using System.Reflection;
 using Autodesk.Revit.UI;
 using Microsoft.Extensions.Logging;
@@ -22,8 +21,9 @@ namespace RevitLookup.Services.Decomposition;
 
 public sealed class EventsMonitoringService(ILogger<EventsMonitoringService> logger)
 {
-    private Action<object, string>? _callback;
+    private Action<object, string>? _eventInvoked;
     private readonly Dictionary<EventInfo, Delegate> _handlersMap = new(16);
+    private static readonly MethodInfo HandlerMethod = typeof(EventHandlerWrapper).GetMethod(nameof(EventHandlerWrapper.OnEvent))!;
 
     private readonly Assembly[] _assemblies = AppDomain.CurrentDomain
         .GetAssemblies()
@@ -35,21 +35,27 @@ public sealed class EventsMonitoringService(ILogger<EventsMonitoringService> log
         .Take(2)
         .ToArray();
 
-    private readonly List<string> _denyList =
+    private readonly HashSet<string> _denyList =
     [
         nameof(UIApplication.Idling),
         nameof(Autodesk.Revit.ApplicationServices.Application.ProgressChanged)
     ];
 
-    public void RegisterEventInvocationCallback(Action<object, string> callback)
+    public event Action<object, string> EventInvoked
     {
-        _callback = callback;
-        EventHandlers.ActionEventHandler.Raise(Subscribe);
-    }
-
-    public void Unregister()
-    {
-        EventHandlers.ActionEventHandler.Raise(Unsubscribe);
+        add
+        {
+            _eventInvoked += value;
+            EventHandlers.ActionEventHandler.Raise(Subscribe);
+        }
+        remove
+        {
+            _eventInvoked -= value;
+            if (_eventInvoked is null)
+            {
+                EventHandlers.ActionEventHandler.Raise(Unsubscribe);
+            }
+        }
     }
 
     private void Subscribe(UIApplication uiApplication)
@@ -57,7 +63,7 @@ public sealed class EventsMonitoringService(ILogger<EventsMonitoringService> log
         if (_handlersMap.Count > 0) return;
 
         foreach (var dll in _assemblies)
-        foreach (var type in dll.GetTypes())
+        foreach (var type in dll.GetTypes().Where(type => type is { IsEnum: false, IsValueType: false, IsInterface: false}))
         foreach (var eventInfo in type.GetEvents())
         {
             if (_denyList.Contains(eventInfo.Name)) continue;
@@ -69,8 +75,8 @@ public sealed class EventsMonitoringService(ILogger<EventsMonitoringService> log
                 break;
             }
 
-            var methodInfo = GetType().GetMethod(nameof(OnHandlingEvent), BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)!;
-            var eventHandler = Delegate.CreateDelegate(eventInfo.EventHandlerType!, this, methodInfo);
+            var wrapper = new EventHandlerWrapper(eventInfo.Name, this);
+            var eventHandler = Delegate.CreateDelegate(eventInfo.EventHandlerType!, wrapper, HandlerMethod);
 
             foreach (var target in targets)
             {
@@ -84,34 +90,35 @@ public sealed class EventsMonitoringService(ILogger<EventsMonitoringService> log
 
     private void Unsubscribe(UIApplication uiApplication)
     {
-        foreach (var eventInfo in _handlersMap)
+        foreach (var (eventInfo, handler) in _handlersMap)
         {
-            var targets = FindValidTargets(eventInfo.Key.ReflectedType);
+            var targets = FindValidTargets(eventInfo.ReflectedType);
             foreach (var target in targets)
             {
-                eventInfo.Key.RemoveEventHandler(target, eventInfo.Value);
+                eventInfo.RemoveEventHandler(target, handler);
             }
         }
 
         _handlersMap.Clear();
     }
 
-    private static object[] FindValidTargets(Type? targetType)
+    private static object[] FindValidTargets(Type? targetType) => targetType switch
     {
-        if (targetType == typeof(Document)) return RevitApiContext.Application.Documents.Cast<object>().ToArray();
-        if (targetType == typeof(Autodesk.Revit.ApplicationServices.Application)) return [RevitApiContext.Application];
-        if (targetType == typeof(UIApplication)) return [RevitContext.UiApplication];
+        _ when targetType == typeof(Document)
+            => RevitApiContext.Application.Documents.Cast<object>().ToArray(),
+        _ when targetType == typeof(Autodesk.Revit.ApplicationServices.Application)
+            => [RevitApiContext.Application],
+        _ when targetType == typeof(UIApplication)
+            => [RevitContext.UiApplication],
+        _ => []
+    };
 
-        return [];
-    }
-
-    public void OnHandlingEvent(object sender, EventArgs args)
+    private sealed class EventHandlerWrapper(string eventName, EventsMonitoringService service)
     {
-        var stackTrace = new StackTrace();
-        var stackFrames = stackTrace.GetFrames()!;
-        var eventType = stackFrames[1].GetMethod()!.Name;
-        var eventName = eventType.Replace(nameof(EventHandler), "");
-
-        _callback?.Invoke(args, eventName);
+        [UsedImplicitly(Reason = "Reflection delegate subscription")]
+        public void OnEvent(object sender, EventArgs args)
+        {
+            service._eventInvoked?.Invoke(args, eventName);
+        }
     }
 }
