@@ -12,13 +12,38 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
+using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class UnitsDescriptor(Autodesk.Revit.DB.Units units) : Descriptor, IDescriptorExtension
+public sealed class UnitsDescriptor(Autodesk.Revit.DB.Units units) : Descriptor, IDescriptorResolver, IDescriptorExtension
 {
+    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    {
+        return target switch
+        {
+            nameof(Autodesk.Revit.DB.Units.GetFormatOptions) => ResolveGetFormatOptions,
+            _ => null
+        };
+
+        IVariant ResolveGetFormatOptions()
+        {
+            var specProperties = typeof(SpecTypeId).GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.DeclaredOnly);
+            var values = Variants.Values<FormatOptions>(specProperties.Length);
+
+            foreach (var property in specProperties)
+            {
+                var propertyValue = (ForgeTypeId) property.GetValue(null)!;
+                var formatOptions = units.GetFormatOptions(propertyValue);
+                values.Add(formatOptions, propertyValue.TypeId);
+            }
+
+            return values.Consume();
+        }
+    }
+
     public void RegisterExtensions(IExtensionManager manager)
     {
         manager.Register(nameof(UnitFormatUtils.Format), Variants.NotSupported);
