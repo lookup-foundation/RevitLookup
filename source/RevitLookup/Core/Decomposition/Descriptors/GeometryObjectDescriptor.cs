@@ -17,11 +17,13 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
+#pragma warning disable CS9113 // Parameter is unread.
 public sealed class GeometryObjectDescriptor(GeometryObject geometryObject) : Descriptor, IDescriptorExtension
+#pragma warning restore CS9113 // Parameter is unread.
 {
     public void RegisterExtensions(IExtensionManager manager)
     {
-#if REVIT2022_OR_GREATER 
+#if REVIT2022_OR_GREATER
         manager.Register(nameof(ExternallyTaggedGeometryValidation.IsNonSolid), () => Variants.Value(ExternallyTaggedGeometryValidation.IsNonSolid(geometryObject)));
         manager.Register(nameof(ExternallyTaggedGeometryValidation.IsSolid), () => Variants.Value(ExternallyTaggedGeometryValidation.IsSolid(geometryObject)));
 #endif
