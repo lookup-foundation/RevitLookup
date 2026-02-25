@@ -74,7 +74,11 @@ public sealed class ForgeTypeIdDescriptor : Descriptor, IDescriptorResolver, IDe
 
         IVariant ResolveIsValidUnit()
         {
+#if REVIT2022_OR_GREATER
             if (!SpecUtils.IsSpec(_typeId)) return Variants.Empty<bool>();
+#else
+            if (!UnitUtils.IsSpec(_typeId)) return Variants.Empty<bool>();
+#endif
 
             var unitProperties = typeof(UnitTypeId).GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.DeclaredOnly);
             var values = Variants.Values<bool>(unitProperties.Length);
@@ -85,7 +89,7 @@ public sealed class ForgeTypeIdDescriptor : Descriptor, IDescriptorResolver, IDe
                 var isValidUnit = UnitUtils.IsValidUnit(_typeId, propertyValue);
                 values.Add(isValidUnit, $"{property.Name}: {isValidUnit}");
             }
-            
+
             return values.Consume();
         }
     }
