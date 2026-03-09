@@ -13,7 +13,6 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using System.Globalization;
-using System.Windows.Controls;
 using System.Windows.Input;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
@@ -21,13 +20,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RevitLookup.Abstractions.Decomposition;
 using RevitLookup.Abstractions.Services.Presentation;
-using RevitLookup.Services.Application;
 using RevitLookup.UI.Framework.Extensions;
 using RevitLookup.UI.Framework.Views.Visualization;
+using ContextMenu = System.Windows.Controls.ContextMenu;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public class FaceDescriptor : Descriptor, IDescriptorCollector, IContextMenuConnector
+public partial class FaceDescriptor : Descriptor, IDescriptorCollector, IContextMenuConnector
 {
     private readonly Face _face;
 
@@ -40,13 +39,12 @@ public class FaceDescriptor : Descriptor, IDescriptorCollector, IContextMenuConn
     public virtual void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)
     {
 #if REVIT2023_OR_GREATER
-
         contextMenu.AddMenuItem("SelectMenuItem")
-            .SetCommand(_face, SelectFace)
+            .SetCommand(_face, face => SelectFaceEvent.Raise(face))
             .SetShortcut(Key.F6);
 
         contextMenu.AddMenuItem("ShowMenuItem")
-            .SetCommand(_face, ShowFace)
+            .SetCommand(_face, face => ShowFaceEvent.Raise(face))
             .SetShortcut(Key.F7);
 #endif
         contextMenu.AddMenuItem("VisualizeMenuItem")
@@ -72,32 +70,29 @@ public class FaceDescriptor : Descriptor, IDescriptorCollector, IContextMenuConn
                 notificationService.ShowError("Visualization error", exception);
             }
         }
+    }
 #if REVIT2023_OR_GREATER
 
-        void SelectFace(Face face)
-        {
-            if (RevitContext.ActiveUiDocument is null) return;
-            if (face.Reference is null) return;
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private static void SelectFace(UIApplication application, Face face)
+    {
+        if (application.ActiveUIDocument is null) return;
+        if (face.Reference is null) return;
 
-            EventHandlers.ActionEventHandler.Raise(_ => RevitContext.ActiveUiDocument.Selection.SetReferences([face.Reference]));
-        }
-
-        void ShowFace(Face face)
-        {
-            if (RevitContext.ActiveUiDocument is null) return;
-            if (face.Reference is null) return;
-
-            EventHandlers.ActionEventHandler.Raise(application =>
-            {
-                var uiDocument = application.ActiveUIDocument;
-                if (uiDocument is null) return;
-
-                var element = face.Reference.ElementId.ToElement(uiDocument.Document);
-                if (element is not null) uiDocument.ShowElements(element);
-
-                uiDocument.Selection.SetReferences([face.Reference]);
-            });
-        }
-#endif
+        application.ActiveUIDocument.Selection.SetReferences([face.Reference]);
     }
+
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private static void ShowFace(UIApplication application, Face face)
+    {
+        var uiDocument = application.ActiveUIDocument;
+        if (uiDocument is null) return;
+        if (face.Reference is null) return;
+
+        var element = face.Reference.ElementId.ToElement(uiDocument.Document);
+        if (element is not null) uiDocument.ShowElements(element);
+
+        uiDocument.Selection.SetReferences([face.Reference]);
+    }
+#endif
 }

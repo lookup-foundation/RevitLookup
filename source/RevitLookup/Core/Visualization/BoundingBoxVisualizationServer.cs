@@ -14,14 +14,15 @@
 
 using Autodesk.Revit.DB.DirectContext3D;
 using Autodesk.Revit.DB.ExternalService;
+using Autodesk.Revit.UI;
+using Nice3point.Revit.Toolkit.External;
 using RevitLookup.Core.Visualization.Buffers;
 using RevitLookup.Core.Visualization.Events;
 using RevitLookup.Core.Visualization.Helpers;
-using RevitLookup.Services.Application;
 
 namespace RevitLookup.Core.Visualization;
 
-public sealed class BoundingBoxVisualizationServer : IDirectContext3DServer
+public sealed partial class BoundingBoxVisualizationServer : IDirectContext3DServer
 {
     private BoundingBoxXYZ _box = null!; //Cant be null after registration
     private bool _hasGeometryUpdates = true;
@@ -277,31 +278,36 @@ public sealed class BoundingBoxVisualizationServer : IDirectContext3DServer
     public void Register(BoundingBoxXYZ box)
     {
         _box = box;
-
-        EventHandlers.ActionEventHandler.Raise(application =>
-        {
-            if (application.ActiveUIDocument is null) return;
-
-            var directContextService = (MultiServerService) ExternalServiceRegistry.GetService(ExternalServices.BuiltInExternalServices.DirectContext3DService);
-            var serverIds = directContextService.GetActiveServerIds();
-
-            directContextService.AddServer(this);
-            serverIds.Add(GetServerId());
-            directContextService.SetActiveServers(serverIds);
-
-            application.ActiveUIDocument.UpdateAllOpenViews();
-        });
+        RegisterServerEvent.Raise();
     }
 
     public void Unregister()
     {
-        EventHandlers.ActionEventHandler.Raise(application =>
-        {
-            var directContextService = (MultiServerService) ExternalServiceRegistry.GetService(ExternalServices.BuiltInExternalServices.DirectContext3DService);
-            directContextService.RemoveServer(GetServerId());
+        UnregisterServerEvent.Raise();
+    }
 
-            application.ActiveUIDocument?.UpdateAllOpenViews();
-        });
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private void RegisterServer(UIApplication application)
+    {
+        if (application.ActiveUIDocument is null) return;
+
+        var directContextService = (MultiServerService) ExternalServiceRegistry.GetService(ExternalServices.BuiltInExternalServices.DirectContext3DService);
+        var serverIds = directContextService.GetActiveServerIds();
+
+        directContextService.AddServer(this);
+        serverIds.Add(GetServerId());
+        directContextService.SetActiveServers(serverIds);
+
+        application.ActiveUIDocument.UpdateAllOpenViews();
+    }
+
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private void UnregisterServer(UIApplication application)
+    {
+        var directContextService = (MultiServerService) ExternalServiceRegistry.GetService(ExternalServices.BuiltInExternalServices.DirectContext3DService);
+        directContextService.RemoveServer(GetServerId());
+
+        application.ActiveUIDocument?.UpdateAllOpenViews();
     }
 
     public event EventHandler<RenderFailedEventArgs>? RenderFailed;

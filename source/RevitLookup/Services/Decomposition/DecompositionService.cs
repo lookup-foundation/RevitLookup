@@ -2,79 +2,88 @@
 using System.Diagnostics.CodeAnalysis;
 using LookupEngine;
 using LookupEngine.Options;
+using Nice3point.Revit.Toolkit.External;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Decomposition;
 using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.Core.Decomposition;
 using RevitLookup.Mappers;
-using RevitLookup.Services.Application;
 
 namespace RevitLookup.Services.Decomposition;
 
 [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery")]
 [SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]
-public sealed class DecompositionService(ISettingsService settingsService) : IDecompositionService
+public sealed partial class DecompositionService(ISettingsService settingsService) : IDecompositionService
 {
     public List<ObservableDecomposedObject> DecompositionStackHistory { get; } = [];
 
-    public async Task<ObservableDecomposedObject> DecomposeAsync(object? obj)
+    public async Task<ObservableDecomposedObject> DecomposeAsync(object? target)
     {
         var options = CreateDecomposeMembersOptions();
-        return await EventHandlers.AsyncObjectHandler.RaiseAsync(_ =>
-        {
-            if (TryFindRevitContext(obj, out var context))
-            {
-                options.Context = context;
-            }
-
-            var result = LookupComposer.Decompose(obj, options);
-            return DecompositionResultMapper.Convert(result);
-        });
+        return await DecomposeAsyncEvent.RaiseAsync(target, options);
     }
 
     public async Task<List<ObservableDecomposedObject>> DecomposeAsync(IEnumerable objects)
     {
-        return await EventHandlers.AsyncObjectsHandler.RaiseAsync(_ =>
-        {
-            var options = CreateDecomposeOptions();
-            var capacity = objects is ICollection collection ? collection.Count : 4;
-            var decomposedObjects = new List<ObservableDecomposedObject>(capacity);
-
-            foreach (var obj in objects)
-            {
-                if (TryFindRevitContext(obj, out var context))
-                {
-                    options.Context = context;
-                }
-
-                var decomposedObject = LookupComposer.DecomposeObject(obj, options);
-                decomposedObjects.Add(DecompositionResultMapper.Convert(decomposedObject));
-            }
-
-            return decomposedObjects;
-        });
+        var options = CreateDecomposeOptions();
+        return await DecomposeIEnumerableAsyncEvent.RaiseAsync(objects, options);
     }
 
     public async Task<List<ObservableDecomposedMember>> DecomposeMembersAsync(ObservableDecomposedObject decomposedObject)
     {
         var options = CreateDecomposeMembersOptions();
-        return await EventHandlers.AsyncMembersHandler.RaiseAsync(_ =>
+        return await DecomposeMembersAsyncEvent.RaiseAsync(decomposedObject, options);
+    }
+
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private ObservableDecomposedObject Decompose(object? target, DecomposeOptions<Document> options)
+    {
+        if (TryFindRevitContext(target, out var context))
         {
-            if (TryFindRevitContext(decomposedObject.RawValue, out var context))
+            options.Context = context;
+        }
+
+        var result = LookupComposer.Decompose(target, options);
+        return DecompositionResultMapper.Convert(result);
+    }
+
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private List<ObservableDecomposedObject> DecomposeIEnumerable(IEnumerable targets, DecomposeOptions<Document> options)
+    {
+        var capacity = targets is ICollection collection ? collection.Count : 4;
+        var decomposedObjects = new List<ObservableDecomposedObject>(capacity);
+
+        foreach (var target in targets)
+        {
+            if (TryFindRevitContext(target, out var context))
             {
                 options.Context = context;
             }
 
-            var decomposedMembers = LookupComposer.DecomposeMembers(decomposedObject.RawValue, options);
-            var members = new List<ObservableDecomposedMember>(decomposedMembers.Count);
+            var decomposedObject = LookupComposer.DecomposeObject(target, options);
+            decomposedObjects.Add(DecompositionResultMapper.Convert(decomposedObject));
+        }
 
-            foreach (var decomposedMember in decomposedMembers)
-            {
-                members.Add(DecompositionResultMapper.Convert(decomposedMember));
-            }
+        return decomposedObjects;
+    }
 
-            return members;
-        });
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private List<ObservableDecomposedMember> DecomposeMembers(ObservableDecomposedObject decomposedObject, DecomposeOptions<Document> options)
+    {
+        if (TryFindRevitContext(decomposedObject.RawValue, out var context))
+        {
+            options.Context = context;
+        }
+
+        var decomposedMembers = LookupComposer.DecomposeMembers(decomposedObject.RawValue, options);
+        var members = new List<ObservableDecomposedMember>(decomposedMembers.Count);
+
+        foreach (var decomposedMember in decomposedMembers)
+        {
+            members.Add(DecompositionResultMapper.Convert(decomposedMember));
+        }
+
+        return members;
     }
 
     private bool TryFindRevitContext(object? obj, [MaybeNullWhen(false)] out Document context)

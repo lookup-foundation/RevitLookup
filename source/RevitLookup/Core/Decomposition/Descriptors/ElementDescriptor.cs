@@ -14,28 +14,30 @@
 
 using System.Reflection;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using Autodesk.Revit.DB.DirectContext3D;
 using Autodesk.Revit.DB.ExtensibleStorage;
+using Autodesk.Revit.UI;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Nice3point.Revit.Toolkit.External;
 using RevitLookup.Abstractions.Decomposition;
 using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.ViewModels.Decomposition;
-using RevitLookup.Services.Application;
 using RevitLookup.UI.Framework.Extensions;
+using ContextMenu = System.Windows.Controls.ContextMenu;
 #if REVIT2024_OR_GREATER
 using Autodesk.Revit.DB.Structure;
 #endif
+
 #if REVIT2026_OR_GREATER
 #endif
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public class ElementDescriptor : Descriptor, IDescriptorResolver, IDescriptorExtension, IContextMenuConnector
+public partial class ElementDescriptor : Descriptor, IDescriptorResolver, IDescriptorExtension, IContextMenuConnector
 {
     private readonly Element _element;
 
@@ -353,85 +355,82 @@ public class ElementDescriptor : Descriptor, IDescriptorResolver, IDescriptorExt
     public virtual void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)
     {
         contextMenu.AddMenuItem("SelectMenuItem")
-            .SetCommand(_element, SelectFace)
+            .SetCommand(_element, element => SelectElementEvent.Raise(element))
             .SetShortcut(Key.F6);
 
         if (_element is not ElementType && _element is not Family)
         {
             contextMenu.AddMenuItem("ShowMenuItem")
-                .SetCommand(_element, ShowFace)
+                .SetCommand(_element, element => ShowElementEvent.Raise(element))
                 .SetShortcut(Key.F7);
         }
 
         contextMenu.AddMenuItem("DeleteMenuItem")
-            .SetCommand(_element, DeleteElement)
+            .SetCommand(_element, element => DeleteElementEvent.Raise(element, serviceProvider, contextMenu))
             .SetAvailability(DocumentValidation.CanDeleteElement(_element.Document, _element.Id))
             .SetShortcut(Key.Delete);
+    }
 
-        void SelectFace(Element element)
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private static void SelectElement(UIApplication application, Element element)
+    {
+        if (application.ActiveUIDocument is null) return;
+        if (!element.IsValidObject) return;
+
+        application.ActiveUIDocument.Selection.SetElementIds([element.Id]);
+    }
+
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private static void ShowElement(UIApplication application, Element element)
+    {
+        if (application.ActiveUIDocument is null) return;
+        if (!element.IsValidObject) return;
+
+        application.ActiveUIDocument.ShowElements(element);
+        application.ActiveUIDocument.Selection.SetElementIds([element.Id]);
+    }
+
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private static void DeleteElement(UIApplication application, Element element, IServiceProvider serviceProvider, ContextMenu contextMenu)
+    {
+        if (application.ActiveUIDocument is null) return;
+
+        var notificationService = serviceProvider.GetRequiredService<INotificationService>();
+        try
         {
-            if (RevitContext.ActiveUiDocument is null) return;
-            if (!element.IsValidObject) return;
+            using var transaction = new Transaction(element.Document);
+            transaction.Start($"Delete {element.Name}");
 
-            EventHandlers.ActionEventHandler.Raise(_ => RevitContext.ActiveUiDocument.Selection.SetElementIds([element.Id]));
-        }
-
-        void ShowFace(Element element)
-        {
-            if (RevitContext.ActiveUiDocument is null) return;
-            if (!element.IsValidObject) return;
-
-            EventHandlers.ActionEventHandler.Raise(_ =>
-            {
-                RevitContext.ActiveUiDocument.ShowElements(element);
-                RevitContext.ActiveUiDocument.Selection.SetElementIds([element.Id]);
-            });
-        }
-
-        async Task DeleteElement(Element element)
-        {
-            if (RevitContext.ActiveUiDocument is null) return;
-
-            ICollection<ElementId>? removedIds = [];
-            var notificationService = serviceProvider.GetRequiredService<INotificationService>();
+            ICollection<ElementId>? removedIds;
             try
             {
-                await EventHandlers.AsyncEventHandler.RaiseAsync(_ =>
-                {
-                    using var transaction = new Transaction(element.Document);
-                    transaction.Start($"Delete {element.Name}");
+                removedIds = element.Document.Delete(element.Id);
+                transaction.Commit();
 
-                    try
-                    {
-                        removedIds = element.Document.Delete(element.Id);
-                        transaction.Commit();
-
-                        if (transaction.GetStatus() == TransactionStatus.RolledBack) throw new OperationCanceledException("Element deletion cancelled by user");
-                    }
-                    catch
-                    {
-                        if (!transaction.HasEnded()) transaction.RollBack();
-                        throw;
-                    }
-                });
-
-                var summaryViewModel = serviceProvider.GetRequiredService<IDecompositionSummaryViewModel>();
-                var placementTarget = (FrameworkElement) contextMenu.PlacementTarget;
-                summaryViewModel.RemoveItem(placementTarget.DataContext);
-
-                notificationService.ShowSuccess("Success", $"{removedIds.Count} elements completely removed from the Revit database");
+                if (transaction.GetStatus() == TransactionStatus.RolledBack) throw new OperationCanceledException("Element deletion cancelled by user");
             }
-            catch (OperationCanceledException exception)
+            catch
             {
-                notificationService.ShowWarning("Warning", exception.Message);
+                if (!transaction.HasEnded()) transaction.RollBack();
+                throw;
             }
-            catch (Exception exception)
-            {
-                var logger = serviceProvider.GetRequiredService<ILogger<ElementDescriptor>>();
 
-                logger.LogError(exception, "Element deletion error");
-                notificationService.ShowError("Element deletion error", exception.Message);
-            }
+            var summaryViewModel = serviceProvider.GetRequiredService<IDecompositionSummaryViewModel>();
+            var placementTarget = (FrameworkElement) contextMenu.PlacementTarget;
+            summaryViewModel.RemoveItem(placementTarget.DataContext);
+
+            notificationService.ShowSuccess("Success", $"{removedIds.Count} elements completely removed from the Revit database");
+        }
+        catch (OperationCanceledException exception)
+        {
+            notificationService.ShowWarning("Warning", exception.Message);
+        }
+        catch (Exception exception)
+        {
+            var logger = serviceProvider.GetRequiredService<ILogger<ElementDescriptor>>();
+
+            logger.LogError(exception, "Element deletion error");
+            notificationService.ShowError("Element deletion error", exception.Message);
         }
     }
 }

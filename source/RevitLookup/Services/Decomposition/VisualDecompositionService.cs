@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using LookupEngine.Abstractions.Configuration;
+using Nice3point.Revit.Toolkit.External;
 using RevitLookup.Abstractions.Decomposition;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Decomposition;
 using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.ViewModels.Decomposition;
 using RevitLookup.Core.Decomposition;
-using RevitLookup.Services.Application;
 using OperationCanceledException = Autodesk.Revit.Exceptions.OperationCanceledException;
 using Visibility = System.Windows.Visibility;
 
@@ -15,7 +15,7 @@ namespace RevitLookup.Services.Decomposition;
 
 [SuppressMessage("ReSharper", "LoopCanBeConvertedToQuery")]
 [SuppressMessage("ReSharper", "ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator")]
-public sealed class VisualDecompositionService(
+public sealed partial class VisualDecompositionService(
     IWindowIntercomService intercomService,
     INotificationService notificationService,
     IDecompositionService decompositionService,
@@ -37,7 +37,7 @@ public sealed class VisualDecompositionService(
                     break;
             }
 
-            var objects = await EventHandlers.AsyncCollectionHandler.RaiseAsync(_ => RevitObjectsCollector.GetObjects(decompositionObject));
+            var objects = await CollectObjectsAsyncEvent.RaiseAsync(decompositionObject);
             summaryViewModel.DecomposedObjects = await decompositionService.DecomposeAsync(objects);
         }
         catch (OperationCanceledException)
@@ -52,6 +52,12 @@ public sealed class VisualDecompositionService(
         {
             ShowHost();
         }
+    }
+
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private IEnumerable CollectObjects(KnownDecompositionObject decompositionObject)
+    {
+        return RevitObjectsCollector.GetObjects(decompositionObject);
     }
 
     private void ShowHost()

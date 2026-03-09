@@ -14,7 +14,6 @@
 
 using System.Globalization;
 using System.Reflection;
-using System.Windows.Controls;
 using System.Windows.Input;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
@@ -23,13 +22,13 @@ using Microsoft.Extensions.Logging;
 using Nice3point.Revit.Extensions.SystemExtensions;
 using RevitLookup.Abstractions.Decomposition;
 using RevitLookup.Abstractions.Services.Presentation;
-using RevitLookup.Services.Application;
 using RevitLookup.UI.Framework.Extensions;
 using RevitLookup.UI.Framework.Views.Visualization;
+using ContextMenu = System.Windows.Controls.ContextMenu;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class CurveDescriptor : Descriptor, IDescriptorResolver, IContextMenuConnector
+public sealed partial class CurveDescriptor : Descriptor, IDescriptorResolver, IContextMenuConnector
 {
     private readonly Curve _curve;
 
@@ -93,11 +92,11 @@ public sealed class CurveDescriptor : Descriptor, IDescriptorResolver, IContextM
     {
 #if REVIT2023_OR_GREATER
         contextMenu.AddMenuItem("SelectMenuItem")
-            .SetCommand(_curve, SelectCurve)
+            .SetCommand(_curve, curve => SelectCurveEvent.Raise(curve))
             .SetShortcut(Key.F6);
 
         contextMenu.AddMenuItem("ShowMenuItem")
-            .SetCommand(_curve, ShowCurve)
+            .SetCommand(_curve, curve => ShowCurveEvent.Raise(curve))
             .SetShortcut(Key.F7);
 #endif
         contextMenu.AddMenuItem("VisualizeMenuItem")
@@ -123,32 +122,29 @@ public sealed class CurveDescriptor : Descriptor, IDescriptorResolver, IContextM
                 notificationService.ShowError("Visualization error", exception);
             }
         }
-
-#if REVIT2023_OR_GREATER
-        void SelectCurve(Curve curve)
-        {
-            if (RevitContext.ActiveUiDocument is null) return;
-            if (curve.Reference is null) return;
-
-            EventHandlers.ActionEventHandler.Raise(_ => RevitContext.ActiveUiDocument.Selection.SetReferences([curve.Reference]));
-        }
-
-        void ShowCurve(Curve curve)
-        {
-            if (RevitContext.ActiveUiDocument is null) return;
-            if (curve.Reference is null) return;
-
-            EventHandlers.ActionEventHandler.Raise(application =>
-            {
-                var uiDocument = application.ActiveUIDocument;
-                if (uiDocument is null) return;
-
-                var element = curve.Reference.ElementId.ToElement(uiDocument.Document);
-                if (element is not null) uiDocument.ShowElements(element);
-
-                uiDocument.Selection.SetReferences([curve.Reference]);
-            });
-        }
-#endif
     }
+#if REVIT2023_OR_GREATER
+
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private static void SelectCurve(UIApplication application, Curve curve)
+    {
+        if (application.ActiveUIDocument is null) return;
+        if (curve.Reference is null) return;
+
+        application.ActiveUIDocument.Selection.SetReferences([curve.Reference]);
+    }
+
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private static void ShowCurve(UIApplication application, Curve curve)
+    {
+        var uiDocument = application.ActiveUIDocument;
+        if (uiDocument is null) return;
+        if (curve.Reference is null) return;
+
+        var element = curve.Reference.ElementId.ToElement(uiDocument.Document);
+        if (element is not null) uiDocument.ShowElements(element);
+
+        uiDocument.Selection.SetReferences([curve.Reference]);
+    }
+#endif
 }

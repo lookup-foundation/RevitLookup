@@ -13,7 +13,6 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using System.Globalization;
-using System.Windows.Controls;
 using System.Windows.Input;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
@@ -21,13 +20,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RevitLookup.Abstractions.Decomposition;
 using RevitLookup.Abstractions.Services.Presentation;
-using RevitLookup.Services.Application;
 using RevitLookup.UI.Framework.Extensions;
 using RevitLookup.UI.Framework.Views.Visualization;
+using ContextMenu = System.Windows.Controls.ContextMenu;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class EdgeDescriptor : Descriptor, IDescriptorCollector, IContextMenuConnector
+public sealed partial class EdgeDescriptor : Descriptor, IDescriptorCollector, IContextMenuConnector
 {
     private readonly Edge _edge;
 
@@ -40,13 +39,12 @@ public sealed class EdgeDescriptor : Descriptor, IDescriptorCollector, IContextM
     public void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)
     {
 #if REVIT2023_OR_GREATER
-
         contextMenu.AddMenuItem("SelectMenuItem")
-            .SetCommand(_edge, SelectEdge)
+            .SetCommand(_edge, edge => SelectEdgeEvent.Raise(edge))
             .SetShortcut(Key.F6);
 
         contextMenu.AddMenuItem("ShowMenuItem")
-            .SetCommand(_edge, ShowEdge)
+            .SetCommand(_edge, edge => ShowEdgeEvent.Raise(edge))
             .SetShortcut(Key.F7);
 #endif
         contextMenu.AddMenuItem("VisualizeMenuItem")
@@ -72,32 +70,29 @@ public sealed class EdgeDescriptor : Descriptor, IDescriptorCollector, IContextM
                 notificationService.ShowError("Visualization error", exception);
             }
         }
+    }
 #if REVIT2023_OR_GREATER
 
-        void SelectEdge(Edge edge)
-        {
-            if (RevitContext.ActiveUiDocument is null) return;
-            if (edge.Reference is null) return;
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private static void SelectEdge(UIApplication application, Edge edge)
+    {
+        if (application.ActiveUIDocument is null) return;
+        if (edge.Reference is null) return;
 
-            EventHandlers.ActionEventHandler.Raise(_ => RevitContext.ActiveUiDocument.Selection.SetReferences([edge.Reference]));
-        }
-
-        void ShowEdge(Edge edge)
-        {
-            if (RevitContext.ActiveUiDocument is null) return;
-            if (edge.Reference is null) return;
-
-            EventHandlers.ActionEventHandler.Raise(application =>
-            {
-                var uiDocument = application.ActiveUIDocument;
-                if (uiDocument is null) return;
-
-                var element = edge.Reference.ElementId.ToElement(uiDocument.Document);
-                if (element is not null) uiDocument.ShowElements(element);
-
-                uiDocument.Selection.SetReferences([edge.Reference]);
-            });
-        }
-#endif
+        application.ActiveUIDocument.Selection.SetReferences([edge.Reference]);
     }
+
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private static void ShowEdge(UIApplication application, Edge edge)
+    {
+        var uiDocument = application.ActiveUIDocument;
+        if (uiDocument is null) return;
+        if (edge.Reference is null) return;
+
+        var element = edge.Reference.ElementId.ToElement(uiDocument.Document);
+        if (element is not null) uiDocument.ShowElements(element);
+
+        uiDocument.Selection.SetReferences([edge.Reference]);
+    }
+#endif
 }

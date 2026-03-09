@@ -15,11 +15,11 @@
 using System.Reflection;
 using Autodesk.Revit.UI;
 using Microsoft.Extensions.Logging;
-using RevitLookup.Services.Application;
+using Nice3point.Revit.Toolkit.External;
 
 namespace RevitLookup.Services.Decomposition;
 
-public sealed class EventsMonitoringService(ILogger<EventsMonitoringService> logger)
+public sealed partial class EventsMonitoringService(ILogger<EventsMonitoringService> logger)
 {
     private Action<object, string>? _eventInvoked;
     private readonly Dictionary<EventInfo, Delegate> _handlersMap = new(16);
@@ -46,24 +46,25 @@ public sealed class EventsMonitoringService(ILogger<EventsMonitoringService> log
         add
         {
             _eventInvoked += value;
-            EventHandlers.ActionEventHandler.Raise(Subscribe);
+            SubscribeEvent.Raise();
         }
         remove
         {
             _eventInvoked -= value;
             if (_eventInvoked is null)
             {
-                EventHandlers.ActionEventHandler.Raise(Unsubscribe);
+                UnsubscribeEvent.Raise();
             }
         }
     }
 
-    private void Subscribe(UIApplication uiApplication)
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private void Subscribe()
     {
         if (_handlersMap.Count > 0) return;
 
         foreach (var dll in _assemblies)
-        foreach (var type in dll.GetTypes().Where(type => type is { IsEnum: false, IsValueType: false, IsInterface: false}))
+        foreach (var type in dll.GetTypes().Where(type => type is {IsEnum: false, IsValueType: false, IsInterface: false}))
         foreach (var eventInfo in type.GetEvents())
         {
             if (_denyList.Contains(eventInfo.Name)) continue;
@@ -88,7 +89,8 @@ public sealed class EventsMonitoringService(ILogger<EventsMonitoringService> log
         }
     }
 
-    private void Unsubscribe(UIApplication uiApplication)
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private void Unsubscribe()
     {
         foreach (var (eventInfo, handler) in _handlersMap)
         {

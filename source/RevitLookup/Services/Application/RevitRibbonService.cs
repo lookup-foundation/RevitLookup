@@ -20,20 +20,17 @@ using RevitLookup.Commands.Controllers;
 
 namespace RevitLookup.Services.Application;
 
-public sealed class RevitRibbonService(ISettingsService settingsService)
+public sealed partial class RevitRibbonService(ISettingsService settingsService)
 {
-    private readonly ActionEventHandler _eventHandler = new();
     private readonly List<RibbonPanel> _createdPanels = new(2);
 
     public void CreateRibbon()
     {
-        _eventHandler.Raise(_ =>
-        {
-            RemovePanels();
-            CreatePanels();
-        });
+        RemovePanelsEvent.Raise();
+        CreatePanelsEvent.Raise();
     }
 
+    [ExternalEvent(AllowDirectInvocation = true)]
     private void CreatePanels()
     {
         var application = RevitContext.UiControlledApplication;
@@ -76,6 +73,7 @@ public sealed class RevitRibbonService(ISettingsService settingsService)
         _createdPanels.Add(addinsPanel);
     }
 
+    [ExternalEvent(AllowDirectInvocation = true)]
     private void RemovePanels()
     {
         if (_createdPanels.Count == 0) return;

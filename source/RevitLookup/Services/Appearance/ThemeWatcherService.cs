@@ -15,7 +15,6 @@
 using System.Windows;
 using RevitLookup.Abstractions.Services.Appearance;
 using RevitLookup.Abstractions.Services.Settings;
-using RevitLookup.Services.Application;
 using Wpf.Ui;
 using Wpf.Ui.Appearance;
 using Color = System.Windows.Media.Color;
@@ -26,7 +25,7 @@ using Autodesk.Revit.UI.Events;
 
 namespace RevitLookup.Services.Appearance;
 
-public sealed class ThemeWatcherService(ISettingsService settingsService) : IThemeWatcherService
+public sealed partial class ThemeWatcherService(ISettingsService settingsService) : IThemeWatcherService
 {
 #if REVIT2024_OR_GREATER
     private bool _isWatching;
@@ -54,7 +53,7 @@ public sealed class ThemeWatcherService(ISettingsService settingsService) : IThe
 
             if (!_isWatching)
             {
-                EventHandlers.ActionEventHandler.Raise(application => application.ThemeChanged += OnRevitThemeChanged);
+                TrackThemeChangesEvent.Raise();
                 _isWatching = true;
             }
         }
@@ -75,12 +74,24 @@ public sealed class ThemeWatcherService(ISettingsService settingsService) : IThe
 #if REVIT2024_OR_GREATER
         if (!_isWatching) return;
 
-        EventHandlers.ActionEventHandler.Raise(application => application.ThemeChanged -= OnRevitThemeChanged);
+        UntrackThemeChangesEvent.Raise();
         _isWatching = false;
 #endif
     }
-
 #if REVIT2024_OR_GREATER
+
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private void TrackThemeChanges(UIApplication application)
+    {
+        application.ThemeChanged += OnRevitThemeChanged;
+    }
+    
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private void UntrackThemeChanges(UIApplication application)
+    {
+        application.ThemeChanged -= OnRevitThemeChanged;
+    }
+    
     private static ApplicationTheme GetRevitTheme()
     {
         return UIThemeManager.CurrentTheme switch

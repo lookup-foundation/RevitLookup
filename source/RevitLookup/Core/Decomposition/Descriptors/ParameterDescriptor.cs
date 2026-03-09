@@ -18,11 +18,11 @@ using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Nice3point.Revit.Toolkit.External;
 using RevitLookup.Abstractions.Decomposition;
 using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.ViewModels.Decomposition;
 using RevitLookup.Core.Decomposition.Extensions;
-using RevitLookup.Services.Application;
 using RevitLookup.UI.Framework.Extensions;
 using RevitLookup.UI.Framework.Views.EditDialogs;
 using Wpf.Ui.Controls;
@@ -31,7 +31,7 @@ using ParameterExtensions = Nice3point.Revit.Extensions.ParameterExtensions;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class ParameterDescriptor : Descriptor, IDescriptorResolver, IDescriptorExtension, IContextMenuConnector
+public sealed partial class ParameterDescriptor : Descriptor, IDescriptorResolver, IDescriptorExtension, IContextMenuConnector
 {
     private readonly Parameter _parameter;
 
@@ -99,7 +99,7 @@ public sealed class ParameterDescriptor : Descriptor, IDescriptorResolver, IDesc
                 {
                     var parameterValue = dialog.Value; // Share between threads
 
-                    await EventHandlers.AsyncEventHandler.RaiseAsync(_ => SetParameterValue(parameter, parameterValue));
+                    await SetParameterValueAsyncEvent.RaiseAsync(parameter, parameterValue);
 
                     var decompositionViewModel = serviceProvider.GetRequiredService<IDecompositionSummaryViewModel>();
                     await decompositionViewModel.RefreshMembersAsync();
@@ -116,6 +116,7 @@ public sealed class ParameterDescriptor : Descriptor, IDescriptorResolver, IDesc
         }
     }
 
+    [ExternalEvent(AllowDirectInvocation = true)]
     private static void SetParameterValue(Parameter parameter, string parameterValue)
     {
         using var transaction = new Transaction(parameter.Element.Document);

@@ -23,12 +23,11 @@ using RevitLookup.Services.Application;
 namespace RevitLookup;
 
 [UsedImplicitly]
-public class Application : ExternalApplication
+public partial class Application : ExternalApplication
 {
     public override void OnStartup()
     {
         Host.Start();
-        EventHandlers.RegisterHandlers();
 
         EnableThemes();
         EnableHardwareRendering();
@@ -58,8 +57,8 @@ public class Application : ExternalApplication
         if (!settingsService.ApplicationSettings.UseHardwareRendering) return;
 
         //Revit overrides render mode during initialization
-        //EventHandler is called after initialization
-        EventHandlers.ActionEventHandler.Raise(_ => RenderOptions.ProcessRenderMode = RenderMode.Default);
+        //ExternalEvent is called after initialization
+        EnableHardwareRenderingAfterInitializationEvent.Raise();
     }
 
     public static void DisableHardwareRendering()
@@ -68,5 +67,11 @@ public class Application : ExternalApplication
         if (settingsService.ApplicationSettings.UseHardwareRendering) return;
 
         RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
+    }
+
+    [ExternalEvent]
+    private static void EnableHardwareRenderingAfterInitialization()
+    {
+        RenderOptions.ProcessRenderMode = RenderMode.Default;
     }
 }

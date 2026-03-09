@@ -13,7 +13,6 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using System.Globalization;
-using System.Windows.Controls;
 using System.Windows.Input;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
@@ -21,13 +20,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RevitLookup.Abstractions.Decomposition;
 using RevitLookup.Abstractions.Services.Presentation;
-using RevitLookup.Services.Application;
 using RevitLookup.UI.Framework.Extensions;
 using RevitLookup.UI.Framework.Views.Visualization;
+using ContextMenu = System.Windows.Controls.ContextMenu;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class SolidDescriptor : Descriptor, IDescriptorExtension, IContextMenuConnector
+public sealed partial class SolidDescriptor : Descriptor, IDescriptorExtension, IContextMenuConnector
 {
     private readonly Solid _solid;
 
@@ -73,11 +72,11 @@ public sealed class SolidDescriptor : Descriptor, IDescriptorExtension, IContext
     {
 #if REVIT2023_OR_GREATER
         contextMenu.AddMenuItem("SelectMenuItem")
-            .SetCommand(_solid, SelectSolid)
+            .SetCommand(_solid, solid => SelectSolidEvent.Raise(solid))
             .SetShortcut(Key.F6);
 
         contextMenu.AddMenuItem("ShowMenuItem")
-            .SetCommand(_solid, ShowSolid)
+            .SetCommand(_solid, solid => ShowSolidEvent.Raise(solid))
             .SetShortcut(Key.F7);
 #endif
         contextMenu.AddMenuItem("VisualizeMenuItem")
@@ -103,66 +102,41 @@ public sealed class SolidDescriptor : Descriptor, IDescriptorExtension, IContext
                 notificationService.ShowError("Visualization error", exception);
             }
         }
-
-#if REVIT2023_OR_GREATER
-        void SelectSolid(Solid solid)
-        {
-            try
-            {
-                if (RevitContext.ActiveUiDocument is null) return;
-
-                var references = solid.Faces.Cast<Face>()
-                    .Select(face => face.Reference)
-                    .Where(reference => reference is not null)
-                    .ToList();
-
-                if (references.Count == 0) return;
-
-                EventHandlers.ActionEventHandler.Raise(_ => RevitContext.ActiveUiDocument.Selection.SetReferences(references));
-            }
-            catch (Exception exception)
-            {
-                var logger = serviceProvider.GetRequiredService<ILogger<SolidDescriptor>>();
-                var notificationService = serviceProvider.GetRequiredService<INotificationService>();
-
-                logger.LogError(exception, "Select solid error");
-                notificationService.ShowError("Selection error", exception);
-            }
-        }
-
-        void ShowSolid(Solid solid)
-        {
-            try
-            {
-                if (RevitContext.ActiveUiDocument is null) return;
-
-                var references = solid.Faces.Cast<Face>()
-                    .Select(face => face.Reference)
-                    .Where(reference => reference is not null)
-                    .ToList();
-
-                if (references.Count == 0) return;
-
-                EventHandlers.ActionEventHandler.Raise(application =>
-                {
-                    var uiDocument = application.ActiveUIDocument;
-                    if (uiDocument is null) return;
-
-                    var element = references[0].ElementId.ToElement(uiDocument.Document);
-                    if (element is not null) uiDocument.ShowElements(element);
-
-                    uiDocument.Selection.SetReferences(references);
-                });
-            }
-            catch (Exception exception)
-            {
-                var logger = serviceProvider.GetRequiredService<ILogger<SolidDescriptor>>();
-                var notificationService = serviceProvider.GetRequiredService<INotificationService>();
-
-                logger.LogError(exception, "Show solid error");
-                notificationService.ShowError("Showing error", exception);
-            }
-        }
-#endif
     }
+#if REVIT2023_OR_GREATER
+
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private static void SelectSolid(UIApplication application, Solid solid)
+    {
+        if (application.ActiveUIDocument is null) return;
+
+        var references = solid.Faces.Cast<Face>()
+            .Select(face => face.Reference)
+            .Where(reference => reference is not null)
+            .ToList();
+        
+        if (references.Count == 0) return;
+
+        application.ActiveUIDocument.Selection.SetReferences(references);
+    }
+
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private static void ShowSolid(UIApplication application, Solid solid)
+    {
+        var uiDocument = application.ActiveUIDocument;
+        if (uiDocument is null) return;
+        
+        var references = solid.Faces.Cast<Face>()
+            .Select(face => face.Reference)
+            .Where(reference => reference is not null)
+            .ToList();
+        
+        if (references.Count == 0) return;
+
+        var element = references[0].ElementId.ToElement(uiDocument.Document);
+        if (element is not null) uiDocument.ShowElements(element);
+        
+        uiDocument.Selection.SetReferences(references);
+    }
+#endif
 }

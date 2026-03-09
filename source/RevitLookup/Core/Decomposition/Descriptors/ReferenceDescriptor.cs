@@ -13,17 +13,14 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using System.Reflection;
-using System.Windows.Controls;
-using System.Windows.Input;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 using RevitLookup.Abstractions.Decomposition;
-using RevitLookup.Services.Application;
-using RevitLookup.UI.Framework.Extensions;
+using ContextMenu = System.Windows.Controls.ContextMenu;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class ReferenceDescriptor : Descriptor, IDescriptorResolver<Document>, IDescriptorExtension<Document>, IContextMenuConnector
+public sealed partial class ReferenceDescriptor : Descriptor, IDescriptorResolver<Document>, IDescriptorExtension<Document>, IContextMenuConnector
 {
     private readonly Reference _reference;
 
@@ -51,15 +48,8 @@ public sealed class ReferenceDescriptor : Descriptor, IDescriptorResolver<Docume
     {
 #if REVIT2023_OR_GREATER
         contextMenu.AddMenuItem("SelectMenuItem")
-            .SetCommand(_reference, SelectReference)
+            .SetCommand(_reference, reference => SelectReferenceEvent.Raise(reference))
             .SetShortcut(Key.F6);
-
-        void SelectReference(Reference reference)
-        {
-            if (RevitContext.ActiveUiDocument is null) return;
-
-            EventHandlers.ActionEventHandler.Raise(_ => RevitContext.ActiveUiDocument.Selection.SetReferences([reference]));
-        }
 #endif
     }
 
@@ -67,4 +57,14 @@ public sealed class ReferenceDescriptor : Descriptor, IDescriptorResolver<Docume
     {
         manager.Register(nameof(CurveByPointsUtils.GetFaceRegions), context => Variants.Value(CurveByPointsUtils.GetFaceRegions(context, _reference)));
     }
+#if REVIT2023_OR_GREATER
+
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private static void SelectReference(UIApplication application, Reference reference)
+    {
+        if (application.ActiveUIDocument is null) return;
+
+        application.ActiveUIDocument.Selection.SetReferences([reference]);
+    }
+#endif
 }
