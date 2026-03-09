@@ -21,6 +21,7 @@ using Color = System.Windows.Media.Color;
 #if REVIT2024_OR_GREATER
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Events;
+using Nice3point.Revit.Toolkit.External;
 #endif
 
 namespace RevitLookup.Services.Appearance;

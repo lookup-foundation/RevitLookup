@@ -17,6 +17,12 @@ using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 using RevitLookup.Abstractions.Decomposition;
 using ContextMenu = System.Windows.Controls.ContextMenu;
+#if REVIT2023_OR_GREATER
+using System.Windows.Input;
+using Autodesk.Revit.UI;
+using Nice3point.Revit.Toolkit.External;
+using RevitLookup.UI.Framework.Extensions;
+#endif
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 

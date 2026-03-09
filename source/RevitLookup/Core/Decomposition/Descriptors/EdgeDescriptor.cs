@@ -23,6 +23,10 @@ using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.UI.Framework.Extensions;
 using RevitLookup.UI.Framework.Views.Visualization;
 using ContextMenu = System.Windows.Controls.ContextMenu;
+#if REVIT2023_OR_GREATER
+using Autodesk.Revit.UI;
+using Nice3point.Revit.Toolkit.External;
+#endif
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
