@@ -26,12 +26,14 @@ namespace RevitLookup.Services.Application;
 public sealed class HostBackgroundService(
     ISettingsService settingsService,
     ISoftwareUpdateService updateService,
+    RevitRibbonService ribbonService,
     ILogger<HostBackgroundService> logger)
     : IHostedService
 {
     public Task StartAsync(CancellationToken cancellationToken)
     {
         LoadSettings();
+        CreateRibbon();
         _ = CheckUpdatesAsync();
 
         return Task.CompletedTask;
@@ -65,6 +67,18 @@ public sealed class HostBackgroundService(
 
         logger.LogInformation("Installing RevitLookup {Version} version", updateService.NewVersion);
         ProcessTasks.StartShell(updateService.LocalFilePath!);
+    }
+
+    private void CreateRibbon()
+    {
+        try
+        {
+            ribbonService.CreateRibbon();
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Creating ribbon error");
+        }
     }
 
     private void SaveSettings()

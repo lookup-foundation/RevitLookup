@@ -32,7 +32,7 @@ public static class Host
     /// <summary>
     ///     Starts the host and configures the application's services
     /// </summary>
-    public static void Start()
+    public static async Task StartAsync()
     {
         var builder = Microsoft.Extensions.Hosting.Host.CreateApplicationBuilder(new HostApplicationBuilderSettings
         {
@@ -82,15 +82,17 @@ public static class Host
         builder.Services.AddTransient<EventsMonitoringService>();
 
         _host = builder.Build();
-        _host.Start();
+        await _host.StartAsync();
     }
 
     /// <summary>
     ///     Stops the host and handle <see cref="IHostedService"/> services
     /// </summary>
-    public static void Stop()
+    public static async Task StopAsync()
     {
-        _host!.StopAsync().GetAwaiter().GetResult();
+        if (_host is null) return;
+
+        await _host.StopAsync();
     }
 
     /// <summary>

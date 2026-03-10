@@ -18,27 +18,23 @@ using Nice3point.Revit.Toolkit.External;
 using RevitLookup.Abstractions.Services.Appearance;
 using RevitLookup.Abstractions.Services.Application;
 using RevitLookup.Abstractions.Services.Settings;
-using RevitLookup.Services.Application;
 
 namespace RevitLookup;
 
 [UsedImplicitly]
-public partial class Application : ExternalApplication
+public partial class Application : AsyncExternalApplication
 {
-    public override void OnStartup()
+    public override async Task OnStartupAsync()
     {
-        Host.Start();
+        await Host.StartAsync();
 
         EnableThemes();
         EnableHardwareRendering();
-
-        var ribbonService = Host.GetService<RevitRibbonService>();
-        ribbonService.CreateRibbon();
     }
 
-    public override void OnShutdown()
+    public override async Task OnShutdownAsync()
     {
-        Host.Stop();
+        await Host.StopAsync();
     }
 
     private static void EnableThemes()

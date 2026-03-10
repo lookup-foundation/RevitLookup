@@ -13,6 +13,7 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using Autodesk.Revit.UI;
+using Nice3point.Revit.Extensions.UI;
 using Nice3point.Revit.Toolkit.External;
 using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.Commands;
@@ -31,9 +32,9 @@ public sealed partial class RevitRibbonService(ISettingsService settingsService)
     }
 
     [ExternalEvent(AllowDirectInvocation = true)]
-    private void CreatePanels()
+    private void CreatePanels(UIApplication uiApplication)
     {
-        var application = RevitContext.UiControlledApplication;
+        var application = uiApplication.AsControlledApplication();
         var addinsPanel = application.CreatePanel("Revit Lookup");
         var pullButton = addinsPanel.AddPullDownButton("RevitLookupButton", "RevitLookup");
         pullButton.SetImage("/RevitLookup;component/Resources/Images/RibbonIcon16.png");
@@ -45,7 +46,7 @@ public sealed partial class RevitRibbonService(ISettingsService settingsService)
         if (!settingsService.ApplicationSettings.UseModifyTab)
         {
             pullButton.AddPushButton<DecomposeSelectionCommand>("Snoop Selection")
-                .AddShortcuts("SS");
+                .TryAddShortcuts("SS");
         }
 
         pullButton.AddPushButton<DecomposeViewCommand>("Snoop Active view");
