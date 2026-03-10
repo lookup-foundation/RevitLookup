@@ -55,7 +55,7 @@ public sealed partial class VisualDecompositionService(
     }
 
     [ExternalEvent(AllowDirectInvocation = true)]
-    private IEnumerable CollectObjects(KnownDecompositionObject decompositionObject)
+    private static IEnumerable CollectObjects(KnownDecompositionObject decompositionObject)
     {
         return RevitObjectsCollector.GetObjects(decompositionObject);
     }
