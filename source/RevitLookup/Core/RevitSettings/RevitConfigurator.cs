@@ -16,7 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using Nice3point.Revit.Extensions.SystemExtensions;
+using Nice3point.Revit.Extensions.Bcl;
 using RevitLookup.Abstractions.ObservableModels.Entries;
 
 namespace RevitLookup.Core.RevitSettings;

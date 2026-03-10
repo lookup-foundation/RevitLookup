@@ -17,6 +17,7 @@ using Autodesk.Revit.DB.ExtensibleStorage;
 using Autodesk.Revit.DB.ExternalService;
 using Autodesk.Revit.UI.Selection;
 using Autodesk.Windows;
+using Nice3point.Revit.Extensions.UI;
 using RevitLookup.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition;
@@ -71,7 +72,7 @@ public static class RevitObjectsCollector
 
     private static IEnumerable FindUiControlledApplication()
     {
-        return new object[] {RevitContext.UiControlledApplication};
+        return new object[] {RevitContext.UiApplication.AsControlledApplication()};
     }
 
     private static IEnumerable FindEdge()
