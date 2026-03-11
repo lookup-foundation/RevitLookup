@@ -27,7 +27,7 @@ public static class LoggerConfiguration
 
     public static TBuilder AddSerilogLoggingProvider<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
-        var logger = CreateDefaultLogger();
+        var logger = CreateDefaultLogger(builder.Environment);
         builder.Logging.AddSerilog(logger);
 
         PresentationTraceSources.ResourceDictionarySource.Switch.Level = SourceLevels.Critical;
@@ -35,11 +35,11 @@ public static class LoggerConfiguration
         return builder;
     }
 
-    private static Logger CreateDefaultLogger()
+    private static Logger CreateDefaultLogger(IHostEnvironment environment)
     {
         return new Serilog.LoggerConfiguration()
-            .ConfigureSinks()
-            .ConfigureMinimumLevel()
+            .ConfigureSinks(environment)
+            .ConfigureMinimumLevel(environment)
             .ConfigureEnrichers()
             .CreateLogger();
     }
@@ -53,25 +53,37 @@ public static class LoggerConfiguration
 
     extension(Serilog.LoggerConfiguration loggerConfiguration)
     {
-        private Serilog.LoggerConfiguration ConfigureSinks()
+        private Serilog.LoggerConfiguration ConfigureSinks(IHostEnvironment environment)
         {
-            loggerConfiguration.WriteTo.Console(LogEventLevel.Information, outputTemplate: LogTemplate);
-
-            if (Debugger.IsAttached)
+            if (environment.IsDevelopment())
             {
-                loggerConfiguration.WriteTo.Debug(LogEventLevel.Debug, outputTemplate: LogTemplate);
-                return loggerConfiguration;
+                if (Debugger.IsAttached)
+                {
+                    loggerConfiguration.WriteTo.Debug(LogEventLevel.Debug, outputTemplate: LogTemplate);
+                    return loggerConfiguration;
+                }
             }
 
+            loggerConfiguration.WriteTo.Console(LogEventLevel.Information, outputTemplate: LogTemplate);
             loggerConfiguration.WriteTo.RevitJournal(RevitContext.UiApplication, false, LogTemplate, LogEventLevel.Error);
 
             return loggerConfiguration;
         }
 
-        private Serilog.LoggerConfiguration ConfigureMinimumLevel()
+        private Serilog.LoggerConfiguration ConfigureMinimumLevel(IHostEnvironment environment)
         {
-            loggerConfiguration.MinimumLevel.Verbose();
-            if (Debugger.IsAttached) return loggerConfiguration;
+            if (environment.IsDevelopment())
+            {
+                loggerConfiguration.MinimumLevel.Verbose();
+                if (Debugger.IsAttached)
+                {
+                    return loggerConfiguration;
+                }
+            }
+            else
+            {
+                loggerConfiguration.MinimumLevel.Information();
+            }
 
             loggerConfiguration.MinimumLevel.Override("Microsoft.Extensions.Http.DefaultHttpClientFactory", LogEventLevel.Warning);
 
