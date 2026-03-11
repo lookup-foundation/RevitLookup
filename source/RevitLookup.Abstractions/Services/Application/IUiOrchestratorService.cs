@@ -72,7 +72,6 @@ public interface INavigationOrchestrator
     ///     Open the RevitLookup instance and navigate to the specified page.
     /// </summary>
     IInteractionOrchestrator Show<T>() where T : Page;
-    // ILookupServiceRunStage ShowDialog<T>() where T : Page;
 }
 
 /// <summary>

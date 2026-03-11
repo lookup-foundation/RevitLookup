@@ -18,10 +18,10 @@ using Wpf.Ui;
 
 namespace RevitLookup.Services.Application;
 
-public sealed class UiOrchestratorService : IUiOrchestratorService, IHistoryOrchestrator
+public sealed class UiOrchestratorService(IServiceScopeFactory scopeFactory) : IUiOrchestratorService, IHistoryOrchestrator
 {
     private static readonly Dispatcher Dispatcher;
-    private UiServiceImpl _uiService = null!; //Late init in the constructor
+    private UiSession? _session;
 
     [SuppressMessage("ReSharper", "AccessToDisposedClosure")]
     static UiOrchestratorService()
@@ -45,166 +45,124 @@ public sealed class UiOrchestratorService : IUiOrchestratorService, IHistoryOrch
         Dispatcher = Dispatcher.FromThread(uiThread)!;
     }
 
-    public UiOrchestratorService(IServiceScopeFactory scopeFactory)
-    {
-        if (Dispatcher.CheckAccess())
-        {
-            _uiService = new UiServiceImpl(scopeFactory);
-        }
-        else
-        {
-            Dispatcher.Invoke(() => _uiService = new UiServiceImpl(scopeFactory));
-        }
-    }
-
     public INavigationOrchestrator Decompose(KnownDecompositionObject decompositionObject)
     {
-        if (Dispatcher.CheckAccess())
-        {
-            _uiService.Decompose(decompositionObject);
-        }
-        else
-        {
-            Dispatcher.Invoke(() => _uiService.Decompose(decompositionObject));
-        }
-
+        var session = EnsureSession();
+        InvokeOnDispatcher(() => session.Decompose(decompositionObject));
         return this;
     }
 
     public INavigationOrchestrator Decompose(object? obj)
     {
-        if (Dispatcher.CheckAccess())
-        {
-            _uiService.Decompose(obj);
-        }
-        else
-        {
-            Dispatcher.Invoke(() => _uiService.Decompose(obj));
-        }
-
+        var session = EnsureSession();
+        InvokeOnDispatcher(() => session.Decompose(obj));
         return this;
     }
 
     public INavigationOrchestrator Decompose(IEnumerable objects)
     {
-        if (Dispatcher.CheckAccess())
-        {
-            _uiService.Decompose(objects);
-        }
-        else
-        {
-            Dispatcher.Invoke(() => _uiService.Decompose(objects));
-        }
-
+        var session = EnsureSession();
+        InvokeOnDispatcher(() => session.Decompose(objects));
         return this;
     }
 
     public INavigationOrchestrator Decompose(ObservableDecomposedObject decomposedObject)
     {
-        if (Dispatcher.CheckAccess())
-        {
-            _uiService.Decompose(decomposedObject);
-        }
-        else
-        {
-            Dispatcher.Invoke(() => _uiService.Decompose(decomposedObject));
-        }
-
+        var session = EnsureSession();
+        InvokeOnDispatcher(() => session.Decompose(decomposedObject));
         return this;
     }
 
     public INavigationOrchestrator Decompose(List<ObservableDecomposedObject> decomposedObjects)
     {
-        if (Dispatcher.CheckAccess())
-        {
-            _uiService.Decompose(decomposedObjects);
-        }
-        else
-        {
-            Dispatcher.Invoke(() => _uiService.Decompose(decomposedObjects));
-        }
-
+        var session = EnsureSession();
+        InvokeOnDispatcher(() => session.Decompose(decomposedObjects));
         return this;
     }
 
     public IHistoryOrchestrator AddParent(IServiceProvider parentProvider)
     {
-        if (Dispatcher.CheckAccess())
-        {
-            _uiService.AddParent(parentProvider);
-        }
-        else
-        {
-            Dispatcher.Invoke(() => _uiService.AddParent(parentProvider));
-        }
-
+        var session = EnsureSession();
+        InvokeOnDispatcher(() => session.AddParent(parentProvider));
         return this;
     }
 
     public IDecompositionOrchestrator AddStackHistory(ObservableDecomposedObject item)
     {
-        if (Dispatcher.CheckAccess())
-        {
-            _uiService.AddStackHistory(item);
-        }
-        else
-        {
-            Dispatcher.Invoke(() => _uiService.AddStackHistory(item));
-        }
-
+        var session = EnsureSession();
+        InvokeOnDispatcher(() => session.AddStackHistory(item));
         return this;
     }
 
     public IInteractionOrchestrator Show<T>() where T : Page
     {
-        if (Dispatcher.CheckAccess())
-        {
-            _uiService.Show<T>();
-        }
-        else
-        {
-            Dispatcher.Invoke(() => _uiService.Show<T>());
-        }
-
+        var session = EnsureSession();
+        InvokeOnDispatcher(() => session.Show<T>());
         return this;
     }
 
     public void RunService<T>(Action<T> handler) where T : class
     {
-        if (Dispatcher.CheckAccess())
+        if (_session is {IsAlive: true})
         {
-            _uiService.RunService(handler);
+            var session = _session;
+            InvokeOnDispatcher(() => session.RunService(handler));
         }
         else
         {
-            Dispatcher.Invoke(() => _uiService.RunService(handler));
+            var scopeFactoryInstance = scopeFactory;
+            InvokeOnDispatcher(() =>
+            {
+                using var scope = scopeFactoryInstance.CreateScope();
+                var service = scope.ServiceProvider.GetRequiredService<T>();
+                handler.Invoke(service);
+            });
         }
     }
 
-    private sealed class UiServiceImpl
+    private UiSession EnsureSession()
+    {
+        if (_session is {IsAlive: true})
+        {
+            return _session;
+        }
+
+        _session = Dispatcher.CheckAccess() ? new UiSession(scopeFactory) : Dispatcher.Invoke(() => new UiSession(scopeFactory));
+        return _session;
+    }
+
+    private static void InvokeOnDispatcher(Action action)
+    {
+        if (Dispatcher.CheckAccess())
+        {
+            action();
+        }
+        else
+        {
+            Dispatcher.Invoke(action);
+        }
+    }
+
+    private sealed class UiSession
     {
         private IServiceProvider? _parentProvider;
+
         private readonly List<Task> _activeTasks = [];
         private readonly IServiceScope _scope;
-        private readonly IDecompositionService _decompositionService;
         private readonly IVisualDecompositionService _visualDecompositionService;
-        private readonly INavigationService _navigationService;
-        private readonly INotificationService _notificationService;
         private readonly ILogger<UiOrchestratorService> _logger;
         private readonly Window _host;
 
-        public UiServiceImpl(IServiceScopeFactory scopeFactory)
+        public bool IsAlive { get; private set; } = true;
+
+        public UiSession(IServiceScopeFactory scopeFactory)
         {
             _scope = scopeFactory.CreateScope();
-
-            _host = _scope.ServiceProvider.GetRequiredService<RevitLookupView>();
-            _decompositionService = _scope.ServiceProvider.GetRequiredService<IDecompositionService>();
             _visualDecompositionService = _scope.ServiceProvider.GetRequiredService<IVisualDecompositionService>();
-            _navigationService = _scope.ServiceProvider.GetRequiredService<INavigationService>();
-            _notificationService = _scope.ServiceProvider.GetRequiredService<INotificationService>();
             _logger = _scope.ServiceProvider.GetRequiredService<ILogger<UiOrchestratorService>>();
+            _host = _scope.ServiceProvider.GetRequiredService<RevitLookupView>();
 
-            _host.Closed += (_, _) => _scope.Dispose();
+            _host.Closed += OnHostClosed;
         }
 
         public async void Decompose(KnownDecompositionObject decompositionObject)
@@ -299,8 +257,9 @@ public sealed class UiOrchestratorService : IUiOrchestratorService, IHistoryOrch
             }
             finally
             {
-                var decompositionService = parentProvider.GetRequiredService<IDecompositionService>();
-                _decompositionService.DecompositionStackHistory.AddRange(decompositionService.DecompositionStackHistory);
+                var parentDecompositionService = parentProvider.GetRequiredService<IDecompositionService>();
+                var decompositionService = _scope.ServiceProvider.GetRequiredService<IDecompositionService>();
+                decompositionService.DecompositionStackHistory.AddRange(parentDecompositionService.DecompositionStackHistory);
                 _parentProvider = parentProvider;
             }
         }
@@ -317,7 +276,8 @@ public sealed class UiOrchestratorService : IUiOrchestratorService, IHistoryOrch
             }
             finally
             {
-                _decompositionService.DecompositionStackHistory.Add(item);
+                var decompositionService = _scope.ServiceProvider.GetRequiredService<IDecompositionService>();
+                decompositionService.DecompositionStackHistory.Add(item);
             }
         }
 
@@ -325,33 +285,14 @@ public sealed class UiOrchestratorService : IUiOrchestratorService, IHistoryOrch
         {
             try
             {
-                await Task.WhenAll(_activeTasks);
-            }
-            catch (InvalidObjectException exception)
-            {
-                _notificationService.ShowError("Invalid object", exception);
-            }
-            catch (InternalException)
-            {
-                _notificationService.ShowError(
-                    "Invalid object",
-                    "A problem in the Revit code. Usually occurs when a managed API object is no longer valid and is unloaded from memory");
-            }
-            catch (SEHException)
-            {
-                _notificationService.ShowError(
-                    "Revit API internal error",
-                    "A problem in the Revit code. Usually occurs when a managed API object is no longer valid and is unloaded from memory");
+                await NotifyErrorsAsync();
+                ShowHost();
+
+                _scope.ServiceProvider.GetRequiredService<INavigationService>().Navigate(typeof(T));
             }
             catch (Exception exception)
             {
                 _logger.LogError(exception, "RevitLookup new instance startup error");
-                _notificationService.ShowError("Lookup engine error", exception);
-            }
-            finally
-            {
-                ShowHost(false);
-                _navigationService.Navigate(typeof(T));
             }
         }
 
@@ -372,7 +313,13 @@ public sealed class UiOrchestratorService : IUiOrchestratorService, IHistoryOrch
             }
         }
 
-        private void ShowHost(bool modal)
+        private void ShowHost()
+        {
+            ConfigureWindowLocation();
+            _host.Show(RevitContext.UiApplication.MainWindowHandle);
+        }
+
+        private void ConfigureWindowLocation()
         {
             if (_parentProvider is null)
             {
@@ -386,15 +333,43 @@ public sealed class UiOrchestratorService : IUiOrchestratorService, IHistoryOrch
                 _host.Left = parentHost.Left + 47;
                 _host.Top = parentHost.Top + 49;
             }
+        }
 
-            if (modal)
+        private async Task NotifyErrorsAsync()
+        {
+            var notificationService = _scope.ServiceProvider.GetRequiredService<INotificationService>();
+
+            try
             {
-                _host.ShowDialog();
+                await Task.WhenAll(_activeTasks);
             }
-            else
+            catch (InvalidObjectException exception)
             {
-                _host.Show(RevitContext.UiApplication.MainWindowHandle);
+                notificationService.ShowError("Invalid object", exception);
             }
+            catch (InternalException)
+            {
+                notificationService.ShowError(
+                    "Invalid object",
+                    "A problem in the Revit code. Usually occurs when a managed API object is no longer valid and is unloaded from memory");
+            }
+            catch (SEHException)
+            {
+                notificationService.ShowError(
+                    "Revit API internal error",
+                    "A problem in the Revit code. Usually occurs when a managed API object is no longer valid and is unloaded from memory");
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, "Lookup engine error");
+                notificationService.ShowError("Lookup engine error", exception);
+            }
+        }
+
+        private void OnHostClosed(object? sender, EventArgs e)
+        {
+            IsAlive = false;
+            _scope.Dispose();
         }
     }
 }
