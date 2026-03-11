@@ -15,6 +15,8 @@
 using System.IO;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using RevitLookup.Abstractions.Services.Appearance;
+using RevitLookup.Abstractions.Services.Application;
 using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.Common.Utils;
 
@@ -26,6 +28,7 @@ namespace RevitLookup.Services.Application;
 public sealed class HostBackgroundService(
     ISettingsService settingsService,
     ISoftwareUpdateService updateService,
+    IUiOrchestratorService orchestratorService,
     RevitRibbonService ribbonService,
     ILogger<HostBackgroundService> logger)
     : IHostedService
@@ -33,6 +36,7 @@ public sealed class HostBackgroundService(
     public Task StartAsync(CancellationToken cancellationToken)
     {
         LoadSettings();
+        InitializeThemes();
         CreateRibbon();
         _ = CheckUpdatesAsync();
 
@@ -69,6 +73,28 @@ public sealed class HostBackgroundService(
         ProcessTasks.StartShell(updateService.LocalFilePath!);
     }
 
+    /// <summary>
+    ///     Initializes and applies theme services for the application UI
+    /// </summary>
+    private void InitializeThemes()
+    {
+        try
+        {
+            orchestratorService.RunService<IThemeWatcherService>(themeService =>
+            {
+                themeService.Initialize();
+                themeService.ApplyTheme();
+            });
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Theme initialization error");
+        }
+    }
+
+    /// <summary>
+    ///     Creates the Revit ribbon.
+    /// </summary>
     private void CreateRibbon()
     {
         try
@@ -81,12 +107,18 @@ public sealed class HostBackgroundService(
         }
     }
 
+    /// <summary>
+    ///     Saves the current application settings to the storage.
+    /// </summary>
     private void SaveSettings()
     {
         logger.LogInformation("Saving settings");
         settingsService.SaveSettings();
     }
 
+    /// <summary>
+    ///     Loads application settings into the application context.
+    /// </summary>
     private void LoadSettings()
     {
         logger.LogInformation("Loading settings");

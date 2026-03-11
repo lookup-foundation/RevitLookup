@@ -15,8 +15,6 @@
 using System.Windows.Interop;
 using System.Windows.Media;
 using Nice3point.Revit.Toolkit.External;
-using RevitLookup.Abstractions.Services.Appearance;
-using RevitLookup.Abstractions.Services.Application;
 using RevitLookup.Abstractions.Services.Settings;
 
 namespace RevitLookup;
@@ -27,24 +25,12 @@ public partial class Application : AsyncExternalApplication
     public override async Task OnStartupAsync()
     {
         await Host.StartAsync();
-
-        EnableThemes();
         EnableHardwareRendering();
     }
 
     public override async Task OnShutdownAsync()
     {
         await Host.StopAsync();
-    }
-
-    private static void EnableThemes()
-    {
-        var uiService = Host.GetService<IUiOrchestratorService>();
-        uiService.RunService<IThemeWatcherService>(themeService =>
-        {
-            themeService.Initialize();
-            themeService.ApplyTheme();
-        });
     }
 
     public static void EnableHardwareRendering()
