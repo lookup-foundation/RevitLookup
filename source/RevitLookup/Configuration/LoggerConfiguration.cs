@@ -27,7 +27,7 @@ public static class LoggerConfiguration
 
     public static TBuilder AddSerilogLoggingProvider<TBuilder>(this TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
-        var logger = CreateDefaultLogger(builder.Environment);
+        var logger = CreateDefaultLogger();
         builder.Logging.AddSerilog(logger);
 
         PresentationTraceSources.ResourceDictionarySource.Switch.Level = SourceLevels.Critical;
@@ -35,11 +35,11 @@ public static class LoggerConfiguration
         return builder;
     }
 
-    private static Logger CreateDefaultLogger(IHostEnvironment environment)
+    private static Logger CreateDefaultLogger()
     {
         return new Serilog.LoggerConfiguration()
             .ConfigureSinks()
-            .ConfigureMinimumLevel(environment)
+            .ConfigureMinimumLevel()
             .ConfigureEnrichers()
             .CreateLogger();
     }
@@ -68,21 +68,10 @@ public static class LoggerConfiguration
             return loggerConfiguration;
         }
 
-        private Serilog.LoggerConfiguration ConfigureMinimumLevel(IHostEnvironment environment)
+        private Serilog.LoggerConfiguration ConfigureMinimumLevel()
         {
             loggerConfiguration.MinimumLevel.Verbose();
             if (Debugger.IsAttached) return loggerConfiguration;
-
-            if (environment.IsDevelopment())
-            {
-                loggerConfiguration.MinimumLevel.Override("System.Net.Http.HttpClient.OpenSearchClient.LogicalHandler", LogEventLevel.Information);
-                loggerConfiguration.MinimumLevel.Override("System.Net.Http.HttpClient.OpenSearchClient.ClientHandler", LogEventLevel.Information);
-            }
-            else
-            {
-                loggerConfiguration.MinimumLevel.Override("System.Net.Http.HttpClient.OpenSearchClient.LogicalHandler", LogEventLevel.Warning);
-                loggerConfiguration.MinimumLevel.Override("System.Net.Http.HttpClient.OpenSearchClient.ClientHandler", LogEventLevel.Warning);
-            }
 
             loggerConfiguration.MinimumLevel.Override("Microsoft.Extensions.Http.DefaultHttpClientFactory", LogEventLevel.Warning);
 
