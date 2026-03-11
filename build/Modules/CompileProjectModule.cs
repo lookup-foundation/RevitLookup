@@ -1,4 +1,5 @@
 ﻿using Build.Options;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using ModularPipelines.Attributes;
 using ModularPipelines.Context;
@@ -17,7 +18,7 @@ namespace Build.Modules;
 [DependsOn<ResolveVersioningModule>]
 [DependsOn<ResolveConfigurationsModule>]
 [DependsOn<CleanProjectModule>(Optional = true)]
-public sealed class CompileProjectModule(IOptions<BuildOptions> buildOptions) : Module
+public sealed class CompileProjectModule(IOptions<BuildOptions> buildOptions, IHostEnvironment environment) : Module
 {
     protected override async Task ExecuteModuleAsync(IModuleContext context, CancellationToken cancellationToken)
     {
@@ -46,7 +47,7 @@ public sealed class CompileProjectModule(IOptions<BuildOptions> buildOptions) : 
             Properties = new List<KeyValue>
             {
                 ("Version", version),
-                ("HostEnvironment", "Production")
+                ("Environment", environment.EnvironmentName.ToUpperInvariant())
             }
         }, cancellationToken: cancellationToken);
     }

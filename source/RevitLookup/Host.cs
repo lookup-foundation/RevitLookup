@@ -38,7 +38,7 @@ public static class Host
         {
             ContentRootPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
             DisableDefaults = true,
-#if Production
+#if ENVIRONMENT_PRODUCTION
             EnvironmentName = Environments.Production
 #else
             EnvironmentName = Environments.Development
