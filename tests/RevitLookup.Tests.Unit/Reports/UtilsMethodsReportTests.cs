@@ -18,13 +18,13 @@ using Nice3point.TUnit.Revit;
 using Nice3point.TUnit.Revit.Executors;
 using TUnit.Core.Executors;
 
-namespace RevitLookup.Tests.Unit;
+namespace RevitLookup.Tests.Unit.Reports;
 
-public sealed class UtilsMethodsTests : RevitApiTest
+public sealed class UtilsMethodsReportTests : RevitApiTest
 {
     [Test]
     [TestExecutor<RevitThreadExecutor>]
-    public async Task Report_RevitAPI_StaticMethods()
+    public async Task Report_RevitAPI_UtilsMethods()
     {
         var sourceIndex = BuildSourceIndex();
         var types = GetRevitTypes();
@@ -48,7 +48,7 @@ public sealed class UtilsMethodsTests : RevitApiTest
 
     private async Task SaveAndAttachReportAsync(string content)
     {
-        var reportPath = $"PublicStaticApiMethods-{Application.VersionNumber}.md";
+        var reportPath = $"RevitAPI-Utils-{Application.VersionNumber}.md";
         await File.WriteAllTextAsync(reportPath, content);
 
         TestContext.Current!.Output.AttachArtifact(
