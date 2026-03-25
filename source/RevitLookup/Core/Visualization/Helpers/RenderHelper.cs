@@ -13,7 +13,7 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using Autodesk.Revit.DB.DirectContext3D;
-using Nice3point.Revit.Extensions.Bcl;
+using Nice3point.Revit.Extensions.Runtime;
 using RevitLookup.Core.Visualization.Buffers;
 
 namespace RevitLookup.Core.Visualization.Helpers;

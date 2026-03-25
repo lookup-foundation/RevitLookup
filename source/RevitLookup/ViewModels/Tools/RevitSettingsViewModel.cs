@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Nice3point.Revit.Extensions.Bcl;
+using Nice3point.Revit.Extensions.Runtime;
 using RevitLookup.Abstractions.ObservableModels.Entries;
 using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.ViewModels.Tools;
@@ -113,7 +113,7 @@ public sealed partial class RevitSettingsViewModel(
     [RelayCommand]
     private void OpenSettings()
     {
-        var iniFile = RevitApiContext.Application.CurrentUsersDataFolderPath.AppendPath("Revit.ini");
+        var iniFile = Path.Combine(RevitApiContext.Application.CurrentUsersDataFolderPath, "Revit.ini");
         if (!File.Exists(iniFile))
         {
             notificationService.ShowWarning("Missing settings", "Revit.ini file does not exists");
@@ -204,17 +204,17 @@ public sealed partial class RevitSettingsViewModel(
 
         if (!string.IsNullOrWhiteSpace(CategoryFilter))
         {
-            expressions.Add(entry => entry.Category.Contains((string) CategoryFilter, StringComparison.OrdinalIgnoreCase));
+            expressions.Add(entry => entry.Category.Contains(CategoryFilter, StringComparison.OrdinalIgnoreCase));
         }
 
         if (!string.IsNullOrWhiteSpace(PropertyFilter))
         {
-            expressions.Add(entry => entry.Property.Contains((string) PropertyFilter, StringComparison.OrdinalIgnoreCase));
+            expressions.Add(entry => entry.Property.Contains(PropertyFilter, StringComparison.OrdinalIgnoreCase));
         }
 
         if (!string.IsNullOrWhiteSpace(ValueFilter))
         {
-            expressions.Add(entry => entry.Value.Contains((string) ValueFilter, StringComparison.OrdinalIgnoreCase));
+            expressions.Add(entry => entry.Value.Contains(ValueFilter, StringComparison.OrdinalIgnoreCase));
         }
 
         if (ShowUserSettingsFilter)
