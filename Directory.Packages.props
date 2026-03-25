@@ -96,7 +96,7 @@
 
     <!-- Development References -->
     <ItemGroup>
-        <GlobalPackageReference Include="Polyfill" Version="9.8.1"/>
+        <GlobalPackageReference Include="Polyfill" Version="9.23.0"/>
     </ItemGroup>
 
 </Project>
