@@ -30,9 +30,8 @@ public sealed class SchemaDescriptor : Descriptor, IDescriptorExtension<Document
 
     public void RegisterExtensions(IExtensionManager<Document> manager)
     {
-        manager.Register("GetElements", context => Variants.Value(context
-            .GetElements()
-            .WherePasses(new ExtensibleStorageFilter(_schema.GUID))
+        manager.Register("GetElements", context => Variants.Value(context.CollectElements()
+            .WithExtensibleStorage(_schema.GUID)
             .ToElements()));
     }
 }

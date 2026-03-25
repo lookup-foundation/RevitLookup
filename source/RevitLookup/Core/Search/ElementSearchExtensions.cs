@@ -68,34 +68,18 @@ public static class ElementSearchExtensions
 
     private static IEnumerable<Element> SearchByName(Document document, string rawId)
     {
-        var elementTypes = document.GetElements().WhereElementIsElementType();
-        var elementInstances = document.GetElements().WhereElementIsNotElementType();
-        return elementTypes
-            .UnionWith(elementInstances)
+        return document.CollectElements().Types()
+            .UnionWith(document.CollectElements().Instances())
             .Where(element => element.Name.Contains(rawId, StringComparison.OrdinalIgnoreCase));
     }
 
     private static IList<Element> SearchByIfcGuid(Document document, string rawId)
     {
-        var guidProvider = new ParameterValueProvider(new ElementId(BuiltInParameter.IFC_GUID));
-        var typeGuidProvider = new ParameterValueProvider(new ElementId(BuiltInParameter.IFC_TYPE_GUID));
-#if REVIT2022_OR_GREATER
-        var filterRule = new FilterStringRule(guidProvider, new FilterStringEquals(), rawId);
-        var typeFilterRule = new FilterStringRule(typeGuidProvider, new FilterStringEquals(), rawId);
-#else
-        var filterRule = new FilterStringRule(guidProvider, new FilterStringEquals(), rawId, true);
-        var typeFilterRule = new FilterStringRule(typeGuidProvider, new FilterStringEquals(), rawId, true);
-#endif
-        var elementFilter = new ElementParameterFilter(filterRule);
-        var typeElementFilter = new ElementParameterFilter(typeFilterRule);
+        var typeGuidsCollector = document.CollectElements()
+            .WhereParameter(BuiltInParameter.IFC_TYPE_GUID).Equals(rawId);
 
-        var typeGuidsCollector = document
-            .GetElements()
-            .WherePasses(typeElementFilter);
-
-        return document
-            .GetElements()
-            .WherePasses(elementFilter)
+        return document.CollectElements()
+            .WhereParameter(BuiltInParameter.IFC_GUID).Equals(rawId)
             .UnionWith(typeGuidsCollector)
             .ToElements();
     }

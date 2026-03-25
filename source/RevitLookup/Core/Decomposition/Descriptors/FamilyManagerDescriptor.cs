@@ -66,10 +66,8 @@ public sealed class FamilyManagerDescriptor(FamilyManager familyManager) : Descr
 
         IVariant ResolveGetAssociatedFamilyParameter(Document context)
         {
-            var elementTypes = context.GetElements().WhereElementIsElementType();
-            var elementInstances = context.GetElements().WhereElementIsNotElementType();
-            var elements = elementTypes
-                .UnionWith(elementInstances)
+            var elements = context.CollectElements().Types()
+                .UnionWith(context.CollectElements().Instances())
                 .ToElements();
 
             var variants = Variants.Values<KeyValuePair<Parameter, FamilyParameter>>(elements.Count);

@@ -84,7 +84,7 @@ public sealed class CategoryDescriptor : Descriptor, IDescriptorResolver, IDescr
         manager.Register(nameof(DirectContext3DDocumentUtils.IsADirectContext3DHandleCategory),
             () => Variants.Value(DirectContext3DDocumentUtils.IsADirectContext3DHandleCategory(_category.Id)));
         manager.Register(nameof(ParameterFilterUtilities.GetAllFilterableCategories), () => Variants.Value(ParameterFilterUtilities.GetAllFilterableCategories()));
-        
+
 #if REVIT2024_OR_GREATER
         _ = nameof(SSEPointVisibilitySettings.SetVisibility); //Api compile-time compability check
         manager.Register("SetSSEPointVisibility", Variants.NotSupported);
@@ -93,15 +93,14 @@ public sealed class CategoryDescriptor : Descriptor, IDescriptorResolver, IDescr
 
     public void RegisterExtensions(IExtensionManager<Document> manager)
     {
-        manager.Register("GetElements", context =>
-        {
-            return Variants.Value(context
+        manager.Register("GetElements", context => Variants.Value(context.CollectElements()
+            .Instances()
 #if REVIT2023_OR_GREATER
-                .GetInstances(_category.BuiltInCategory));
+            .OfCategory(_category.BuiltInCategory)
 #else
-                .GetInstances((BuiltInCategory) _category.Id.IntegerValue));
+            .OfCategory((BuiltInCategory) _category.Id.IntegerValue)
 #endif
-        });
+            .ToElements()));
         manager.Register(nameof(DirectContext3DDocumentUtils.GetDirectContext3DHandleInstances),
             context => Variants.Value(DirectContext3DDocumentUtils.GetDirectContext3DHandleInstances(context, _category.Id)));
         manager.Register(nameof(DirectContext3DDocumentUtils.GetDirectContext3DHandleTypes),

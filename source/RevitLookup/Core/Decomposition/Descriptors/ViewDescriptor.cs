@@ -14,7 +14,6 @@
 
 using System.Reflection;
 using Autodesk.Revit.DB.Analysis;
-using Autodesk.Revit.DB.Structure;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
@@ -198,7 +197,13 @@ public sealed class ViewDescriptor(View view) : ElementDescriptor(view)
 
         IVariant ResolveIsValidViewTemplate()
         {
-            var templates = view.Document.EnumerateInstances<View>().Where(x => x.IsTemplate).ToArray();
+            var templates = view.Document.CollectElements()
+                .Instances()
+                .OfClass<View>()
+                .Cast<View>()
+                .Where(element => element.IsTemplate)
+                .ToArray();
+            
             var variants = Variants.Values<bool>(templates.Length);
             foreach (var template in templates)
             {
@@ -268,7 +273,7 @@ public sealed class ViewDescriptor(View view) : ElementDescriptor(view)
     public override void RegisterExtensions(IExtensionManager manager)
     {
         manager.Register(nameof(SpatialFieldManager.GetSpatialFieldManager), () => Variants.Value(SpatialFieldManager.GetSpatialFieldManager(view)));
-        manager.Register("GetInstances", () => Variants.Value(view.Document.GetInstances(view.Id)));
+        manager.Register("GetInstances", () => Variants.Value(view.Document.CollectElements(view.Id).Instances().ToElements()));
         manager.Register(nameof(ReferenceableViewUtils.GetReferencedViewId), () => Variants.Value(ReferenceableViewUtils.GetReferencedViewId(view.Document, view.Id)));
         manager.Register(nameof(ReferenceableViewUtils.ChangeReferencedView), Variants.NotSupported);
 

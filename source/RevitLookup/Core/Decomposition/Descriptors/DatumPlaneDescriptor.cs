@@ -35,11 +35,16 @@ public sealed class DatumPlaneDescriptor(DatumPlane datumPlane) : ElementDescrip
 
         IVariant ResolveCanBeVisibleInView()
         {
-            var views = datumPlane.Document.EnumerateInstances<View>().ToArray();
-            var variants = Variants.Values<bool>(views.Length);
+            var views = datumPlane.Document.CollectElements()
+                .Instances()
+                .OfClass<View>()
+                .ToElements();
+            
+            var variants = Variants.Values<bool>(views.Count);
 
-            foreach (var view in views)
+            foreach (var element in views)
             {
+                var view = (View)element;
                 var result = datumPlane.CanBeVisibleInView(view);
                 variants.Add(result, $"{view.Name}: {result}");
             }
@@ -49,11 +54,16 @@ public sealed class DatumPlaneDescriptor(DatumPlane datumPlane) : ElementDescrip
 
         IVariant ResolvePropagationViews()
         {
-            var views = datumPlane.Document.EnumerateInstances<View>().ToArray();
+            var views = datumPlane.Document.CollectElements()
+                .Instances()
+                .OfClass<View>()
+                .ToArray();
+
             var variants = Variants.Values<ISet<ElementId>>(views.Length);
 
-            foreach (var view in views)
+            foreach (var element in views)
             {
+                var view = (View)element;
                 if (!datumPlane.CanBeVisibleInView(view)) continue;
 
                 var result = datumPlane.GetPropagationViews(view);

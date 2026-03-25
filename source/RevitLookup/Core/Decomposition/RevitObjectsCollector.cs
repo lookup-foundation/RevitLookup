@@ -111,25 +111,19 @@ public static class RevitObjectsCollector
         var selectedIds = activeUiDocument.Selection.GetElementIds();
         if (selectedIds.Count > 0)
         {
-            return activeUiDocument.Document
-                .GetElements(selectedIds)
-                .WherePasses(new ElementIdSetFilter(selectedIds))
-                .ToArray();
+            return activeUiDocument.Document.CollectElements(selectedIds).ToArray();
         }
 
-        return activeUiDocument.Document
-            .GetElements(activeUiDocument.ActiveView.Id)
-            .ToArray();
+        return activeUiDocument.Document.CollectElements(activeUiDocument.ActiveView.Id).ToArray();
     }
 
     private static IEnumerable FindDatabase()
     {
         var activeDocument = RevitContext.ActiveDocument!;
-        var elementTypes = activeDocument.GetElements().WhereElementIsElementType();
-        var elementInstances = activeDocument.GetElements().WhereElementIsNotElementType();
-        return elementTypes
-            .UnionWith(elementInstances)
-            .ToArray();
+        return activeDocument
+            .CollectElements().Types()
+            .UnionWith(activeDocument.CollectElements().Instances())
+            .ToElements();
     }
 
     private static IEnumerable FindDependentElements()
@@ -139,7 +133,7 @@ public static class RevitObjectsCollector
 
         var elements = new List<ElementId>();
         var activeDocument = RevitContext.ActiveDocument!;
-        var selectedElements = activeDocument.GetElements(selectedIds).WhereElementIsNotElementType();
+        var selectedElements = activeDocument.CollectElements(selectedIds).Instances();
 
         foreach (var selectedElement in selectedElements)
         {
@@ -147,9 +141,7 @@ public static class RevitObjectsCollector
             foreach (var dependentElement in dependentElements) elements.Add(dependentElement);
         }
 
-        return activeDocument.GetElements()
-            .WherePasses(new ElementIdSetFilter(elements))
-            .ToArray();
+        return activeDocument.CollectElements(elements).ToArray();
     }
 
     private static IEnumerable FindComponentManager()

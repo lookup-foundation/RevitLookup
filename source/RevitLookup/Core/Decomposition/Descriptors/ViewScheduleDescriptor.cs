@@ -61,8 +61,12 @@ public sealed class ViewScheduleDescriptor(ViewSchedule viewSchedule) : ElementD
 
         IVariant ResolveValidTextTypeId()
         {
-            var types = viewSchedule.Document.EnumerateTypes<TextNoteType>().ToArray();
-            var variants = Variants.Values<bool>(types.Length);
+            var types = viewSchedule.Document.CollectElements()
+                .OfClass<TextNoteType>()
+                .Types()
+                .ToElements();
+            
+            var variants = Variants.Values<bool>(types.Count);
 
             foreach (var type in types)
             {
@@ -99,8 +103,13 @@ public sealed class ViewScheduleDescriptor(ViewSchedule viewSchedule) : ElementD
 
         IVariant ResolveDefaultNameForSchedule()
         {
+            var areas = viewSchedule.Document
+                .CollectElements()
+                .Instances()
+                .OfClass<AreaScheme>()
+                .ToArray();
+            
             var categories = ViewSchedule.GetValidCategoriesForSchedule();
-            var areas = viewSchedule.Document.EnumerateInstances<AreaScheme>().ToArray();
             var variants = Variants.Values<string>(categories.Count + areas.Length);
             var areaId = new ElementId(BuiltInCategory.OST_Areas);
             foreach (var categoryId in categories)
