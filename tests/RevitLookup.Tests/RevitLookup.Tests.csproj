@@ -5,15 +5,15 @@
         <EnableTUnitPolyfills>false</EnableTUnitPolyfills>
         <Configurations>Debug.R21;Debug.R22;Debug.R23;Debug.R24;Debug.R25;Debug.R26;Debug.R27</Configurations>
         <Configurations>$(Configurations);Release.R21;Release.R22;Release.R23;Release.R24;Release.R25;Release.R26;Release.R27</Configurations>
+        <RootNamespace>RevitLookup.Tests.Unit</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Nice3point.Revit.Api.RevitAPI"/>
+        <PackageReference Include="Nice3point.Revit.Toolkit"/>
+        <PackageReference Include="Nice3point.Revit.Extensions"/>
         <PackageReference Include="Nice3point.TUnit.Revit"/>
         <PackageReference Include="TUnit"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\source\RevitLookup\RevitLookup.csproj"/>
     </ItemGroup>
 
 </Project>
