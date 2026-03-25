@@ -16,6 +16,9 @@ using System.Reflection;
 using Autodesk.Revit.DB.Analysis;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
+#if REVIT2024_OR_GREATER
+using Autodesk.Revit.DB.Structure;
+#endif
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 

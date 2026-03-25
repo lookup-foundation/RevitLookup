@@ -62,8 +62,8 @@ public sealed class ViewScheduleDescriptor(ViewSchedule viewSchedule) : ElementD
         IVariant ResolveValidTextTypeId()
         {
             var types = viewSchedule.Document.CollectElements()
-                .OfClass<TextNoteType>()
                 .Types()
+                .OfClass<TextNoteType>()
                 .ToElements();
             
             var variants = Variants.Values<bool>(types.Count);

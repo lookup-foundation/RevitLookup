@@ -111,10 +111,12 @@ public static class RevitObjectsCollector
         var selectedIds = activeUiDocument.Selection.GetElementIds();
         if (selectedIds.Count > 0)
         {
-            return activeUiDocument.Document.CollectElements(selectedIds).ToArray();
+            return activeUiDocument.Document.CollectElements()
+                .OfElements(selectedIds)
+                .ToElements();
         }
 
-        return activeUiDocument.Document.CollectElements(activeUiDocument.ActiveView.Id).ToArray();
+        return activeUiDocument.Document.CollectElements(activeUiDocument.ActiveView.Id).ToElements();
     }
 
     private static IEnumerable FindDatabase()
@@ -141,7 +143,7 @@ public static class RevitObjectsCollector
             foreach (var dependentElement in dependentElements) elements.Add(dependentElement);
         }
 
-        return activeDocument.CollectElements(elements).ToArray();
+        return activeDocument.CollectElements().OfElements(elements).ToElements();
     }
 
     private static IEnumerable FindComponentManager()
