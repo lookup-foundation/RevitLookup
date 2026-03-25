@@ -23,19 +23,9 @@ public sealed class BasePointDescriptor(BasePoint basePoint) : ElementDescriptor
     {
         return target switch
         {
-            nameof(BasePoint.GetSurveyPoint) => ResolveGetSurveyPoint,
-            nameof(BasePoint.GetProjectBasePoint) => ResolveGetProjectBasePoint,
+            nameof(BasePoint.GetSurveyPoint) => () => Variants.Value(BasePoint.GetSurveyPoint(basePoint.Document)),
+            nameof(BasePoint.GetProjectBasePoint) => () => Variants.Value(BasePoint.GetProjectBasePoint(basePoint.Document)),
             _ => null
         };
-
-        IVariant ResolveGetSurveyPoint()
-        {
-            return Variants.Value(BasePoint.GetSurveyPoint(basePoint.Document));
-        }
-
-        IVariant ResolveGetProjectBasePoint()
-        {
-            return Variants.Value(BasePoint.GetProjectBasePoint(basePoint.Document));
-        }
     }
 }

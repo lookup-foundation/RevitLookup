@@ -24,12 +24,11 @@ public sealed class TableViewDescriptor(TableView tableView) : ElementDescriptor
     {
         return target switch
         {
-            // nameof(TableView.GetAvailableParameterCategories) => ResolveAvailableParameterCategories, //TODO disabled, long computation time
             nameof(TableView.GetAvailableParameters) => ResolveAvailableParameters,
-            nameof(TableView.GetCalculatedValueName) => ResolveCalculatedValueName,
-            nameof(TableView.GetCalculatedValueText) => ResolveCalculatedValueText,
-            nameof(TableView.IsValidSectionType) => ResolveIsValidSectionType,
-            nameof(TableView.GetCellText) => ResolveCellText,
+            nameof(TableView.GetCalculatedValueName) => () => ResolveTableViewCells(tableView.GetCalculatedValueName),
+            nameof(TableView.GetCalculatedValueText) => () => ResolveTableViewCells(tableView.GetCalculatedValueText),
+            nameof(TableView.IsValidSectionType) => () => VariantsResolver.ResolveEnum<SectionType, bool>(tableView.IsValidSectionType),
+            nameof(TableView.GetCellText) => () => ResolveTableViewCells(tableView.GetCellText),
             _ => null
         };
 
@@ -39,14 +38,13 @@ public sealed class TableViewDescriptor(TableView tableView) : ElementDescriptor
             var variants = Variants.Values<IList<ElementId>>(categories.Size);
             foreach (Category category in categories)
             {
-                var result = TableView.GetAvailableParameters(tableView.Document, category.Id);
-                variants.Add(result, $"{category.Name}");
+                variants.Add(TableView.GetAvailableParameters(tableView.Document, category.Id), category.Name);
             }
 
             return variants.Consume();
         }
 
-        IVariant ResolveCalculatedValueName()
+        IVariant ResolveTableViewCells(Func<SectionType, int, int, string> selector)
         {
             var tableData = tableView switch
             {
@@ -55,85 +53,19 @@ public sealed class TableViewDescriptor(TableView tableView) : ElementDescriptor
                 _ => throw new NotSupportedException($"{tableView.GetType().FullName} is not supported in the current API version")
             };
 
-            var sectionTypes = Enum.GetValues(typeof(SectionType));
+            var sectionTypes = Enum.GetValues<SectionType>();
             var variants = Variants.Values<string>(sectionTypes.Length);
-            foreach (SectionType sectionType in sectionTypes)
+            foreach (var sectionType in sectionTypes)
             {
-                var tableSectionData = tableData!.GetSectionData(sectionType);
-                if (tableSectionData is null) continue;
+                var section = tableData.GetSectionData(sectionType);
+                if (section is null) continue;
 
-                for (var i = tableSectionData.FirstRowNumber; i < tableSectionData.LastRowNumber; i++)
-                for (var j = tableSectionData.FirstColumnNumber; j < tableSectionData.LastColumnNumber; j++)
+                for (var i = section.FirstRowNumber; i < section.LastRowNumber; i++)
+                for (var j = section.FirstColumnNumber; j < section.LastColumnNumber; j++)
                 {
-                    var result = tableView.GetCalculatedValueName(sectionType, i, j);
+                    var result = selector(sectionType, i, j);
                     variants.Add(result, $"{sectionType}, row {i}, column {j}: {result}");
                 }
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveCalculatedValueText()
-        {
-            var tableData = tableView switch
-            {
-                ViewSchedule viewSchedule => viewSchedule.GetTableData(),
-                PanelScheduleView panelScheduleView => panelScheduleView.GetTableData(),
-                _ => throw new NotSupportedException($"{tableView.GetType().FullName} is not supported in the current API version")
-            };
-
-            var sectionTypes = Enum.GetValues(typeof(SectionType));
-            var variants = Variants.Values<string>(sectionTypes.Length);
-            foreach (SectionType sectionType in sectionTypes)
-            {
-                var tableSectionData = tableData!.GetSectionData(sectionType);
-                if (tableSectionData is null) continue;
-
-                for (var i = tableSectionData.FirstRowNumber; i < tableSectionData.LastRowNumber; i++)
-                for (var j = tableSectionData.FirstColumnNumber; j < tableSectionData.LastColumnNumber; j++)
-                {
-                    var result = tableView.GetCalculatedValueText(sectionType, i, j);
-                    variants.Add(result, $"{sectionType}, row {i}, column {j}: {result}");
-                }
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveCellText()
-        {
-            var tableData = tableView switch
-            {
-                ViewSchedule viewSchedule => viewSchedule.GetTableData(),
-                PanelScheduleView panelScheduleView => panelScheduleView.GetTableData(),
-                _ => throw new NotSupportedException($"{tableView.GetType().FullName} is not supported in the current API version")
-            };
-
-            var sectionTypes = Enum.GetValues(typeof(SectionType));
-            var variants = Variants.Values<string>(sectionTypes.Length);
-            foreach (SectionType sectionType in sectionTypes)
-            {
-                var tableSectionData = tableData!.GetSectionData(sectionType);
-                if (tableSectionData is null) continue;
-                for (var i = tableSectionData.FirstRowNumber; i < tableSectionData.LastRowNumber; i++)
-                for (var j = tableSectionData.FirstColumnNumber; j < tableSectionData.LastColumnNumber; j++)
-                {
-                    var result = tableView.GetCellText(sectionType, i, j);
-                    variants.Add(result, $"{sectionType}, row {i}, column {j}: {result}");
-                }
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveIsValidSectionType()
-        {
-            var sectionTypes = Enum.GetValues(typeof(SectionType));
-            var variants = Variants.Values<bool>(sectionTypes.Length);
-            foreach (SectionType sectionType in sectionTypes)
-            {
-                var result = tableView.IsValidSectionType(sectionType);
-                variants.Add(result, $"{sectionType}: {result}");
             }
 
             return variants.Consume();

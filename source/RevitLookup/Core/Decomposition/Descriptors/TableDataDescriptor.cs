@@ -24,10 +24,10 @@ public sealed class TableDataDescriptor(TableData tableData) : Descriptor, IDesc
     {
         return target switch
         {
-            nameof(TableData.GetSectionData) when parameters.Length == 1 &&
-                                                  parameters[0].ParameterType == typeof(SectionType) => ResolveSectionDataBySectionType,
-            nameof(TableData.GetSectionData) when parameters.Length == 1 &&
-                                                  parameters[0].ParameterType == typeof(int) => ResolveSectionDataByIndex,
+            nameof(TableData.GetSectionData)
+                when parameters.Length == 1 && parameters[0].ParameterType == typeof(SectionType) => () => VariantsResolver.ResolveEnum<SectionType, TableSectionData>(tableData.GetSectionData),
+            nameof(TableData.GetSectionData)
+                when parameters.Length == 1 && parameters[0].ParameterType == typeof(int) => ResolveSectionDataByIndex,
             nameof(TableData.IsValidZoomLevel) => ResolveZoomLevel,
             _ => null
         };

@@ -40,14 +40,14 @@ public sealed partial class ReferenceDescriptor : Descriptor, IDescriptorResolve
     {
         return target switch
         {
-            nameof(Reference.ConvertToStableRepresentation) => ResolveConvertToStableRepresentation,
+            nameof(Reference.ConvertToStableRepresentation) => context => Variants.Value(_reference.ConvertToStableRepresentation(context)),
             _ => null
         };
+    }
 
-        IVariant ResolveConvertToStableRepresentation(Document context)
-        {
-            return Variants.Value(_reference.ConvertToStableRepresentation(context));
-        }
+    public void RegisterExtensions(IExtensionManager<Document> manager)
+    {
+        manager.Register(nameof(CurveByPointsUtils.GetFaceRegions), context => Variants.Value(CurveByPointsUtils.GetFaceRegions(context, _reference)));
     }
 
     public void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)
@@ -59,10 +59,6 @@ public sealed partial class ReferenceDescriptor : Descriptor, IDescriptorResolve
 #endif
     }
 
-    public void RegisterExtensions(IExtensionManager<Document> manager)
-    {
-        manager.Register(nameof(CurveByPointsUtils.GetFaceRegions), context => Variants.Value(CurveByPointsUtils.GetFaceRegions(context, _reference)));
-    }
 #if REVIT2023_OR_GREATER
 
     [ExternalEvent(AllowDirectInvocation = true)]

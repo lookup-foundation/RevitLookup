@@ -16,7 +16,6 @@ using System.Reflection;
 using Autodesk.Revit.DB.Mechanical;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
-using ArgumentException = Autodesk.Revit.Exceptions.ArgumentException;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
@@ -26,88 +25,12 @@ public sealed class MepSectionDescriptor(MEPSection mepSection) : Descriptor, ID
     {
         return target switch
         {
-            nameof(MEPSection.GetElementIds) => ResolveSectionIds,
-            nameof(MEPSection.GetCoefficient) => ResolveCoefficient,
-            nameof(MEPSection.GetPressureDrop) => ResolvePressureDrop,
-            nameof(MEPSection.GetSegmentLength) => ResolveSegmentLength,
-            nameof(MEPSection.IsMain) => ResolveIsMain,
+            nameof(MEPSection.GetElementIds) => () => VariantsResolver.ResolveElementIds(mepSection.GetElementIds(), id => id),
+            nameof(MEPSection.GetCoefficient) => () => VariantsResolver.ResolveElementIds(mepSection.GetElementIds(), mepSection.GetCoefficient),
+            nameof(MEPSection.GetPressureDrop) => () => VariantsResolver.ResolveElementIds(mepSection.GetElementIds(), mepSection.GetPressureDrop),
+            nameof(MEPSection.GetSegmentLength) => () => VariantsResolver.ResolveElementIds(mepSection.GetElementIds(), mepSection.GetSegmentLength),
+            nameof(MEPSection.IsMain) => () => VariantsResolver.ResolveElementIds(mepSection.GetElementIds(), mepSection.IsMain),
             _ => null
         };
-
-        IVariant ResolveSectionIds()
-        {
-            var elementIds = mepSection.GetElementIds();
-            var variants = Variants.Values<ElementId>(elementIds.Count);
-            foreach (var id in elementIds)
-            {
-                variants.Add(id);
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveCoefficient()
-        {
-            var elementIds = mepSection.GetElementIds();
-            var variants = Variants.Values<double>(elementIds.Count);
-            foreach (var id in elementIds)
-            {
-                variants.Add(mepSection.GetCoefficient(id), $"ID{id}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolvePressureDrop()
-        {
-            var elementIds = mepSection.GetElementIds();
-            var variants = Variants.Values<double>(elementIds.Count);
-            foreach (var id in elementIds)
-            {
-                variants.Add(mepSection.GetPressureDrop(id), $"ID{id}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveSegmentLength()
-        {
-            var elementIds = mepSection.GetElementIds();
-            var variants = Variants.Values<double>(elementIds.Count);
-            foreach (var id in elementIds)
-            {
-                try
-                {
-                    var length = mepSection.GetSegmentLength(id);
-                    variants.Add(length, $"ID{id}");
-                }
-                catch (ArgumentException)
-                {
-                    // ignored
-                }
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveIsMain()
-        {
-            var elementIds = mepSection.GetElementIds();
-            var variants = Variants.Values<bool>(elementIds.Count);
-            foreach (var id in elementIds)
-            {
-                try
-                {
-                    var isMain = mepSection.IsMain(id);
-                    variants.Add(isMain, $"ID{id}");
-                }
-                catch (ArgumentException)
-                {
-                    // ignored
-                }
-            }
-
-            return variants.Consume();
-        }
     }
 }

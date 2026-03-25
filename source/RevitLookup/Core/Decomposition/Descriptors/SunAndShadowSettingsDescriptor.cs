@@ -23,52 +23,13 @@ public sealed class SunAndShadowSettingsDescriptor(SunAndShadowSettings settings
     {
         return target switch
         {
-            nameof(SunAndShadowSettings.GetActiveSunAndShadowSettings) => ResolveGet,
-            nameof(SunAndShadowSettings.GetSunrise) => ResolveGetSunrise,
-            nameof(SunAndShadowSettings.GetSunset) => ResolveGetSunset,
-            nameof(SunAndShadowSettings.IsTimeIntervalValid) => ResolveTimeInterval,
-            nameof(SunAndShadowSettings.IsAfterStartDateAndTime) => ResolveAfterStart,
-            nameof(SunAndShadowSettings.IsBeforeEndDateAndTime) => ResolveBeforeStart,
+            nameof(SunAndShadowSettings.GetActiveSunAndShadowSettings) => () => Variants.Value(SunAndShadowSettings.GetActiveSunAndShadowSettings(settings.Document)),
+            nameof(SunAndShadowSettings.GetSunrise) => () => Variants.Value(settings.GetSunrise(DateTime.Today)),
+            nameof(SunAndShadowSettings.GetSunset) => () => Variants.Value(settings.GetSunset(DateTime.Today)),
+            nameof(SunAndShadowSettings.IsTimeIntervalValid) => () => VariantsResolver.ResolveEnum<SunStudyTimeInterval, bool>(settings.IsTimeIntervalValid),
+            nameof(SunAndShadowSettings.IsAfterStartDateAndTime) => () => Variants.Value(settings.IsAfterStartDateAndTime(DateTime.Today)),
+            nameof(SunAndShadowSettings.IsBeforeEndDateAndTime) => () => Variants.Value(settings.IsBeforeEndDateAndTime(DateTime.Today)),
             _ => null
         };
-
-        IVariant ResolveGet()
-        {
-            return Variants.Value(SunAndShadowSettings.GetActiveSunAndShadowSettings(settings.Document));
-        }
-
-        IVariant ResolveGetSunrise()
-        {
-            return Variants.Value(settings.GetSunrise(DateTime.Today));
-        }
-
-        IVariant ResolveGetSunset()
-        {
-            return Variants.Value(settings.GetSunset(DateTime.Today));
-        }
-
-        IVariant ResolveAfterStart()
-        {
-            return Variants.Value(settings.IsAfterStartDateAndTime(DateTime.Today));
-        }
-
-        IVariant ResolveBeforeStart()
-        {
-            return Variants.Value(settings.IsBeforeEndDateAndTime(DateTime.Today));
-        }
-
-        IVariant ResolveTimeInterval()
-        {
-            var conditions = Enum.GetValues(typeof(SunStudyTimeInterval));
-            var variants = Variants.Values<bool>(conditions.Length);
-
-            foreach (SunStudyTimeInterval condition in conditions)
-            {
-                var result = settings.IsTimeIntervalValid(condition);
-                variants.Add(result, $"{condition}: {result}");
-            }
-
-            return variants.Consume();
-        }
     }
 }

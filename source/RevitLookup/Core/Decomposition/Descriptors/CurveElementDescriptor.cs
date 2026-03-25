@@ -127,7 +127,21 @@ public sealed class CurveElementDescriptor(CurveElement element) : ElementDescri
         manager.Register(nameof(CurveByPointsUtils.GetHostFace), () => Variants.Value(CurveByPointsUtils.GetHostFace(element)));
         manager.Register(nameof(CurveByPointsUtils.GetProjectionType), () => Variants.Value(CurveByPointsUtils.GetProjectionType(element)));
         manager.Register(nameof(CurveByPointsUtils.GetSketchOnSurface), () => Variants.Value(CurveByPointsUtils.GetSketchOnSurface(element)));
-        manager.Register(nameof(CurveByPointsUtils.SetProjectionType), Variants.NotSupported);
-        manager.Register(nameof(CurveByPointsUtils.SetSketchOnSurface), Variants.NotSupported);
+
+        RegisterNotSupportedExtensions();
+        return;
+
+        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+        void RegisterNotSupportedExtensions()
+        {
+            manager.Register(nameof(CurveByPointsUtils.SetProjectionType), Variants.NotSupported);
+            manager.Register(nameof(CurveByPointsUtils.SetSketchOnSurface), Variants.NotSupported);
+            manager.Register(nameof(CurveByPointsUtils.CreateArcThroughPoints), Variants.NotSupported);
+            manager.Register(nameof(CurveByPointsUtils.AddCurvesToFaceRegion), Variants.NotSupported);
+            manager.Register(nameof(CurveByPointsUtils.CreateRectangle), Variants.NotSupported);
+            
+            _ = nameof(CurveByPointsUtils.ValidateCurveElementIdArrayForFaceRegions);
+            manager.Register("ValidateForFaceRegions", Variants.NotSupported);
+        }
     }
 }

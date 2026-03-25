@@ -24,14 +24,9 @@ public sealed class HostObjectDescriptor(HostObject hostObject) : ElementDescrip
     {
         return target switch
         {
-            nameof(HostObject.FindInserts) => ResolveFindInserts,
+            nameof(HostObject.FindInserts) => () => Variants.Value(hostObject.FindInserts(true, true, true, true)),
             _ => null
         };
-
-        IVariant ResolveFindInserts()
-        {
-            return Variants.Value(hostObject.FindInserts(true, true, true, true));
-        }
     }
 
     public override void RegisterExtensions(IExtensionManager manager)

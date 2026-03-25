@@ -46,7 +46,14 @@ public sealed class UnitsDescriptor(Autodesk.Revit.DB.Units units) : Descriptor,
 
     public void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(UnitFormatUtils.Format), Variants.NotSupported);
-        manager.Register(nameof(UnitFormatUtils.TryParse), Variants.NotSupported);
+        RegisterNotSupportedExtensions();
+        return;
+
+        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+        void RegisterNotSupportedExtensions()
+        {
+            manager.Register(nameof(UnitFormatUtils.Format), Variants.NotSupported);
+            manager.Register(nameof(UnitFormatUtils.TryParse), Variants.NotSupported);
+        }
     }
 }

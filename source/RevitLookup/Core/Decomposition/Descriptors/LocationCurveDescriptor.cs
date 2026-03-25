@@ -31,26 +31,18 @@ public sealed class LocationCurveDescriptor(LocationCurve locationCurve) : Descr
 
         IVariant ResolveElementsAtJoin()
         {
-            var variants = Variants.Values<ElementArray>(2);
-            for (var i = 0; i < 2; i++)
-            {
-                var elements = locationCurve.get_ElementsAtJoin(i);
-                variants.Add(elements, $"Point {i}");
-            }
-
-            return variants.Consume();
+            return Variants.Values<ElementArray>(2)
+                .Add(locationCurve.get_ElementsAtJoin(0), "Point 0")
+                .Add(locationCurve.get_ElementsAtJoin(1), "Point 1")
+                .Consume();
         }
 
         IVariant ResolveJoinType()
         {
-            var variants = Variants.Values<JoinType>(2);
-            for (var i = 0; i < 2; i++)
-            {
-                var joinType = locationCurve.get_JoinType(i);
-                variants.Add(joinType, $"Point {i}");
-            }
-
-            return variants.Consume();
+            return Variants.Values<JoinType>(2)
+                .Add(locationCurve.get_JoinType(0), "Point 0")
+                .Add(locationCurve.get_JoinType(1), "Point 1")
+                .Consume();
         }
     }
 }

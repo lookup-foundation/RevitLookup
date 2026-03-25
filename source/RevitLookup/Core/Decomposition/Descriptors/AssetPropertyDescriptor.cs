@@ -25,27 +25,9 @@ public sealed class AssetPropertyDescriptor(AssetProperty assetProperty) : Descr
     {
         return target switch
         {
-            nameof(AssetProperty.GetTypeName) => ResolveGetTypeName,
-            nameof(AssetProperty.GetConnectedProperty) => ResolveConnectedProperty,
+            nameof(AssetProperty.GetTypeName) => () => Variants.Value(AssetProperty.GetTypeName(assetProperty.Type)),
+            nameof(AssetProperty.GetConnectedProperty) => () => VariantsResolver.ResolveIndex(assetProperty.NumberOfConnectedProperties, assetProperty.GetConnectedProperty),
             _ => null
         };
-
-        IVariant ResolveConnectedProperty()
-        {
-            var capacity = assetProperty.NumberOfConnectedProperties;
-            var variants = Variants.Values<AssetProperty>(capacity);
-            for (var i = 0; i < capacity; i++)
-            {
-                var property = assetProperty.GetConnectedProperty(i);
-                variants.Add(property, property.Name);
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveGetTypeName()
-        {
-            return Variants.Value(AssetProperty.GetTypeName(assetProperty.Type));
-        }
     }
 }

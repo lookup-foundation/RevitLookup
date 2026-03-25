@@ -18,47 +18,46 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public class WallDescriptor(Wall wall) : ElementDescriptor(wall)
+public sealed class WallDescriptor(Wall wall) : ElementDescriptor(wall)
 {
     public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
     {
         return target switch
         {
 #if REVIT2022_OR_GREATER
-            nameof(Wall.IsWallCrossSectionValid) => ResolveIsWallCrossSectionValid,
+            nameof(Wall.IsWallCrossSectionValid) => () => VariantsResolver.ResolveEnum<WallCrossSection, bool>(wall.IsWallCrossSectionValid),
 #endif
             _ => null
         };
-#if REVIT2022_OR_GREATER
-        IVariant ResolveIsWallCrossSectionValid()
-        {
-            var values = Enum.GetValues(typeof(WallCrossSection));
-            var variants = Variants.Values<bool>(values.Length);
-
-            foreach (WallCrossSection crossSection in values)
-            {
-                var result = wall.IsWallCrossSectionValid(crossSection);
-                variants.Add(result, $"{crossSection}: {result}");
-            }
-
-            return variants.Consume();
-        }
-#endif
     }
 
     public override void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(WallUtils.IsWallJoinAllowedAtEnd), ResolveIsWallJoinAllowedAtEnd);
-    }
+        _ = nameof(WallUtils.IsWallJoinAllowedAtEnd);
+        manager.Register("IsJoinAllowedAtEnd", ResolveIsWallJoinAllowedAtEnd);
 
-    private IVariant ResolveIsWallJoinAllowedAtEnd()
-    {
-        var variants = Variants.Values<bool>(2);
-        var startResult = WallUtils.IsWallJoinAllowedAtEnd(wall, 0);
-        var endResult = WallUtils.IsWallJoinAllowedAtEnd(wall, 1);
-        variants.Add(startResult, $"Start: {startResult}");
-        variants.Add(endResult, $"End: {endResult}");
+        RegisterNotSupportedExtensions();
+        return;
 
-        return variants.Consume();
+        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+        void RegisterNotSupportedExtensions()
+        {
+            _ = nameof(WallUtils.AllowWallJoinAtEnd);
+            manager.Register("AllowJoinAtEnd", Variants.NotSupported);
+
+            _ = nameof(WallUtils.DisallowWallJoinAtEnd);
+            manager.Register("DisallowJoinAtEnd", Variants.NotSupported);
+        }
+
+        IVariant ResolveIsWallJoinAllowedAtEnd()
+        {
+            var isJoinAllowedAtEnd0 = WallUtils.IsWallJoinAllowedAtEnd(wall, 0);
+            var isJoinAllowedAtEnd1 = WallUtils.IsWallJoinAllowedAtEnd(wall, 1);
+
+            return Variants.Values<bool>(2)
+                .Add(isJoinAllowedAtEnd0, $"Start: {isJoinAllowedAtEnd0}")
+                .Add(isJoinAllowedAtEnd1, $"End: {isJoinAllowedAtEnd1}")
+                .Consume();
+        }
     }
 }

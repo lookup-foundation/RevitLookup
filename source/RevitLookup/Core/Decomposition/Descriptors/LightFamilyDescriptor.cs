@@ -25,35 +25,9 @@ public sealed class LightFamilyDescriptor(LightFamily lightFamily) : Descriptor,
     {
         return target switch
         {
-            nameof(LightFamily.GetLightTypeName) => ResolveLightTypeName,
-            nameof(LightFamily.GetLightType) => ResolveLightType,
+            nameof(LightFamily.GetLightTypeName) => () => VariantsResolver.ResolveIndex(lightFamily.GetNumberOfLightTypes(), lightFamily.GetLightTypeName),
+            nameof(LightFamily.GetLightType) => () => VariantsResolver.ResolveIndex(lightFamily.GetNumberOfLightTypes(), lightFamily.GetLightType),
             _ => null
         };
-
-        IVariant ResolveLightTypeName()
-        {
-            var capacity = lightFamily.GetNumberOfLightTypes();
-            var variants = Variants.Values<string>(capacity);
-            for (var i = 0; i < capacity; i++)
-            {
-                var name = lightFamily.GetLightTypeName(i);
-                variants.Add(name);
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveLightType()
-        {
-            var capacity = lightFamily.GetNumberOfLightTypes();
-            var variants = Variants.Values<LightType>(capacity);
-            for (var i = 0; i < capacity; i++)
-            {
-                var type = lightFamily.GetLightType(i);
-                variants.Add(type, $"Index {i}");
-            }
-
-            return variants.Consume();
-        }
     }
 }

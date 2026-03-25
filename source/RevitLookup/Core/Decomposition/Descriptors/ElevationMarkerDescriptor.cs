@@ -23,22 +23,10 @@ public sealed class ElevationMarkerDescriptor(ElevationMarker elevationMarker) :
     {
         return target switch
         {
-            nameof(ElevationMarker.IsAvailableIndex) => ResolveIndex,
+            nameof(ElevationMarker.IsAvailableIndex) => () => VariantsResolver.ResolveIndex(elevationMarker.MaximumViewCount, elevationMarker.IsAvailableIndex),
             nameof(ElevationMarker.GetViewId) => ResolveViewId,
             _ => null
         };
-
-        IVariant ResolveIndex()
-        {
-            var variants = Variants.Values<bool>(elevationMarker.MaximumViewCount);
-            for (var i = 0; i < elevationMarker.MaximumViewCount; i++)
-            {
-                var result = elevationMarker.IsAvailableIndex(i);
-                variants.Add(result, $"Index {i}: {result}");
-            }
-
-            return variants.Consume();
-        }
 
         IVariant ResolveViewId()
         {

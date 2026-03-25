@@ -24,22 +24,8 @@ public sealed class ConnectorManagerDescriptor(ConnectorManager connectorManager
     {
         return target switch
         {
-            nameof(ConnectorManager.Lookup) => ResolveLookup,
+            nameof(ConnectorManager.Lookup) => () => VariantsResolver.ResolveIndex(connectorManager.Connectors.Size, connectorManager.Lookup),
             _ => null
         };
-
-        IVariant ResolveLookup()
-        {
-            var connectorSet = connectorManager.Connectors;
-            var capacity = connectorSet.Size;
-            var variants = Variants.Values<Connector>(capacity);
-
-            for (var i = 0; i < capacity; i++)
-            {
-                variants.Add(connectorManager.Lookup(i));
-            }
-
-            return variants.Consume();
-        }
     }
 }

@@ -25,13 +25,8 @@ public sealed class RevitLinkTypeDescriptor(RevitLinkType element) : ElementDesc
         {
             nameof(RevitLinkType.Load) => Variants.Disabled,
             nameof(RevitLinkType.Reload) => Variants.Disabled,
-            nameof(RevitLinkType.IsLoaded) => ResolveIsLoaded,
+            nameof(RevitLinkType.IsLoaded) => () => Variants.Value(RevitLinkType.IsLoaded(element.Document, element.Id)),
             _ => null
         };
-
-        IVariant ResolveIsLoaded()
-        {
-            return Variants.Value(RevitLinkType.IsLoaded(element.Document, element.Id));
-        }
     }
 }

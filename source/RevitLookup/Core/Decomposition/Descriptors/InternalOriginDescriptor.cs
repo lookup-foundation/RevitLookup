@@ -23,13 +23,8 @@ public sealed class InternalOriginDescriptor(InternalOrigin internalOrigin) : El
     {
         return target switch
         {
-            nameof(InternalOrigin.Get) => ResolveGet,
+            nameof(InternalOrigin.Get) => () => Variants.Value(InternalOrigin.Get(internalOrigin.Document)),
             _ => null
         };
-
-        IVariant ResolveGet()
-        {
-            return Variants.Value(InternalOrigin.Get(internalOrigin.Document));
-        }
     }
 }

@@ -48,9 +48,6 @@ public sealed class ForgeTypeIdDescriptor : Descriptor, IDescriptorResolver, IDe
         manager.Register(nameof(UnitUtils.GetTypeCatalogStringForSpec), () => Variants.Value(UnitUtils.GetTypeCatalogStringForSpec(_typeId)));
         manager.Register(nameof(UnitUtils.GetTypeCatalogStringForUnit), () => Variants.Value(UnitUtils.GetTypeCatalogStringForUnit(_typeId)));
         manager.Register(nameof(UnitUtils.GetValidUnits), () => Variants.Value(UnitUtils.GetValidUnits(_typeId)));
-        manager.Register(nameof(UnitUtils.Convert), Variants.NotSupported);
-        manager.Register(nameof(UnitUtils.ConvertFromInternalUnits), Variants.NotSupported);
-        manager.Register(nameof(UnitUtils.ConvertToInternalUnits), Variants.NotSupported);
         manager.Register(nameof(UnitUtils.IsValidUnit), ResolveIsValidUnit);
 #if REVIT2022_OR_GREATER
         manager.Register(nameof(LabelUtils.GetLabelForGroup), () => Variants.Value(LabelUtils.GetLabelForGroup(_typeId)));
@@ -65,12 +62,22 @@ public sealed class ForgeTypeIdDescriptor : Descriptor, IDescriptorResolver, IDe
         manager.Register(nameof(SpecUtils.IsValidDataType), () => Variants.Value(SpecUtils.IsValidDataType(_typeId)));
 #endif
 #if REVIT2024_OR_GREATER
-        manager.Register(nameof(ParameterUtils.DownloadCompanyName), () => Variants.Value(ParameterUtils.GetBuiltInParameter(_typeId)));
         manager.Register(nameof(ParameterUtils.DownloadParameterOptions), () => Variants.Value(ParameterUtils.DownloadParameterOptions(_typeId)));
 #endif
 #if REVIT2026_OR_GREATER
         manager.Register(nameof(ParameterUtils.GetBuiltInParameterGroupTypeId), () => Variants.Value(ParameterUtils.GetBuiltInParameterGroupTypeId(_typeId)));
 #endif
+
+        RegisterNotSupportedExtensions();
+        return;
+
+        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+        void RegisterNotSupportedExtensions()
+        {
+            manager.Register(nameof(UnitUtils.Convert), Variants.NotSupported);
+            manager.Register(nameof(UnitUtils.ConvertFromInternalUnits), Variants.NotSupported);
+            manager.Register(nameof(UnitUtils.ConvertToInternalUnits), Variants.NotSupported);
+        }
 
         IVariant ResolveIsValidUnit()
         {
@@ -98,6 +105,7 @@ public sealed class ForgeTypeIdDescriptor : Descriptor, IDescriptorResolver, IDe
     {
 #if REVIT2024_OR_GREATER
         manager.Register(nameof(ParameterUtils.DownloadParameter), context => Variants.Value(ParameterUtils.DownloadParameter(context, new ParameterDownloadOptions(), _typeId)));
+        manager.Register(nameof(ParameterUtils.DownloadCompanyName), context => Variants.Value(ParameterUtils.DownloadCompanyName(context, _typeId)));
 #endif
     }
 }

@@ -31,34 +31,11 @@ public sealed partial class CurveLoopDescriptor : Descriptor, IDescriptorResolve
     {
         return target switch
         {
-            nameof(CurveLoop.IsOpen) => ResolveIsOpen,
-            nameof(CurveLoop.GetPlane) => ResolveGetPlane,
-            nameof(CurveLoop.NumberOfCurves) => ResolveNumberOfCurves,
+            nameof(CurveLoop.IsOpen) => () => Variants.Value(_curveLoop.IsOpen()),
+            nameof(CurveLoop.GetPlane) => () => Variants.Value(_curveLoop.GetPlane()),
+            nameof(CurveLoop.NumberOfCurves) => () => Variants.Value(_curveLoop.NumberOfCurves()),
             _ => null
         };
-
-        IVariant ResolveNumberOfCurves()
-        {
-            var variants = Variants.Values<int>(1);
-
-            variants.Add(_curveLoop.NumberOfCurves(), "number of curves in the curve loop");
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveIsOpen()
-        {
-            return Variants.Values<bool>(1)
-                .Add(_curveLoop.IsOpen(), "whether the curve loop is open or closed")
-                .Consume();
-        }
-
-        IVariant ResolveGetPlane()
-        {
-            return Variants.Values<Plane>(1)
-                .Add(_curveLoop.GetPlane(), "Plane")
-                .Consume();
-        }
     }
 
     public void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)

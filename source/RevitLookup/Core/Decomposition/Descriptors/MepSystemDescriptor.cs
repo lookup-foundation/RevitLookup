@@ -24,7 +24,7 @@ public sealed class MepSystemDescriptor(MEPSystem mepSystem) : ElementDescriptor
     {
         return target switch
         {
-            nameof(MEPSystem.GetSectionByIndex) => ResolveSectionByIndex,
+            nameof(MEPSystem.GetSectionByIndex) => () => VariantsResolver.ResolveIndex(mepSystem.SectionsCount, mepSystem.GetSectionByIndex),
             nameof(MEPSystem.GetSectionByNumber) => ResolveSectionByNumber,
             _ => null
         };
@@ -37,19 +37,6 @@ public sealed class MepSystemDescriptor(MEPSystem mepSystem) : ElementDescriptor
             {
                 var section = mepSystem.GetSectionByIndex(i);
                 variants.Add(section, $"Number {section.Number}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveSectionByIndex()
-        {
-            var capacity = mepSystem.SectionsCount;
-            var variants = Variants.Values<MEPSection>(capacity);
-            for (var i = 0; i < capacity; i++)
-            {
-                var section = mepSystem.GetSectionByIndex(i);
-                variants.Add(section, $"Index {i}");
             }
 
             return variants.Consume();

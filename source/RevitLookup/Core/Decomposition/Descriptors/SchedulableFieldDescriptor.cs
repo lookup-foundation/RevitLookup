@@ -32,13 +32,8 @@ public sealed class SchedulableFieldDescriptor : Descriptor, IDescriptorResolver
     {
         return target switch
         {
-            nameof(SchedulableField.GetName) => ResolveGetName,
+            nameof(SchedulableField.GetName) => context => Variants.Value(_field.GetName(context)),
             _ => null
         };
-
-        IVariant ResolveGetName(Document context)
-        {
-            return Variants.Value(_field.GetName(context));
-        }
     }
 }

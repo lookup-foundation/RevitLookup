@@ -1,4 +1,4 @@
-// Copyright (c) Lookup Foundation and Contributors
+// Copyright (column) Lookup Foundation and Contributors
 // 
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -25,162 +25,33 @@ public sealed class TableSectionDataDescriptor(TableSectionData tableSectionData
     {
         return target switch
         {
-            nameof(TableSectionData.AllowOverrideCellStyle) => ResolveOverrideCellStyle,
-            nameof(TableSectionData.CanInsertColumn) => ResolveCanInsertColumn,
-            nameof(TableSectionData.CanInsertRow) => ResolveCanInsertRow,
-            nameof(TableSectionData.CanRemoveColumn) => ResolveCanRemoveColumn,
-            nameof(TableSectionData.CanRemoveRow) => ResolveCanRemoveRow,
-            nameof(TableSectionData.GetCellCalculatedValue) when parameters.Length == 1 => ResolveCellCalculatedValueForColumns,
-            nameof(TableSectionData.GetCellCalculatedValue) when parameters.Length == 2 => ResolveCellCalculatedValueForTable,
-            nameof(TableSectionData.GetCellCombinedParameters) when parameters.Length == 1 => ResolveCellCombinedParametersForColumns,
-            nameof(TableSectionData.GetCellCombinedParameters) when parameters.Length == 2 => ResolveCellCombinedParametersForTable,
+            nameof(TableSectionData.AllowOverrideCellStyle) => () => VariantsResolver.ResolveTableCells(tableSectionData.NumberOfRows, tableSectionData.NumberOfColumns, tableSectionData.AllowOverrideCellStyle),
+            nameof(TableSectionData.CanInsertColumn) => () => VariantsResolver.ResolveIndex(tableSectionData.NumberOfColumns, tableSectionData.CanInsertColumn),
+            nameof(TableSectionData.CanInsertRow) => () => VariantsResolver.ResolveIndex(tableSectionData.NumberOfRows, tableSectionData.CanInsertRow),
+            nameof(TableSectionData.CanRemoveColumn) => () => VariantsResolver.ResolveIndex(tableSectionData.NumberOfColumns, tableSectionData.CanRemoveColumn),
+            nameof(TableSectionData.CanRemoveRow) => () => VariantsResolver.ResolveIndex(tableSectionData.NumberOfRows, tableSectionData.CanRemoveRow),
+            nameof(TableSectionData.GetCellCalculatedValue) when parameters.Length == 1 => () => VariantsResolver.ResolveIndex(tableSectionData.NumberOfColumns, tableSectionData.GetCellCalculatedValue),
+            nameof(TableSectionData.GetCellCalculatedValue) when parameters.Length == 2 => () => VariantsResolver.ResolveTableCells(tableSectionData.NumberOfRows, tableSectionData.NumberOfColumns, tableSectionData.GetCellCalculatedValue),
+            nameof(TableSectionData.GetCellCombinedParameters) when parameters.Length == 1 => () => VariantsResolver.ResolveIndex(tableSectionData.NumberOfColumns, tableSectionData.GetCellCombinedParameters),
+            nameof(TableSectionData.GetCellCombinedParameters) when parameters.Length == 2 => () => VariantsResolver.ResolveTableCells(tableSectionData.NumberOfRows, tableSectionData.NumberOfColumns, tableSectionData.GetCellCombinedParameters),
             nameof(TableSectionData.GetCellSpec) => ResolveCellSpec,
-            nameof(TableSectionData.GetCellText) => ResolveCellText,
-            nameof(TableSectionData.GetCellType) when parameters.Length == 1 => ResolveCellTypeForColumns,
-            nameof(TableSectionData.GetCellType) when parameters.Length == 2 => ResolveCellTypeForTable,
+            nameof(TableSectionData.GetCellText) => () => VariantsResolver.ResolveTableCells(tableSectionData.NumberOfRows, tableSectionData.NumberOfColumns, tableSectionData.GetCellText),
+            nameof(TableSectionData.GetCellType) when parameters.Length == 1 => () => VariantsResolver.ResolveIndex(tableSectionData.NumberOfColumns, tableSectionData.GetCellType),
+            nameof(TableSectionData.GetCellType) when parameters.Length == 2 => () => VariantsResolver.ResolveTableCells(tableSectionData.NumberOfRows, tableSectionData.NumberOfColumns, tableSectionData.GetCellType),
             nameof(TableSectionData.GetColumnWidth) => ResolveColumnWidth,
             nameof(TableSectionData.GetColumnWidthInPixels) => ResolveColumnWidthInPixels,
-            nameof(TableSectionData.GetMergedCell) => ResolveMergedCell,
+            nameof(TableSectionData.GetMergedCell) => () => VariantsResolver.ResolveTableCells(tableSectionData.NumberOfRows, tableSectionData.NumberOfColumns, tableSectionData.GetMergedCell),
             nameof(TableSectionData.GetRowHeight) => ResolveRowHeight,
             nameof(TableSectionData.GetRowHeightInPixels) => ResolveRowHeightInPixels,
-            nameof(TableSectionData.GetTableCellStyle) => ResolveTableCellStyle,
-            nameof(TableSectionData.IsCellFormattable) => ResolveIsCellFormattable,
-            nameof(TableSectionData.IsCellOverridden) when parameters.Length == 1 => ResolveIsCellOverriddenForColumns,
-            nameof(TableSectionData.IsCellOverridden) when parameters.Length == 2 => ResolveIsCellOverriddenForTable,
-            nameof(TableSectionData.IsValidColumnNumber) => ResolveIsValidColumnNumber,
-            nameof(TableSectionData.IsValidRowNumber) => ResolveIsValidRowNumber,
+            nameof(TableSectionData.GetTableCellStyle) => () => VariantsResolver.ResolveTableCells(tableSectionData.NumberOfRows, tableSectionData.NumberOfColumns, tableSectionData.GetTableCellStyle),
+            nameof(TableSectionData.IsCellFormattable) => () => VariantsResolver.ResolveTableCells(tableSectionData.NumberOfRows, tableSectionData.NumberOfColumns, tableSectionData.IsCellFormattable),
+            nameof(TableSectionData.IsCellOverridden) when parameters.Length == 1 => () => VariantsResolver.ResolveIndex(tableSectionData.NumberOfColumns, tableSectionData.IsCellOverridden),
+            nameof(TableSectionData.IsCellOverridden) when parameters.Length == 2 => () => VariantsResolver.ResolveTableCells(tableSectionData.NumberOfRows, tableSectionData.NumberOfColumns, tableSectionData.IsCellOverridden),
+            nameof(TableSectionData.IsValidColumnNumber) => () => VariantsResolver.ResolveIndex(tableSectionData.NumberOfColumns, tableSectionData.IsValidColumnNumber),
+            nameof(TableSectionData.IsValidRowNumber) => () => VariantsResolver.ResolveIndex(tableSectionData.NumberOfRows, tableSectionData.IsValidRowNumber),
             nameof(TableSectionData.RefreshData) => Variants.Disabled,
             _ => null
         };
-
-        IVariant ResolveOverrideCellStyle()
-        {
-            var rowsNumber = tableSectionData.NumberOfRows;
-            var columnsNumber = tableSectionData.NumberOfColumns;
-            var variants = Variants.Values<bool>(rowsNumber * columnsNumber);
-            for (var i = 0; i < rowsNumber; i++)
-            {
-                for (var j = 0; j < columnsNumber; j++)
-                {
-                    var result = tableSectionData.AllowOverrideCellStyle(i, j);
-                    variants.Add(result, $"Row {i}, Column {j}: {result}");
-                }
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveCanInsertColumn()
-        {
-            var count = tableSectionData.NumberOfColumns;
-            var variants = Variants.Values<bool>(count);
-            for (var i = 0; i < count; i++)
-            {
-                var result = tableSectionData.CanInsertColumn(i);
-                variants.Add(result, $"{i}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveCanInsertRow()
-        {
-            var count = tableSectionData.NumberOfRows;
-            var variants = Variants.Values<bool>(count);
-            for (var i = 0; i < count; i++)
-            {
-                var result = tableSectionData.CanInsertRow(i);
-                variants.Add(result, $"{i}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveCanRemoveColumn()
-        {
-            var count = tableSectionData.NumberOfColumns;
-            var variants = Variants.Values<bool>(count);
-            for (var i = 0; i < count; i++)
-            {
-                var result = tableSectionData.CanRemoveColumn(i);
-                variants.Add(result, $"{i}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveCanRemoveRow()
-        {
-            var count = tableSectionData.NumberOfRows;
-            var variants = Variants.Values<bool>(count);
-            for (var i = 0; i < count; i++)
-            {
-                var result = tableSectionData.CanRemoveRow(i);
-                variants.Add(result, $"{i}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveCellCalculatedValueForColumns()
-        {
-            var columnsNumber = tableSectionData.NumberOfColumns;
-            var variants = Variants.Values<TableCellCalculatedValueData>(columnsNumber);
-            for (var j = 0; j < columnsNumber; j++)
-            {
-                var result = tableSectionData.GetCellCalculatedValue(j);
-                variants.Add(result, $"Column {j}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveCellCalculatedValueForTable()
-        {
-            var rowsNumber = tableSectionData.NumberOfRows;
-            var columnsNumber = tableSectionData.NumberOfColumns;
-            var variants = Variants.Values<TableCellCalculatedValueData>(rowsNumber * columnsNumber);
-            for (var i = 0; i < rowsNumber; i++)
-            {
-                for (var j = 0; j < columnsNumber; j++)
-                {
-                    var result = tableSectionData.GetCellCalculatedValue(i, j);
-                    variants.Add(result, $"Row {i}, Column {j}: {result}");
-                }
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveCellCombinedParametersForColumns()
-        {
-            var columnsNumber = tableSectionData.NumberOfColumns;
-            var variants = Variants.Values<IList<TableCellCombinedParameterData>>(columnsNumber);
-            for (var i = 0; i < columnsNumber; i++)
-            {
-                var result = tableSectionData.GetCellCombinedParameters(i);
-                variants.Add(result, $"Column {i}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveCellCombinedParametersForTable()
-        {
-            var rowsNumber = tableSectionData.NumberOfRows;
-            var columnsNumber = tableSectionData.NumberOfColumns;
-            var variants = Variants.Values<IList<TableCellCombinedParameterData>>(rowsNumber * columnsNumber);
-            for (var i = 0; i < columnsNumber; i++)
-            {
-                for (var j = 0; j < rowsNumber; j++)
-                {
-                    var result = tableSectionData.GetCellCombinedParameters(j, i);
-                    variants.Add(result, $"Row {j}, Column {i}");
-                }
-            }
-
-            return variants.Consume();
-        }
 
         IVariant ResolveCellSpec()
         {
@@ -201,53 +72,6 @@ public sealed class TableSectionDataDescriptor(TableSectionData tableSectionData
             return variants.Consume();
         }
 
-        IVariant ResolveCellText()
-        {
-            var rowsNumber = tableSectionData.NumberOfRows;
-            var columnsNumber = tableSectionData.NumberOfColumns;
-            var variants = Variants.Values<string>(rowsNumber * columnsNumber);
-            for (var i = 0; i < columnsNumber; i++)
-            {
-                for (var j = 0; j < rowsNumber; j++)
-                {
-                    var result = tableSectionData.GetCellText(j, i);
-                    variants.Add(result, $"Row {j}, Column {i}: {result}");
-                }
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveCellTypeForColumns()
-        {
-            var columnsNumber = tableSectionData.NumberOfColumns;
-            var variants = Variants.Values<CellType>(columnsNumber);
-            for (var i = 0; i < columnsNumber; i++)
-            {
-                var result = tableSectionData.GetCellType(i);
-                variants.Add(result, $"Column {i}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveCellTypeForTable()
-        {
-            var rowsNumber = tableSectionData.NumberOfRows;
-            var columnsNumber = tableSectionData.NumberOfColumns;
-            var variants = Variants.Values<CellType>(rowsNumber * columnsNumber);
-            for (var i = 0; i < columnsNumber; i++)
-            {
-                for (var j = 0; j < rowsNumber; j++)
-                {
-                    var result = tableSectionData.GetCellType(j, i);
-                    variants.Add(result, $"Row {j}, Column {i}: {result}");
-                }
-            }
-
-            return variants.Consume();
-        }
-
         IVariant ResolveColumnWidth()
         {
             var count = tableSectionData.NumberOfColumns;
@@ -261,7 +85,6 @@ public sealed class TableSectionDataDescriptor(TableSectionData tableSectionData
             return variants.Consume();
         }
 
-
         IVariant ResolveColumnWidthInPixels()
         {
             var count = tableSectionData.NumberOfColumns;
@@ -270,23 +93,6 @@ public sealed class TableSectionDataDescriptor(TableSectionData tableSectionData
             {
                 var result = tableSectionData.GetColumnWidthInPixels(i);
                 variants.Add(result, $"{i}: {result.ToString(CultureInfo.InvariantCulture)}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveMergedCell()
-        {
-            var rowsNumber = tableSectionData.NumberOfRows;
-            var columnsNumber = tableSectionData.NumberOfColumns;
-            var variants = Variants.Values<TableMergedCell>(rowsNumber * columnsNumber);
-            for (var i = 0; i < columnsNumber; i++)
-            {
-                for (var j = 0; j < rowsNumber; j++)
-                {
-                    var result = tableSectionData.GetMergedCell(j, i);
-                    variants.Add(result, $"Row {j}, Column {i}");
-                }
             }
 
             return variants.Consume();
@@ -313,96 +119,6 @@ public sealed class TableSectionDataDescriptor(TableSectionData tableSectionData
             {
                 var result = tableSectionData.GetRowHeightInPixels(i);
                 variants.Add(result, $"{i}: {result.ToString(CultureInfo.InvariantCulture)}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveTableCellStyle()
-        {
-            var rowsNumber = tableSectionData.NumberOfRows;
-            var columnsNumber = tableSectionData.NumberOfColumns;
-            var variants = Variants.Values<TableCellStyle>(rowsNumber * columnsNumber);
-            for (var i = 0; i < columnsNumber; i++)
-            {
-                for (var j = 0; j < rowsNumber; j++)
-                {
-                    var result = tableSectionData.GetTableCellStyle(j, i);
-                    variants.Add(result, $"Row {j}, Column {i}");
-                }
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveIsCellFormattable()
-        {
-            var rowsNumber = tableSectionData.NumberOfRows;
-            var columnsNumber = tableSectionData.NumberOfColumns;
-            var variants = Variants.Values<bool>(rowsNumber * columnsNumber);
-            for (var i = 0; i < columnsNumber; i++)
-            {
-                for (var j = 0; j < rowsNumber; j++)
-                {
-                    var result = tableSectionData.IsCellFormattable(j, i);
-                    variants.Add(result, $"Row {j}, Column {i}: {result}");
-                }
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveIsCellOverriddenForColumns()
-        {
-            var columnsNumber = tableSectionData.NumberOfColumns;
-            var variants = Variants.Values<bool>(columnsNumber);
-            for (var i = 0; i < columnsNumber; i++)
-            {
-                var result = tableSectionData.IsCellOverridden(i);
-                variants.Add(result, $"Column {i}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveIsCellOverriddenForTable()
-        {
-            var rowsNumber = tableSectionData.NumberOfRows;
-            var columnsNumber = tableSectionData.NumberOfColumns;
-            var variants = Variants.Values<bool>(rowsNumber * columnsNumber);
-            for (var i = 0; i < columnsNumber; i++)
-            {
-                for (var j = 0; j < rowsNumber; j++)
-                {
-                    var result = tableSectionData.IsCellOverridden(j, i);
-                    variants.Add(result, $"Row {j}, Column {i}: {result}");
-                }
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveIsValidColumnNumber()
-        {
-            var count = tableSectionData.NumberOfColumns;
-            var variants = Variants.Values<bool>(count);
-            for (var i = 0; i < count; i++)
-            {
-                var result = tableSectionData.IsValidColumnNumber(i);
-                variants.Add(result, $"{i}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveIsValidRowNumber()
-        {
-            var count = tableSectionData.NumberOfRows;
-            var variants = Variants.Values<bool>(count);
-            for (var i = 0; i < count; i++)
-            {
-                var result = tableSectionData.IsValidRowNumber(i);
-                variants.Add(result, $"{i}: {result}");
             }
 
             return variants.Consume();

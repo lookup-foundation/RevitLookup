@@ -24,13 +24,8 @@ public sealed class StructuralSettingsDescriptor(StructuralSettings structuralSe
     {
         return target switch
         {
-            nameof(StructuralSettings.GetStructuralSettings) => ResolveGet,
+            nameof(StructuralSettings.GetStructuralSettings) => () => Variants.Value(StructuralSettings.GetStructuralSettings(structuralSettings.Document)),
             _ => null
         };
-
-        IVariant ResolveGet()
-        {
-            return Variants.Value(StructuralSettings.GetStructuralSettings(structuralSettings.Document));
-        }
     }
 }

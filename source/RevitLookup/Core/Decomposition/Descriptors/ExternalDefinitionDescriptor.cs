@@ -23,12 +23,24 @@ public sealed class ExternalDefinitionDescriptor(ExternalDefinition externalDefi
     public void RegisterExtensions(IExtensionManager manager)
     {
         manager.Register(nameof(RebarShapeParameters.IsValidExternalDefinition), () => Variants.Value(RebarShapeParameters.IsValidExternalDefinition(externalDefinition)));
-        manager.Register(nameof(RebarShapeParameters.GetExternalDefinitionForElementId), Variants.NotSupported);
+
+        RegisterNotSupportedExtensions();
+        return;
+
+        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+        void RegisterNotSupportedExtensions()
+        {
+            _ = nameof(RebarShapeParameters.GetExternalDefinitionForElementId);
+            manager.Register("SearchExternalDefinition", Variants.NotSupported);
+        }
     }
 
     public void RegisterExtensions(IExtensionManager<Document> manager)
-    {        
-        manager.Register(nameof(RebarShapeParameters.GetElementIdForExternalDefinition), context => Variants.Value(RebarShapeParameters.GetElementIdForExternalDefinition(context, externalDefinition)));
-        manager.Register(nameof(RebarShapeParameters.GetOrCreateElementIdForExternalDefinition), context => Variants.Value(RebarShapeParameters.GetOrCreateElementIdForExternalDefinition(context, externalDefinition)));
+    {
+        _ = nameof(RebarShapeParameters.GetElementIdForExternalDefinition);
+        manager.Register("GetRebarShapeParameterElementId", context => Variants.Value(RebarShapeParameters.GetElementIdForExternalDefinition(context, externalDefinition)));
+
+        _ = nameof(RebarShapeParameters.GetOrCreateElementIdForExternalDefinition);
+        manager.Register("GetOrCreateRebarShapeParameterElementId", context => Variants.Value(RebarShapeParameters.GetOrCreateElementIdForExternalDefinition(context, externalDefinition)));
     }
 }

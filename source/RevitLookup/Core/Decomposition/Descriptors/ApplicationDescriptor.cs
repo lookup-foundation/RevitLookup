@@ -73,8 +73,8 @@ public sealed class ApplicationDescriptor : Descriptor, IDescriptorExtension
         manager.Register(nameof(OptionalFunctionalityUtils.IsSATImportLinkAvailable), () => Variants.Value(OptionalFunctionalityUtils.IsSATImportLinkAvailable()));
         manager.Register(nameof(OptionalFunctionalityUtils.IsShapeImporterAvailable), () => Variants.Value(OptionalFunctionalityUtils.IsShapeImporterAvailable()));
         manager.Register(nameof(OptionalFunctionalityUtils.IsSKPImportLinkAvailable), () => Variants.Value(OptionalFunctionalityUtils.IsSKPImportLinkAvailable()));
-        manager.Register(nameof(LabelUtils.GetStructuralSectionShapeName), ResolveGetStructuralSectionShapeName);
-#if REVIT2022_OR_GREATER 
+        manager.Register(nameof(LabelUtils.GetStructuralSectionShapeName), () => VariantsResolver.ResolveEnum<StructuralSectionShape, string>(LabelUtils.GetStructuralSectionShapeName));
+#if REVIT2022_OR_GREATER
         manager.Register(nameof(OptionalFunctionalityUtils.IsAXMImportLinkAvailable), () => Variants.Value(OptionalFunctionalityUtils.IsAXMImportLinkAvailable()));
         manager.Register(nameof(OptionalFunctionalityUtils.Is3DMImportLinkAvailable), () => Variants.Value(OptionalFunctionalityUtils.Is3DMImportLinkAvailable()));
         manager.Register(nameof(OptionalFunctionalityUtils.IsOBJImportLinkAvailable), () => Variants.Value(OptionalFunctionalityUtils.IsOBJImportLinkAvailable()));
@@ -84,37 +84,9 @@ public sealed class ApplicationDescriptor : Descriptor, IDescriptorExtension
         manager.Register(nameof(OptionalFunctionalityUtils.IsSTEPImportLinkAvailable), () => Variants.Value(OptionalFunctionalityUtils.IsSTEPImportLinkAvailable()));
 #endif
 #if REVIT2026_OR_GREATER
+        manager.Register(nameof(ModelPathUtils.GetAllCloudRegions), () => Variants.Value(ModelPathUtils.GetAllCloudRegions()));
         manager.Register(nameof(OptionalFunctionalityUtils.IsMaterialLibraryAvailable), () => Variants.Value(OptionalFunctionalityUtils.IsMaterialLibraryAvailable()));
-        manager.Register(nameof(LabelUtils.GetFailureSeverityName), ResolveGetFailureSeverityName);
+        manager.Register(nameof(LabelUtils.GetFailureSeverityName), () => VariantsResolver.ResolveEnum<FailureSeverity, string>(LabelUtils.GetFailureSeverityName));
 #endif
-        return;
-
-#if REVIT2026_OR_GREATER
-        IVariant ResolveGetFailureSeverityName()
-        {
-            var severities = Enum.GetValues<FailureSeverity>();
-            var variants = Variants.Values<string>(severities.Length);
-            foreach (var severity in severities)
-            {
-                var name = LabelUtils.GetFailureSeverityName(severity);
-                variants.Add(name, $"{severity}: {name}");
-            }
-
-            return variants.Consume();
-        }
-#endif
-
-        IVariant ResolveGetStructuralSectionShapeName()
-        {
-            var shapes = Enum.GetValues<StructuralSectionShape>();
-            var variants = Variants.Values<string>(shapes.Length);
-            foreach (var shape in shapes)
-            {
-                var name = LabelUtils.GetStructuralSectionShapeName(shape);
-                variants.Add(name, $"{shape}: {name}");
-            }
-
-            return variants.Consume();
-        }
     }
 }

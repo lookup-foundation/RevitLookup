@@ -24,144 +24,19 @@ public sealed class ScheduleDefinitionDescriptor(ScheduleDefinition scheduleDefi
     {
         return target switch
         {
-            nameof(ScheduleDefinition.CanFilterByGlobalParameters) => ResolveFilterByGlobalParameters,
-            nameof(ScheduleDefinition.CanFilterByParameterExistence) => ResolveFilterByParameterExistence,
-            nameof(ScheduleDefinition.CanFilterBySubstring) => ResolveFilterBySubstring,
-            nameof(ScheduleDefinition.CanFilterByValue) => ResolveFilterByValue,
-            nameof(ScheduleDefinition.CanFilterByValuePresence) => ResolveFilterByValuePresence,
-            nameof(ScheduleDefinition.CanSortByField) => ResolveSortByField,
-            nameof(ScheduleDefinition.GetField) => ResolveGetField,
-            nameof(ScheduleDefinition.GetFieldId) => ResolveGetFieldId,
-            nameof(ScheduleDefinition.GetFieldIndex) => ResolveGetFieldIndex,
+            nameof(ScheduleDefinition.CanFilterByGlobalParameters) => () => VariantsResolver.ResolveScheduleFields(scheduleDefinition.GetFieldOrder(), scheduleDefinition.CanFilterByGlobalParameters, (field, result) => $"{scheduleDefinition.GetField(field).GetName()}: {result}"),
+            nameof(ScheduleDefinition.CanFilterByParameterExistence) => () => VariantsResolver.ResolveScheduleFields(scheduleDefinition.GetFieldOrder(), scheduleDefinition.CanFilterByParameterExistence, (field, result) => $"{scheduleDefinition.GetField(field).GetName()}: {result}"),
+            nameof(ScheduleDefinition.CanFilterBySubstring) => () => VariantsResolver.ResolveScheduleFields(scheduleDefinition.GetFieldOrder(), scheduleDefinition.CanFilterBySubstring, (field, result) => $"{scheduleDefinition.GetField(field).GetName()}: {result}"),
+            nameof(ScheduleDefinition.CanFilterByValue) => () => VariantsResolver.ResolveScheduleFields(scheduleDefinition.GetFieldOrder(), scheduleDefinition.CanFilterByValue, (field, result) => $"{scheduleDefinition.GetField(field).GetName()}: {result}"),
+            nameof(ScheduleDefinition.CanFilterByValuePresence) => () => VariantsResolver.ResolveScheduleFields(scheduleDefinition.GetFieldOrder(), scheduleDefinition.CanFilterByValuePresence, (field, result) => $"{scheduleDefinition.GetField(field).GetName()}: {result}"),
+            nameof(ScheduleDefinition.CanSortByField) => () => VariantsResolver.ResolveScheduleFields(scheduleDefinition.GetFieldOrder(), scheduleDefinition.CanSortByField, (field, result) => $"{scheduleDefinition.GetField(field).GetName()}: {result}"),
+            nameof(ScheduleDefinition.GetField) => () => VariantsResolver.ResolveScheduleFields(scheduleDefinition.GetFieldOrder(), scheduleDefinition.GetField, (_, result) => result.GetName()),
+            nameof(ScheduleDefinition.GetFieldId) => () => VariantsResolver.ResolveScheduleFields(scheduleDefinition.GetFieldOrder(), field => scheduleDefinition.GetFieldId(field.IntegerValue), (field, result) => $"{scheduleDefinition.GetField(field).GetName()}: {result}"),
+            nameof(ScheduleDefinition.GetFieldIndex) => () => VariantsResolver.ResolveScheduleFields(scheduleDefinition.GetFieldOrder(), scheduleDefinition.GetFieldIndex, (field, result) => $"{scheduleDefinition.GetField(field).GetName()}: {result}"),
             nameof(ScheduleDefinition.GetFilter) => ResolveGetFilter,
             nameof(ScheduleDefinition.GetSortGroupField) => ResolveGetSortGroupField,
             _ => null
         };
-
-        IVariant ResolveFilterByGlobalParameters()
-        {
-            var fields = scheduleDefinition.GetFieldOrder();
-            var variants = Variants.Values<bool>(fields.Count);
-            foreach (var field in fields)
-            {
-                var result = scheduleDefinition.CanFilterByGlobalParameters(field);
-                var name = scheduleDefinition.GetField(field).GetName();
-                variants.Add(result, $"{name}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveFilterByParameterExistence()
-        {
-            var fields = scheduleDefinition.GetFieldOrder();
-            var variants = Variants.Values<bool>(fields.Count);
-            foreach (var field in fields)
-            {
-                var result = scheduleDefinition.CanFilterByParameterExistence(field);
-                var name = scheduleDefinition.GetField(field).GetName();
-                variants.Add(result, $"{name}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveFilterBySubstring()
-        {
-            var fields = scheduleDefinition.GetFieldOrder();
-            var variants = Variants.Values<bool>(fields.Count);
-            foreach (var field in fields)
-            {
-                var result = scheduleDefinition.CanFilterBySubstring(field);
-                var name = scheduleDefinition.GetField(field).GetName();
-                variants.Add(result, $"{name}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveFilterByValue()
-        {
-            var fields = scheduleDefinition.GetFieldOrder();
-            var variants = Variants.Values<bool>(fields.Count);
-            foreach (var field in fields)
-            {
-                var result = scheduleDefinition.CanFilterByValue(field);
-                var name = scheduleDefinition.GetField(field).GetName();
-                variants.Add(result, $"{name}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveFilterByValuePresence()
-        {
-            var fields = scheduleDefinition.GetFieldOrder();
-            var variants = Variants.Values<bool>(fields.Count);
-            foreach (var field in fields)
-            {
-                var result = scheduleDefinition.CanFilterByValuePresence(field);
-                var name = scheduleDefinition.GetField(field).GetName();
-                variants.Add(result, $"{name}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveSortByField()
-        {
-            var fields = scheduleDefinition.GetFieldOrder();
-            var variants = Variants.Values<bool>(fields.Count);
-            foreach (var field in fields)
-            {
-                var result = scheduleDefinition.CanSortByField(field);
-                var name = scheduleDefinition.GetField(field).GetName();
-                variants.Add(result, $"{name}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveGetField()
-        {
-            var fields = scheduleDefinition.GetFieldOrder();
-            var variants = Variants.Values<ScheduleField>(fields.Count);
-            foreach (var field in fields)
-            {
-                var result = scheduleDefinition.GetField(field);
-                variants.Add(result, $"{result.GetName()}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveGetFieldId()
-        {
-            var fields = scheduleDefinition.GetFieldOrder();
-            var variants = Variants.Values<ScheduleFieldId>(fields.Count);
-            foreach (var field in fields)
-            {
-                var result = scheduleDefinition.GetFieldId(field.IntegerValue);
-                var name = scheduleDefinition.GetField(field).GetName();
-                variants.Add(result, $"{name}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveGetFieldIndex()
-        {
-            var fields = scheduleDefinition.GetFieldOrder();
-            var variants = Variants.Values<int>(fields.Count);
-            foreach (var field in fields)
-            {
-                var result = scheduleDefinition.GetFieldIndex(field);
-                var name = scheduleDefinition.GetField(field).GetName();
-                variants.Add(result, $"{name}: {result}");
-            }
-
-            return variants.Consume();
-        }
 
         IVariant ResolveGetFilter()
         {

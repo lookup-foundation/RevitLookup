@@ -13,6 +13,7 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using System.Reflection;
+using Autodesk.Revit.DB.Analysis;
 using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.DB.Structure;
 using Autodesk.Revit.DB.Structure.StructuralSections;
@@ -161,40 +162,62 @@ public sealed class FamilyInstanceDescriptor(FamilyInstance familyInstance) : El
 
     public override void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(AdaptiveComponentInstanceUtils.GetInstancePlacementPointElementRefIds),
-            () => Variants.Value(AdaptiveComponentInstanceUtils.GetInstancePlacementPointElementRefIds(familyInstance)));
-        manager.Register(nameof(AdaptiveComponentInstanceUtils.GetInstancePointElementRefIds),
-            () => Variants.Value(AdaptiveComponentInstanceUtils.GetInstancePointElementRefIds(familyInstance)));
-        manager.Register(nameof(AdaptiveComponentInstanceUtils.GetInstanceShapeHandlePointElementRefIds),
-            () => Variants.Value(AdaptiveComponentInstanceUtils.GetInstanceShapeHandlePointElementRefIds(familyInstance)));
-        manager.Register(nameof(AdaptiveComponentInstanceUtils.HasAdaptiveFamilySymbol),
-            () => Variants.Value(AdaptiveComponentInstanceUtils.HasAdaptiveFamilySymbol(familyInstance)));
-        manager.Register(nameof(AdaptiveComponentInstanceUtils.IsAdaptiveComponentInstance),
-            () => Variants.Value(AdaptiveComponentInstanceUtils.IsAdaptiveComponentInstance(familyInstance)));
+        manager.Register(nameof(AdaptiveComponentInstanceUtils.GetInstancePlacementPointElementRefIds), () => Variants.Value(AdaptiveComponentInstanceUtils.GetInstancePlacementPointElementRefIds(familyInstance)));
+        manager.Register(nameof(AdaptiveComponentInstanceUtils.GetInstancePointElementRefIds), () => Variants.Value(AdaptiveComponentInstanceUtils.GetInstancePointElementRefIds(familyInstance)));
+        manager.Register(nameof(AdaptiveComponentInstanceUtils.GetInstanceShapeHandlePointElementRefIds), () => Variants.Value(AdaptiveComponentInstanceUtils.GetInstanceShapeHandlePointElementRefIds(familyInstance)));
+        manager.Register(nameof(AdaptiveComponentInstanceUtils.HasAdaptiveFamilySymbol), () => Variants.Value(AdaptiveComponentInstanceUtils.HasAdaptiveFamilySymbol(familyInstance)));
+        manager.Register(nameof(AdaptiveComponentInstanceUtils.IsAdaptiveComponentInstance), () => Variants.Value(AdaptiveComponentInstanceUtils.IsAdaptiveComponentInstance(familyInstance)));
         manager.Register(nameof(AdaptiveComponentInstanceUtils.IsInstanceFlipped), () => Variants.Value(AdaptiveComponentInstanceUtils.IsInstanceFlipped(familyInstance)));
-        manager.Register(nameof(AdaptiveComponentInstanceUtils.MoveAdaptiveComponentInstance), Variants.NotSupported);
-        manager.Register(nameof(AdaptiveComponentInstanceUtils.SetInstanceFlipped), Variants.NotSupported);
-        manager.Register(nameof(MassInstanceUtils.GetGrossFloorArea), () => Variants.Value(MassInstanceUtils.GetGrossFloorArea(familyInstance.Document, familyInstance.Id)));
-        manager.Register(nameof(MassInstanceUtils.GetGrossSurfaceArea), () => Variants.Value(MassInstanceUtils.GetGrossSurfaceArea(familyInstance.Document, familyInstance.Id)));
-        manager.Register(nameof(MassInstanceUtils.GetGrossVolume), () => Variants.Value(MassInstanceUtils.GetGrossVolume(familyInstance.Document, familyInstance.Id)));
-        manager.Register(nameof(MassInstanceUtils.GetJoinedElementIds), () => Variants.Value(MassInstanceUtils.GetJoinedElementIds(familyInstance.Document, familyInstance.Id)));
+        manager.Register(nameof(MassLevelData.IsMassFamilyInstance), () => Variants.Value(MassLevelData.IsMassFamilyInstance(familyInstance.Document, familyInstance.Id)));
+        manager.Register("GetMassGrossFloorArea", () => Variants.Value(MassInstanceUtils.GetGrossFloorArea(familyInstance.Document, familyInstance.Id)));
+        manager.Register("GetMassGrossSurfaceArea", () => Variants.Value(MassInstanceUtils.GetGrossSurfaceArea(familyInstance.Document, familyInstance.Id)));
+        manager.Register("GetMassGrossVolume", () => Variants.Value(MassInstanceUtils.GetGrossVolume(familyInstance.Document, familyInstance.Id)));
+        manager.Register("GetMassJoinedElementIds", () => Variants.Value(MassInstanceUtils.GetJoinedElementIds(familyInstance.Document, familyInstance.Id)));
         manager.Register(nameof(MassInstanceUtils.GetMassLevelDataIds), () => Variants.Value(MassInstanceUtils.GetMassLevelDataIds(familyInstance.Document, familyInstance.Id)));
         manager.Register(nameof(MassInstanceUtils.GetMassLevelIds), () => Variants.Value(MassInstanceUtils.GetMassLevelIds(familyInstance.Document, familyInstance.Id)));
-        manager.Register(nameof(MassInstanceUtils.AddMassLevelDataToMassInstance), Variants.NotSupported);
-        manager.Register(nameof(MassInstanceUtils.RemoveMassLevelDataFromMassInstance), Variants.NotSupported);
         manager.Register(nameof(StructuralFramingUtils.CanFlipEnds), () => Variants.Value(StructuralFramingUtils.CanFlipEnds(familyInstance)));
         manager.Register(nameof(StructuralFramingUtils.IsJoinAllowedAtEnd), ResolveIsJoinAllowedAtEnd);
-        manager.Register(nameof(StructuralFramingUtils.AllowJoinAtEnd), Variants.NotSupported);
         manager.Register(nameof(StructuralFramingUtils.CanSetEndReference), ResolveCanSetEndReference);
-        manager.Register(nameof(StructuralFramingUtils.DisallowJoinAtEnd), Variants.NotSupported);
-        manager.Register(nameof(StructuralFramingUtils.FlipEnds), Variants.NotSupported);
         manager.Register(nameof(StructuralFramingUtils.GetEndReference), ResolveGetEndReference);
-        manager.Register(nameof(StructuralFramingUtils.IsEndReferenceValid), Variants.NotSupported);
-        manager.Register(nameof(StructuralFramingUtils.RemoveEndReference), Variants.NotSupported);
-        manager.Register(nameof(StructuralFramingUtils.SetEndReference), Variants.NotSupported);
         manager.Register(nameof(StructuralSectionUtils.GetStructuralSection), () => Variants.Value(StructuralSectionUtils.GetStructuralSection(familyInstance.Document, familyInstance.Id)));
         manager.Register(nameof(StructuralSectionUtils.GetStructuralElementDefinitionData), GetStructuralElementDefinitionData);
+
+        RegisterNotSupportedExtensions();
         return;
+
+        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+        void RegisterNotSupportedExtensions()
+        {
+            _ = nameof(AdaptiveComponentInstanceUtils.MoveAdaptiveComponentInstance);
+            manager.Register("MoveAdaptiveComponentInstance", Variants.NotSupported);
+            
+            _ = nameof(AdaptiveComponentInstanceUtils.SetInstanceFlipped);
+            manager.Register("SetAdaptiveInstanceFlipped", Variants.NotSupported);
+            
+            _ = nameof(MassInstanceUtils.AddMassLevelDataToMassInstance);
+            manager.Register("AddMassLevelData", Variants.NotSupported);
+            
+            _ = nameof(MassInstanceUtils.RemoveMassLevelDataFromMassInstance);
+            manager.Register("RemoveMassLevelData", Variants.NotSupported);
+            
+            _ = nameof(StructuralFramingUtils.AllowJoinAtEnd);
+            manager.Register("AllowFramingJoinAtEnd", Variants.NotSupported);
+            
+            _ = nameof(StructuralFramingUtils.DisallowJoinAtEnd);
+            manager.Register("DisallowFramingJoinAtEnd", Variants.NotSupported);
+            
+            _ = nameof(StructuralFramingUtils.FlipEnds);
+            manager.Register("FlipFramingEnds", Variants.NotSupported);
+            
+            _ = nameof(StructuralFramingUtils.IsEndReferenceValid);
+            manager.Register("IsFramingEndReferenceValid", Variants.NotSupported);
+            
+            _ = nameof(StructuralFramingUtils.RemoveEndReference);
+            manager.Register("RemoveFramingEndReference", Variants.NotSupported);
+            
+            _ = nameof(StructuralFramingUtils.SetEndReference);
+            manager.Register("SetFramingEndReference", Variants.NotSupported);
+        }
 
         IVariant ResolveIsJoinAllowedAtEnd()
         {

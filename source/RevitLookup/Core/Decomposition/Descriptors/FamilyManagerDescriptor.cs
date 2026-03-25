@@ -24,36 +24,10 @@ public sealed class FamilyManagerDescriptor(FamilyManager familyManager) : Descr
     {
         return target switch
         {
-            nameof(FamilyManager.IsParameterLockable) => ResolveIsParameterLockable,
-            nameof(FamilyManager.IsParameterLocked) => ResolveIsParameterLocked,
+            nameof(FamilyManager.IsParameterLockable) => () => VariantsResolver.ResolveFamilyParameters(familyManager.Parameters, familyManager.IsParameterLockable),
+            nameof(FamilyManager.IsParameterLocked) => () => VariantsResolver.ResolveFamilyParameters(familyManager.Parameters, familyManager.IsParameterLocked),
             _ => null
         };
-
-        IVariant ResolveIsParameterLockable()
-        {
-            var familyParameters = familyManager.Parameters;
-            var variants = Variants.Values<bool>(familyParameters.Size);
-            foreach (FamilyParameter parameter in familyParameters)
-            {
-                var result = familyManager.IsParameterLockable(parameter);
-                variants.Add(result, $"{parameter.Definition.Name}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveIsParameterLocked()
-        {
-            var familyParameters = familyManager.Parameters;
-            var variants = Variants.Values<bool>(familyParameters.Size);
-            foreach (FamilyParameter parameter in familyParameters)
-            {
-                var result = familyManager.IsParameterLocked(parameter);
-                variants.Add(result, $"{parameter.Definition.Name}: {result}");
-            }
-
-            return variants.Consume();
-        }
     }
 
     Func<Document, IVariant>? IDescriptorResolver<Document>.Resolve(string target, ParameterInfo[] parameters)

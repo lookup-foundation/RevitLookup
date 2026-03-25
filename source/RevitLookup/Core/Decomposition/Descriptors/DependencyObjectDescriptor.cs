@@ -26,36 +26,19 @@ public class DependencyObjectDescriptor(DependencyObject dependencyObject) : Des
     {
         return target switch
         {
-            nameof(DependencyObject.GetLocalValueEnumerator) => ResolveGetLocalValueEnumerator,
+            nameof(DependencyObject.GetLocalValueEnumerator) => Variants.Empty<LocalValueEnumerator?>,
             _ => null
         };
-
-        IVariant ResolveGetLocalValueEnumerator()
-        {
-            return Variants.Empty<LocalValueEnumerator?>();
-        }
     }
 
     public virtual void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register("GetVisualParent", RegisterGetVisualParent);
+        manager.Register("GetVisualParent", () => Variants.Value(VisualTreeHelper.GetParent(dependencyObject)));
         manager.Register("GetVisualChild", RegisterGetVisualChild);
-        manager.Register("GetVisualChildrenCount", RegisterGetVisualChildrenCount);
-        manager.Register("GetLogicalParent", RegisterGetLogicalParent);
-        manager.Register("GetLogicalChildren", RegisterGetLogicalChildren);
+        manager.Register("GetVisualChildrenCount", () => Variants.Value(VisualTreeHelper.GetChildrenCount(dependencyObject)));
+        manager.Register("GetLogicalParent", () => Variants.Value(LogicalTreeHelper.GetParent(dependencyObject)));
+        manager.Register("GetLogicalChildren", () => Variants.Value(LogicalTreeHelper.GetChildren(dependencyObject)));
         return;
-
-        IVariant RegisterGetVisualParent()
-        {
-            var parent = VisualTreeHelper.GetParent(dependencyObject);
-            return Variants.Value(parent);
-        }
-
-        IVariant RegisterGetVisualChildrenCount()
-        {
-            var count = VisualTreeHelper.GetChildrenCount(dependencyObject);
-            return Variants.Value(count);
-        }
 
         IVariant RegisterGetVisualChild()
         {
@@ -67,18 +50,6 @@ public class DependencyObjectDescriptor(DependencyObject dependencyObject) : Des
             }
 
             return variants.Consume();
-        }
-        
-        IVariant RegisterGetLogicalParent()
-        {
-            var parent = LogicalTreeHelper.GetParent(dependencyObject);
-            return Variants.Value(parent);
-        }
-
-        IVariant RegisterGetLogicalChildren()
-        {
-            var count = LogicalTreeHelper.GetChildren(dependencyObject);
-            return Variants.Value(count);
         }
     }
 }

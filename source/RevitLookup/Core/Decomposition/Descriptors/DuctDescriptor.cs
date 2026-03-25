@@ -22,10 +22,19 @@ public sealed class DuctDescriptor(Duct duct) : ElementDescriptor(duct)
 {
     public override void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(MechanicalUtils.BreakCurve), Variants.NotSupported);
-        manager.Register(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtCross), Variants.NotSupported);
-        manager.Register(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtElbow), Variants.NotSupported);
-        manager.Register(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtTee), Variants.NotSupported);
-        manager.Register(nameof(MechanicalUtils.ConnectAirTerminalOnDuct), Variants.NotSupported);
+        RegisterNotSupportedExtensions();
+        return;
+
+        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+        void RegisterNotSupportedExtensions()
+        {
+            manager.Register(nameof(MechanicalUtils.BreakCurve), Variants.NotSupported);
+            manager.Register(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtElbow), Variants.NotSupported);
+            manager.Register(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtTee), Variants.NotSupported);
+            manager.Register(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtCross), Variants.NotSupported);
+            
+            _ = nameof(MechanicalUtils.ConnectAirTerminalOnDuct);
+            manager.Register("ConnectAirTerminal", Variants.NotSupported);
+        }
     }
 }

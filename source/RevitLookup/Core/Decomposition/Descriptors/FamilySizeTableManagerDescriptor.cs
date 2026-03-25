@@ -26,7 +26,7 @@ public sealed class FamilySizeTableManagerDescriptor(FamilySizeTableManager mana
         {
             nameof(FamilySizeTableManager.GetSizeTable) => ResolveSizeTable,
             nameof(FamilySizeTableManager.HasSizeTable) => ResolveHasSizeTable,
-            nameof(FamilySizeTableManager.GetFamilySizeTableManager) => ResolveGetFamilySizeTableManager,
+            nameof(FamilySizeTableManager.GetFamilySizeTableManager) => () => Variants.Value(manager),
             _ => null
         };
 
@@ -55,11 +55,6 @@ public sealed class FamilySizeTableManagerDescriptor(FamilySizeTableManager mana
             }
 
             return variants.Consume();
-        }
-
-        IVariant ResolveGetFamilySizeTableManager()
-        {
-            return Variants.Value(manager);
         }
     }
 

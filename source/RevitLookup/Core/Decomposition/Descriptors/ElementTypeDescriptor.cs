@@ -29,30 +29,40 @@ public sealed class ElementTypeDescriptor(ElementType elementType) : ElementDesc
         manager.Register("GetRebarSpliceLapLengthMultiplier", () => Variants.Value(RebarSpliceTypeUtils.GetLapLengthMultiplier(elementType.Document, elementType.Id)));
         manager.Register("GetRebarSpliceShiftOption", () => Variants.Value(RebarSpliceTypeUtils.GetShiftOption(elementType.Document, elementType.Id)));
         manager.Register("GetRebarSpliceStaggerLengthMultiplier", () => Variants.Value(RebarSpliceTypeUtils.GetStaggerLengthMultiplier(elementType.Document, elementType.Id)));
-        
-        _ = nameof(RebarSpliceTypeUtils.SetLapLengthMultiplier); //Api compile-time compability check
-        manager.Register("SetRebarSpliceLapLengthMultiplier", Variants.NotSupported);
-        
-        _ = nameof(RebarSpliceTypeUtils.SetShiftOption); //Api compile-time compability check
-        manager.Register("SetRebarSpliceShiftOption", Variants.NotSupported);
-        
-        _ = nameof(RebarSpliceTypeUtils.SetStaggerLengthMultiplier); //Api compile-time compability check
-        manager.Register("SetRebarSpliceStaggerLengthMultiplier", Variants.NotSupported);
 #endif
 #if REVIT2026_OR_GREATER
         manager.Register(nameof(CoordinationModelLinkUtils.GetCoordinationModelTypeData), () => Variants.Value(CoordinationModelLinkUtils.GetCoordinationModelTypeData(elementType.Document, elementType)));
         manager.Register("GetRebarCrankLengthMultiplier", () => Variants.Value(RebarCrankTypeUtils.GetCrankLengthMultiplier(elementType.Document, elementType.Id)));
         manager.Register("GetRebarCrankOffsetMultiplier", () => Variants.Value(RebarCrankTypeUtils.GetCrankOffsetMultiplier(elementType.Document, elementType.Id)));
         manager.Register("GetRebarCrankRatio", () => Variants.Value(RebarCrankTypeUtils.GetCrankRatio(elementType.Document, elementType.Id)));
-        
-        _ = nameof(RebarCrankTypeUtils.SetCrankLengthMultiplier); //Api compile-time compability check
-        manager.Register("SetRebarCrankLengthMultiplier", Variants.NotSupported);
-        
-        _ = nameof(RebarCrankTypeUtils.SetCrankOffsetMultiplier); //Api compile-time compability check
-        manager.Register("SetRebarCrankOffsetMultiplier", Variants.NotSupported);
-        
-        _ = nameof(RebarCrankTypeUtils.SetCrankRatio); //Api compile-time compability check
-        manager.Register("SetRebarCrankRatio", Variants.NotSupported);
 #endif
+
+        RegisterNotSupportedExtensions();
+        return;
+
+        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+        void RegisterNotSupportedExtensions()
+        {
+#if REVIT2025_OR_GREATER
+            _ = nameof(RebarSpliceTypeUtils.SetLapLengthMultiplier);
+            manager.Register("SetRebarSpliceLapLengthMultiplier", Variants.NotSupported);
+            
+            _ = nameof(RebarSpliceTypeUtils.SetShiftOption);
+            manager.Register("SetRebarSpliceShiftOption", Variants.NotSupported);
+            
+            _ = nameof(RebarSpliceTypeUtils.SetStaggerLengthMultiplier);
+            manager.Register("SetRebarSpliceStaggerLengthMultiplier", Variants.NotSupported);
+#endif
+#if REVIT2026_OR_GREATER
+            _ = nameof(RebarCrankTypeUtils.SetCrankLengthMultiplier);
+            manager.Register("SetRebarCrankLengthMultiplier", Variants.NotSupported);
+            
+            _ = nameof(RebarCrankTypeUtils.SetCrankOffsetMultiplier);
+            manager.Register("SetRebarCrankOffsetMultiplier", Variants.NotSupported);
+            
+            _ = nameof(RebarCrankTypeUtils.SetCrankRatio);
+            manager.Register("SetRebarCrankRatio", Variants.NotSupported);
+#endif
+        }
     }
 }

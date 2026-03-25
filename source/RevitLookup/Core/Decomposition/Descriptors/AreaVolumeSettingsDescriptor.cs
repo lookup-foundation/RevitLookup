@@ -23,28 +23,9 @@ public sealed class AreaVolumeSettingsDescriptor(AreaVolumeSettings settings) : 
     {
         return target switch
         {
-            nameof(AreaVolumeSettings.GetAreaVolumeSettings) => ResolveGet,
-            nameof(AreaVolumeSettings.GetSpatialElementBoundaryLocation) => ResolveGetSpatialElementBoundaryLocation,
+            nameof(AreaVolumeSettings.GetAreaVolumeSettings) => () => Variants.Value(AreaVolumeSettings.GetAreaVolumeSettings(settings.Document)),
+            nameof(AreaVolumeSettings.GetSpatialElementBoundaryLocation) => () => VariantsResolver.ResolveEnum<SpatialElementType, SpatialElementBoundaryLocation>(settings.GetSpatialElementBoundaryLocation),
             _ => null
         };
-
-        IVariant ResolveGet()
-        {
-            return Variants.Value(AreaVolumeSettings.GetAreaVolumeSettings(settings.Document));
-        }
-
-        IVariant ResolveGetSpatialElementBoundaryLocation()
-        {
-            var conditions = Enum.GetValues(typeof(SpatialElementType));
-            var variants = Variants.Values<SpatialElementBoundaryLocation>(conditions.Length);
-
-            foreach (SpatialElementType condition in conditions)
-            {
-                var result = settings.GetSpatialElementBoundaryLocation(condition);
-                variants.Add(result, $"{condition}: {result}");
-            }
-
-            return variants.Consume();
-        }
     }
 }

@@ -27,24 +27,23 @@ public sealed class FamilyDescriptor(Family family) : ElementDescriptor(family)
 
     public override void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(FamilySizeTableManager.GetFamilySizeTableManager), RegisterGetFamilySizeTableManager);
-        manager.Register(nameof(FamilyUtils.FamilyCanConvertToFaceHostBased), RegisterFamilyCanConvertToFaceHostBased);
+        manager.Register(nameof(FamilySizeTableManager.GetFamilySizeTableManager), () => Variants.Value(FamilySizeTableManager.GetFamilySizeTableManager(family.Document, family.Id)));
+        manager.Register(nameof(FamilyUtils.FamilyCanConvertToFaceHostBased), () => Variants.Value(FamilyUtils.FamilyCanConvertToFaceHostBased(family.Document, family.Id)));
         manager.Register(nameof(FamilyUtils.GetProfileSymbols), RegisterProfileSymbols);
-        manager.Register(nameof(FamilyUtils.ConvertFamilyToFaceHostBased), Variants.NotSupported);
         manager.Register(nameof(AdaptiveComponentFamilyUtils.GetNumberOfAdaptivePoints), () => Variants.Value(AdaptiveComponentFamilyUtils.GetNumberOfAdaptivePoints(family)));
         manager.Register(nameof(AdaptiveComponentFamilyUtils.GetNumberOfPlacementPoints), () => Variants.Value(AdaptiveComponentFamilyUtils.GetNumberOfPlacementPoints(family)));
         manager.Register(nameof(AdaptiveComponentFamilyUtils.GetNumberOfShapeHandlePoints), () => Variants.Value(AdaptiveComponentFamilyUtils.GetNumberOfShapeHandlePoints(family)));
         manager.Register(nameof(AdaptiveComponentFamilyUtils.IsAdaptiveComponentFamily), () => Variants.Value(AdaptiveComponentFamilyUtils.IsAdaptiveComponentFamily(family)));
+        manager.Register(nameof(LoadedFamilyIntegrityCheck.CheckFamily), () => Variants.Value(LoadedFamilyIntegrityCheck.CheckFamily(family.Document, family.Id)));
+
+        RegisterNotSupportedExtensions();
         return;
-
-        IVariant RegisterGetFamilySizeTableManager()
+        
+        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+        void RegisterNotSupportedExtensions()
         {
-            return Variants.Value(FamilySizeTableManager.GetFamilySizeTableManager(family.Document, family.Id));
-        }
-
-        IVariant RegisterFamilyCanConvertToFaceHostBased()
-        {
-            return Variants.Value(FamilyUtils.FamilyCanConvertToFaceHostBased(family.Document, family.Id));
+            _ = nameof(FamilyUtils.ConvertFamilyToFaceHostBased);
+            manager.Register("ConvertToFaceHostBased", Variants.NotSupported);
         }
 
         IVariant RegisterProfileSymbols()
@@ -52,7 +51,6 @@ public sealed class FamilyDescriptor(Family family) : ElementDescriptor(family)
             var values = Enum.GetValues(typeof(ProfileFamilyUsage));
             var capacity = values.Length * 2;
             var variants = Variants.Values<ICollection<ElementId>>(capacity);
-
             foreach (ProfileFamilyUsage value in values)
             {
                 variants.Add(FamilyUtils.GetProfileSymbols(family.Document, value, false), $"{value}, with multiple curve loops");

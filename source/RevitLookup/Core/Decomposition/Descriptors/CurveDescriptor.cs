@@ -58,11 +58,11 @@ public sealed partial class CurveDescriptor : Descriptor, IDescriptorResolver, I
             var variants = Variants.Values<XYZ>(3);
             var endParameter0 = _curve.GetEndParameter(0);
             var endParameter1 = _curve.GetEndParameter(1);
-            var endParameterMid = (endParameter0 + endParameter1) / 2;
+            var centerParameter = (endParameter0 + endParameter1) / 2;
 
-            variants.Add(_curve.Evaluate(endParameter0, false), $"Parameter {endParameter0.Round(3)}");
-            variants.Add(_curve.Evaluate(endParameterMid, false), $"Parameter {endParameterMid.Round(3)}");
-            variants.Add(_curve.Evaluate(endParameter1, false), $"Parameter {endParameter1.Round(3)}");
+            variants.Add(_curve.Evaluate(endParameter0, false), $"Start parameter {endParameter0.Round(3)}");
+            variants.Add(_curve.Evaluate(centerParameter, false), $"Center parameter {centerParameter.Round(3)}");
+            variants.Add(_curve.Evaluate(endParameter1, false), $"End parameter {endParameter1.Round(3)}");
 
             return variants.Consume();
         }

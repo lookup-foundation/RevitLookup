@@ -24,6 +24,14 @@ public sealed class PointCloudFilterDescriptor(PointCloudFilter pointCloudFilter
 {
     public void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(PointCloudFilterUtils.GetFilteredOutline), Variants.NotSupported);
+        RegisterNotSupportedExtensions();
+        return;
+
+        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+        void RegisterNotSupportedExtensions()
+        {
+            _ = nameof(PointCloudFilterUtils.GetFilteredOutline);
+            manager.Register("GetFilteredOutline", Variants.NotSupported);
+        }
     }
 }

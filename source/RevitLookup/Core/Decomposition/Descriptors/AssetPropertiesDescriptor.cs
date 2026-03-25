@@ -25,22 +25,9 @@ public sealed class AssetPropertiesDescriptor(AssetProperties assetProperties) :
     {
         return target switch
         {
-            nameof(AssetProperties.Get) => ResolveAssetProperties,
-            nameof(AssetProperties.FindByName) => ResolveAssetProperties,
+            nameof(AssetProperties.Get) => () => VariantsResolver.ResolveIndex(assetProperties.Size, assetProperties.Get),
+            nameof(AssetProperties.FindByName) => () => VariantsResolver.ResolveIndex(assetProperties.Size, assetProperties.Get),
             _ => null
         };
-
-        IVariant ResolveAssetProperties()
-        {
-            var capacity = assetProperties.Size;
-            var variants = Variants.Values<AssetProperty>(capacity);
-            for (var i = 0; i < capacity; i++)
-            {
-                var property = assetProperties.Get(i);
-                variants.Add(property, property.Name);
-            }
-
-            return variants.Consume();
-        }
     }
 }

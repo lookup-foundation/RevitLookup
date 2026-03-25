@@ -21,15 +21,35 @@ public sealed class ReferencePointDescriptor(ReferencePoint referencePoint) : El
 {
     public override void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(AdaptiveComponentFamilyUtils.GetPlacementNumber), () => Variants.Value(AdaptiveComponentFamilyUtils.GetPlacementNumber(referencePoint.Document, referencePoint.Id)));
-        manager.Register(nameof(AdaptiveComponentFamilyUtils.GetPointConstraintType), () => Variants.Value(AdaptiveComponentFamilyUtils.GetPointConstraintType(referencePoint.Document, referencePoint.Id)));
-        manager.Register(nameof(AdaptiveComponentFamilyUtils.GetPointOrientationType), () => Variants.Value(AdaptiveComponentFamilyUtils.GetPointOrientationType(referencePoint.Document, referencePoint.Id)));
+        _ = nameof(AdaptiveComponentFamilyUtils.GetPlacementNumber);
+        manager.Register("GetAdaptivePlacementNumber", () => Variants.Value(AdaptiveComponentFamilyUtils.GetPlacementNumber(referencePoint.Document, referencePoint.Id)));
+        
+        _ = nameof(AdaptiveComponentFamilyUtils.GetPointConstraintType);
+        manager.Register("GetAdaptivePointConstraintType", () => Variants.Value(AdaptiveComponentFamilyUtils.GetPointConstraintType(referencePoint.Document, referencePoint.Id)));
+        
+        _ = nameof(AdaptiveComponentFamilyUtils.GetPointOrientationType);
+        manager.Register("GetAdaptivePointOrientationType", () => Variants.Value(AdaptiveComponentFamilyUtils.GetPointOrientationType(referencePoint.Document, referencePoint.Id)));
+        
         manager.Register(nameof(AdaptiveComponentFamilyUtils.IsAdaptivePlacementPoint), () => Variants.Value(AdaptiveComponentFamilyUtils.IsAdaptivePlacementPoint(referencePoint.Document, referencePoint.Id)));
         manager.Register(nameof(AdaptiveComponentFamilyUtils.IsAdaptivePoint), () => Variants.Value(AdaptiveComponentFamilyUtils.IsAdaptivePoint(referencePoint.Document, referencePoint.Id)));
         manager.Register(nameof(AdaptiveComponentFamilyUtils.IsAdaptiveShapeHandlePoint), () => Variants.Value(AdaptiveComponentFamilyUtils.IsAdaptiveShapeHandlePoint(referencePoint.Document, referencePoint.Id)));
-        manager.Register(nameof(AdaptiveComponentFamilyUtils.MakeAdaptivePoint), Variants.NotSupported);
-        manager.Register(nameof(AdaptiveComponentFamilyUtils.SetPlacementNumber), Variants.NotSupported);
-        manager.Register(nameof(AdaptiveComponentFamilyUtils.SetPointConstraintType), Variants.NotSupported);
-        manager.Register(nameof(AdaptiveComponentFamilyUtils.SetPointOrientationType), Variants.NotSupported);
+
+        RegisterNotSupportedExtensions();
+        return;
+
+        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+        void RegisterNotSupportedExtensions()
+        {
+            _ = nameof(AdaptiveComponentFamilyUtils.SetPlacementNumber);
+            manager.Register("SetAdaptivePlacementNumber", Variants.NotSupported);
+            
+            _ = nameof(AdaptiveComponentFamilyUtils.SetPointConstraintType);
+            manager.Register("SetAdaptivePointConstraintType", Variants.NotSupported);
+            
+            _ = nameof(AdaptiveComponentFamilyUtils.SetPointOrientationType);
+            manager.Register("SetAdaptivePointOrientationType", Variants.NotSupported);
+            
+            manager.Register(nameof(AdaptiveComponentFamilyUtils.MakeAdaptivePoint), Variants.NotSupported);
+        }
     }
 }

@@ -26,22 +26,7 @@ public sealed class UiApplicationDescriptor : Descriptor, IDescriptorExtension
 #if REVIT2024_OR_GREATER
         manager.Register(nameof(UIThemeManager.CurrentCanvasTheme), () => Variants.Value(UIThemeManager.CurrentCanvasTheme));
         manager.Register(nameof(UIThemeManager.FollowSystemColorTheme), () => Variants.Value(UIThemeManager.FollowSystemColorTheme));
-        manager.Register(nameof(UIThemeManager.GetThemeName), ResolveGetThemeName);
-        return;
-
-        IVariant ResolveGetThemeName()
-        {
-            var themes = Enum.GetValues<UITheme>();
-            var values = Variants.Values<string>(themes.Length);
-
-            foreach (var theme in themes)
-            {
-                var name = UIThemeManager.GetThemeName(theme);
-                values.Add(name, $"{theme}: {name}");
-            }
-
-            return values.Consume();
-        }
+        manager.Register(nameof(UIThemeManager.GetThemeName), () => VariantsResolver.ResolveEnum<UITheme, string>(UIThemeManager.GetThemeName));
 #endif
     }
 }

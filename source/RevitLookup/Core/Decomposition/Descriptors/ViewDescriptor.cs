@@ -17,7 +17,6 @@ using Autodesk.Revit.DB.Analysis;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 #if REVIT2024_OR_GREATER
-using Autodesk.Revit.DB.Structure;
 #endif
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
@@ -28,175 +27,26 @@ public sealed class ViewDescriptor(View view) : ElementDescriptor(view)
     {
         return target switch
         {
-            nameof(View.CanCategoryBeHidden) => ResolveCanCategoryBeHidden,
-            nameof(View.CanCategoryBeHiddenTemporary) => ResolveCanCategoryBeHiddenTemporary,
-            nameof(View.CanViewBeDuplicated) => ResolveCanViewBeDuplicated,
-            nameof(View.GetCategoryHidden) => ResolveCategoryHidden,
-            nameof(View.GetCategoryOverrides) => ResolveCategoryOverrides,
-            nameof(View.GetIsFilterEnabled) => ResolveFilterEnabled,
-            nameof(View.GetFilterOverrides) => ResolveFilterOverrides,
-            nameof(View.GetFilterVisibility) => ResolveFilterVisibility,
-            nameof(View.GetWorksetVisibility) => ResolveWorksetVisibility,
-            nameof(View.IsCategoryOverridable) => ResolveIsCategoryOverridable,
-            nameof(View.IsFilterApplied) => ResolveIsFilterApplied,
-            nameof(View.IsInTemporaryViewMode) => ResolveIsInTemporaryViewMode,
+            nameof(View.CanCategoryBeHidden) => () => VariantsResolver.ResolveCategories(view.Document.Settings.Categories, view.CanCategoryBeHidden),
+            nameof(View.CanCategoryBeHiddenTemporary) => () => VariantsResolver.ResolveCategories(view.Document.Settings.Categories, view.CanCategoryBeHiddenTemporary),
+            nameof(View.CanViewBeDuplicated) => () => VariantsResolver.ResolveEnum<ViewDuplicateOption, bool>(view.CanViewBeDuplicated),
+            nameof(View.GetCategoryHidden) => () => VariantsResolver.ResolveCategories(view.Document.Settings.Categories, view.GetCategoryHidden),
+            nameof(View.GetCategoryOverrides) => () => VariantsResolver.ResolveCategories(view.Document.Settings.Categories, view.GetCategoryOverrides),
+            nameof(View.GetIsFilterEnabled) => () => VariantsResolver.ResolveFilters(view.GetFilters(), view.Document, view.GetIsFilterEnabled),
+            nameof(View.GetFilterOverrides) => () => VariantsResolver.ResolveFilters(view.GetFilters(), view.Document, view.GetFilterOverrides),
+            nameof(View.GetFilterVisibility) => () => VariantsResolver.ResolveFilters(view.GetFilters(), view.Document, view.GetFilterVisibility),
+            nameof(View.GetWorksetVisibility) => () => VariantsResolver.ResolveWorksets(new FilteredWorksetCollector(view.Document).OfKind(WorksetKind.UserWorkset).ToWorksets(), view.GetWorksetVisibility),
+            nameof(View.IsCategoryOverridable) => () => VariantsResolver.ResolveCategories(view.Document.Settings.Categories, view.IsCategoryOverridable),
+            nameof(View.IsFilterApplied) => () => VariantsResolver.ResolveFilters(view.GetFilters(), view.Document, view.IsFilterApplied),
+            nameof(View.IsInTemporaryViewMode) => () => VariantsResolver.ResolveEnum<TemporaryViewMode, bool>(view.IsInTemporaryViewMode),
             nameof(View.IsValidViewTemplate) => ResolveIsValidViewTemplate,
-            nameof(View.IsWorksetVisible) => ResolveIsWorksetVisible,
-            nameof(View.SupportsWorksharingDisplayMode) => ResolveSupportsWorksharingDisplayMode,
+            nameof(View.IsWorksetVisible) => () => VariantsResolver.ResolveWorksets(new FilteredWorksetCollector(view.Document).OfKind(WorksetKind.UserWorkset).ToWorksets(), view.IsWorksetVisible),
+            nameof(View.SupportsWorksharingDisplayMode) => () => VariantsResolver.ResolveEnum<WorksharingDisplayMode, bool>(view.SupportsWorksharingDisplayMode),
 #if REVIT2022_OR_GREATER
-            nameof(View.GetColorFillSchemeId) => ResolveColorFillSchemeId,
+            nameof(View.GetColorFillSchemeId) => () => VariantsResolver.ResolveCategories(view.Document.Settings.Categories, view.GetColorFillSchemeId),
 #endif
             _ => null
         };
-
-        IVariant ResolveCanCategoryBeHidden()
-        {
-            var categories = view.Document.Settings.Categories;
-            var variants = Variants.Values<bool>(categories.Size);
-            foreach (Category category in categories)
-            {
-                var result = view.CanCategoryBeHidden(category.Id);
-                variants.Add(result, $"{category.Name}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveCanCategoryBeHiddenTemporary()
-        {
-            var categories = view.Document.Settings.Categories;
-            var variants = Variants.Values<bool>(categories.Size);
-            foreach (Category category in categories)
-            {
-                var result = view.CanCategoryBeHiddenTemporary(category.Id);
-                variants.Add(result, $"{category.Name}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveCanViewBeDuplicated()
-        {
-            var values = Enum.GetValues(typeof(ViewDuplicateOption));
-            var variants = Variants.Values<bool>(values.Length);
-
-            foreach (ViewDuplicateOption option in values)
-            {
-                var result = view.CanViewBeDuplicated(option);
-                variants.Add(result, $"{option.ToString()}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveCategoryHidden()
-        {
-            var categories = view.Document.Settings.Categories;
-            var variants = Variants.Values<bool>(categories.Size);
-            foreach (Category category in categories)
-            {
-                var result = view.GetCategoryHidden(category.Id);
-                variants.Add(result, $"{category.Name}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveCategoryOverrides()
-        {
-            var categories = view.Document.Settings.Categories;
-            var variants = Variants.Values<OverrideGraphicSettings>(categories.Size);
-            foreach (Category category in categories)
-            {
-                var result = view.GetCategoryOverrides(category.Id);
-                variants.Add(result, category.Name);
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveIsCategoryOverridable()
-        {
-            var categories = view.Document.Settings.Categories;
-            var variants = Variants.Values<bool>(categories.Size);
-            foreach (Category category in categories)
-            {
-                var result = view.IsCategoryOverridable(category.Id);
-                variants.Add(result, $"{category.Name}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveFilterOverrides()
-        {
-            var filters = view.GetFilters();
-            var variants = Variants.Values<OverrideGraphicSettings>(filters.Count);
-            foreach (var filterId in filters)
-            {
-                var filter = filterId.ToElement(view.Document)!;
-                var result = view.GetFilterOverrides(filterId);
-                variants.Add(result, filter.Name);
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveFilterVisibility()
-        {
-            var filters = view.GetFilters();
-            var variants = Variants.Values<bool>(filters.Count);
-            foreach (var filterId in filters)
-            {
-                var filter = filterId.ToElement(view.Document)!;
-                var result = view.GetFilterVisibility(filterId);
-                variants.Add(result, $"{filter.Name}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveFilterEnabled()
-        {
-            var filters = view.GetFilters();
-            var variants = Variants.Values<bool>(filters.Count);
-            foreach (var filterId in filters)
-            {
-                var filter = filterId.ToElement(view.Document)!;
-                var result = view.GetIsFilterEnabled(filterId);
-                variants.Add(result, $"{filter.Name}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveIsFilterApplied()
-        {
-            var filters = view.GetFilters();
-            var variants = Variants.Values<bool>(filters.Count);
-            foreach (var filterId in filters)
-            {
-                var filter = filterId.ToElement(view.Document)!;
-                var result = view.IsFilterApplied(filterId);
-                variants.Add(result, $"{filter.Name}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveIsInTemporaryViewMode()
-        {
-            var values = Enum.GetValues(typeof(TemporaryViewMode));
-            var variants = Variants.Values<bool>(values.Length);
-
-            foreach (TemporaryViewMode mode in values)
-            {
-                var result = view.IsInTemporaryViewMode(mode);
-                variants.Add(result, $"{mode.ToString()}: {result}");
-            }
-
-            return variants.Consume();
-        }
 
         IVariant ResolveIsValidViewTemplate()
         {
@@ -206,7 +56,7 @@ public sealed class ViewDescriptor(View view) : ElementDescriptor(view)
                 .Cast<View>()
                 .Where(element => element.IsTemplate)
                 .ToArray();
-            
+
             var variants = Variants.Values<bool>(templates.Length);
             foreach (var template in templates)
             {
@@ -216,82 +66,25 @@ public sealed class ViewDescriptor(View view) : ElementDescriptor(view)
 
             return variants.Consume();
         }
-
-        IVariant ResolveIsWorksetVisible()
-        {
-            var workSets = new FilteredWorksetCollector(view.Document).OfKind(WorksetKind.UserWorkset).ToWorksets();
-            var variants = Variants.Values<bool>(workSets.Count);
-            foreach (var workSet in workSets)
-            {
-                var result = view.IsWorksetVisible(workSet.Id);
-                variants.Add(result, $"{workSet.Name}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveWorksetVisibility()
-        {
-            var workSets = new FilteredWorksetCollector(view.Document).OfKind(WorksetKind.UserWorkset).ToWorksets();
-            var variants = Variants.Values<WorksetVisibility>(workSets.Count);
-            foreach (var workSet in workSets)
-            {
-                var result = view.GetWorksetVisibility(workSet.Id);
-                variants.Add(result, $"{workSet.Name}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveSupportsWorksharingDisplayMode()
-        {
-            var values = Enum.GetValues(typeof(WorksharingDisplayMode));
-            var variants = Variants.Values<bool>(values.Length);
-
-            foreach (WorksharingDisplayMode mode in values)
-            {
-                var result = view.SupportsWorksharingDisplayMode(mode);
-                variants.Add(result, $"{mode.ToString()}: {result}");
-            }
-
-            return variants.Consume();
-        }
-#if REVIT2022_OR_GREATER
-
-        IVariant ResolveColorFillSchemeId()
-        {
-            var categories = view.Document.Settings.Categories;
-            var variants = Variants.Values<ElementId>(categories.Size);
-            foreach (Category category in categories)
-            {
-                var result = view.GetColorFillSchemeId(category.Id);
-                variants.Add(result, category.Name);
-            }
-
-            return variants.Consume();
-        }
-#endif
     }
 
     public override void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(SpatialFieldManager.GetSpatialFieldManager), () => Variants.Value(SpatialFieldManager.GetSpatialFieldManager(view)));
         manager.Register("GetInstances", () => Variants.Value(view.Document.CollectElements(view.Id).Instances().ToElements()));
+        manager.Register(nameof(SpatialFieldManager.GetSpatialFieldManager), () => Variants.Value(SpatialFieldManager.GetSpatialFieldManager(view)));
         manager.Register(nameof(ReferenceableViewUtils.GetReferencedViewId), () => Variants.Value(ReferenceableViewUtils.GetReferencedViewId(view.Document, view.Id)));
-        manager.Register(nameof(ReferenceableViewUtils.ChangeReferencedView), Variants.NotSupported);
 
-        _ = nameof(ElementTransformUtils.GetTransformFromViewToView); //Api compile-time compability check
-        manager.Register("GetTransformFromViewToView", Variants.NotSupported);
+        RegisterNotSupportedExtensions();
+        return;
 
-        _ = nameof(ElementTransformUtils.CopyElements); //Api compile-time compability check
-        manager.Register("CopyElementsBetweenViews", Variants.NotSupported);
-#if REVIT2023_OR_GREATER
-        manager.Register(nameof(BoundaryValidation.IsValidBoundaryOnView), Variants.NotSupported);
-#endif
-#if REVIT2024_OR_GREATER
-        _ = nameof(RebarBendingDetail.Create); //Api compile-time compability check
-        manager.Register("CreateBendingDetail", Variants.NotSupported);
+        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+        void RegisterNotSupportedExtensions()
+        {
+            manager.Register(nameof(ReferenceableViewUtils.ChangeReferencedView), Variants.NotSupported);
+            manager.Register(nameof(ElementTransformUtils.GetTransformFromViewToView), Variants.NotSupported);
 
-#endif
+            _ = nameof(ElementTransformUtils.CopyElements);
+            manager.Register("CopyElementsBetweenViews", Variants.NotSupported);
+        }
     }
 }

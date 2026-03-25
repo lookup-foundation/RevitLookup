@@ -23,8 +23,15 @@ public sealed class SketchPlaneDescriptor(SketchPlane sketchPlane) : ElementDesc
 {
     public override void RegisterExtensions(IExtensionManager manager)
     {
+        RegisterNotSupportedExtensions();
+        return;
+
+        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+        void RegisterNotSupportedExtensions()
+        {
 #if REVIT2023_OR_GREATER
-        manager.Register(nameof(BoundaryValidation.IsValidBoundaryOnSketchPlane), Variants.NotSupported);
+            _ = nameof(BoundaryValidation.IsValidBoundaryOnSketchPlane); manager.Register("IsValidBoundaryOnSketchPlane", Variants.NotSupported);
 #endif
+        }
     }
 }

@@ -24,21 +24,8 @@ public sealed class AnalyticalLinkTypeDescriptor(AnalyticalLinkType analyticalLi
     {
         return target switch
         {
-            nameof(AnalyticalLinkType.IsValidAnalyticalFixityState) => ResolveIsValidAnalyticalFixityState,
+            nameof(AnalyticalLinkType.IsValidAnalyticalFixityState) => () => VariantsResolver.ResolveEnum<AnalyticalFixityState, bool>(AnalyticalLinkType.IsValidAnalyticalFixityState),
             _ => null
         };
-
-        IVariant ResolveIsValidAnalyticalFixityState()
-        {
-            var values = Enum.GetValues(typeof(AnalyticalFixityState));
-            var variants = Variants.Values<bool>(values.Length);
-            foreach (AnalyticalFixityState state in values)
-            {
-                var result = AnalyticalLinkType.IsValidAnalyticalFixityState(state);
-                variants.Add(result, $"{state}: {result}");
-            }
-
-            return variants.Consume();
-        }
     }
 }

@@ -46,37 +46,17 @@ public sealed partial class ParameterDescriptor : Descriptor, IDescriptorResolve
         return target switch
         {
             nameof(Parameter.ClearValue) => Variants.Disabled,
-            nameof(Parameter.HasValue) => ResolveHasValue,
-            nameof(Parameter.AsString) => ResolveAsString,
+            nameof(Parameter.HasValue) => () => _parameter.Element is null ? Variants.Disabled() : Variants.Value(_parameter.HasValue),
+            nameof(Parameter.AsString) => () => _parameter.Element is null ? Variants.Disabled() : Variants.Value(_parameter.AsString()),
             _ => null
         };
-
-        IVariant ResolveHasValue()
-        {
-            // Memory corrupted if the Element is null
-            return _parameter.Element is null ? Variants.Disabled() : Variants.Value(_parameter.HasValue);
-        }
-
-        IVariant ResolveAsString()
-        {
-            // Memory corrupted if the Element is null
-            return _parameter.Element is null ? Variants.Disabled() : Variants.Value(_parameter.AsString());
-        }
     }
 
     public void RegisterExtensions(IExtensionManager manager)
     {
-        if (_parameter.StorageType == StorageType.Integer)
-        {
-            manager.Register(nameof(ParameterExtensions.AsBool), () => Variants.Value(_parameter.AsBool()));
-            manager.Register(nameof(ParameterExtensions.AsColor), () => Variants.Value(_parameter.AsColor()));
-        }
-
-        // Memory corrupted if the Element is null
-        if (_parameter.Element is not null && _parameter.Element.Document.IsFamilyDocument)
-        {
-            manager.Register(nameof(FamilyManager.GetAssociatedFamilyParameter), () => Variants.Value(_parameter.Element.Document.FamilyManager.GetAssociatedFamilyParameter(_parameter)));
-        }
+        manager.Register(nameof(ParameterExtensions.AsBool), () => Variants.Value(_parameter.AsBool()));
+        manager.Register(nameof(ParameterExtensions.AsColor), () => Variants.Value(_parameter.AsColor()));
+        manager.Register(nameof(FamilyManager.GetAssociatedFamilyParameter), () => Variants.Value(_parameter.Element?.Document.FamilyManager.GetAssociatedFamilyParameter(_parameter)));
     }
 
     public void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)

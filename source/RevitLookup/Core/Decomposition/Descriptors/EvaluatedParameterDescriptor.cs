@@ -33,20 +33,10 @@ public sealed class EvaluatedParameterDescriptor : Descriptor, IDescriptorResolv
     {
         return target switch
         {
-            nameof(EvaluatedParameter.AsValueString) when parameters.Length == 1 => ResolveAsValueString,
-            nameof(EvaluatedParameter.AsValueString) when parameters.Length == 2 => ResolveAsValueStringFormat,
+            nameof(EvaluatedParameter.AsValueString) when parameters.Length == 1 => context => Variants.Value(_parameter.AsValueString(context)),
+            nameof(EvaluatedParameter.AsValueString) when parameters.Length == 2 => context => Variants.Value(_parameter.AsValueString(context, new FormatOptions())),
             _ => null
         };
-
-        IVariant ResolveAsValueString(Document context)
-        {
-            return Variants.Value(_parameter.AsValueString(context));
-        }
-
-        IVariant ResolveAsValueStringFormat(Document context)
-        {
-            return Variants.Value(_parameter.AsValueString(context, new FormatOptions()));
-        }
     }
 }
 #endif

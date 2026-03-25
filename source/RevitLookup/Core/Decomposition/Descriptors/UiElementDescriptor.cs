@@ -24,17 +24,12 @@ public sealed class UiElementDescriptor(UIElement uiElement) : DependencyObjectD
     {
         return target switch
         {
-            nameof(UIElement.GetLocalValueEnumerator) => ResolveGetLocalValueEnumerator,
+            nameof(UIElement.GetLocalValueEnumerator) => Variants.Empty<LocalValueEnumerator>,
             nameof(UIElement.CaptureMouse) => Variants.Disabled,
             nameof(UIElement.CaptureStylus) => Variants.Disabled,
             nameof(UIElement.Focus) => Variants.Disabled,
             "Enter" => Variants.Disabled,
             _ => null
         };
-
-        IVariant ResolveGetLocalValueEnumerator()
-        {
-            return Variants.Empty<LocalValueEnumerator>();
-        }
     }
 }

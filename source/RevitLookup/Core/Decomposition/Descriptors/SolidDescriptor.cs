@@ -44,31 +44,48 @@ public sealed partial class SolidDescriptor : Descriptor, IDescriptorExtension, 
     {
         manager.Register(nameof(SolidUtils.SplitVolumes), () => Variants.Value(SolidUtils.SplitVolumes(_solid)));
         manager.Register(nameof(SolidUtils.IsValidForTessellation), () => Variants.Value(SolidUtils.IsValidForTessellation(_solid)));
-        manager.Register(nameof(SolidUtils.Clone), Variants.Disabled);
-        manager.Register(nameof(SolidUtils.CreateTransformed), Variants.Disabled);
         manager.Register(nameof(SolidUtils.TessellateSolidOrShell), ResolveTessellateSolidOrShell);
-        manager.Register(nameof(BooleanOperationsUtils.CutWithHalfSpace), Variants.NotSupported);
-        manager.Register(nameof(BooleanOperationsUtils.CutWithHalfSpaceModifyingOriginalSolid), Variants.NotSupported);
-        manager.Register(nameof(BooleanOperationsUtils.ExecuteBooleanOperation), Variants.NotSupported);
-        manager.Register(nameof(BooleanOperationsUtils.ExecuteBooleanOperationModifyingOriginalSolid), Variants.NotSupported);
 #if REVIT2026_OR_GREATER
         manager.Register(nameof(SolidUtils.ComputeIsGeometricallyClosed), () => Variants.Value(SolidUtils.ComputeIsGeometricallyClosed(_solid)));
         manager.Register(nameof(SolidUtils.ComputeIsTopologicallyClosed), () => Variants.Value(SolidUtils.ComputeIsTopologicallyClosed(_solid)));
 #endif
+
+        RegisterNotSupportedExtensions();
         return;
 
         IVariant ResolveTessellateSolidOrShell()
         {
             return Variants.Values<TriangulatedSolidOrShell>(2)
-                .Add(SolidUtils.TessellateSolidOrShell(_solid, new SolidOrShellTessellationControls
-                {
-                    LevelOfDetail = 0
-                }), "Coarse")
-                .Add(SolidUtils.TessellateSolidOrShell(_solid, new SolidOrShellTessellationControls
-                {
-                    LevelOfDetail = 1
-                }), "Fine")
+                .Add(SolidUtils.TessellateSolidOrShell(_solid, new SolidOrShellTessellationControls {LevelOfDetail = 0}), "Coarse")
+                .Add(SolidUtils.TessellateSolidOrShell(_solid, new SolidOrShellTessellationControls {LevelOfDetail = 1}), "Fine")
                 .Consume();
+        }
+
+        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+        void RegisterNotSupportedExtensions()
+        {
+            manager.Register(nameof(SolidUtils.Clone), Variants.NotSupported);
+            manager.Register(nameof(SolidUtils.CreateTransformed), Variants.NotSupported);
+            
+            _ = nameof(BooleanOperationsUtils.CutWithHalfSpace);
+            manager.Register("CutWithHalfSpace", Variants.NotSupported);
+            
+            _ = nameof(BooleanOperationsUtils.CutWithHalfSpaceModifyingOriginalSolid);
+            manager.Register("CutWithHalfSpaceModifyingOriginalSolid", Variants.NotSupported);
+            
+            _ = nameof(BooleanOperationsUtils.ExecuteBooleanOperation);
+            manager.Register("ExecuteBooleanOperation", Variants.NotSupported);
+            
+            _ = nameof(BooleanOperationsUtils.ExecuteBooleanOperationModifyingOriginalSolid);
+            manager.Register("ExecuteBooleanOperationModifyingOriginalSolid", Variants.NotSupported);
+
+            manager.Register(nameof(GeometryCreationUtilities.CreateBlendGeometry), Variants.NotSupported);
+            manager.Register(nameof(GeometryCreationUtilities.CreateExtrusionGeometry), Variants.NotSupported);
+            manager.Register(nameof(GeometryCreationUtilities.CreateFixedReferenceSweptGeometry), Variants.NotSupported);
+            manager.Register(nameof(GeometryCreationUtilities.CreateLoftGeometry), Variants.NotSupported);
+            manager.Register(nameof(GeometryCreationUtilities.CreateRevolvedGeometry), Variants.NotSupported);
+            manager.Register(nameof(GeometryCreationUtilities.CreateSweptBlendGeometry), Variants.NotSupported);
+            manager.Register(nameof(GeometryCreationUtilities.CreateSweptGeometry), Variants.NotSupported);
         }
     }
 
@@ -118,7 +135,7 @@ public sealed partial class SolidDescriptor : Descriptor, IDescriptorExtension, 
             .Select(face => face.Reference)
             .Where(reference => reference is not null)
             .ToList();
-        
+
         if (references.Count == 0) return;
 
         application.ActiveUIDocument.Selection.SetReferences(references);
@@ -129,17 +146,17 @@ public sealed partial class SolidDescriptor : Descriptor, IDescriptorExtension, 
     {
         var uiDocument = application.ActiveUIDocument;
         if (uiDocument is null) return;
-        
+
         var references = solid.Faces.Cast<Face>()
             .Select(face => face.Reference)
             .Where(reference => reference is not null)
             .ToList();
-        
+
         if (references.Count == 0) return;
 
         var element = references[0].ElementId.ToElement(uiDocument.Document);
         if (element is not null) uiDocument.ShowElements(element);
-        
+
         uiDocument.Selection.SetReferences(references);
     }
 #endif

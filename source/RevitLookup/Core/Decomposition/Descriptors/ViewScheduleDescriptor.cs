@@ -23,41 +23,28 @@ public sealed class ViewScheduleDescriptor(ViewSchedule viewSchedule) : ElementD
     {
         return target switch
         {
-            nameof(ViewSchedule.GetStripedRowsColor) => ResolveStripedRowsColor,
+            nameof(ViewSchedule.GetStripedRowsColor) => () => VariantsResolver.ResolveEnum<StripedRowPattern, Color>(viewSchedule.GetStripedRowsColor),
             nameof(ViewSchedule.IsValidTextTypeId) => ResolveValidTextTypeId,
             nameof(ViewSchedule.GetDefaultNameForKeySchedule) => ResolveDefaultNameForKeySchedule,
             nameof(ViewSchedule.GetDefaultNameForMaterialTakeoff) => ResolveDefaultNameForMaterialTakeoff,
             nameof(ViewSchedule.GetDefaultNameForSchedule) => ResolveDefaultNameForSchedule,
             nameof(ViewSchedule.GetDefaultParameterNameForKeySchedule) => ResolveDefaultParameterNameForKeySchedule,
-            nameof(ViewSchedule.IsValidCategoryForKeySchedule) => ResolveIsValidCategoryForKeySchedule,
-            nameof(ViewSchedule.IsValidCategoryForMaterialTakeoff) => ResolveIsValidCategoryForMaterialTakeoff,
-            nameof(ViewSchedule.IsValidCategoryForSchedule) => ResolveIsValidCategoryForSchedule,
-            nameof(ViewSchedule.GetDefaultNameForKeynoteLegend) => ResolveGetDefaultNameForKeynoteLegend,
-            nameof(ViewSchedule.GetDefaultNameForNoteBlock) => ResolveGetDefaultNameForNoteBlock,
-            nameof(ViewSchedule.GetDefaultNameForRevisionSchedule) => ResolveGetDefaultNameForRevisionSchedule,
-            nameof(ViewSchedule.GetDefaultNameForSheetList) => ResolveGetDefaultNameForSheetList,
-            nameof(ViewSchedule.GetDefaultNameForViewList) => ResolveGetDefaultNameForViewList,
-            nameof(ViewSchedule.GetValidFamiliesForNoteBlock) => ResolveGetValidFamiliesForNoteBlock,
+            nameof(ViewSchedule.IsValidCategoryForKeySchedule) => () => VariantsResolver.ResolveCategories(viewSchedule.Document.Settings.Categories, ViewSchedule.IsValidCategoryForKeySchedule),
+            nameof(ViewSchedule.IsValidCategoryForMaterialTakeoff) => () => VariantsResolver.ResolveCategories(viewSchedule.Document.Settings.Categories, ViewSchedule.IsValidCategoryForMaterialTakeoff),
+            nameof(ViewSchedule.IsValidCategoryForSchedule) => () => VariantsResolver.ResolveCategories(viewSchedule.Document.Settings.Categories, ViewSchedule.IsValidCategoryForSchedule),
+            nameof(ViewSchedule.GetDefaultNameForKeynoteLegend) => () => Variants.Value(ViewSchedule.GetDefaultNameForKeynoteLegend(viewSchedule.Document)),
+            nameof(ViewSchedule.GetDefaultNameForNoteBlock) => () => Variants.Value(ViewSchedule.GetDefaultNameForNoteBlock(viewSchedule.Document)),
+            nameof(ViewSchedule.GetDefaultNameForRevisionSchedule) => () => Variants.Value(ViewSchedule.GetDefaultNameForRevisionSchedule(viewSchedule.Document)),
+            nameof(ViewSchedule.GetDefaultNameForSheetList) => () => Variants.Value(ViewSchedule.GetDefaultNameForSheetList(viewSchedule.Document)),
+            nameof(ViewSchedule.GetDefaultNameForViewList) => () => Variants.Value(ViewSchedule.GetDefaultNameForViewList(viewSchedule.Document)),
+            nameof(ViewSchedule.GetValidFamiliesForNoteBlock) => () => Variants.Value(ViewSchedule.GetValidFamiliesForNoteBlock(viewSchedule.Document)),
             nameof(ViewSchedule.RefreshData) => Variants.Disabled,
 #if REVIT2022_OR_GREATER
             nameof(ViewSchedule.GetScheduleInstances) => ResolveScheduleInstances,
-            nameof(ViewSchedule.GetSegmentHeight) => ResolveSegmentHeight,
+            nameof(ViewSchedule.GetSegmentHeight) => () => VariantsResolver.ResolveIndex(viewSchedule.GetSegmentCount(), viewSchedule.GetSegmentHeight),
 #endif
             _ => null
         };
-
-        IVariant ResolveStripedRowsColor()
-        {
-            var patterns = Enum.GetValues(typeof(StripedRowPattern));
-            var variants = Variants.Values<Color>(patterns.Length);
-
-            foreach (StripedRowPattern pattern in patterns)
-            {
-                variants.Add(viewSchedule.GetStripedRowsColor(pattern), pattern.ToString());
-            }
-
-            return variants.Consume();
-        }
 
         IVariant ResolveValidTextTypeId()
         {
@@ -65,9 +52,8 @@ public sealed class ViewScheduleDescriptor(ViewSchedule viewSchedule) : ElementD
                 .Types()
                 .OfClass<TextNoteType>()
                 .ToElements();
-            
-            var variants = Variants.Values<bool>(types.Count);
 
+            var variants = Variants.Values<bool>(types.Count);
             foreach (var type in types)
             {
                 var result = viewSchedule.IsValidTextTypeId(type.Id);
@@ -108,7 +94,7 @@ public sealed class ViewScheduleDescriptor(ViewSchedule viewSchedule) : ElementD
                 .Instances()
                 .OfClass<AreaScheme>()
                 .ToArray();
-            
+
             var categories = ViewSchedule.GetValidCategoriesForSchedule();
             var variants = Variants.Values<string>(categories.Count + areas.Length);
             var areaId = new ElementId(BuiltInCategory.OST_Areas);
@@ -144,51 +130,11 @@ public sealed class ViewScheduleDescriptor(ViewSchedule viewSchedule) : ElementD
             return variants.Consume();
         }
 
-        IVariant ResolveIsValidCategoryForKeySchedule()
-        {
-            var categories = viewSchedule.Document.Settings.Categories;
-            var variants = Variants.Values<bool>(categories.Size);
-            foreach (Category category in categories)
-            {
-                var result = ViewSchedule.IsValidCategoryForKeySchedule(category.Id);
-                variants.Add(result, $"{category.Name}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveIsValidCategoryForMaterialTakeoff()
-        {
-            var categories = viewSchedule.Document.Settings.Categories;
-            var variants = Variants.Values<bool>(categories.Size);
-            foreach (Category category in categories)
-            {
-                var result = ViewSchedule.IsValidCategoryForMaterialTakeoff(category.Id);
-                variants.Add(result, $"{category.Name}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
-        IVariant ResolveIsValidCategoryForSchedule()
-        {
-            var categories = viewSchedule.Document.Settings.Categories;
-            var variants = Variants.Values<bool>(categories.Size);
-            foreach (Category category in categories)
-            {
-                var result = ViewSchedule.IsValidCategoryForSchedule(category.Id);
-                variants.Add(result, $"{category.Name}: {result}");
-            }
-
-            return variants.Consume();
-        }
-
 #if REVIT2022_OR_GREATER
         IVariant ResolveScheduleInstances()
         {
             var count = viewSchedule.GetSegmentCount();
             var variants = Variants.Values<IList<ElementId>>(count);
-
             for (var i = -1; i < count; i++)
             {
                 variants.Add(viewSchedule.GetScheduleInstances(i));
@@ -196,48 +142,6 @@ public sealed class ViewScheduleDescriptor(ViewSchedule viewSchedule) : ElementD
 
             return variants.Consume();
         }
-
-        IVariant ResolveSegmentHeight()
-        {
-            var count = viewSchedule.GetSegmentCount();
-            var variants = Variants.Values<double>(count);
-
-            for (var i = 0; i < count; i++)
-            {
-                variants.Add(viewSchedule.GetSegmentHeight(i));
-            }
-
-            return variants.Consume();
-        }
 #endif
-        IVariant ResolveGetDefaultNameForKeynoteLegend()
-        {
-            return Variants.Value(ViewSchedule.GetDefaultNameForKeynoteLegend(viewSchedule.Document));
-        }
-
-        IVariant ResolveGetDefaultNameForNoteBlock()
-        {
-            return Variants.Value(ViewSchedule.GetDefaultNameForNoteBlock(viewSchedule.Document));
-        }
-
-        IVariant ResolveGetDefaultNameForRevisionSchedule()
-        {
-            return Variants.Value(ViewSchedule.GetDefaultNameForRevisionSchedule(viewSchedule.Document));
-        }
-
-        IVariant ResolveGetDefaultNameForSheetList()
-        {
-            return Variants.Value(ViewSchedule.GetDefaultNameForSheetList(viewSchedule.Document));
-        }
-
-        IVariant ResolveGetDefaultNameForViewList()
-        {
-            return Variants.Value(ViewSchedule.GetDefaultNameForViewList(viewSchedule.Document));
-        }
-
-        IVariant ResolveGetValidFamiliesForNoteBlock()
-        {
-            return Variants.Value(ViewSchedule.GetValidFamiliesForNoteBlock(viewSchedule.Document));
-        }
     }
 }
