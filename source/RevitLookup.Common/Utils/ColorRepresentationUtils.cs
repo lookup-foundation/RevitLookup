@@ -512,10 +512,10 @@ public static class ColorRepresentationUtils
         yellow = Math.Round(yellow * 100);
         blackKey = Math.Round(blackKey * 100);
 
-        return $"cmyk({cyan.ToString(CultureInfo.InvariantCulture)}%"
+        return $"{cyan.ToString(CultureInfo.InvariantCulture)}%"
                + $", {magenta.ToString(CultureInfo.InvariantCulture)}%"
                + $", {yellow.ToString(CultureInfo.InvariantCulture)}%"
-               + $", {blackKey.ToString(CultureInfo.InvariantCulture)}%)";
+               + $", {blackKey.ToString(CultureInfo.InvariantCulture)}%";
     }
 
     /// <summary>
@@ -545,9 +545,9 @@ public static class ColorRepresentationUtils
         saturation = Math.Round(saturation * 100);
         brightness = Math.Round(brightness * 100);
 
-        return $"hsb({hue.ToString(CultureInfo.InvariantCulture)}"
+        return $"{hue.ToString(CultureInfo.InvariantCulture)}"
                + $", {saturation.ToString(CultureInfo.InvariantCulture)}%"
-               + $", {brightness.ToString(CultureInfo.InvariantCulture)}%)";
+               + $", {brightness.ToString(CultureInfo.InvariantCulture)}%";
     }
 
     /// <summary>
@@ -561,9 +561,9 @@ public static class ColorRepresentationUtils
         const int precision = 2;
         const string floatFormat = "0.##";
 
-        return $"({Math.Round(red, precision).ToString(floatFormat, CultureInfo.InvariantCulture)}f"
+        return $"{Math.Round(red, precision).ToString(floatFormat, CultureInfo.InvariantCulture)}f"
                + $", {Math.Round(green, precision).ToString(floatFormat, CultureInfo.InvariantCulture)}f"
-               + $", {Math.Round(blue, precision).ToString(floatFormat, CultureInfo.InvariantCulture)}f, 1f)";
+               + $", {Math.Round(blue, precision).ToString(floatFormat, CultureInfo.InvariantCulture)}f, 1f";
     }
 
     /// <summary>
@@ -589,9 +589,9 @@ public static class ColorRepresentationUtils
         saturation = Math.Round(saturation * 100);
         intensity = Math.Round(intensity * 100);
 
-        return $"hsi({hue.ToString(CultureInfo.InvariantCulture)}"
+        return $"{hue.ToString(CultureInfo.InvariantCulture)}"
                + $", {saturation.ToString(CultureInfo.InvariantCulture)}%"
-               + $", {intensity.ToString(CultureInfo.InvariantCulture)}%)";
+               + $", {intensity.ToString(CultureInfo.InvariantCulture)}%";
     }
 
     /// <summary>
@@ -608,9 +608,9 @@ public static class ColorRepresentationUtils
         lightness = Math.Round(lightness * 100);
 
         // Using InvariantCulture since this is used for color representation
-        return $"hsl({hue.ToString(CultureInfo.InvariantCulture)}"
+        return $"{hue.ToString(CultureInfo.InvariantCulture)}"
                + $", {saturation.ToString(CultureInfo.InvariantCulture)}%"
-               + $", {lightness.ToString(CultureInfo.InvariantCulture)}%)";
+               + $", {lightness.ToString(CultureInfo.InvariantCulture)}%";
     }
 
     /// <summary>
@@ -627,9 +627,9 @@ public static class ColorRepresentationUtils
         value = Math.Round(value * 100);
 
         // Using InvariantCulture since this is used for color representation
-        return $"hsv({hue.ToString(CultureInfo.InvariantCulture)}"
+        return $"{hue.ToString(CultureInfo.InvariantCulture)}"
                + $", {saturation.ToString(CultureInfo.InvariantCulture)}%"
-               + $", {value.ToString(CultureInfo.InvariantCulture)}%)";
+               + $", {value.ToString(CultureInfo.InvariantCulture)}%";
     }
 
     /// <summary>
@@ -645,9 +645,9 @@ public static class ColorRepresentationUtils
         whiteness = Math.Round(whiteness * 100);
         blackness = Math.Round(blackness * 100);
 
-        return $"hwb({hue.ToString(CultureInfo.InvariantCulture)}"
+        return $"{hue.ToString(CultureInfo.InvariantCulture)}"
                + $", {whiteness.ToString(CultureInfo.InvariantCulture)}%"
-               + $", {blackness.ToString(CultureInfo.InvariantCulture)}%)";
+               + $", {blackness.ToString(CultureInfo.InvariantCulture)}%";
     }
 
     /// <summary>
@@ -673,9 +673,9 @@ public static class ColorRepresentationUtils
     /// <param name="color">The <see cref="Color"/> for the RGB color presentation</param>
     /// <returns>A <see cref="string"/> representation of a RGB color</returns>
     public static string ColorToRgb(Color color)
-        => $"rgb({color.R.ToString(CultureInfo.InvariantCulture)}"
+        => $"{color.R.ToString(CultureInfo.InvariantCulture)}"
            + $", {color.G.ToString(CultureInfo.InvariantCulture)}"
-           + $", {color.B.ToString(CultureInfo.InvariantCulture)})";
+           + $", {color.B.ToString(CultureInfo.InvariantCulture)}";
 
     /// <summary>
     /// Returns a <see cref="string"/> representation of a CIE LAB color
@@ -689,9 +689,9 @@ public static class ColorRepresentationUtils
         chromaticityA = Math.Round(chromaticityA, 2);
         chromaticityB = Math.Round(chromaticityB, 2);
 
-        return $"CIELab({lightness.ToString(CultureInfo.InvariantCulture)}" +
+        return $"{lightness.ToString(CultureInfo.InvariantCulture)}" +
                $", {chromaticityA.ToString(CultureInfo.InvariantCulture)}" +
-               $", {chromaticityB.ToString(CultureInfo.InvariantCulture)})";
+               $", {chromaticityB.ToString(CultureInfo.InvariantCulture)}";
     }
 
     /// <summary>
@@ -707,9 +707,9 @@ public static class ColorRepresentationUtils
         y = Math.Round(y * 100, 4);
         z = Math.Round(z * 100, 4);
 
-        return $"XYZ({x.ToString(CultureInfo.InvariantCulture)}" +
+        return $"{x.ToString(CultureInfo.InvariantCulture)}" +
                $", {y.ToString(CultureInfo.InvariantCulture)}" +
-               $", {z.ToString(CultureInfo.InvariantCulture)})";
+               $", {z.ToString(CultureInfo.InvariantCulture)}";
     }
 
     /// <summary>
