@@ -55,7 +55,7 @@
         <PackageVersion Include="WixSharp.Msi.Core" Version="2.12.2"/>
 
         <!-- Testing -->
-        <PackageVersion Include="TUnit" Version="1.13.60"/>
+        <PackageVersion Include="TUnit" Version="1.21.20"/>
         <PackageVersion Include="Shouldly" Version="4.3.0"/>
 
         <!-- System Libraries -->
