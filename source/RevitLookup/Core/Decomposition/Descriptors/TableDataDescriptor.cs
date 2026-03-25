@@ -32,18 +32,6 @@ public sealed class TableDataDescriptor(TableData tableData) : Descriptor, IDesc
             _ => null
         };
 
-        IVariant ResolveSectionDataBySectionType()
-        {
-            var sectionTypes = Enum.GetValues(typeof(SectionType));
-            var variants = Variants.Values<TableSectionData>(sectionTypes.Length);
-            foreach (SectionType sectionType in sectionTypes)
-            {
-                variants.Add(tableData.GetSectionData(sectionType), sectionType.ToString());
-            }
-
-            return variants.Consume();
-        }
-
         IVariant ResolveSectionDataByIndex()
         {
             var variants = Variants.Values<TableSectionData>(tableData.NumberOfSections);
