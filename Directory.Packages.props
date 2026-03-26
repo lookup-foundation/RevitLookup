@@ -20,7 +20,7 @@
         <PackageVersion Include="Nice3point.TUnit.Revit" Version="$(RevitVersion).*" Condition="$(RevitVersion) != ''"/>
 
         <!-- MVVM -->
-        <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.1"/>
+        <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2"/>
 
         <!-- Application Hosting -->
         <PackageVersion Include="Scrutor" Version="7.0.0"/>
