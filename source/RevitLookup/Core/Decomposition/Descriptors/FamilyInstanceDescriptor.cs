@@ -194,6 +194,9 @@ public sealed class FamilyInstanceDescriptor(FamilyInstance familyInstance) : El
             _ = nameof(AdaptiveComponentInstanceUtils.SetInstanceFlipped);
             manager.Register("SetAdaptiveInstanceFlipped", Variants.NotSupported);
             
+            _ = nameof(InstanceVoidCutUtils.IsVoidInstanceCuttingElement);
+            manager.Register("IsVoidInstanceCuttingElement", Variants.NotSupported);
+            
             _ = nameof(MassInstanceUtils.AddMassLevelDataToMassInstance);
             manager.Register("AddMassLevelData", Variants.NotSupported);
             

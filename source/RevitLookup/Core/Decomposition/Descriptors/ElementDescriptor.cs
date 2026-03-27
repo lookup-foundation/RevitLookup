@@ -254,9 +254,6 @@ public partial class ElementDescriptor : Descriptor, IDescriptorResolver, IDescr
         // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
         void RegisterNotSupportedExtensions()
         {
-            _ = nameof(InstanceVoidCutUtils.IsVoidInstanceCuttingElement);
-            manager.Register("IsVoidInstanceCuttingElement", Variants.NotSupported);
-
             _ = nameof(InstanceVoidCutUtils.GetElementsBeingCut);
             manager.Register("GetElementsBeingCut", Variants.NotSupported);
 
