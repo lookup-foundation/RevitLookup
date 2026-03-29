@@ -56,28 +56,4 @@ public sealed class FamilySizeTableDescriptor(FamilySizeTable table) : Descripto
             return variants.Consume();
         }
     }
-
-    // TODO: rework FamilySizeTableEditDialog
-    // public void RegisterMenu(ContextMenu contextMenu)
-    // {
-    //     var context = (ISnoopViewModel) contextMenu.DataContext;
-    //     var document = context.SnoopableObjects[0].Context;
-    //     
-    //     contextMenu.AddMenuItem("ShowMenuItem")
-    //         .SetHeader("Show table")
-    //         .SetAvailability(table.IsValidObject)
-    //         .SetCommand(table, async sizeTable =>
-    //         {
-    //             try
-    //             {
-    //                 var dialog = new FamilySizeTableEditDialog(document, sizeTable);
-    //                 await dialog.ShowAsync();
-    //             }
-    //             catch (Exception exception)
-    //             {
-    //                 var logger = context.ServiceProvider.GetRequiredService<ILogger<FamilySizeTableDescriptor>>();
-    //                 logger.LogError(exception, "FamilySizeTableDialog error");
-    //             }
-    //         });
-    // }
 }

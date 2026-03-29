@@ -57,45 +57,4 @@ public sealed class FamilySizeTableManagerDescriptor(FamilySizeTableManager mana
             return variants.Consume();
         }
     }
-
-    // TODO: rework FamilySizeTableSelectDialog
-    // public void RegisterMenu(ContextMenu contextMenu)
-    // {
-    //     var context = (ISnoopViewModel) contextMenu.DataContext;
-    //     var document = context.SnoopableObjects[0].Context;
-    //     
-    //     contextMenu.AddMenuItem("ExportMenuItem")
-    //         .SetHeader("Export table")
-    //         .SetAvailability(manager.GetAllSizeTableNames().Count > 0)
-    //         .SetCommand(manager, async _ =>
-    //         {
-    //             try
-    //             {
-    //                 var dialog = new FamilySizeTableSelectDialog(context.ServiceProvider, document, manager);
-    //                 await dialog.ShowExportDialogAsync();
-    //             }
-    //             catch (Exception exception)
-    //             {
-    //                 var logger = context.ServiceProvider.GetRequiredService<ILogger<ParameterDescriptor>>();
-    //                 logger.LogError(exception, "Initialize FamilySizeTableExportDialog error");
-    //             }
-    //         });
-    //     
-    //     contextMenu.AddMenuItem("EditMenuItem")
-    //         .SetHeader("Edit table")
-    //         .SetAvailability(document.IsFamilyDocument && manager.GetAllSizeTableNames().Count > 0)
-    //         .SetCommand(manager, async _ =>
-    //         {
-    //             try
-    //             {
-    //                 var dialog = new FamilySizeTableSelectDialog(context.ServiceProvider, document, manager);
-    //                 await dialog.ShowEditDialogAsync();
-    //             }
-    //             catch (Exception exception)
-    //             {
-    //                 var logger = context.ServiceProvider.GetRequiredService<ILogger<FamilySizeTableDescriptor>>();
-    //                 logger.LogError(exception, "Initialize FamilySizeTableSelectDialog error");
-    //             }
-    //         });
-    // }
 }

@@ -34,24 +34,10 @@ public sealed class ApplicationDescriptor : Descriptor, IDescriptorExtension
     // {
     //     return target switch
     //     {
+    //        TODO slow, ~8s
     //         nameof(Autodesk.Revit.ApplicationServices.Application.GetAssets) => ResolveGetAssets,
     //         _ => null
     //     };
-    //
-    //     TODO slow, ~8s
-    //     IVariant ResolveGetAssets()
-    //     {
-    //         var assetTypes = Enum.GetValues<AssetType>();
-    //         var capacity = assetTypes.Length;
-    //         var variants = Variants.Values<IList<Asset>>(capacity);
-    //
-    //         foreach (var assetType in assetTypes)
-    //         {
-    //             variants.Add(Context.Application.GetAssets(assetType));
-    //         }
-    //
-    //         return variants.Consume();
-    //     }
     // }
 
     public void RegisterExtensions(IExtensionManager manager)

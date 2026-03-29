@@ -77,15 +77,6 @@ public sealed class CategoryDescriptor : Descriptor, IDescriptorResolver, IDescr
         RegisterNotSupportedExtensions(manager);
     }
 
-    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-    private void RegisterNotSupportedExtensions(IExtensionManager manager)
-    {
-#if REVIT2024_OR_GREATER
-        _ = nameof(SSEPointVisibilitySettings.SetVisibility);
-        manager.Register("SetSSEPointVisibility", Variants.NotSupported);
-#endif
-    }
-
     public void RegisterExtensions(IExtensionManager<Document> manager)
     {
         manager.Register("GetElements", context => Variants.Value(context.CollectElements()
@@ -101,6 +92,15 @@ public sealed class CategoryDescriptor : Descriptor, IDescriptorResolver, IDescr
         manager.Register(nameof(ParameterFilterUtilities.GetFilterableParametersInCommon), context => Variants.Value(ParameterFilterUtilities.GetFilterableParametersInCommon(context, [_category.Id])));
 #if REVIT2024_OR_GREATER
         manager.Register("GetSSEPointVisibility", context => Variants.Value(SSEPointVisibilitySettings.GetVisibility(context, _category.Id)));
+#endif
+    }
+
+    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+    private void RegisterNotSupportedExtensions(IExtensionManager manager)
+    {
+#if REVIT2024_OR_GREATER
+        _ = nameof(SSEPointVisibilitySettings.SetVisibility);
+        manager.Register("SetSSEPointVisibility", Variants.NotSupported);
 #endif
     }
 }

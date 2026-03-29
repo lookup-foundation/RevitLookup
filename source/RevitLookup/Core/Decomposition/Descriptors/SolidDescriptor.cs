@@ -102,26 +102,26 @@ public sealed partial class SolidDescriptor : Descriptor, IDescriptorExtension, 
 #endif
         contextMenu.AddMenuItem("VisualizeMenuItem")
             .SetAvailability(_solid.IsValidForTessellation)
-            .SetCommand(_solid, VisualizeSolid)
+            .SetCommand(_solid, solid => VisualizeSolid(solid, serviceProvider))
             .SetShortcut(Key.F8);
+    }
 
-        async Task VisualizeSolid(Solid solid)
+    private static async Task VisualizeSolid(Solid solid, IServiceProvider serviceProvider)
+    {
+        if (RevitContext.ActiveUiDocument is null) return;
+
+        try
         {
-            if (RevitContext.ActiveUiDocument is null) return;
+            var dialog = serviceProvider.GetRequiredService<SolidVisualizationDialog>();
+            await dialog.ShowDialogAsync(solid);
+        }
+        catch (Exception exception)
+        {
+            var logger = serviceProvider.GetRequiredService<ILogger<SolidDescriptor>>();
+            var notificationService = serviceProvider.GetRequiredService<INotificationService>();
 
-            try
-            {
-                var dialog = serviceProvider.GetRequiredService<SolidVisualizationDialog>();
-                await dialog.ShowDialogAsync(solid);
-            }
-            catch (Exception exception)
-            {
-                var logger = serviceProvider.GetRequiredService<ILogger<SolidDescriptor>>();
-                var notificationService = serviceProvider.GetRequiredService<INotificationService>();
-
-                logger.LogError(exception, "Visualize solid error");
-                notificationService.ShowError("Visualization error", exception);
-            }
+            logger.LogError(exception, "Visualize solid error");
+            notificationService.ShowError("Visualization error", exception);
         }
     }
 #if REVIT2023_OR_GREATER

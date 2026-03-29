@@ -133,26 +133,26 @@ public sealed class BoundingBoxXyzDescriptor(BoundingBoxXYZ box) : Descriptor, I
     public void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)
     {
         contextMenu.AddMenuItem("VisualizeMenuItem")
-            .SetCommand(box, VisualizeFace)
+            .SetCommand(box, xyz => VisualizeFace(xyz, serviceProvider))
             .SetShortcut(Key.F8);
+    }
+    
+    private static async Task VisualizeFace(BoundingBoxXYZ boundingBox, IServiceProvider serviceProvider)
+    {
+        if (RevitContext.ActiveUiDocument is null) return;
 
-        async Task VisualizeFace(BoundingBoxXYZ boundingBox)
+        try
         {
-            if (RevitContext.ActiveUiDocument is null) return;
+            var dialog = serviceProvider.GetRequiredService<BoundingBoxVisualizationDialog>();
+            await dialog.ShowDialogAsync(boundingBox);
+        }
+        catch (Exception exception)
+        {
+            var logger = serviceProvider.GetRequiredService<ILogger<BoundingBoxXyzDescriptor>>();
+            var notificationService = serviceProvider.GetRequiredService<INotificationService>();
 
-            try
-            {
-                var dialog = serviceProvider.GetRequiredService<BoundingBoxVisualizationDialog>();
-                await dialog.ShowDialogAsync(boundingBox);
-            }
-            catch (Exception exception)
-            {
-                var logger = serviceProvider.GetRequiredService<ILogger<BoundingBoxXyzDescriptor>>();
-                var notificationService = serviceProvider.GetRequiredService<INotificationService>();
-
-                logger.LogError(exception, "Visualize BoundingBox error");
-                notificationService.ShowError("Visualization error", exception);
-            }
+            logger.LogError(exception, "Visualize BoundingBox error");
+            notificationService.ShowError("Visualization error", exception);
         }
     }
 }

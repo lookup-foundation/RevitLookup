@@ -227,7 +227,7 @@ public partial class ElementDescriptor : Descriptor, IDescriptorResolver, IDescr
         manager.Register(nameof(DirectContext3DDocumentUtils.IsADirectContext3DHandleType), () => Variants.Value(DirectContext3DDocumentUtils.IsADirectContext3DHandleType(_element.Document, _element.Id)));
         manager.Register("IsCategorySupportedByElementIntersectsFilter", () => Variants.Value(ElementIntersectsFilter.IsCategorySupported(_element)));
         manager.Register("IsSupportedByElementIntersectsFilter", () => Variants.Value(ElementIntersectsFilter.IsElementSupported(_element)));
-        manager.Register(nameof(ExportUtils.GetExportId), () => Variants.Value(ExportUtils.GetExportId(_element.Document, _element.Id)));
+        manager.Register("ExportId", () => Variants.Value(ExportUtils.GetExportId(_element.Document, _element.Id)));
         manager.Register(nameof(ExternalFileUtils.GetExternalFileReference), () => Variants.Value(ExternalFileUtils.GetExternalFileReference(_element.Document, _element.Id)));
         manager.Register(nameof(ExternalFileUtils.IsExternalFileReference), () => Variants.Value(ExternalFileUtils.IsExternalFileReference(_element.Document, _element.Id)));
         manager.Register(nameof(InstanceVoidCutUtils.CanBeCutWithVoid), () => Variants.Value(InstanceVoidCutUtils.CanBeCutWithVoid(_element)));

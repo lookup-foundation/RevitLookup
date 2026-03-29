@@ -53,26 +53,26 @@ public partial class FaceDescriptor : Descriptor, IDescriptorCollector, IContext
 #endif
         contextMenu.AddMenuItem("VisualizeMenuItem")
             .SetAvailability(_face.Area > 1e-6)
-            .SetCommand(_face, VisualizeFace)
+            .SetCommand(_face, face => VisualizeFace(face, serviceProvider))
             .SetShortcut(Key.F8);
+    }
 
-        async Task VisualizeFace(Face face)
+    private static async Task VisualizeFace(Face face, IServiceProvider serviceProvider)
+    {
+        if (RevitContext.ActiveUiDocument is null) return;
+
+        try
         {
-            if (RevitContext.ActiveUiDocument is null) return;
+            var dialog = serviceProvider.GetRequiredService<FaceVisualizationDialog>();
+            await dialog.ShowDialogAsync(face);
+        }
+        catch (Exception exception)
+        {
+            var logger = serviceProvider.GetRequiredService<ILogger<FaceDescriptor>>();
+            var notificationService = serviceProvider.GetRequiredService<INotificationService>();
 
-            try
-            {
-                var dialog = serviceProvider.GetRequiredService<FaceVisualizationDialog>();
-                await dialog.ShowDialogAsync(face);
-            }
-            catch (Exception exception)
-            {
-                var logger = serviceProvider.GetRequiredService<ILogger<FaceDescriptor>>();
-                var notificationService = serviceProvider.GetRequiredService<INotificationService>();
-
-                logger.LogError(exception, "Visualize Face error");
-                notificationService.ShowError("Visualization error", exception);
-            }
+            logger.LogError(exception, "Visualize Face error");
+            notificationService.ShowError("Visualization error", exception);
         }
     }
 #if REVIT2023_OR_GREATER

@@ -64,35 +64,33 @@ public sealed partial class ParameterDescriptor : Descriptor, IDescriptorResolve
         contextMenu.AddMenuItem("EditMenuItem")
             .SetHeader("Edit value")
             .SetAvailability(!_parameter.IsReadOnly && _parameter.StorageType != StorageType.None)
-            .SetCommand(_parameter, EditParameter)
+            .SetCommand(_parameter, parameter => EditParameter(parameter, serviceProvider))
             .SetShortcut(Key.F2);
+    }
 
-        return;
-
-        async Task EditParameter(Parameter parameter)
+    private static async Task EditParameter(Parameter parameter, IServiceProvider serviceProvider)
+    {
+        try
         {
-            try
+            var dialog = serviceProvider.GetRequiredService<EditValueDialog>();
+            var result = await dialog.ShowAsync(parameter.Definition.Name, parameter.GetStringValue(), "Update the parameter");
+            if (result == ContentDialogResult.Primary)
             {
-                var dialog = serviceProvider.GetRequiredService<EditValueDialog>();
-                var result = await dialog.ShowAsync(parameter.Definition.Name, parameter.GetStringValue(), "Update the parameter");
-                if (result == ContentDialogResult.Primary)
-                {
-                    var parameterValue = dialog.Value; // Share between threads
+                var parameterValue = dialog.Value; // Share between threads
 
-                    await SetParameterValueAsyncEvent.RaiseAsync(parameter, parameterValue);
+                await SetParameterValueAsyncEvent.RaiseAsync(parameter, parameterValue);
 
-                    var decompositionViewModel = serviceProvider.GetRequiredService<IDecompositionSummaryViewModel>();
-                    await decompositionViewModel.RefreshMembersAsync();
-                }
+                var decompositionViewModel = serviceProvider.GetRequiredService<IDecompositionSummaryViewModel>();
+                await decompositionViewModel.RefreshMembersAsync();
             }
-            catch (Exception exception)
-            {
-                var logger = serviceProvider.GetRequiredService<ILogger<ParameterDescriptor>>();
-                var notificationService = serviceProvider.GetRequiredService<INotificationService>();
+        }
+        catch (Exception exception)
+        {
+            var logger = serviceProvider.GetRequiredService<ILogger<ParameterDescriptor>>();
+            var notificationService = serviceProvider.GetRequiredService<INotificationService>();
 
-                logger.LogError(exception, "Update value error");
-                notificationService.ShowError("Updating parameter value error", exception);
-            }
+            logger.LogError(exception, "Update value error");
+            notificationService.ShowError("Updating parameter value error", exception);
         }
     }
 

@@ -59,26 +59,26 @@ public sealed partial class CurveLoopDescriptor : Descriptor, IDescriptorResolve
 #endif
         contextMenu.AddMenuItem("VisualizeMenuItem")
             .SetAvailability(_curveLoop.GetExactLength() > 1e-6)
-            .SetCommand(_curveLoop, VisualizeCurve)
+            .SetCommand(_curveLoop, loop => VisualizeCurve(loop, serviceProvider))
             .SetShortcut(Key.F8);
+    }
 
-        async Task VisualizeCurve(CurveLoop curveLoop)
+    private static async Task VisualizeCurve(CurveLoop curveLoop, IServiceProvider serviceProvider)
+    {
+        if (RevitContext.ActiveUiDocument is null) return;
+
+        try
         {
-            if (RevitContext.ActiveUiDocument is null) return;
+            var dialog = serviceProvider.GetRequiredService<CurveLoopVisualizationDialog>();
+            await dialog.ShowDialogAsync(curveLoop);
+        }
+        catch (Exception exception)
+        {
+            var logger = serviceProvider.GetRequiredService<ILogger<CurveLoopDescriptor>>();
+            var notificationService = serviceProvider.GetRequiredService<INotificationService>();
 
-            try
-            {
-                var dialog = serviceProvider.GetRequiredService<CurveLoopVisualizationDialog>();
-                await dialog.ShowDialogAsync(curveLoop);
-            }
-            catch (Exception exception)
-            {
-                var logger = serviceProvider.GetRequiredService<ILogger<CurveLoopDescriptor>>();
-                var notificationService = serviceProvider.GetRequiredService<INotificationService>();
-
-                logger.LogError(exception, "Visualize curve loop error");
-                notificationService.ShowError("Visualization error", exception);
-            }
+            logger.LogError(exception, "Visualize curve loop error");
+            notificationService.ShowError("Visualization error", exception);
         }
     }
 #if REVIT2023_OR_GREATER

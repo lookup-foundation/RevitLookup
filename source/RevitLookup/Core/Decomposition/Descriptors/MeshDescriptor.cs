@@ -31,26 +31,26 @@ public sealed class MeshDescriptor(Mesh mesh) : Descriptor, IDescriptorCollector
     {
         contextMenu.AddMenuItem("VisualizeMenuItem")
             .SetAvailability(mesh.Vertices.Count > 0)
-            .SetCommand(mesh, VisualizeMesh)
+            .SetCommand(mesh, parameter => VisualizeMesh(parameter, serviceProvider))
             .SetShortcut(Key.F8);
+    }
 
-        async Task VisualizeMesh(Mesh meshParameter)
+    private static async Task VisualizeMesh(Mesh meshParameter, IServiceProvider serviceProvider)
+    {
+        if (RevitContext.ActiveUiDocument is null) return;
+
+        try
         {
-            if (RevitContext.ActiveUiDocument is null) return;
+            var dialog = serviceProvider.GetRequiredService<MeshVisualizationDialog>();
+            await dialog.ShowDialogAsync(meshParameter);
+        }
+        catch (Exception exception)
+        {
+            var logger = serviceProvider.GetRequiredService<ILogger<MeshDescriptor>>();
+            var notificationService = serviceProvider.GetRequiredService<INotificationService>();
 
-            try
-            {
-                var dialog = serviceProvider.GetRequiredService<MeshVisualizationDialog>();
-                await dialog.ShowDialogAsync(meshParameter);
-            }
-            catch (Exception exception)
-            {
-                var logger = serviceProvider.GetRequiredService<ILogger<MeshDescriptor>>();
-                var notificationService = serviceProvider.GetRequiredService<INotificationService>();
-
-                logger.LogError(exception, "Visualize Mesh error");
-                notificationService.ShowError("Visualization error", exception);
-            }
+            logger.LogError(exception, "Visualize Mesh error");
+            notificationService.ShowError("Visualization error", exception);
         }
     }
 }
