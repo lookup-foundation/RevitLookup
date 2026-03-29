@@ -10,6 +10,7 @@ This release focuses on dramatically extending the number of API Utils members, 
 
 - **Revit 2027** support.
 - **Enabled addin isolation** starting from Revit 2027. Finally, Autodesk fixed it.
+- **Event Monitor** refactored, improved performance, event discovery, reduced reflection overhead.
 
 ## API Coverage
 
@@ -19,11 +20,30 @@ This release brings the largest expansion for Revit API Utils coverage. Hundreds
 
 New types can now be inspected:
 
-- **`ModelPath`** — model path information and transmission data.
+- **`AssemblyInstance`** — assembly instance members and associated views.
+- **`Connector`** — MEP connector properties and mechanical utilities.
 - **`DefinitionFile`** — shared parameter file definitions.
+- **`DocumentCreation`** — document creation API members.
+- **`Duct`** — duct element properties and mechanical utilities.
+- **`EdgeEndPoint`** — edge end point properties and vertex utilities.
+- **`ExternalDefinition`** — external shared parameter definition details.
+- **`ExternalResourceReference`** — external resource reference metadata.
 - **`ExternalResourceType`** — external resource type metadata.
-- **`RebarShape`** — rebar shape parameters via `RebarShapeParameters.GetAllRebarShapeParameters`.
 - **`FailureDefinitionAccessor`** — failure definition details.
+- **`FamilySymbol`** — family symbol members and activation utilities.
+- **`GeometryObject`** — geometry object validation and tagging support.
+- **`GlobalParameter`** — global parameter properties and values.
+- **`ModelPath`** — model path information and transmission data.
+- **`PointCloudFilter`** — point cloud filter properties.
+- **`Rebar`** — rebar element properties and shape parameters.
+- **`RebarShape`** — rebar shape parameters and bend data.
+- **`ReferencePoint`** — reference point properties for adaptive components.
+- **`SketchPlane`** — sketch plane members and boundary validation.
+- **`Subelement`** — subelement properties and geometry access.
+- **`Surface`** — surface geometry properties.
+- **`TriangulationInterface`** — triangulation and quad conversion utilities.
+- **`Units`** — unit formatting and parsing members.
+- **`WallType`** — wall type compound structure and properties.
 
 ### Element extensions
 
