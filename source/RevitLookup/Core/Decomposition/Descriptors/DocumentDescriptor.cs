@@ -44,6 +44,7 @@ public sealed class DocumentDescriptor : Descriptor, IDescriptorResolver, IDescr
             nameof(Document.Close) => Variants.Disabled,
             nameof(Document.PlanTopologies) => ResolvePlanTopologies,
             nameof(Document.GetDefaultElementTypeId) => ResolveDefaultElementTypeId,
+            nameof(Document.GetDocumentVersion) => () => Variants.Value(Document.GetDocumentVersion(_document)),
 #if REVIT2024_OR_GREATER
             nameof(Document.GetUnusedElements) => () => Variants.Value(_document.GetUnusedElements(new HashSet<ElementId>())),
             nameof(Document.GetAllUnusedElements) => () => Variants.Value(_document.GetAllUnusedElements(new HashSet<ElementId>())),

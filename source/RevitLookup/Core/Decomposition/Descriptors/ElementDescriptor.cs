@@ -227,6 +227,7 @@ public partial class ElementDescriptor : Descriptor, IDescriptorResolver, IDescr
         manager.Register(nameof(InstanceVoidCutUtils.CanBeCutWithVoid), () => Variants.Value(InstanceVoidCutUtils.CanBeCutWithVoid(_element)));
         manager.Register(nameof(InstanceVoidCutUtils.GetCuttingVoidInstances), () => Variants.Value(InstanceVoidCutUtils.GetCuttingVoidInstances(_element)));
         manager.Register(nameof(PartUtils.GetAssociatedParts), () => Variants.Value(PartUtils.GetAssociatedParts(_element.Document, _element.Id, true, true)));
+        manager.Register(nameof(PartUtils.HasAssociatedParts), () => Variants.Value(PartUtils.HasAssociatedParts(_element.Document, _element.Id)));
         manager.Register(nameof(DetailElementOrderUtils.IsDetailElement), () => Variants.Value(DetailElementOrderUtils.IsDetailElement(_element.Document, _element.Document.ActiveView, _element.Id)));
 
         _ = nameof(ElementTransformUtils.CanMirrorElement);
@@ -318,6 +319,14 @@ public partial class ElementDescriptor : Descriptor, IDescriptorResolver, IDescr
 
             _ = nameof(CoordinationModelLinkUtils.SetVisibilityOverride);
             manager.Register("SetCoordinationModelVisibilityOverride", Variants.NotSupported);
+        }
+
+        if (CoordinationModelLinkUtils.IsCoordinationModelInstance(_element.Document, _element))
+        {
+            manager.Register(nameof(CoordinationModelLinkUtils.GetAllPropertiesForReferenceInsideCoordinationModel), Variants.NotSupported);
+            manager.Register(nameof(CoordinationModelLinkUtils.GetCategoryForReferenceInsideCoordinationModel), Variants.NotSupported);
+            manager.Register(nameof(CoordinationModelLinkUtils.GetVisibilityOverrideForReferenceInsideCoordinationModel), Variants.NotSupported);
+            manager.Register(nameof(CoordinationModelLinkUtils.SetVisibilityOverrideForReferenceInsideCoordinationModel), Variants.NotSupported);
         }
 #endif
     }
