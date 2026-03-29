@@ -419,7 +419,7 @@ To customize the display of a specific type:
     <ui:TextBlock
         FontTypography="Caption"
         Text="{Binding .,
-            Converter={x:Static converters:DescriptorLabelConverters.ObjectDisplayText},
+            Converter={x:Static converters:DescriptorFormattingConverters.ObjectDisplayText},
             Mode=OneTime}" />
 </DataTemplate>
 ```

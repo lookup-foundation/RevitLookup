@@ -6,7 +6,8 @@
     xmlns:decomposition="clr-namespace:RevitLookup.Abstractions.ObservableModels.Decomposition;assembly=RevitLookup.Abstractions"
     xmlns:ui="http://lookupengine.com/xaml"
     xmlns:objectsTree="clr-namespace:RevitLookup.Styles.ComponentStyles.ObjectsTree"
-    xmlns:converters="clr-namespace:RevitLookup.Styles.Converters"
+    xmlns:lookupConverters="clr-namespace:RevitLookup.Styles.Converters"
+    xmlns:converters="clr-namespace:RevitLookup.UI.Framework.Converters;assembly=RevitLookup.UI.Framework"
     mc:Ignorable="d">
 
     <objectsTree:TreeViewItemTemplateSelector
@@ -30,7 +31,7 @@
         <ui:TextBlock
             FontTypography="Caption"
             Text="{Binding .,
-                                        Converter={x:Static converters:DescriptorLabelConverters.ObjectDisplayText},
+                                        Converter={x:Static converters:DescriptorFormattingConverters.ObjectDisplayText},
                                         Mode=OneTime}" />
     </DataTemplate>
 
@@ -43,7 +44,7 @@
                 FontTypography="Caption"
                 VerticalAlignment="Center"
                 Text="{Binding .,
-                                        Converter={x:Static converters:DescriptorLabelConverters.ObjectDisplayText},
+                                        Converter={x:Static converters:DescriptorFormattingConverters.ObjectDisplayText},
                                         Mode=OneTime}" />
             <Border
                 CornerRadius="4"
@@ -61,7 +62,7 @@
                     <Border.Background>
                         <SolidColorBrush
                             Color="{Binding RawValue,
-                            Converter={x:Static converters:ColorConverters.MediaColor},
+                            Converter={x:Static lookupConverters:ColorConverters.MediaColor},
                             Mode=OneTime}" />
                     </Border.Background>
                 </Border>

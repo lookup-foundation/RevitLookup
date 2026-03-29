@@ -5,7 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:decomposition="clr-namespace:RevitLookup.Abstractions.ObservableModels.Decomposition;assembly=RevitLookup.Abstractions"
     xmlns:ui="http://lookupengine.com/xaml"
-    xmlns:converters="clr-namespace:RevitLookup.Styles.Converters"
+    xmlns:converters="clr-namespace:RevitLookup.UI.Framework.Converters;assembly=RevitLookup.UI.Framework"
+    xmlns:lookupConverters="clr-namespace:RevitLookup.Styles.Converters"
     mc:Ignorable="d">
 
     <DataTemplate
@@ -17,7 +18,7 @@
             FontWeight="{Binding FontWeight, 
                     RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}}"
             Text="{Binding .,
-                Converter={x:Static converters:DescriptorLabelConverters.MemberDisplayText},
+                Converter={x:Static converters:DescriptorFormattingConverters.MemberDisplayText},
                 Mode=OneTime}" />
     </DataTemplate>
 
@@ -32,7 +33,7 @@
                 FontWeight="{Binding FontWeight, 
                     RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}}"
                 Text="{Binding .,
-                    Converter={x:Static converters:DescriptorLabelConverters.MemberDisplayText},
+                    Converter={x:Static converters:DescriptorFormattingConverters.MemberDisplayText},
                     Mode=OneTime}" />
             <Border
                 CornerRadius="4"
@@ -51,7 +52,7 @@
                     <Border.Background>
                         <SolidColorBrush
                             Color="{Binding Value.RawValue,
-                            Converter={x:Static converters:ColorConverters.MediaColor},
+                            Converter={x:Static lookupConverters:ColorConverters.MediaColor},
                             Mode=OneTime}" />
                     </Border.Background>
                 </Border>
