@@ -6,7 +6,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ui="http://lookupengine.com/xaml"
     xmlns:converters="clr-namespace:RevitLookup.UI.Framework.Converters"
-    xmlns:valueConverters="clr-namespace:RevitLookup.UI.Framework.Converters.ValueConverters"
     xmlns:tools="clr-namespace:RevitLookup.UI.Framework.Views.Tools"
     xmlns:controls="clr-namespace:RevitLookup.UI.Framework.Controls"
     mc:Ignorable="d"
@@ -105,7 +104,7 @@
                             Width="8"
                             Style="{DynamicResource DotInfoBadgeStyle}"
                             Visibility="{Binding ViewModel.Filtered, Mode=OneWay, 
-                                Converter={converters:BooleanCollapsedVisibilityConverter}, 
+                                Converter={x:Static converters:VisibilityConverters.CollapsedWhenFalse}, 
                                 FallbackValue=Visible}" />
                         <ui:Flyout
                             x:Name="FilterFlyout"
@@ -212,7 +211,7 @@
                                     Margin="0 0 8 0"
                                     Visibility="{Binding IsModified,
                                         Mode=OneWay,
-                                        Converter={converters:BooleanHiddenVisibilityConverter}}"
+                                        Converter={x:Static converters:VisibilityConverters.HiddenWhenFalse}}"
                                     Icon="{ui:SymbolIcon ArrowClockwise24}"
                                     Command="{Binding DataContext.ViewModel.RestoreDefaultCommand, ElementName=EntriesList}"
                                     CommandParameter="{Binding}" />
@@ -246,7 +245,7 @@
                     MaxHeight="300">
                     <controls:ContentPlaceholder.Visibility>
                         <MultiBinding
-                            Converter="{valueConverters:SettingsEntriesEmptyAfterInitializationConverter}">
+                            Converter="{x:Static converters:SettingsVisibilityConverters.VisibleWhenEmptyAfterInitialization}">
                             <Binding
                                 Path="ViewModel.Entries.Count" />
                             <Binding
@@ -259,7 +258,7 @@
                     MaxHeight="300">
                     <controls:ContentPlaceholder.Visibility>
                         <MultiBinding
-                            Converter="{valueConverters:SettingsEmptySearchResultsVisibilityConverter}">
+                            Converter="{x:Static converters:SettingsVisibilityConverters.VisibleWhenEmptySearchResults}">
                             <Binding
                                 Path="ViewModel.FilteredEntries" />
                             <Binding
@@ -285,7 +284,7 @@
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
                     Visibility="{Binding ViewModel.InitializationTask.IsCompleted, 
-                        Converter={converters:InverseBooleanCollapsedVisibilityConverter},
+                        Converter={x:Static converters:VisibilityConverters.CollapsedWhenTrue},
                         FallbackValue=Hidden}">
                     <TextBlock
                         FontSize="24"

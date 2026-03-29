@@ -7,7 +7,6 @@
     xmlns:ui="http://lookupengine.com/xaml"
     xmlns:dashboard="clr-namespace:RevitLookup.UI.Framework.Views.Dashboard"
     xmlns:converters="clr-namespace:RevitLookup.UI.Framework.Converters"
-    xmlns:valueConverters="clr-namespace:RevitLookup.UI.Framework.Converters.ValueConverters"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance dashboard:DashboardPage}"
     Foreground="{DynamicResource TextFillColorPrimaryBrush}">
@@ -31,7 +30,7 @@
                                 <UniformGrid
                                     Columns="{Binding ActualWidth, 
                                             ElementName=RootItemsControl,
-                                            Converter={valueConverters:WidthToUniformColumnsConverter}}" />
+                                            Converter={x:Static converters:LayoutConverters.UniformColumnsByWidth}}" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemContainerStyle>
@@ -60,7 +59,7 @@
                                                 FontTypography="Caption"
                                                 TextTrimming="CharacterEllipsis"
                                                 Text="{Binding Description}"
-                                                Visibility="{Binding Description, Converter={converters:StringVisibilityConverter}}" />
+                                                Visibility="{Binding Description, Converter={x:Static converters:VisibilityConverters.CollapsedWhenNullOrEmpty}}" />
                                         </StackPanel>
                                     </ui:CardAction.Content>
                                 </ui:CardAction>

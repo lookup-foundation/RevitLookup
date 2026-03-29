@@ -16,7 +16,7 @@
     CloseButtonText="Cancel"
     HorizontalContentAlignment="Center"
     VerticalContentAlignment="Center"
-    IsPrimaryButtonAvailable="{Binding HasErrors, Converter={converters:InverseBooleanConverter}}">
+    IsPrimaryButtonAvailable="{Binding HasErrors, Converter={x:Static converters:BooleanConverters.Not}}">
 
     <ui:ContentDialog.Resources>
         <ResourceDictionary>

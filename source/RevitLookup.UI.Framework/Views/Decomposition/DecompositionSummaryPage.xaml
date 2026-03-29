@@ -6,7 +6,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ui="http://lookupengine.com/xaml"
     xmlns:converters="clr-namespace:RevitLookup.UI.Framework.Converters"
-    xmlns:valueConverters="clr-namespace:RevitLookup.UI.Framework.Converters.ValueConverters"
     xmlns:decomposition="clr-namespace:RevitLookup.UI.Framework.Views.Decomposition"
     xmlns:viewModels="clr-namespace:RevitLookup.Abstractions.ViewModels.Decomposition;assembly=RevitLookup.Abstractions"
     xmlns:controls="clr-namespace:RevitLookup.UI.Framework.Controls"
@@ -22,7 +21,7 @@
 
         <controls:ContentPlaceholder
             MaxHeight="300"
-            Visibility="{Binding ViewModel.DecomposedObjects, Converter={converters:EmptyCollectionVisibilityConverter}}">
+            Visibility="{Binding ViewModel.DecomposedObjects, Converter={x:Static converters:VisibilityConverters.VisibleWhenEmpty}}">
             <controls:ContentPlaceholder.Content>
                 <ui:TextBlock
                     FontTypography="Subtitle"
@@ -32,7 +31,7 @@
 
         <Grid
             Margin="0"
-            Visibility="{Binding ViewModel.DecomposedObjects, Converter={converters:InverseEmptyCollectionVisibilityConverter}}">
+            Visibility="{Binding ViewModel.DecomposedObjects, Converter={x:Static converters:VisibilityConverters.CollapsedWhenEmpty}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
                     Width="250" />
@@ -107,7 +106,7 @@
                                     <ui:SymbolIcon
                                         FontSize="16"
                                         Symbol="{Binding MemberAttributes,
-                                            Converter={valueConverters:MemberAttributeIconConverter},
+                                            Converter={x:Static converters:IconConverters.MemberAttribute},
                                             Mode=OneTime}" />
                                     <ui:TextBlock
                                         Margin="4 0 0 0"
@@ -149,7 +148,7 @@
                                     FontWeight="{Binding FontWeight, 
                                         RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}}"
                                     Text="{Binding ComputationTime,
-                                        Converter={valueConverters:TimeToStringConverter},
+                                        Converter={x:Static converters:FormattingConverters.TimeDisplayText},
                                         Mode=OneTime}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -172,7 +171,7 @@
                                     FontWeight="{Binding FontWeight, 
                                         RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}}"
                                     Text="{Binding AllocatedBytes,
-                                        Converter={valueConverters:BytesToStringConverter},
+                                        Converter={x:Static converters:FormattingConverters.BytesDisplayText},
                                         Mode=OneTime}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>

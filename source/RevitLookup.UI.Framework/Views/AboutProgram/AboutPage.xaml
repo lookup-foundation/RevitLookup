@@ -6,7 +6,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ui="http://lookupengine.com/xaml"
     xmlns:converters="clr-namespace:RevitLookup.UI.Framework.Converters"
-    xmlns:valueConverters="clr-namespace:RevitLookup.UI.Framework.Converters.ValueConverters"
     xmlns:aboutProgram="clr-namespace:RevitLookup.UI.Framework.Views.AboutProgram"
     xmlns:settings="clr-namespace:RevitLookup.Abstractions.Services.Settings;assembly=RevitLookup.Abstractions"
     mc:Ignorable="d"
@@ -48,12 +47,12 @@
                         Height="20"
                         IsIndeterminate="True"
                         VerticalAlignment="Center"
-                        Visibility="{Binding ViewModel.CheckUpdatesCommand.IsRunning, Converter={converters:BooleanCollapsedVisibilityConverter}}" />
+                        Visibility="{Binding ViewModel.CheckUpdatesCommand.IsRunning, Converter={x:Static converters:VisibilityConverters.CollapsedWhenFalse}}" />
                     <ui:Button
                         Margin="9 0 0 0"
                         Appearance="Secondary"
                         Content="Check for updates"
-                        Visibility="{Binding ViewModel.DownloadUpdateCommand.IsRunning, Converter={converters:InverseBooleanCollapsedVisibilityConverter}}"
+                        Visibility="{Binding ViewModel.DownloadUpdateCommand.IsRunning, Converter={x:Static converters:VisibilityConverters.CollapsedWhenTrue}}"
                         Command="{Binding ViewModel.CheckUpdatesCommand}" />
                 </StackPanel>
                 <ui:CardControl.Header>
@@ -62,7 +61,7 @@
                             Text="{Binding ViewModel.CurrentVersion, FallbackValue='1.0.0'}" />
                         <ui:TextBlock
                             FontTypography="Caption"
-                            Visibility="{Binding ViewModel.LatestCheckDate, Converter={converters:StringVisibilityConverter}}"
+                            Visibility="{Binding ViewModel.LatestCheckDate, Converter={x:Static converters:VisibilityConverters.CollapsedWhenNullOrEmpty}}"
                             Text="{Binding ViewModel.LatestCheckDate, StringFormat='Last checked: {0}', FallbackValue='Latest check: 2030.01.01'}" />
                         <ui:HyperlinkButton
                             Padding="0"
@@ -81,7 +80,7 @@
             <ui:CardControl
                 Margin="0,4,0,0"
                 Visibility="{Binding ViewModel.State, 
-                        Converter={valueConverters:SoftwareUpdateStateCollapsedVisibilityConverter},
+                        Converter={x:Static converters:VisibilityConverters.CollapsedWhenSoftwareUpdateStateEqual},
                         ConverterParameter={x:Static settings:SoftwareUpdateState.ReadyToDownload}}">
                 <StackPanel
                     HorizontalAlignment="Right"
@@ -91,7 +90,7 @@
                         Height="20"
                         IsIndeterminate="True"
                         VerticalAlignment="Center"
-                        Visibility="{Binding ViewModel.DownloadUpdateCommand.IsRunning, Converter={converters:BooleanCollapsedVisibilityConverter}}" />
+                        Visibility="{Binding ViewModel.DownloadUpdateCommand.IsRunning, Converter={x:Static converters:VisibilityConverters.CollapsedWhenFalse}}" />
                     <ui:Button
                         Margin="9,0,0,0"
                         Appearance="Secondary"
@@ -151,7 +150,7 @@
                 Message="The new version has been downloaded and will be installed when Revit is closed"
                 Margin="0 4 0 0"
                 IsOpen="{Binding ViewModel.State, 
-                        Converter={valueConverters:SoftwareUpdateStateBooleanConverter},
+                        Converter={x:Static converters:BooleanConverters.SoftwareUpdateStateEqual},
                         ConverterParameter={x:Static settings:SoftwareUpdateState.ReadyToInstall},
                         FallbackValue=True}" />
             <ui:InfoBar
@@ -159,7 +158,7 @@
                 Margin="0,4,0,0"
                 Message="RevitLookup is up to date"
                 IsOpen="{Binding ViewModel.State, 
-                        Converter={valueConverters:SoftwareUpdateStateBooleanConverter},
+                        Converter={x:Static converters:BooleanConverters.SoftwareUpdateStateEqual},
                         ConverterParameter={x:Static settings:SoftwareUpdateState.UpToDate},
                         FallbackValue=True}" />
             <ui:InfoBar
@@ -168,7 +167,7 @@
                 Message="{Binding ViewModel.ErrorMessage, 
                         FallbackValue='Error message'}"
                 IsOpen="{Binding ViewModel.State, 
-                        Converter={valueConverters:SoftwareUpdateStateBooleanConverter},
+                        Converter={x:Static converters:BooleanConverters.SoftwareUpdateStateEqual},
                         ConverterParameter={x:Static settings:SoftwareUpdateState.Error},
                         FallbackValue=True}" />
             <ui:TextBlock

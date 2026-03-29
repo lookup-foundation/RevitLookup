@@ -5,7 +5,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:decomposition="clr-namespace:RevitLookup.Abstractions.ObservableModels.Decomposition;assembly=RevitLookup.Abstractions"
     xmlns:ui="http://lookupengine.com/xaml"
-    xmlns:valueConverters="clr-namespace:RevitLookup.UI.Framework.Converters.ValueConverters;assembly=RevitLookup.UI.Framework"
     xmlns:objectsTree="clr-namespace:RevitLookup.Styles.ComponentStyles.ObjectsTree"
     xmlns:converters="clr-namespace:RevitLookup.Styles.Converters"
     mc:Ignorable="d">
@@ -31,7 +30,7 @@
         <ui:TextBlock
             FontTypography="Caption"
             Text="{Binding .,
-                                        Converter={valueConverters:SingleDescriptorLabelConverter},
+                                        Converter={x:Static converters:DescriptorLabelConverters.ObjectDisplayText},
                                         Mode=OneTime}" />
     </DataTemplate>
 
@@ -44,7 +43,7 @@
                 FontTypography="Caption"
                 VerticalAlignment="Center"
                 Text="{Binding .,
-                                        Converter={valueConverters:SingleDescriptorLabelConverter},
+                                        Converter={x:Static converters:DescriptorLabelConverters.ObjectDisplayText},
                                         Mode=OneTime}" />
             <Border
                 CornerRadius="4"
@@ -54,8 +53,7 @@
                 <Border.Background>
                     <SolidColorBrush
                         Opacity="0.05"
-                        Color="{DynamicResource FocusStrokeColorOuter}">
-                    </SolidColorBrush>
+                        Color="{DynamicResource FocusStrokeColorOuter}" />
                 </Border.Background>
                 <Border
                     Width="10"
@@ -63,9 +61,8 @@
                     <Border.Background>
                         <SolidColorBrush
                             Color="{Binding RawValue,
-                            Converter={converters:ObjectColorConverter},
-                            Mode=OneTime}">
-                        </SolidColorBrush>
+                            Converter={x:Static converters:ColorConverters.MediaColor},
+                            Mode=OneTime}" />
                     </Border.Background>
                 </Border>
             </Border>

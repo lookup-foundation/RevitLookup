@@ -5,9 +5,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:decomposition="clr-namespace:RevitLookup.Abstractions.ObservableModels.Decomposition;assembly=RevitLookup.Abstractions"
     xmlns:ui="http://lookupengine.com/xaml"
-    xmlns:valueConverters="clr-namespace:RevitLookup.UI.Framework.Converters.ValueConverters;assembly=RevitLookup.UI.Framework"
     xmlns:objectsTree="clr-namespace:RevitLookup.UI.Playground.Mocks.Styles.ComponentStyles.ObjectsTree"
-    xmlns:converters="clr-namespace:RevitLookup.UI.Playground.Mocks.Styles.Converters"
+    xmlns:converters="clr-namespace:RevitLookup.UI.Framework.Converters;assembly=RevitLookup.UI.Framework"
+    xmlns:mockConverters="clr-namespace:RevitLookup.UI.Playground.Mocks.Styles.Converters"
     mc:Ignorable="d">
 
     <objectsTree:TreeViewItemTemplateSelector
@@ -30,7 +30,7 @@
         DataType="{x:Type decomposition:ObservableDecomposedObject}">
         <ui:TextBlock
             FontTypography="Caption"
-            Text="{Binding Converter={valueConverters:SingleDescriptorLabelConverter}, Mode=OneTime}" />
+            Text="{Binding Converter={x:Static converters:DescriptorFormattingConverters.ObjectDisplayText}, Mode=OneTime}" />
     </DataTemplate>
 
     <DataTemplate
@@ -41,7 +41,7 @@
             <ui:TextBlock
                 FontTypography="Caption"
                 VerticalAlignment="Center"
-                Text="{Binding Converter={valueConverters:SingleDescriptorLabelConverter}, Mode=OneTime}" />
+                Text="{Binding Converter={x:Static converters:DescriptorFormattingConverters.ObjectDisplayText}, Mode=OneTime}" />
             <Border
                 CornerRadius="4"
                 Padding="4 2"
@@ -57,7 +57,7 @@
                     Height="10">
                     <Border.Background>
                         <SolidColorBrush
-                            Color="{Binding RawValue, Converter={converters:ObjectColorConverter}, Mode=OneTime}" />
+                            Color="{Binding RawValue, Converter={x:Static mockConverters:ColorConverters.MediaColor}, Mode=OneTime}" />
                     </Border.Background>
                 </Border>
             </Border>

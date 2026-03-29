@@ -297,8 +297,7 @@ public sealed class EntityDescriptor(Entity entity) : Descriptor, IDescriptorRes
     {
         return target switch
         {
-            nameof(Entity.Get) when parameters.Length == 1 &&
-                                    parameters[0].ParameterType == typeof(string) => ResolveGetByField,
+            nameof(Entity.Get) when parameters.Length == 1 && parameters[0].ParameterType == typeof(string) => ResolveGetByField,
             _ => null
         };
         
@@ -413,14 +412,14 @@ To customize the display of a specific type:
 1. Create a DataTemplate in a XAML file within the ComponentStyles directory:
 
 ```xml
-// RevitLookup\Styles\ComponentStyles\ObjectsTree\TreeGroupTemplates.xaml
+<!-- RevitLookup\Styles\ComponentStyles\ObjectsTree\TreeGroupTemplates.xaml -->
 <DataTemplate
     x:Key="DefaultSummaryTreeItemTemplate"
     DataType="{x:Type decomposition:ObservableDecomposedObject}">
     <ui:TextBlock
         FontTypography="Caption"
         Text="{Binding .,
-            Converter={valueConverters:SingleDescriptorLabelConverter},
+            Converter={x:Static converters:DescriptorLabelConverters.ObjectDisplayText},
             Mode=OneTime}" />
 </DataTemplate>
 ```

@@ -24,7 +24,7 @@
             <DockPanel>
                 <CheckBox
                     DockPanel.Dock="Right"
-                    IsChecked="{Binding ViewModel.IsStandardButtonEnabled, Converter={converters:InverseBooleanConverter}}"
+                    IsChecked="{Binding ViewModel.IsStandardButtonEnabled, Converter={x:Static converters:BooleanConverters.Not}}"
                     Content="Disable button" />
                 <Button
                     Content="Standard WPF button"
@@ -39,7 +39,7 @@
             <DockPanel>
                 <CheckBox
                     DockPanel.Dock="Right"
-                    IsChecked="{Binding ViewModel.IsPrimaryButtonEnabled, Converter={converters:InverseBooleanConverter}}"
+                    IsChecked="{Binding ViewModel.IsPrimaryButtonEnabled, Converter={x:Static converters:BooleanConverters.Not}}"
                     Content="Disable button" />
                 <ui:Button
                     Appearance="Primary"
@@ -55,7 +55,7 @@
             <DockPanel>
                 <CheckBox
                     DockPanel.Dock="Right"
-                    IsChecked="{Binding ViewModel.IsSecondaryButtonEnabled, Converter={converters:InverseBooleanConverter}}"
+                    IsChecked="{Binding ViewModel.IsSecondaryButtonEnabled, Converter={x:Static converters:BooleanConverters.Not}}"
                     Content="Disable button" />
                 <ui:Button
                     Appearance="Secondary"
@@ -71,7 +71,7 @@
             <DockPanel>
                 <CheckBox
                     DockPanel.Dock="Right"
-                    IsChecked="{Binding ViewModel.IsDangerButtonEnabled, Converter={converters:InverseBooleanConverter}}"
+                    IsChecked="{Binding ViewModel.IsDangerButtonEnabled, Converter={x:Static converters:BooleanConverters.Not}}"
                     Content="Disable button" />
                 <ui:Button
                     Appearance="Danger"
@@ -87,7 +87,7 @@
             <DockPanel>
                 <CheckBox
                     DockPanel.Dock="Right"
-                    IsChecked="{Binding ViewModel.IsTransparentButtonEnabled, Converter={converters:InverseBooleanConverter}}"
+                    IsChecked="{Binding ViewModel.IsTransparentButtonEnabled, Converter={x:Static converters:BooleanConverters.Not}}"
                     Content="Disable button" />
                 <ui:Button
                     Appearance="Transparent"

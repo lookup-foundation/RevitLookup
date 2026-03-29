@@ -5,8 +5,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ui="http://lookupengine.com/xaml"
-    xmlns:valueConverters="clr-namespace:RevitLookup.UI.Framework.Converters.ValueConverters"
     xmlns:settings="clr-namespace:RevitLookup.UI.Framework.Views.Settings"
+    xmlns:converters="clr-namespace:RevitLookup.UI.Framework.Converters"
     mc:Ignorable="d"
     d:DesignHeight="1100"
     d:DesignWidth="500"
@@ -41,7 +41,7 @@
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock
-                                Text="{Binding Converter={valueConverters:ApplicationThemeConverter}}" />
+                                Text="{Binding Converter={x:Static converters:FormattingConverters.ApplicationThemeDisplayText}}" />
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
@@ -69,7 +69,7 @@
                         <DataTemplate>
                             <TextBlock
                                 Text="{Binding ., 
-                                    Converter={valueConverters:BackgroundTypeConverter}}" />
+                                    Converter={x:Static converters:FormattingConverters.BackgroundTypeDisplayText}}" />
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>

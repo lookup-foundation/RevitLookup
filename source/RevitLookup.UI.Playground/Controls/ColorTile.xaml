@@ -170,7 +170,7 @@
                                     Background="Transparent"
                                     ToolTipService.ToolTip="This brush might not be available in the current OS version."
                                     Visibility="{TemplateBinding ShowWarning,
-                                        Converter={converters:BooleanHiddenVisibilityConverter}}">
+                                        Converter={x:Static converters:VisibilityConverters.HiddenWhenFalse}}">
                                     <ui:FontIcon
                                         FontSize="16"
                                         Foreground="{DynamicResource SystemFillColorCriticalBrush}"

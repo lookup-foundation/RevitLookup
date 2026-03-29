@@ -23,7 +23,7 @@
             <DockPanel>
                 <CheckBox
                     DockPanel.Dock="Right"
-                    IsChecked="{Binding ViewModel.IsStandardToggleButtonEnabled, Converter={converters:InverseBooleanConverter}}"
+                    IsChecked="{Binding ViewModel.IsStandardToggleButtonEnabled, Converter={x:Static converters:BooleanConverters.Not}}"
                     Content="Disable control" />
                 <ToggleButton
                     Content="Standard ToggleButton"
