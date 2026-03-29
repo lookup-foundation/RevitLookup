@@ -9,9 +9,9 @@ Interactive Revit project database exploration tool to view and navigate BIM ele
 
 Whether you are a seasoned professional or just starting out, the RevitLookup is an indispensable tool for anyone who works with Revit projects. Its ease of use and advanced features make it the perfect solution for exploring, analyzing and manipulating Revit databases.
 <div align="center">
-<a href="https://github.com/lookup-foundation/RevitLookup/releases/latest"><img src="https://img.shields.io/github/v/release/jeremytammik/RevitLookup?style=for-the-badge" alt="Badge"></a>
-<a href="https://github.com/lookup-foundation/RevitLookup/releases/latest"><img src="https://img.shields.io/github/downloads/jeremytammik/RevitLookup/total?style=for-the-badge" alt="Badge"></a>
-<a href="https://github.com/lookup-foundation/RevitLookup/commits/develop"><img src="https://img.shields.io/github/last-commit/jeremytammik/RevitLookup/develop?style=for-the-badge" alt="Badge"></a>
+<a href="https://github.com/lookup-foundation/RevitLookup/releases/latest"><img src="https://img.shields.io/github/v/release/lookup-foundation/RevitLookup?style=for-the-badge" alt="Badge"></a>
+<a href="https://github.com/lookup-foundation/RevitLookup/releases/latest"><img src="https://img.shields.io/github/downloads/lookup-foundation/RevitLookup/total?style=for-the-badge" alt="Badge"></a>
+<a href="https://github.com/lookup-foundation/RevitLookup/commits/develop"><img src="https://img.shields.io/github/last-commit/lookup-foundation/RevitLookup/develop?style=for-the-badge" alt="Badge"></a>
 <a href="https://github.com/lookup-foundation/RevitLookup/actions?query=branch%3Adevelop"><img src="https://img.shields.io/github/check-runs/lookup-foundation/RevitLookup/develop?style=for-the-badge&logo=github&label=Build" alt="Badge"></a>
 </div>
 <br/>
