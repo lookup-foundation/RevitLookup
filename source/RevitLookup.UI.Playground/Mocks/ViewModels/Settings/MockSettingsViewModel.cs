@@ -42,14 +42,6 @@ public sealed partial class MockSettingsViewModel : ObservableObject, ISettingsV
     private readonly IWindowIntercomService _intercomService;
     private readonly bool _initialized;
 
-    [ObservableProperty] private ApplicationTheme _theme;
-    [ObservableProperty] private WindowBackdropType _background;
-
-    [ObservableProperty] private bool _useTransition;
-    [ObservableProperty] private bool _useHardwareRendering;
-    [ObservableProperty] private bool _useSizeRestoring;
-    [ObservableProperty] private bool _useModifyTab;
-
     public MockSettingsViewModel(
         IServiceProvider serviceProvider,
         INavigationService navigationService,
@@ -84,6 +76,24 @@ public sealed partial class MockSettingsViewModel : ObservableObject, ISettingsV
         WindowBackdropType.Tabbed,
         WindowBackdropType.Mica
     ];
+    
+    [ObservableProperty]
+    public partial ApplicationTheme Theme { get; set; }
+
+    [ObservableProperty]
+    public partial WindowBackdropType Background { get; set; }
+
+    [ObservableProperty]
+    public partial bool UseTransition { get; set; }
+
+    [ObservableProperty]
+    public partial bool UseHardwareRendering { get; set; }
+
+    [ObservableProperty]
+    public partial bool UseSizeRestoring { get; set; }
+
+    [ObservableProperty]
+    public partial bool UseModifyTab { get; set; }
 
     [RelayCommand]
     private async Task ResetSettings()

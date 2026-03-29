@@ -12,7 +12,8 @@ public sealed partial class MockSearchElementsViewModel(
     IVisualDecompositionService decompositionService)
     : ObservableObject, ISearchElementsViewModel
 {
-    [ObservableProperty] private string _searchText = string.Empty;
+    [ObservableProperty]
+    public partial string SearchText { get; set; } = string.Empty;
 
     public async Task<bool> SearchElementsAsync()
     {

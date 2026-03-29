@@ -9,16 +9,6 @@ namespace RevitLookup.UI.Playground.Mocks.ViewModels.Visualization;
 [UsedImplicitly]
 public sealed partial class MockBoundingBoxVisualizationViewModel : ObservableObject, IBoundingBoxVisualizationViewModel
 {
-    [ObservableProperty] private double _transparency;
-
-    [ObservableProperty] private Color _surfaceColor;
-    [ObservableProperty] private Color _edgeColor;
-    [ObservableProperty] private Color _axisColor;
-
-    [ObservableProperty] private bool _showSurface;
-    [ObservableProperty] private bool _showEdge;
-    [ObservableProperty] private bool _showAxis;
-
     public MockBoundingBoxVisualizationViewModel()
     {
         var faker = new Faker();
@@ -32,6 +22,27 @@ public sealed partial class MockBoundingBoxVisualizationViewModel : ObservableOb
         ShowEdge = faker.Random.Bool();
         ShowAxis = faker.Random.Bool();
     }
+    
+    [ObservableProperty]
+    public partial double Transparency { get; set; }
+
+    [ObservableProperty]
+    public partial Color SurfaceColor { get; set; }
+
+    [ObservableProperty]
+    public partial Color EdgeColor { get; set; }
+
+    [ObservableProperty]
+    public partial Color AxisColor { get; set; }
+
+    [ObservableProperty]
+    public partial bool ShowSurface { get; set; }
+
+    [ObservableProperty]
+    public partial bool ShowEdge { get; set; }
+
+    [ObservableProperty]
+    public partial bool ShowAxis { get; set; }
 
     public void RegisterServer(object boundingBoxXyz)
     {

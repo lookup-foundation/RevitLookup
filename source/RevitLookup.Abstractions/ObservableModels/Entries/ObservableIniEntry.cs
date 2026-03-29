@@ -22,13 +22,27 @@ namespace RevitLookup.Abstractions.ObservableModels.Entries;
 /// </summary>
 public sealed partial class ObservableIniEntry : ObservableValidator
 {
-    [ObservableProperty] [Required] [NotifyDataErrorInfo] private string _category = string.Empty;
-    [ObservableProperty] [Required] [NotifyDataErrorInfo] private string _property = string.Empty;
-    [ObservableProperty] private string _value = string.Empty;
-    [ObservableProperty] private string? _defaultValue;
-    [ObservableProperty] private bool _isActive;
-    [ObservableProperty] private bool _isModified;
+    [ObservableProperty]
+    [Required]
+    [NotifyDataErrorInfo]
+    public partial string Category { get; set; } = string.Empty;
 
+    [ObservableProperty]
+    [Required]
+    [NotifyDataErrorInfo]
+    public partial string Property { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial string Value { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial string? DefaultValue { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsActive { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsModified { get; private set; }
     public bool UserDefined { get; set; }
 
     public void Validate()

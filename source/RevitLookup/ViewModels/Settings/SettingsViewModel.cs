@@ -40,13 +40,23 @@ public sealed partial class SettingsViewModel : ObservableObject, ISettingsViewM
     private readonly RevitRibbonService _ribbonService;
     private readonly bool _initialized;
 
-    [ObservableProperty] private ApplicationTheme _theme;
-    [ObservableProperty] private WindowBackdropType _background;
+    [ObservableProperty]
+    public partial ApplicationTheme Theme { get; set; }
 
-    [ObservableProperty] private bool _useTransition;
-    [ObservableProperty] private bool _useHardwareRendering;
-    [ObservableProperty] private bool _useSizeRestoring;
-    [ObservableProperty] private bool _useModifyTab;
+    [ObservableProperty]
+    public partial WindowBackdropType Background { get; set; }
+
+    [ObservableProperty]
+    public partial bool UseTransition { get; set; }
+
+    [ObservableProperty]
+    public partial bool UseHardwareRendering { get; set; }
+
+    [ObservableProperty]
+    public partial bool UseSizeRestoring { get; set; }
+
+    [ObservableProperty]
+    public partial bool UseModifyTab { get; set; }
 
     public SettingsViewModel(
         IServiceProvider serviceProvider,

@@ -9,10 +9,14 @@ namespace RevitLookup.UI.Playground.ViewModels.Pages.Collections;
 [UsedImplicitly]
 public sealed partial class ListViewViewModel : ObservableObject
 {
-    [ObservableProperty] private int _selectionModeIndex;
-    [ObservableProperty] private SelectionMode _selectionMode = SelectionMode.Single;
+    [ObservableProperty]
+    public partial int SelectionModeIndex { get; set; }
 
-    [ObservableProperty] private List<Person> _persons = new Faker<Person>()
+    [ObservableProperty]
+    public partial SelectionMode SelectionMode { get; private set; } = SelectionMode.Single;
+
+    [ObservableProperty]
+    public partial List<Person> Persons { get; set; } = new Faker<Person>()
         .RuleFor(person => person.FirstName, faker => faker.Person.FirstName)
         .RuleFor(person => person.LastName, faker => faker.Person.LastName)
         .RuleFor(person => person.Company, faker => faker.Company.CompanyName("{{name.lastName}}"))

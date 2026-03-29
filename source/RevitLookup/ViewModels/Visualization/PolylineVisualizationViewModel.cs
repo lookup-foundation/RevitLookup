@@ -17,16 +17,29 @@ public sealed partial class PolylineVisualizationViewModel(
 {
     private readonly PolylineVisualizationServer _server = new();
 
-    [ObservableProperty] private double _diameter = settingsService.VisualizationSettings.PolylineSettings.Diameter;
-    [ObservableProperty] private double _transparency = settingsService.VisualizationSettings.PolylineSettings.Transparency;
+    [ObservableProperty]
+    public partial double Diameter { get; set; } = settingsService.VisualizationSettings.PolylineSettings.Diameter;
 
-    [ObservableProperty] private Color _surfaceColor = settingsService.VisualizationSettings.PolylineSettings.SurfaceColor;
-    [ObservableProperty] private Color _curveColor = settingsService.VisualizationSettings.PolylineSettings.CurveColor;
-    [ObservableProperty] private Color _directionColor = settingsService.VisualizationSettings.PolylineSettings.DirectionColor;
+    [ObservableProperty]
+    public partial double Transparency { get; set; } = settingsService.VisualizationSettings.PolylineSettings.Transparency;
 
-    [ObservableProperty] private bool _showSurface = settingsService.VisualizationSettings.PolylineSettings.ShowSurface;
-    [ObservableProperty] private bool _showCurve = settingsService.VisualizationSettings.PolylineSettings.ShowCurve;
-    [ObservableProperty] private bool _showDirection = settingsService.VisualizationSettings.PolylineSettings.ShowDirection;
+    [ObservableProperty]
+    public partial Color SurfaceColor { get; set; } = settingsService.VisualizationSettings.PolylineSettings.SurfaceColor;
+
+    [ObservableProperty]
+    public partial Color CurveColor { get; set; } = settingsService.VisualizationSettings.PolylineSettings.CurveColor;
+
+    [ObservableProperty]
+    public partial Color DirectionColor { get; set; } = settingsService.VisualizationSettings.PolylineSettings.DirectionColor;
+
+    [ObservableProperty]
+    public partial bool ShowSurface { get; set; } = settingsService.VisualizationSettings.PolylineSettings.ShowSurface;
+
+    [ObservableProperty]
+    public partial bool ShowCurve { get; set; } = settingsService.VisualizationSettings.PolylineSettings.ShowCurve;
+
+    [ObservableProperty]
+    public partial bool ShowDirection { get; set; } = settingsService.VisualizationSettings.PolylineSettings.ShowDirection;
 
     public double MinThickness => settingsService.VisualizationSettings.PolylineSettings.MinThickness;
 

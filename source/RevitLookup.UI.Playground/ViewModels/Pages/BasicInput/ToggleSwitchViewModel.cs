@@ -6,5 +6,6 @@ namespace RevitLookup.UI.Playground.ViewModels.Pages.BasicInput;
 [UsedImplicitly]
 public sealed partial class ToggleSwitchViewModel : ObservableObject
 {
-    [ObservableProperty] private bool _isStandardToggleSwitchEnabled = true;
+    [ObservableProperty]
+    public partial bool IsStandardToggleSwitchEnabled { get; set; } = true;
 }

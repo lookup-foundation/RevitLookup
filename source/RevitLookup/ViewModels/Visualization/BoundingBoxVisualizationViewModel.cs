@@ -17,15 +17,26 @@ public sealed partial class BoundingBoxVisualizationViewModel(
 {
     private readonly BoundingBoxVisualizationServer _server = new();
 
-    [ObservableProperty] private double _transparency = settingsService.VisualizationSettings.BoundingBoxSettings.Transparency;
+    [ObservableProperty]
+    public partial double Transparency { get; set; } = settingsService.VisualizationSettings.BoundingBoxSettings.Transparency;
 
-    [ObservableProperty] private Color _surfaceColor = settingsService.VisualizationSettings.BoundingBoxSettings.SurfaceColor;
-    [ObservableProperty] private Color _edgeColor = settingsService.VisualizationSettings.BoundingBoxSettings.EdgeColor;
-    [ObservableProperty] private Color _axisColor = settingsService.VisualizationSettings.BoundingBoxSettings.AxisColor;
+    [ObservableProperty]
+    public partial Color SurfaceColor { get; set; } = settingsService.VisualizationSettings.BoundingBoxSettings.SurfaceColor;
 
-    [ObservableProperty] private bool _showSurface = settingsService.VisualizationSettings.BoundingBoxSettings.ShowSurface;
-    [ObservableProperty] private bool _showEdge = settingsService.VisualizationSettings.BoundingBoxSettings.ShowEdge;
-    [ObservableProperty] private bool _showAxis = settingsService.VisualizationSettings.BoundingBoxSettings.ShowAxis;
+    [ObservableProperty]
+    public partial Color EdgeColor { get; set; } = settingsService.VisualizationSettings.BoundingBoxSettings.EdgeColor;
+
+    [ObservableProperty]
+    public partial Color AxisColor { get; set; } = settingsService.VisualizationSettings.BoundingBoxSettings.AxisColor;
+
+    [ObservableProperty]
+    public partial bool ShowSurface { get; set; } = settingsService.VisualizationSettings.BoundingBoxSettings.ShowSurface;
+
+    [ObservableProperty]
+    public partial bool ShowEdge { get; set; } = settingsService.VisualizationSettings.BoundingBoxSettings.ShowEdge;
+
+    [ObservableProperty]
+    public partial bool ShowAxis { get; set; } = settingsService.VisualizationSettings.BoundingBoxSettings.ShowAxis;
 
     public void RegisterServer(object boxObject)
     {

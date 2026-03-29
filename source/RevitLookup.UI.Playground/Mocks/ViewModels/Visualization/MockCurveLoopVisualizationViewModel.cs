@@ -9,17 +9,6 @@ namespace RevitLookup.UI.Playground.Mocks.ViewModels.Visualization;
 [UsedImplicitly]
 public sealed partial class MockCurveLoopVisualizationViewModel : ObservableObject, ICurveLoopVisualizationViewModel
 {
-    [ObservableProperty] private double _diameter;
-    [ObservableProperty] private double _transparency;
-
-    [ObservableProperty] private Color _surfaceColor;
-    [ObservableProperty] private Color _curveColor;
-    [ObservableProperty] private Color _directionColor;
-
-    [ObservableProperty] private bool _showSurface;
-    [ObservableProperty] private bool _showCurve;
-    [ObservableProperty] private bool _showDirection;
-
     public MockCurveLoopVisualizationViewModel()
     {
         var faker = new Faker();
@@ -35,6 +24,30 @@ public sealed partial class MockCurveLoopVisualizationViewModel : ObservableObje
         ShowCurve = faker.Random.Bool();
         ShowDirection = faker.Random.Bool();
     }
+    
+    [ObservableProperty]
+    public partial double Diameter { get; set; }
+
+    [ObservableProperty]
+    public partial double Transparency { get; set; }
+
+    [ObservableProperty]
+    public partial Color SurfaceColor { get; set; }
+
+    [ObservableProperty]
+    public partial Color CurveColor { get; set; }
+
+    [ObservableProperty]
+    public partial Color DirectionColor { get; set; }
+
+    [ObservableProperty]
+    public partial bool ShowSurface { get; set; }
+
+    [ObservableProperty]
+    public partial bool ShowCurve { get; set; }
+
+    [ObservableProperty]
+    public partial bool ShowDirection { get; set; }
 
     public double MinThickness { get; }
 

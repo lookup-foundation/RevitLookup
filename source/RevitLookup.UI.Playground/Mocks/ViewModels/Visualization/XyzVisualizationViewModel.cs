@@ -9,18 +9,6 @@ namespace RevitLookup.UI.Playground.Mocks.ViewModels.Visualization;
 [UsedImplicitly]
 public sealed partial class XyzVisualizationViewModel : ObservableObject, IXyzVisualizationViewModel
 {
-    [ObservableProperty] private double _axisLength;
-    [ObservableProperty] private double _transparency;
-
-    [ObservableProperty] private Color _xColor;
-    [ObservableProperty] private Color _yColor;
-    [ObservableProperty] private Color _zColor;
-
-    [ObservableProperty] private bool _showPlane;
-    [ObservableProperty] private bool _showXAxis;
-    [ObservableProperty] private bool _showYAxis;
-    [ObservableProperty] private bool _showZAxis;
-
     public XyzVisualizationViewModel()
     {
         var faker = new Faker();
@@ -37,6 +25,33 @@ public sealed partial class XyzVisualizationViewModel : ObservableObject, IXyzVi
         ShowYAxis = faker.Random.Bool();
         ShowZAxis = faker.Random.Bool();
     }
+    
+    [ObservableProperty]
+    public partial double AxisLength { get; set; }
+
+    [ObservableProperty]
+    public partial double Transparency { get; set; }
+
+    [ObservableProperty]
+    public partial Color XColor { get; set; }
+
+    [ObservableProperty]
+    public partial Color YColor { get; set; }
+
+    [ObservableProperty]
+    public partial Color ZColor { get; set; }
+
+    [ObservableProperty]
+    public partial bool ShowPlane { get; set; }
+
+    [ObservableProperty]
+    public partial bool ShowXAxis { get; set; }
+
+    [ObservableProperty]
+    public partial bool ShowYAxis { get; set; }
+
+    [ObservableProperty]
+    public partial bool ShowZAxis { get; set; }
 
     public double MinAxisLength { get; }
 

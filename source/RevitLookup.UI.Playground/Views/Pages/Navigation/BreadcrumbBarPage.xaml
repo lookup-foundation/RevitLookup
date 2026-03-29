@@ -40,7 +40,7 @@
             HeaderText="Standard BreadcrumbBar"
             XamlCode="&lt;ui:BreadcrumbBar&#10;    ItemsSource=&quot;{Binding ViewModel.BaseStrings, Mode=OneWay}&quot;&#10;    Command=&quot;{Binding ViewModel.StringSelectedCommand, Mode=OneWay}&quot; /&gt;">
             <ui:BreadcrumbBar
-                ItemsSource="{Binding ViewModel.BaseStrings, Mode=OneWay}"
+                ItemsSource="{Binding ViewModel.Strings, Mode=OneWay}"
                 Command="{Binding ViewModel.StringSelectedCommand, Mode=OneWay}" />
         </controls:ControlExample>
 

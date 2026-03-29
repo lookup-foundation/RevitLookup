@@ -12,8 +12,11 @@ public partial class SnackbarViewModel(ISnackbarService snackbarService) : Obser
     private ControlAppearance _snackbarAppearance = ControlAppearance.Secondary;
     private IconElement _icon = new SymbolIcon { Symbol = SymbolRegular.Info24, FontSize = 24 };
 
-    [ObservableProperty] private int _snackbarTimeout = 2;
-    [ObservableProperty] private int _snackbarAppearanceComboBoxSelectedIndex = 1;
+    [ObservableProperty]
+    public partial int SnackbarTimeout { get; set; } = 2;
+
+    [ObservableProperty]
+    public partial int SnackbarAppearanceComboBoxSelectedIndex { get; set; } = 1;
 
     [RelayCommand]
     private void OnOpenSnackbar(object? sender)

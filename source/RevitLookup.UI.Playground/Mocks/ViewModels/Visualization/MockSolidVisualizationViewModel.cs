@@ -9,15 +9,6 @@ namespace RevitLookup.UI.Playground.Mocks.ViewModels.Visualization;
 [UsedImplicitly]
 public sealed partial class MockSolidVisualizationViewModel : ObservableObject, ISolidVisualizationViewModel
 {
-    [ObservableProperty] private double _scale;
-    [ObservableProperty] private double _transparency;
-
-    [ObservableProperty] private Color _faceColor;
-    [ObservableProperty] private Color _edgeColor;
-
-    [ObservableProperty] private bool _showFace;
-    [ObservableProperty] private bool _showEdge;
-
     public MockSolidVisualizationViewModel()
     {
         var faker = new Faker();
@@ -30,6 +21,24 @@ public sealed partial class MockSolidVisualizationViewModel : ObservableObject, 
         ShowFace = faker.Random.Bool();
         ShowEdge = faker.Random.Bool();
     }
+    
+    [ObservableProperty]
+    public partial double Scale { get; set; }
+
+    [ObservableProperty]
+    public partial double Transparency { get; set; }
+
+    [ObservableProperty]
+    public partial Color FaceColor { get; set; }
+
+    [ObservableProperty]
+    public partial Color EdgeColor { get; set; }
+
+    [ObservableProperty]
+    public partial bool ShowFace { get; set; }
+
+    [ObservableProperty]
+    public partial bool ShowEdge { get; set; }
 
     public void RegisterServer(object solid)
     {

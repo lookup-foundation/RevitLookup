@@ -13,10 +13,17 @@ namespace RevitLookup.UI.Playground.ViewModels.Pages.DesignGuidance;
 [UsedImplicitly]
 public partial class FontIconsPageViewModel : ObservableObject
 {
-    [ObservableProperty] private List<FontIconData> _icons = [];
-    [ObservableProperty] private List<FontIconData> _filteredIcons = [];
-    [ObservableProperty] private FontIconData? _selectedIcon;
-    [ObservableProperty] private string _searchText = string.Empty;
+    [ObservableProperty]
+    public partial List<FontIconData> Icons { get; set; } = [];
+
+    [ObservableProperty]
+    public partial List<FontIconData> FilteredIcons { get; set; } = [];
+
+    [ObservableProperty]
+    public partial FontIconData? SelectedIcon { get; set; }
+
+    [ObservableProperty]
+    public partial string SearchText { get; set; } = string.Empty;
 
     public FontIconsPageViewModel()
     {
@@ -25,7 +32,7 @@ public partial class FontIconsPageViewModel : ObservableObject
             .OrderBy(data => data.Name)
             .ToList();
 
-        SelectedIcon = _icons.FirstOrDefault();
+        SelectedIcon = Icons.FirstOrDefault();
     }
 
     private static string ReadIconData()

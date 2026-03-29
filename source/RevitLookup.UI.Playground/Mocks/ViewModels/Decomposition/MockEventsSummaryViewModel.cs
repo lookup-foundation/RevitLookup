@@ -25,10 +25,17 @@ public sealed partial class MockEventsSummaryViewModel(
 {
     private CancellationTokenSource? _cancellationTokenSource;
 
-    [ObservableProperty] private string _searchText = string.Empty;
-    [ObservableProperty] private ObservableDecomposedObject? _selectedDecomposedObject;
-    [ObservableProperty] private List<ObservableDecomposedObject> _decomposedObjects = [];
-    [ObservableProperty] private ObservableCollection<ObservableDecomposedObject> _filteredDecomposedObjects = [];
+    [ObservableProperty]
+    public partial string SearchText { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial ObservableDecomposedObject? SelectedDecomposedObject { get; set; }
+
+    [ObservableProperty]
+    public partial List<ObservableDecomposedObject> DecomposedObjects { get; set; } = [];
+
+    [ObservableProperty]
+    public partial ObservableCollection<ObservableDecomposedObject> FilteredDecomposedObjects { get; set; } = [];
 
     public void Navigate(object? value)
     {

@@ -6,5 +6,6 @@ namespace RevitLookup.UI.Playground.ViewModels.Pages.BasicInput;
 [UsedImplicitly]
 public sealed partial class RadioButtonViewModel : ObservableObject
 {
-    [ObservableProperty] private bool _isStandardRadioButtonEnabled = true;
+    [ObservableProperty]
+    public partial bool IsStandardRadioButtonEnabled { get; set; } = true;
 }

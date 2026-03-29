@@ -17,17 +17,32 @@ public sealed partial class XyzVisualizationViewModel(
 {
     private readonly XyzVisualizationServer _server = new();
 
-    [ObservableProperty] private double _axisLength = settingsService.VisualizationSettings.XyzSettings.AxisLength;
-    [ObservableProperty] private double _transparency = settingsService.VisualizationSettings.XyzSettings.Transparency;
+    [ObservableProperty]
+    public partial double AxisLength { get; set; } = settingsService.VisualizationSettings.XyzSettings.AxisLength;
 
-    [ObservableProperty] private Color _xColor = settingsService.VisualizationSettings.XyzSettings.XColor;
-    [ObservableProperty] private Color _yColor = settingsService.VisualizationSettings.XyzSettings.YColor;
-    [ObservableProperty] private Color _zColor = settingsService.VisualizationSettings.XyzSettings.ZColor;
+    [ObservableProperty]
+    public partial double Transparency { get; set; } = settingsService.VisualizationSettings.XyzSettings.Transparency;
 
-    [ObservableProperty] private bool _showPlane = settingsService.VisualizationSettings.XyzSettings.ShowPlane;
-    [ObservableProperty] private bool _showXAxis = settingsService.VisualizationSettings.XyzSettings.ShowXAxis;
-    [ObservableProperty] private bool _showYAxis = settingsService.VisualizationSettings.XyzSettings.ShowYAxis;
-    [ObservableProperty] private bool _showZAxis = settingsService.VisualizationSettings.XyzSettings.ShowZAxis;
+    [ObservableProperty]
+    public partial Color XColor { get; set; } = settingsService.VisualizationSettings.XyzSettings.XColor;
+
+    [ObservableProperty]
+    public partial Color YColor { get; set; } = settingsService.VisualizationSettings.XyzSettings.YColor;
+
+    [ObservableProperty]
+    public partial Color ZColor { get; set; } = settingsService.VisualizationSettings.XyzSettings.ZColor;
+
+    [ObservableProperty]
+    public partial bool ShowPlane { get; set; } = settingsService.VisualizationSettings.XyzSettings.ShowPlane;
+
+    [ObservableProperty]
+    public partial bool ShowXAxis { get; set; } = settingsService.VisualizationSettings.XyzSettings.ShowXAxis;
+
+    [ObservableProperty]
+    public partial bool ShowYAxis { get; set; } = settingsService.VisualizationSettings.XyzSettings.ShowYAxis;
+
+    [ObservableProperty]
+    public partial bool ShowZAxis { get; set; } = settingsService.VisualizationSettings.XyzSettings.ShowZAxis;
 
     public double MinAxisLength => settingsService.VisualizationSettings.XyzSettings.MinAxisLength;
 

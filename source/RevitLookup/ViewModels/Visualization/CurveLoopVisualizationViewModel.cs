@@ -12,12 +12,12 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
+using Microsoft.Extensions.Logging;
 using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.Abstractions.ViewModels.Visualization;
 using RevitLookup.Core.Visualization;
 using RevitLookup.Core.Visualization.Events;
-using Microsoft.Extensions.Logging;
 using Color = System.Windows.Media.Color;
 
 namespace RevitLookup.ViewModels.Visualization
@@ -31,16 +31,29 @@ namespace RevitLookup.ViewModels.Visualization
     {
         private readonly CurveLoopVisualizationServer _server = new();
 
-        [ObservableProperty] private double _diameter = settingsService.VisualizationSettings.CurveLoopSettings.Diameter;
-        [ObservableProperty] private double _transparency = settingsService.VisualizationSettings.CurveLoopSettings.Transparency;
+        [ObservableProperty]
+        public partial double Diameter { get; set; } = settingsService.VisualizationSettings.CurveLoopSettings.Diameter;
 
-        [ObservableProperty] private Color _surfaceColor = settingsService.VisualizationSettings.CurveLoopSettings.SurfaceColor;
-        [ObservableProperty] private Color _curveColor = settingsService.VisualizationSettings.CurveLoopSettings.CurveColor;
-        [ObservableProperty] private Color _directionColor = settingsService.VisualizationSettings.CurveLoopSettings.DirectionColor;
+        [ObservableProperty]
+        public partial double Transparency { get; set; } = settingsService.VisualizationSettings.CurveLoopSettings.Transparency;
 
-        [ObservableProperty] private bool _showSurface = settingsService.VisualizationSettings.CurveLoopSettings.ShowSurface;
-        [ObservableProperty] private bool _showCurve = settingsService.VisualizationSettings.CurveLoopSettings.ShowCurve;
-        [ObservableProperty] private bool _showDirection = settingsService.VisualizationSettings.CurveLoopSettings.ShowDirection;
+        [ObservableProperty]
+        public partial Color SurfaceColor { get; set; } = settingsService.VisualizationSettings.CurveLoopSettings.SurfaceColor;
+
+        [ObservableProperty]
+        public partial Color CurveColor { get; set; } = settingsService.VisualizationSettings.CurveLoopSettings.CurveColor;
+
+        [ObservableProperty]
+        public partial Color DirectionColor { get; set; } = settingsService.VisualizationSettings.CurveLoopSettings.DirectionColor;
+
+        [ObservableProperty]
+        public partial bool ShowSurface { get; set; } = settingsService.VisualizationSettings.CurveLoopSettings.ShowSurface;
+
+        [ObservableProperty]
+        public partial bool ShowCurve { get; set; } = settingsService.VisualizationSettings.CurveLoopSettings.ShowCurve;
+
+        [ObservableProperty]
+        public partial bool ShowDirection { get; set; } = settingsService.VisualizationSettings.CurveLoopSettings.ShowDirection;
 
         public double MinThickness => settingsService.VisualizationSettings.CurveLoopSettings.MinThickness;
 

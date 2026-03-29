@@ -17,14 +17,23 @@ public sealed partial class SolidVisualizationViewModel(
 {
     private readonly SolidVisualizationServer _server = new();
 
-    [ObservableProperty] private double _scale = settingsService.VisualizationSettings.SolidSettings.Scale;
-    [ObservableProperty] private double _transparency = settingsService.VisualizationSettings.SolidSettings.Transparency;
+    [ObservableProperty]
+    public partial double Scale { get; set; } = settingsService.VisualizationSettings.SolidSettings.Scale;
 
-    [ObservableProperty] private Color _faceColor = settingsService.VisualizationSettings.SolidSettings.FaceColor;
-    [ObservableProperty] private Color _edgeColor = settingsService.VisualizationSettings.SolidSettings.EdgeColor;
+    [ObservableProperty]
+    public partial double Transparency { get; set; } = settingsService.VisualizationSettings.SolidSettings.Transparency;
 
-    [ObservableProperty] private bool _showFace = settingsService.VisualizationSettings.SolidSettings.ShowFace;
-    [ObservableProperty] private bool _showEdge = settingsService.VisualizationSettings.SolidSettings.ShowEdge;
+    [ObservableProperty]
+    public partial Color FaceColor { get; set; } = settingsService.VisualizationSettings.SolidSettings.FaceColor;
+
+    [ObservableProperty]
+    public partial Color EdgeColor { get; set; } = settingsService.VisualizationSettings.SolidSettings.EdgeColor;
+
+    [ObservableProperty]
+    public partial bool ShowFace { get; set; } = settingsService.VisualizationSettings.SolidSettings.ShowFace;
+
+    [ObservableProperty]
+    public partial bool ShowEdge { get; set; } = settingsService.VisualizationSettings.SolidSettings.ShowEdge;
 
     public void RegisterServer(object solidObject)
     {

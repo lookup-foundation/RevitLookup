@@ -6,5 +6,6 @@ namespace RevitLookup.UI.Playground.ViewModels.Pages.BasicInput;
 [UsedImplicitly]
 public sealed partial class HyperlinkButtonViewModel : ObservableObject
 {
-    [ObservableProperty] private bool _isStandardButtonEnabled = true;
+    [ObservableProperty]
+    public partial bool IsStandardButtonEnabled { get; set; } = true;
 }

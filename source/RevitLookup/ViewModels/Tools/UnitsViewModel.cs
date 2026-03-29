@@ -27,9 +27,14 @@ public sealed partial class UnitsViewModel(
     INotificationService notificationService)
     : ObservableObject, IUnitsViewModel
 {
-    [ObservableProperty] private List<UnitInfo> _units = [];
-    [ObservableProperty] private List<UnitInfo> _filteredUnits = [];
-    [ObservableProperty] private string _searchText = string.Empty;
+    [ObservableProperty]
+    public partial List<UnitInfo> Units { get; set; } = [];
+
+    [ObservableProperty]
+    public partial List<UnitInfo> FilteredUnits { get; set; } = [];
+
+    [ObservableProperty]
+    public partial string SearchText { get; set; } = string.Empty;
 
     public void InitializeParameters()
     {

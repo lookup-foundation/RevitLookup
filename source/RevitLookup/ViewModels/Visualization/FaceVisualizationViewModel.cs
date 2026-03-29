@@ -17,16 +17,29 @@ public sealed partial class FaceVisualizationViewModel(
 {
     private readonly FaceVisualizationServer _server = new();
 
-    [ObservableProperty] private double _extrusion = settingsService.VisualizationSettings.FaceSettings.Extrusion;
-    [ObservableProperty] private double _transparency = settingsService.VisualizationSettings.FaceSettings.Transparency;
+    [ObservableProperty]
+    public partial double Extrusion { get; set; } = settingsService.VisualizationSettings.FaceSettings.Extrusion;
 
-    [ObservableProperty] private Color _surfaceColor = settingsService.VisualizationSettings.FaceSettings.SurfaceColor;
-    [ObservableProperty] private Color _meshColor = settingsService.VisualizationSettings.FaceSettings.MeshColor;
-    [ObservableProperty] private Color _normalVectorColor = settingsService.VisualizationSettings.FaceSettings.NormalVectorColor;
+    [ObservableProperty]
+    public partial double Transparency { get; set; } = settingsService.VisualizationSettings.FaceSettings.Transparency;
 
-    [ObservableProperty] private bool _showSurface = settingsService.VisualizationSettings.FaceSettings.ShowSurface;
-    [ObservableProperty] private bool _showMeshGrid = settingsService.VisualizationSettings.FaceSettings.ShowMeshGrid;
-    [ObservableProperty] private bool _showNormalVector = settingsService.VisualizationSettings.FaceSettings.ShowNormalVector;
+    [ObservableProperty]
+    public partial Color SurfaceColor { get; set; } = settingsService.VisualizationSettings.FaceSettings.SurfaceColor;
+
+    [ObservableProperty]
+    public partial Color MeshColor { get; set; } = settingsService.VisualizationSettings.FaceSettings.MeshColor;
+
+    [ObservableProperty]
+    public partial Color NormalVectorColor { get; set; } = settingsService.VisualizationSettings.FaceSettings.NormalVectorColor;
+
+    [ObservableProperty]
+    public partial bool ShowSurface { get; set; } = settingsService.VisualizationSettings.FaceSettings.ShowSurface;
+
+    [ObservableProperty]
+    public partial bool ShowMeshGrid { get; set; } = settingsService.VisualizationSettings.FaceSettings.ShowMeshGrid;
+
+    [ObservableProperty]
+    public partial bool ShowNormalVector { get; set; } = settingsService.VisualizationSettings.FaceSettings.ShowNormalVector;
 
     public double MinExtrusion => settingsService.VisualizationSettings.FaceSettings.MinExtrusion;
 

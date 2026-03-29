@@ -24,15 +24,30 @@ public sealed partial class RevitSettingsViewModel(
     private readonly RevitConfigurator _configurator = new();
     private TaskNotifier<List<ObservableIniEntry>>? _initializationTask;
 
-    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(ClearFiltersCommand))] private bool _filtered;
-    [ObservableProperty] private string _categoryFilter = string.Empty;
-    [ObservableProperty] private string _propertyFilter = string.Empty;
-    [ObservableProperty] private string _valueFilter = string.Empty;
-    [ObservableProperty] private bool _showUserSettingsFilter;
-    [ObservableProperty] private ObservableIniEntry? _selectedEntry;
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(ClearFiltersCommand))]
+    public partial bool Filtered { get; set; }
 
-    [ObservableProperty] private List<ObservableIniEntry> _entries = [];
-    [ObservableProperty] private ObservableCollection<ObservableIniEntry> _filteredEntries = [];
+    [ObservableProperty]
+    public partial string CategoryFilter { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial string PropertyFilter { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial string ValueFilter { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial bool ShowUserSettingsFilter { get; set; }
+
+    [ObservableProperty]
+    public partial ObservableIniEntry? SelectedEntry { get; set; }
+
+    [ObservableProperty]
+    public partial List<ObservableIniEntry> Entries { get; set; } = [];
+
+    [ObservableProperty]
+    public partial ObservableCollection<ObservableIniEntry> FilteredEntries { get; set; } = [];
 
     public Task<List<ObservableIniEntry>>? InitializationTask
     {

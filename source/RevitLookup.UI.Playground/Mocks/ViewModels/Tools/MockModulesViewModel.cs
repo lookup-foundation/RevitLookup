@@ -25,10 +25,6 @@ namespace RevitLookup.UI.Playground.Mocks.ViewModels.Tools;
 
 public sealed partial class MockModulesViewModel : ObservableObject, IModulesViewModel
 {
-    [ObservableProperty] private string _searchText = string.Empty;
-    [ObservableProperty] private List<ModuleInfo> _modules = [];
-    [ObservableProperty] private List<ModuleInfo> _filteredModules = [];
-
     public MockModulesViewModel()
     {
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -54,6 +50,15 @@ public sealed partial class MockModulesViewModel : ObservableObject, IModulesVie
             Modules.Add(module);
         }
     }
+    
+    [ObservableProperty]
+    public partial string SearchText { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial List<ModuleInfo> Modules { get; set; }
+
+    [ObservableProperty]
+    public partial List<ModuleInfo> FilteredModules { get; set; } = [];
 
     async partial void OnSearchTextChanged(string value)
     {

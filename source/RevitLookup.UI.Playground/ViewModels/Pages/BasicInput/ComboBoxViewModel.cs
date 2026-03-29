@@ -7,8 +7,9 @@ namespace RevitLookup.UI.Playground.ViewModels.Pages.BasicInput;
 [UsedImplicitly]
 public sealed partial class ComboBoxViewModel : ObservableObject
 {
-    [ObservableProperty] private bool _isStandardComboBoxEnabled = true;
-
+    [ObservableProperty]
+    public partial bool IsStandardComboBoxEnabled { get; set; } = true;
+    
     public ObservableCollection<string> Items { get; } =
     [
         "Item 1",

@@ -24,10 +24,17 @@ public sealed partial class MockDecompositionSummaryViewModel(
     ILogger<MockDecompositionSummaryViewModel> logger)
     : ObservableObject, IDecompositionSummaryViewModel
 {
-    [ObservableProperty] private string _searchText = string.Empty;
-    [ObservableProperty] private ObservableDecomposedObject? _selectedDecomposedObject;
-    [ObservableProperty] private List<ObservableDecomposedObject> _decomposedObjects = [];
-    [ObservableProperty] private ObservableCollection<ObservableDecomposedObjectsGroup> _filteredDecomposedObjects = [];
+    [ObservableProperty]
+    public partial string SearchText { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial ObservableDecomposedObject? SelectedDecomposedObject { get; set; }
+
+    [ObservableProperty]
+    public partial List<ObservableDecomposedObject> DecomposedObjects { get; set; } = [];
+
+    [ObservableProperty]
+    public partial ObservableCollection<ObservableDecomposedObjectsGroup> FilteredDecomposedObjects { get; private set; } = [];
 
     public void Navigate(object? value)
     {

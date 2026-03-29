@@ -11,12 +11,6 @@ namespace RevitLookup.UI.Playground.ViewModels.Pages.DesignGuidance;
 [UsedImplicitly]
 public partial class SymbolIconsPageViewModel : ObservableObject
 {
-    [ObservableProperty] private List<SymbolIconData> _icons = [];
-    [ObservableProperty] private List<SymbolIconData> _filteredIcons = [];
-    [ObservableProperty] private SymbolIconData? _selectedIcon;
-    [ObservableProperty] private string _searchText = string.Empty;
-    [ObservableProperty] private bool _useFilledIcons;
-
     public SymbolIconsPageViewModel()
     {
         var symbols = Enum.GetNames(typeof(SymbolRegular));
@@ -30,8 +24,23 @@ public partial class SymbolIconsPageViewModel : ObservableObject
             .OrderBy(data => data.Name)
             .ToList();
 
-        SelectedIcon = _icons.FirstOrDefault();
+        SelectedIcon = Icons.FirstOrDefault();
     }
+    
+    [ObservableProperty]
+    private partial List<SymbolIconData> Icons { get; set; }
+
+    [ObservableProperty]
+    public partial List<SymbolIconData> FilteredIcons { get; private set; } = [];
+
+    [ObservableProperty]
+    public partial SymbolIconData? SelectedIcon { get; set; }
+
+    [ObservableProperty]
+    public partial string SearchText { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial bool UseFilledIcons { get; set; }
 
     partial void OnIconsChanged(List<SymbolIconData> value)
     {
@@ -40,26 +49,33 @@ public partial class SymbolIconsPageViewModel : ObservableObject
 
     async partial void OnSearchTextChanged(string value)
     {
-        FilteredIcons = await Task.Run(() =>
+        try
         {
-            if (string.IsNullOrWhiteSpace(value))
+            FilteredIcons = await Task.Run(() =>
             {
-                return Icons;
-            }
-
-            var formattedText = value.Trim();
-            var results = new List<SymbolIconData>();
-
-            // ReSharper disable once LoopCanBeConvertedToQuery
-            foreach (var setData in Icons)
-            {
-                if (setData.Name.Contains(formattedText, StringComparison.OrdinalIgnoreCase))
+                if (string.IsNullOrWhiteSpace(value))
                 {
-                    results.Add(setData);
+                    return Icons;
                 }
-            }
 
-            return results;
-        });
+                var formattedText = value.Trim();
+                var results = new List<SymbolIconData>();
+
+                // ReSharper disable once LoopCanBeConvertedToQuery
+                foreach (var setData in Icons)
+                {
+                    if (setData.Name.Contains(formattedText, StringComparison.OrdinalIgnoreCase))
+                    {
+                        results.Add(setData);
+                    }
+                }
+
+                return results;
+            });
+        }
+        catch
+        {
+            // ignored
+        }
     }
 }

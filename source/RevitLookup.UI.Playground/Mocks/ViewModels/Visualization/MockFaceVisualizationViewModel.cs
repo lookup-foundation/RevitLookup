@@ -9,19 +9,6 @@ namespace RevitLookup.UI.Playground.Mocks.ViewModels.Visualization;
 [UsedImplicitly]
 public sealed partial class MockFaceVisualizationViewModel : ObservableObject, IFaceVisualizationViewModel
 {
-    [ObservableProperty] private double _extrusion;
-    [ObservableProperty] private double _transparency;
-
-    [ObservableProperty] private Color _surfaceColor;
-    [ObservableProperty] private Color _meshColor;
-    [ObservableProperty] private Color _normalVectorColor;
-
-    [ObservableProperty] private bool _showSurface;
-    [ObservableProperty] private bool _showMeshGrid;
-    [ObservableProperty] private bool _showNormalVector;
-
-    public double MinExtrusion { get; }
-
     public MockFaceVisualizationViewModel()
     {
         var faker = new Faker();
@@ -37,6 +24,32 @@ public sealed partial class MockFaceVisualizationViewModel : ObservableObject, I
         ShowMeshGrid = faker.Random.Bool();
         ShowNormalVector = faker.Random.Bool();
     }
+    
+    [ObservableProperty]
+    public partial double Extrusion { get; set; }
+
+    [ObservableProperty]
+    public partial double Transparency { get; set; }
+
+    [ObservableProperty]
+    public partial Color SurfaceColor { get; set; }
+
+    [ObservableProperty]
+    public partial Color MeshColor { get; set; }
+
+    [ObservableProperty]
+    public partial Color NormalVectorColor { get; set; }
+
+    [ObservableProperty]
+    public partial bool ShowSurface { get; set; }
+
+    [ObservableProperty]
+    public partial bool ShowMeshGrid { get; set; }
+
+    [ObservableProperty]
+    public partial bool ShowNormalVector { get; set; }
+    
+    public double MinExtrusion { get; }
 
     public void RegisterServer(object face)
     {

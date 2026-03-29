@@ -7,8 +7,11 @@ namespace RevitLookup.UI.Playground.ViewModels.Pages.DialogsAndFlyouts;
 [UsedImplicitly]
 public partial class FlyoutViewModel : ObservableObject
 {
-    [ObservableProperty] private bool _isStandardFlyoutOpen;
-    [ObservableProperty] private bool _isRightFlyoutOpen;
+    [ObservableProperty]
+    public partial bool IsStandardFlyoutOpen { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsRightFlyoutOpen { get; set; }
 
     [RelayCommand]
     private void OnStandardButtonClick()

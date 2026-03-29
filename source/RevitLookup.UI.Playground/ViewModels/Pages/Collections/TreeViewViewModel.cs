@@ -6,10 +6,9 @@ using Person = RevitLookup.UI.Playground.Models.Person;
 namespace RevitLookup.UI.Playground.ViewModels.Pages.Collections;
 
 [UsedImplicitly]
-public sealed partial class TreeViewViewModel : ObservableObject
+public sealed class TreeViewViewModel : ObservableObject
 {
-    [ObservableProperty]
-    private List<Person> _persons = GenerateHierarchicalPersons();
+    public List<Person> Persons { get; } = GenerateHierarchicalPersons();
 
     private static List<Person> GenerateHierarchicalPersons()
     {

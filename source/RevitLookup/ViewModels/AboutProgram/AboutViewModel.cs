@@ -32,14 +32,6 @@ public sealed partial class AboutViewModel : ObservableObject, IAboutViewModel
     private readonly ISoftwareUpdateService _updateService;
     private readonly ILogger<AboutViewModel> _logger;
 
-    [ObservableProperty] private SoftwareUpdateState _state = (SoftwareUpdateState) (-1);
-    [ObservableProperty] private Version? _currentVersion;
-    [ObservableProperty] private string? _newVersion;
-    [ObservableProperty] private string? _releaseNotesUrl;
-    [ObservableProperty] private string? _latestCheckDate;
-    [ObservableProperty] private string? _errorMessage;
-    [ObservableProperty] private string? _runtime;
-
     public AboutViewModel(
         IServiceProvider serviceProvider,
         ISoftwareUpdateService updateService,
@@ -63,6 +55,27 @@ public sealed partial class AboutViewModel : ObservableObject, IAboutViewModel
         LatestCheckDate = _updateService.LatestCheckDate?.ToString("yyyy.MM.dd HH:mm:ss");
         UpdateSoftwareState();
     }
+    
+    [ObservableProperty]
+    public partial SoftwareUpdateState State { get; set; } = (SoftwareUpdateState) (-1);
+
+    [ObservableProperty]
+    public partial Version? CurrentVersion { get; set; }
+
+    [ObservableProperty]
+    public partial string? NewVersion { get; set; }
+
+    [ObservableProperty]
+    public partial string? ReleaseNotesUrl { get; set; }
+
+    [ObservableProperty]
+    public partial string? LatestCheckDate { get; set; }
+
+    [ObservableProperty]
+    public partial string? ErrorMessage { get; set; }
+
+    [ObservableProperty]
+    public partial string? Runtime { get; set; }
 
     [RelayCommand]
     private async Task CheckUpdatesAsync()

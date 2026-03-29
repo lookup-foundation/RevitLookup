@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using RevitLookup.Abstractions.Decomposition;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Application;
 using RevitLookup.Abstractions.Services.Decomposition;
@@ -12,7 +13,7 @@ using Wpf.Ui;
 
 namespace RevitLookup.UI.Playground.Mocks.Services.Application;
 
-public sealed class MockUiOrchestratorService : IUiOrchestratorService, IHistoryOrchestrator, IInteractionOrchestrator
+public sealed class MockUiOrchestratorService : IUiOrchestratorService, IHistoryOrchestrator
 {
     private IServiceProvider? _parentProvider;
     private readonly List<Task> _activeTasks = [];

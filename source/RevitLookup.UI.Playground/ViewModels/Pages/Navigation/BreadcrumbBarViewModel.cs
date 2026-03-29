@@ -17,7 +17,12 @@ public partial class BreadcrumbBarViewModel : ObservableObject
         new("Folder3")
     ];
 
-    [ObservableProperty] private ObservableCollection<string> _baseStrings =
+    public BreadcrumbBarViewModel()
+    {
+        ResetFoldersCollection();
+    }
+    
+    public ObservableCollection<string> Strings { get; } =
     [
         "Home",
         "Document",
@@ -27,12 +32,7 @@ public partial class BreadcrumbBarViewModel : ObservableObject
         "Folder3"
     ];
 
-    [ObservableProperty] private ObservableCollection<DirectoryInfo> _directories = [];
-
-    public BreadcrumbBarViewModel()
-    {
-        ResetFoldersCollection();
-    }
+    public ObservableCollection<DirectoryInfo> Directories { get; } = [];
 
     [RelayCommand]
     private void OnStringSelected(object item)
