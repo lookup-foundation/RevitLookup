@@ -1,6 +1,6 @@
 ﻿<Solution>
     <Configurations>
-        <BuildType Name="Debug.Playground" />
+        <BuildType Name="Debug" />
         <BuildType Name="Debug.R21" />
         <BuildType Name="Debug.R22" />
         <BuildType Name="Debug.R23" />
@@ -8,7 +8,7 @@
         <BuildType Name="Debug.R25" />
         <BuildType Name="Debug.R26" />
         <BuildType Name="Debug.R27" />
-        <BuildType Name="Release.Playground" />
+        <BuildType Name="Release" />
         <BuildType Name="Release.R21" />
         <BuildType Name="Release.R22" />
         <BuildType Name="Release.R23" />
@@ -27,7 +27,6 @@
     </Folder>
     <Folder Name="/Automation/">
         <Project Path="build\Build.csproj">
-            <BuildType Solution="Debug.Playground|*" Project="Debug" />
             <BuildType Solution="Debug.R21|*" Project="Debug" />
             <BuildType Solution="Debug.R22|*" Project="Debug" />
             <BuildType Solution="Debug.R23|*" Project="Debug" />
@@ -35,7 +34,6 @@
             <BuildType Solution="Debug.R25|*" Project="Debug" />
             <BuildType Solution="Debug.R26|*" Project="Debug" />
             <BuildType Solution="Debug.R27|*" Project="Debug" />
-            <BuildType Solution="Release.Playground|*" Project="Release" />
             <BuildType Solution="Release.R21|*" Project="Release" />
             <BuildType Solution="Release.R22|*" Project="Release" />
             <BuildType Solution="Release.R23|*" Project="Release" />
@@ -46,7 +44,6 @@
             <Build Project="false" />
         </Project>
         <Project Path="install\Installer.csproj">
-            <BuildType Solution="Debug.Playground|*" Project="Debug" />
             <BuildType Solution="Debug.R21|*" Project="Debug" />
             <BuildType Solution="Debug.R22|*" Project="Debug" />
             <BuildType Solution="Debug.R23|*" Project="Debug" />
@@ -54,7 +51,6 @@
             <BuildType Solution="Debug.R25|*" Project="Debug" />
             <BuildType Solution="Debug.R26|*" Project="Debug" />
             <BuildType Solution="Debug.R27|*" Project="Debug" />
-            <BuildType Solution="Release.Playground|*" Project="Release" />
             <BuildType Solution="Release.R21|*" Project="Release" />
             <BuildType Solution="Release.R22|*" Project="Release" />
             <BuildType Solution="Release.R23|*" Project="Release" />
@@ -67,7 +63,6 @@
     </Folder>
     <Folder Name="/Engine/">
         <Project Path="source\LookupEngine\source\LookupEngine.Abstractions\LookupEngine.Abstractions.csproj">
-            <BuildType Solution="Debug.Playground|*" Project="Debug" />
             <BuildType Solution="Debug.R21|*" Project="Debug" />
             <BuildType Solution="Debug.R22|*" Project="Debug" />
             <BuildType Solution="Debug.R23|*" Project="Debug" />
@@ -75,7 +70,6 @@
             <BuildType Solution="Debug.R25|*" Project="Debug" />
             <BuildType Solution="Debug.R26|*" Project="Debug" />
             <BuildType Solution="Debug.R27|*" Project="Debug" />
-            <BuildType Solution="Release.Playground|*" Project="Release" />
             <BuildType Solution="Release.R21|*" Project="Release" />
             <BuildType Solution="Release.R22|*" Project="Release" />
             <BuildType Solution="Release.R23|*" Project="Release" />
@@ -85,7 +79,6 @@
             <BuildType Solution="Release.R27|*" Project="Release" />
         </Project>
         <Project Path="source\LookupEngine\source\LookupEngine\LookupEngine.csproj">
-            <BuildType Solution="Debug.Playground|*" Project="Debug" />
             <BuildType Solution="Debug.R21|*" Project="Debug" />
             <BuildType Solution="Debug.R22|*" Project="Debug" />
             <BuildType Solution="Debug.R23|*" Project="Debug" />
@@ -93,7 +86,6 @@
             <BuildType Solution="Debug.R25|*" Project="Debug" />
             <BuildType Solution="Debug.R26|*" Project="Debug" />
             <BuildType Solution="Debug.R27|*" Project="Debug" />
-            <BuildType Solution="Release.Playground|*" Project="Release" />
             <BuildType Solution="Release.R21|*" Project="Release" />
             <BuildType Solution="Release.R22|*" Project="Release" />
             <BuildType Solution="Release.R23|*" Project="Release" />
@@ -105,7 +97,6 @@
     </Folder>
     <Folder Name="/Frontend/">
         <Project Path="source\LookupEngine.UI\source\LookupEngine.UI.Abstractions\LookupEngine.UI.Abstractions.csproj">
-            <BuildType Solution="Debug.Playground|*" Project="Debug" />
             <BuildType Solution="Debug.R21|*" Project="Debug" />
             <BuildType Solution="Debug.R22|*" Project="Debug" />
             <BuildType Solution="Debug.R23|*" Project="Debug" />
@@ -113,7 +104,6 @@
             <BuildType Solution="Debug.R25|*" Project="Debug" />
             <BuildType Solution="Debug.R26|*" Project="Debug" />
             <BuildType Solution="Debug.R27|*" Project="Debug" />
-            <BuildType Solution="Release.Playground|*" Project="Release" />
             <BuildType Solution="Release.R21|*" Project="Release" />
             <BuildType Solution="Release.R22|*" Project="Release" />
             <BuildType Solution="Release.R23|*" Project="Release" />
@@ -123,7 +113,6 @@
             <BuildType Solution="Release.R27|*" Project="Release" />
         </Project>
         <Project Path="source\LookupEngine.UI\source\LookupEngine.UI\LookupEngine.UI.csproj">
-            <BuildType Solution="Debug.Playground|*" Project="Debug" />
             <BuildType Solution="Debug.R21|*" Project="Debug" />
             <BuildType Solution="Debug.R22|*" Project="Debug" />
             <BuildType Solution="Debug.R23|*" Project="Debug" />
@@ -131,7 +120,6 @@
             <BuildType Solution="Debug.R25|*" Project="Debug" />
             <BuildType Solution="Debug.R26|*" Project="Debug" />
             <BuildType Solution="Debug.R27|*" Project="Debug" />
-            <BuildType Solution="Release.Playground|*" Project="Release" />
             <BuildType Solution="Release.R21|*" Project="Release" />
             <BuildType Solution="Release.R22|*" Project="Release" />
             <BuildType Solution="Release.R23|*" Project="Release" />
@@ -141,7 +129,6 @@
             <BuildType Solution="Release.R27|*" Project="Release" />
         </Project>
         <Project Path="source\RevitLookup.UI.Framework\RevitLookup.UI.Framework.csproj">
-            <BuildType Solution="Debug.Playground|*" Project="Debug" />
             <BuildType Solution="Debug.R21|*" Project="Debug" />
             <BuildType Solution="Debug.R22|*" Project="Debug" />
             <BuildType Solution="Debug.R23|*" Project="Debug" />
@@ -149,7 +136,6 @@
             <BuildType Solution="Debug.R25|*" Project="Debug" />
             <BuildType Solution="Debug.R26|*" Project="Debug" />
             <BuildType Solution="Debug.R27|*" Project="Debug" />
-            <BuildType Solution="Release.Playground|*" Project="Release" />
             <BuildType Solution="Release.R21|*" Project="Release" />
             <BuildType Solution="Release.R22|*" Project="Release" />
             <BuildType Solution="Release.R23|*" Project="Release" />
@@ -161,7 +147,6 @@
     </Folder>
     <Folder Name="/Playground/">
         <Project Path="source\RevitLookup.UI.Playground\RevitLookup.UI.Playground.csproj">
-            <BuildType Solution="Debug.Playground|*" Project="Debug" />
             <BuildType Solution="Debug.R21|*" Project="Debug" />
             <BuildType Solution="Debug.R22|*" Project="Debug" />
             <BuildType Solution="Debug.R23|*" Project="Debug" />
@@ -169,7 +154,6 @@
             <BuildType Solution="Debug.R25|*" Project="Debug" />
             <BuildType Solution="Debug.R26|*" Project="Debug" />
             <BuildType Solution="Debug.R27|*" Project="Debug" />
-            <BuildType Solution="Release.Playground|*" Project="Release" />
             <BuildType Solution="Release.R21|*" Project="Release" />
             <BuildType Solution="Release.R22|*" Project="Release" />
             <BuildType Solution="Release.R23|*" Project="Release" />
@@ -195,22 +179,21 @@
     </Folder>
     <Folder Name="/Revit/">
         <Project Path="source\RevitLookup\RevitLookup.csproj">
-            <BuildType Solution="Debug.Playground|*" Project="Debug.R26" />
-            <BuildType Solution="Release.Playground|*" Project="Release.R26" />
-            <Build Solution="Debug.Playground|*" Project="false" />
-            <Build Solution="Release.Playground|*" Project="false" />
+            <BuildType Solution="Debug|*" Project="Debug.R27" />
+            <BuildType Solution="Release|*" Project="Release.R27" />
+            <Build Solution="Debug|*" Project="false" />
+            <Build Solution="Release|*" Project="false" />
         </Project>
     </Folder>
     <Folder Name="/Tests/">
         <Project Path="tests/RevitLookup.Tests/RevitLookup.Tests.csproj">
-            <BuildType Solution="Debug.Playground|*" Project="Debug.R26" />
-            <BuildType Solution="Release.Playground|*" Project="Release.R26" />
-            <Build Solution="Debug.Playground|*" Project="false" />
-            <Build Solution="Release.Playground|*" Project="false" />
+            <BuildType Solution="Debug|*" Project="Debug.R27" />
+            <BuildType Solution="Release|*" Project="Release.R27" />
+            <Build Solution="Debug|*" Project="false" />
+            <Build Solution="Release|*" Project="false" />
         </Project>
     </Folder>
     <Project Path="source/RevitLookup.ServiceDefaults/RevitLookup.ServiceDefaults.csproj">
-        <BuildType Solution="Debug.Playground|*" Project="Debug" />
         <BuildType Solution="Debug.R21|*" Project="Debug" />
         <BuildType Solution="Debug.R22|*" Project="Debug" />
         <BuildType Solution="Debug.R23|*" Project="Debug" />
@@ -218,7 +201,6 @@
         <BuildType Solution="Debug.R25|*" Project="Debug" />
         <BuildType Solution="Debug.R26|*" Project="Debug" />
         <BuildType Solution="Debug.R27|*" Project="Debug" />
-        <BuildType Solution="Release.Playground|*" Project="Release" />
         <BuildType Solution="Release.R21|*" Project="Release" />
         <BuildType Solution="Release.R22|*" Project="Release" />
         <BuildType Solution="Release.R23|*" Project="Release" />
@@ -228,7 +210,6 @@
         <BuildType Solution="Release.R27|*" Project="Release" />
     </Project>
     <Project Path="source\RevitLookup.Abstractions\RevitLookup.Abstractions.csproj">
-        <BuildType Solution="Debug.Playground|*" Project="Debug" />
         <BuildType Solution="Debug.R21|*" Project="Debug" />
         <BuildType Solution="Debug.R22|*" Project="Debug" />
         <BuildType Solution="Debug.R23|*" Project="Debug" />
@@ -236,7 +217,6 @@
         <BuildType Solution="Debug.R25|*" Project="Debug" />
         <BuildType Solution="Debug.R26|*" Project="Debug" />
         <BuildType Solution="Debug.R27|*" Project="Debug" />
-        <BuildType Solution="Release.Playground|*" Project="Release" />
         <BuildType Solution="Release.R21|*" Project="Release" />
         <BuildType Solution="Release.R22|*" Project="Release" />
         <BuildType Solution="Release.R23|*" Project="Release" />
@@ -246,7 +226,6 @@
         <BuildType Solution="Release.R27|*" Project="Release" />
     </Project>
     <Project Path="source\RevitLookup.Common\RevitLookup.Common.csproj">
-        <BuildType Solution="Debug.Playground|*" Project="Debug" />
         <BuildType Solution="Debug.R21|*" Project="Debug" />
         <BuildType Solution="Debug.R22|*" Project="Debug" />
         <BuildType Solution="Debug.R23|*" Project="Debug" />
@@ -254,7 +233,6 @@
         <BuildType Solution="Debug.R25|*" Project="Debug" />
         <BuildType Solution="Debug.R26|*" Project="Debug" />
         <BuildType Solution="Debug.R27|*" Project="Debug" />
-        <BuildType Solution="Release.Playground|*" Project="Release" />
         <BuildType Solution="Release.R21|*" Project="Release" />
         <BuildType Solution="Release.R22|*" Project="Release" />
         <BuildType Solution="Release.R23|*" Project="Release" />

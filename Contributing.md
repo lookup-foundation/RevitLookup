@@ -454,11 +454,11 @@ For custom visualization of specific data types, create specialized templates fo
 
 ## UI Development and Testing
 
-RevitLookup provides a dedicated environment for UI development and testing without launching Revit, which significantly speeds up the development cycle. All UI changes should first be developed and tested in the `RevitLookup.UI.Playground` project using the `Debug.Playground` solution configuration.
+RevitLookup provides a dedicated environment for UI development and testing without launching Revit, which significantly speeds up the development cycle. All UI changes should first be developed and tested in the `RevitLookup.UI.Playground` project using the `Debug` solution configuration.
 
 ### Setting Up the UI Playground
 
-1. Select the `Debug.Playground` configuration from the solution configuration dropdown.
+1. Select the `Debug` configuration from the solution configuration dropdown.
 2. Set `RevitLookup.UI.Playground` as the startup project.
 
 ### Benefits of UI Playground
