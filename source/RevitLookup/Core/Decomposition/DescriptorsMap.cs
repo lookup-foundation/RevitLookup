@@ -29,6 +29,7 @@ using Autodesk.Windows;
 using LookupEngine.Abstractions.Decomposition;
 using LookupEngine.Descriptors;
 using RevitLookup.Core.Decomposition.Descriptors;
+using Document = Autodesk.Revit.Creation.Document;
 using EnumerableDescriptor = RevitLookup.Core.Decomposition.Descriptors.EnumerableDescriptor;
 using RibbonItem = Autodesk.Revit.UI.RibbonItem;
 using RibbonPanel = Autodesk.Revit.UI.RibbonPanel;
@@ -90,6 +91,7 @@ public static class DescriptorsMap
             MEPSection value when type is null || type == typeof(MEPSection) => new MepSectionDescriptor(value),
             LocationCurve value when type is null || type == typeof(LocationCurve) => new LocationCurveDescriptor(value),
             CurtainGrid value when type is null || type == typeof(CurtainGrid) => new CurtainGridDescriptor(value),
+            Document value when type is null || type == typeof(Document) => new DocumentCreationDescriptor(value),
             APIObject when type is null || type == typeof(APIObject) => new ApiObjectDescriptor(),
 
             //Elements
@@ -118,6 +120,7 @@ public static class DescriptorsMap
             StructuralSettings value when type is null || type == typeof(StructuralSettings) => new StructuralSettingsDescriptor(value),
             AreaVolumeSettings value when type is null || type == typeof(AreaVolumeSettings) => new AreaVolumeSettingsDescriptor(value),
             Rebar value when type is null || type == typeof(Rebar) => new RebarDescriptor(value),
+            RebarShape value when type is null || type == typeof(RebarShape) => new RebarShapeDescriptor(value),
             SketchPlane value when type is null || type == typeof(SketchPlane) => new SketchPlaneDescriptor(value),
             CurveElement value when type is null || type == typeof(CurveElement) => new CurveElementDescriptor(value),
             GlobalParameter value when type is null || type == typeof(GlobalParameter) => new GlobalParameterDescriptor(value),
@@ -133,7 +136,7 @@ public static class DescriptorsMap
             Element value when type is null || type == typeof(Element) => new ElementDescriptor(value),
 
             //IDisposables
-            Document value when type is null || type == typeof(Document) => new DocumentDescriptor(value),
+            Autodesk.Revit.DB.Document value when type is null || type == typeof(Autodesk.Revit.DB.Document) => new DocumentDescriptor(value),
             PlanViewRange value when type is null || type == typeof(PlanViewRange) => new PlanViewRangeDescriptor(value),
             ForgeTypeId value when type is null || type == typeof(ForgeTypeId) => new ForgeTypeIdDescriptor(value),
             Entity value when type is null || type == typeof(Entity) => new EntityDescriptor(value),
@@ -168,6 +171,7 @@ public static class DescriptorsMap
             TriangulationInterface value when type is null || type == typeof(TriangulationInterface) => new TriangulationInterfaceDescriptor(value),
             Autodesk.Revit.DB.Units value when type is null || type == typeof(Autodesk.Revit.DB.Units) => new UnitsDescriptor(value),
             CompoundStructure value when type is null || type == typeof(CompoundStructure) => new CompoundStructureDescriptor(value),
+            FailureDefinitionAccessor value when type is null || type == typeof(FailureDefinitionAccessor) => new FailureDefinitionAccessorDescriptor(value),
 #if REVIT2024_OR_GREATER
             EvaluatedParameter value when type is null || type == typeof(EvaluatedParameter) => new EvaluatedParameterDescriptor(value),
 #endif

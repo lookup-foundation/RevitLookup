@@ -97,7 +97,6 @@ public sealed class DocumentDescriptor : Descriptor, IDescriptorResolver, IDescr
         manager.Register(nameof(GlobalParametersManager.AreGlobalParametersAllowed), () => Variants.Value(GlobalParametersManager.AreGlobalParametersAllowed(_document)));
         manager.Register(nameof(GlobalParametersManager.GetGlobalParametersOrdered), () => Variants.Value(GlobalParametersManager.GetGlobalParametersOrdered(_document)));
         manager.Register(nameof(KeynoteTable.GetKeynoteTable), () => Variants.Value(KeynoteTable.GetKeynoteTable(_document)));
-        manager.Register(nameof(RebarShapeParameters.GetAllRebarShapeParameters), () => Variants.Value(RebarShapeParameters.GetAllRebarShapeParameters(_document)));
         manager.Register(nameof(LightGroupManager.GetLightGroupManager), () => Variants.Value(LightGroupManager.GetLightGroupManager(_document)));
         manager.Register(nameof(UpdaterRegistry.GetRegisteredUpdaterInfos), () => Variants.Value(UpdaterRegistry.GetRegisteredUpdaterInfos(_document)));
         manager.Register(nameof(LightFamily.GetLightFamily), () => Variants.Value(LightFamily.GetLightFamily(_document)));

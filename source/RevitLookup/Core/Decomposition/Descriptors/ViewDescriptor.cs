@@ -87,9 +87,6 @@ public sealed class ViewDescriptor(View view) : ElementDescriptor(view)
         manager.Register(nameof(ReferenceableViewUtils.ChangeReferencedView), Variants.NotSupported);
         manager.Register(nameof(ElementTransformUtils.GetTransformFromViewToView), Variants.NotSupported);
 
-        _ = nameof(ElementTransformUtils.CopyElements);
-        manager.Register("CopyElementsBetweenViews", Variants.NotSupported);
-
         _ = nameof(BoundaryValidation.IsValidBoundaryOnView);
         manager.Register("IsValidBoundaryOnView", Variants.NotSupported);
     }

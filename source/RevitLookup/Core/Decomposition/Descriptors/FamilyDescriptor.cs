@@ -28,13 +28,17 @@ public sealed class FamilyDescriptor(Family family) : ElementDescriptor(family)
     public override void RegisterExtensions(IExtensionManager manager)
     {
         manager.Register(nameof(FamilySizeTableManager.GetFamilySizeTableManager), () => Variants.Value(FamilySizeTableManager.GetFamilySizeTableManager(family.Document, family.Id)));
-        manager.Register(nameof(FamilyUtils.FamilyCanConvertToFaceHostBased), () => Variants.Value(FamilyUtils.FamilyCanConvertToFaceHostBased(family.Document, family.Id)));
+        manager.Register("CanBeConvertedToFaceHostBased", () => Variants.Value(FamilyUtils.FamilyCanConvertToFaceHostBased(family.Document, family.Id)));
         manager.Register(nameof(FamilyUtils.GetProfileSymbols), RegisterProfileSymbols);
-        manager.Register(nameof(AdaptiveComponentFamilyUtils.GetNumberOfAdaptivePoints), () => Variants.Value(AdaptiveComponentFamilyUtils.GetNumberOfAdaptivePoints(family)));
-        manager.Register(nameof(AdaptiveComponentFamilyUtils.GetNumberOfPlacementPoints), () => Variants.Value(AdaptiveComponentFamilyUtils.GetNumberOfPlacementPoints(family)));
-        manager.Register(nameof(AdaptiveComponentFamilyUtils.GetNumberOfShapeHandlePoints), () => Variants.Value(AdaptiveComponentFamilyUtils.GetNumberOfShapeHandlePoints(family)));
-        manager.Register(nameof(AdaptiveComponentFamilyUtils.IsAdaptiveComponentFamily), () => Variants.Value(AdaptiveComponentFamilyUtils.IsAdaptiveComponentFamily(family)));
         manager.Register(nameof(LoadedFamilyIntegrityCheck.CheckFamily), () => Variants.Value(LoadedFamilyIntegrityCheck.CheckFamily(family.Document, family.Id)));
+        manager.Register(nameof(AdaptiveComponentFamilyUtils.IsAdaptiveComponentFamily), () => Variants.Value(AdaptiveComponentFamilyUtils.IsAdaptiveComponentFamily(family)));
+
+        if (AdaptiveComponentFamilyUtils.IsAdaptiveComponentFamily(family))
+        {
+            manager.Register(nameof(AdaptiveComponentFamilyUtils.GetNumberOfAdaptivePoints), () => Variants.Value(AdaptiveComponentFamilyUtils.GetNumberOfAdaptivePoints(family)));
+            manager.Register(nameof(AdaptiveComponentFamilyUtils.GetNumberOfPlacementPoints), () => Variants.Value(AdaptiveComponentFamilyUtils.GetNumberOfPlacementPoints(family)));
+            manager.Register(nameof(AdaptiveComponentFamilyUtils.GetNumberOfShapeHandlePoints), () => Variants.Value(AdaptiveComponentFamilyUtils.GetNumberOfShapeHandlePoints(family)));
+        }
 
         RegisterNotSupportedExtensions(manager);
         return;

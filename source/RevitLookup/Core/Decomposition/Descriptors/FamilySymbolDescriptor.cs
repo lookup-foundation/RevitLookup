@@ -30,15 +30,13 @@ public sealed class FamilySymbolDescriptor(FamilySymbol familySymbol) : ElementD
     // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
     private void RegisterNotSupportedExtensions(IExtensionManager manager)
     {
-        _ = nameof(AdaptiveComponentInstanceUtils.CreateAdaptiveComponentInstance);
-        manager.Register("CreateAdaptiveComponentInstance", Variants.NotSupported);
+        if (AdaptiveComponentInstanceUtils.IsAdaptiveFamilySymbol(familySymbol))
+        {
+            _ = nameof(AdaptiveComponentInstanceUtils.CreateAdaptiveComponentInstance);
+            manager.Register("CreateAdaptiveComponentInstance", Variants.NotSupported);
+        }
 
         _ = nameof(StructuralSectionUtils.SetStructuralSection);
         manager.Register("SetStructuralSection", Variants.NotSupported);
-#if REVIT2024_OR_GREATER
-
-        _ = nameof(MEPSupportUtils.CreateDuctworkStiffener);
-        manager.Register("NewDuctworkStiffener", Variants.NotSupported);
-#endif
     }
 }

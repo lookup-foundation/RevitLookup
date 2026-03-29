@@ -45,6 +45,7 @@ public sealed class ApplicationDescriptor : Descriptor, IDescriptorExtension
         manager.Register("GetFormulaFunctions", () => Variants.Value(FormulaManager.GetFunctions()));
         manager.Register("GetFormulaOperators", () => Variants.Value(FormulaManager.GetOperators()));
         manager.Register("GetSupportedPointCloudEngines", () => Variants.Value(PointCloudEngineRegistry.GetSupportedEngines()));
+        manager.Register(nameof(LabelUtils.GetStructuralSectionShapeName), () => VariantsResolver.ResolveEnum<StructuralSectionShape, string>(LabelUtils.GetStructuralSectionShapeName));
         manager.Register(nameof(MacroManager.GetMacroManager), () => Variants.Value(MacroManager.GetMacroManager(_application)));
         manager.Register(nameof(OptionalFunctionalityUtils.IsDGNExportAvailable), () => Variants.Value(OptionalFunctionalityUtils.IsDGNExportAvailable()));
         manager.Register(nameof(OptionalFunctionalityUtils.IsDGNImportLinkAvailable), () => Variants.Value(OptionalFunctionalityUtils.IsDGNImportLinkAvailable()));
@@ -59,7 +60,6 @@ public sealed class ApplicationDescriptor : Descriptor, IDescriptorExtension
         manager.Register(nameof(OptionalFunctionalityUtils.IsSATImportLinkAvailable), () => Variants.Value(OptionalFunctionalityUtils.IsSATImportLinkAvailable()));
         manager.Register(nameof(OptionalFunctionalityUtils.IsShapeImporterAvailable), () => Variants.Value(OptionalFunctionalityUtils.IsShapeImporterAvailable()));
         manager.Register(nameof(OptionalFunctionalityUtils.IsSKPImportLinkAvailable), () => Variants.Value(OptionalFunctionalityUtils.IsSKPImportLinkAvailable()));
-        manager.Register(nameof(LabelUtils.GetStructuralSectionShapeName), () => VariantsResolver.ResolveEnum<StructuralSectionShape, string>(LabelUtils.GetStructuralSectionShapeName));
 #if REVIT2022_OR_GREATER
         manager.Register(nameof(OptionalFunctionalityUtils.IsAXMImportLinkAvailable), () => Variants.Value(OptionalFunctionalityUtils.IsAXMImportLinkAvailable()));
         manager.Register(nameof(OptionalFunctionalityUtils.Is3DMImportLinkAvailable), () => Variants.Value(OptionalFunctionalityUtils.Is3DMImportLinkAvailable()));
@@ -70,8 +70,8 @@ public sealed class ApplicationDescriptor : Descriptor, IDescriptorExtension
         manager.Register(nameof(OptionalFunctionalityUtils.IsSTEPImportLinkAvailable), () => Variants.Value(OptionalFunctionalityUtils.IsSTEPImportLinkAvailable()));
 #endif
 #if REVIT2026_OR_GREATER
-        manager.Register(nameof(ModelPathUtils.GetAllCloudRegions), () => Variants.Value(ModelPathUtils.GetAllCloudRegions()));
         manager.Register(nameof(OptionalFunctionalityUtils.IsMaterialLibraryAvailable), () => Variants.Value(OptionalFunctionalityUtils.IsMaterialLibraryAvailable()));
+        manager.Register(nameof(ModelPathUtils.GetAllCloudRegions), () => Variants.Value(ModelPathUtils.GetAllCloudRegions()));
         manager.Register(nameof(LabelUtils.GetFailureSeverityName), () => VariantsResolver.ResolveEnum<FailureSeverity, string>(LabelUtils.GetFailureSeverityName));
 #endif
     }

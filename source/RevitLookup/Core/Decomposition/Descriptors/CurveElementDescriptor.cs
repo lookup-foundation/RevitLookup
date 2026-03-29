@@ -137,10 +137,6 @@ public sealed class CurveElementDescriptor(CurveElement element) : ElementDescri
         manager.Register(nameof(CurveByPointsUtils.SetProjectionType), Variants.NotSupported);
         manager.Register(nameof(CurveByPointsUtils.SetSketchOnSurface), Variants.NotSupported);
         manager.Register(nameof(CurveByPointsUtils.CreateArcThroughPoints), Variants.NotSupported);
-        manager.Register(nameof(CurveByPointsUtils.AddCurvesToFaceRegion), Variants.NotSupported);
         manager.Register(nameof(CurveByPointsUtils.CreateRectangle), Variants.NotSupported);
-            
-        _ = nameof(CurveByPointsUtils.ValidateCurveElementIdArrayForFaceRegions);
-        manager.Register("ValidateForFaceRegions", Variants.NotSupported);
     }
 }
