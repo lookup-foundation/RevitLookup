@@ -23,14 +23,13 @@ public sealed class GlobalParameterDescriptor(GlobalParameter globalParameter) :
     {
         manager.Register(nameof(GlobalParametersManager.IsValidGlobalParameter), () => Variants.Value(GlobalParametersManager.IsValidGlobalParameter(globalParameter.Document, globalParameter.Id)));
         
-        RegisterNotSupportedExtensions();
-        return;
-
-        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-        void RegisterNotSupportedExtensions()
-        {
-            manager.Register(nameof(GlobalParametersManager.MoveParameterDownOrder), Variants.NotSupported);
-            manager.Register(nameof(GlobalParametersManager.MoveParameterUpOrder), Variants.NotSupported);
-        }
+        RegisterNotSupportedExtensions(manager);
+    }
+    
+    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+    private void RegisterNotSupportedExtensions(IExtensionManager manager)
+    {
+        manager.Register(nameof(GlobalParametersManager.MoveParameterDownOrder), Variants.NotSupported);
+        manager.Register(nameof(GlobalParametersManager.MoveParameterUpOrder), Variants.NotSupported);
     }
 }

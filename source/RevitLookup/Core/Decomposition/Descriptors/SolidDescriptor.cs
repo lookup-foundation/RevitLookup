@@ -50,7 +50,7 @@ public sealed partial class SolidDescriptor : Descriptor, IDescriptorExtension, 
         manager.Register(nameof(SolidUtils.ComputeIsTopologicallyClosed), () => Variants.Value(SolidUtils.ComputeIsTopologicallyClosed(_solid)));
 #endif
 
-        RegisterNotSupportedExtensions();
+        RegisterNotSupportedExtensions(manager);
         return;
 
         IVariant ResolveTessellateSolidOrShell()
@@ -60,33 +60,33 @@ public sealed partial class SolidDescriptor : Descriptor, IDescriptorExtension, 
                 .Add(SolidUtils.TessellateSolidOrShell(_solid, new SolidOrShellTessellationControls {LevelOfDetail = 1}), "Fine")
                 .Consume();
         }
+    }
 
-        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-        void RegisterNotSupportedExtensions()
-        {
-            manager.Register(nameof(SolidUtils.Clone), Variants.NotSupported);
-            manager.Register(nameof(SolidUtils.CreateTransformed), Variants.NotSupported);
+    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+    private void RegisterNotSupportedExtensions(IExtensionManager manager)
+    {
+        manager.Register(nameof(SolidUtils.Clone), Variants.NotSupported);
+        manager.Register(nameof(SolidUtils.CreateTransformed), Variants.NotSupported);
             
-            _ = nameof(BooleanOperationsUtils.CutWithHalfSpace);
-            manager.Register("CutWithHalfSpace", Variants.NotSupported);
+        _ = nameof(BooleanOperationsUtils.CutWithHalfSpace);
+        manager.Register("CutWithHalfSpace", Variants.NotSupported);
             
-            _ = nameof(BooleanOperationsUtils.CutWithHalfSpaceModifyingOriginalSolid);
-            manager.Register("CutWithHalfSpaceModifyingOriginalSolid", Variants.NotSupported);
+        _ = nameof(BooleanOperationsUtils.CutWithHalfSpaceModifyingOriginalSolid);
+        manager.Register("CutWithHalfSpaceModifyingOriginalSolid", Variants.NotSupported);
             
-            _ = nameof(BooleanOperationsUtils.ExecuteBooleanOperation);
-            manager.Register("ExecuteBooleanOperation", Variants.NotSupported);
+        _ = nameof(BooleanOperationsUtils.ExecuteBooleanOperation);
+        manager.Register("ExecuteBooleanOperation", Variants.NotSupported);
             
-            _ = nameof(BooleanOperationsUtils.ExecuteBooleanOperationModifyingOriginalSolid);
-            manager.Register("ExecuteBooleanOperationModifyingOriginalSolid", Variants.NotSupported);
+        _ = nameof(BooleanOperationsUtils.ExecuteBooleanOperationModifyingOriginalSolid);
+        manager.Register("ExecuteBooleanOperationModifyingOriginalSolid", Variants.NotSupported);
 
-            manager.Register(nameof(GeometryCreationUtilities.CreateBlendGeometry), Variants.NotSupported);
-            manager.Register(nameof(GeometryCreationUtilities.CreateExtrusionGeometry), Variants.NotSupported);
-            manager.Register(nameof(GeometryCreationUtilities.CreateFixedReferenceSweptGeometry), Variants.NotSupported);
-            manager.Register(nameof(GeometryCreationUtilities.CreateLoftGeometry), Variants.NotSupported);
-            manager.Register(nameof(GeometryCreationUtilities.CreateRevolvedGeometry), Variants.NotSupported);
-            manager.Register(nameof(GeometryCreationUtilities.CreateSweptBlendGeometry), Variants.NotSupported);
-            manager.Register(nameof(GeometryCreationUtilities.CreateSweptGeometry), Variants.NotSupported);
-        }
+        manager.Register(nameof(GeometryCreationUtilities.CreateBlendGeometry), Variants.NotSupported);
+        manager.Register(nameof(GeometryCreationUtilities.CreateExtrusionGeometry), Variants.NotSupported);
+        manager.Register(nameof(GeometryCreationUtilities.CreateFixedReferenceSweptGeometry), Variants.NotSupported);
+        manager.Register(nameof(GeometryCreationUtilities.CreateLoftGeometry), Variants.NotSupported);
+        manager.Register(nameof(GeometryCreationUtilities.CreateRevolvedGeometry), Variants.NotSupported);
+        manager.Register(nameof(GeometryCreationUtilities.CreateSweptBlendGeometry), Variants.NotSupported);
+        manager.Register(nameof(GeometryCreationUtilities.CreateSweptGeometry), Variants.NotSupported);
     }
 
     public void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)

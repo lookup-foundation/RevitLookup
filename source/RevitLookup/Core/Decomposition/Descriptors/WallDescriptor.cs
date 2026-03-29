@@ -36,18 +36,8 @@ public sealed class WallDescriptor(Wall wall) : ElementDescriptor(wall)
         _ = nameof(WallUtils.IsWallJoinAllowedAtEnd);
         manager.Register("IsJoinAllowedAtEnd", ResolveIsWallJoinAllowedAtEnd);
 
-        RegisterNotSupportedExtensions();
+        RegisterNotSupportedExtensions(manager);
         return;
-
-        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-        void RegisterNotSupportedExtensions()
-        {
-            _ = nameof(WallUtils.AllowWallJoinAtEnd);
-            manager.Register("AllowJoinAtEnd", Variants.NotSupported);
-
-            _ = nameof(WallUtils.DisallowWallJoinAtEnd);
-            manager.Register("DisallowJoinAtEnd", Variants.NotSupported);
-        }
 
         IVariant ResolveIsWallJoinAllowedAtEnd()
         {
@@ -59,5 +49,15 @@ public sealed class WallDescriptor(Wall wall) : ElementDescriptor(wall)
                 .Add(isJoinAllowedAtEnd1, $"End: {isJoinAllowedAtEnd1}")
                 .Consume();
         }
+    }
+
+    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+    private void RegisterNotSupportedExtensions(IExtensionManager manager)
+    {
+        _ = nameof(WallUtils.AllowWallJoinAtEnd);
+        manager.Register("AllowJoinAtEnd", Variants.NotSupported);
+
+        _ = nameof(WallUtils.DisallowWallJoinAtEnd);
+        manager.Register("DisallowJoinAtEnd", Variants.NotSupported);
     }
 }

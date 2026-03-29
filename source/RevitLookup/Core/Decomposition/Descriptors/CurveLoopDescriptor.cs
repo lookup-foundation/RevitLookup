@@ -17,7 +17,7 @@ using Nice3point.Revit.Toolkit.External;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed partial class CurveLoopDescriptor : Descriptor, IDescriptorResolver, IContextMenuConnector
+public sealed partial class CurveLoopDescriptor : Descriptor, IDescriptorResolver, IDescriptorExtension, IContextMenuConnector
 {
     private readonly CurveLoop _curveLoop;
 
@@ -36,6 +36,14 @@ public sealed partial class CurveLoopDescriptor : Descriptor, IDescriptorResolve
             nameof(CurveLoop.NumberOfCurves) => () => Variants.Value(_curveLoop.NumberOfCurves()),
             _ => null
         };
+    }
+
+    public void RegisterExtensions(IExtensionManager manager)
+    {
+#if REVIT2022_OR_GREATER
+        _ = nameof(BoundaryValidation.IsValidHorizontalBoundary);
+        manager.Register("IsValidHorizontalBoundary", Variants.NotSupported);
+#endif
     }
 
     public void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)

@@ -33,6 +33,7 @@ using Autodesk.Revit.DB.Structure;
 #endif
 
 #if REVIT2026_OR_GREATER
+using Autodesk.Revit.DB.ExternalData;
 #endif
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
@@ -209,10 +210,10 @@ public partial class ElementDescriptor : Descriptor, IDescriptorResolver, IDescr
     {
         _ = nameof(ElementTransformUtils.CanMirrorElement);
         manager.Register("CanBeMirrored", () => Variants.Value(ElementTransformUtils.CanMirrorElement(_element.Document, _element.Id)));
-        
+
         _ = nameof(DocumentValidation.CanDeleteElement);
         manager.Register("CanBeDeleted", () => Variants.Value(DocumentValidation.CanDeleteElement(_element.Document, _element.Id)));
-        
+
         manager.Register(nameof(JoinGeometryUtils.GetJoinedElements), () => Variants.Value(JoinGeometryUtils.GetJoinedElements(_element.Document, _element)));
         manager.Register(nameof(SolidSolidCutUtils.GetCuttingSolids), () => Variants.Value(SolidSolidCutUtils.GetCuttingSolids(_element)));
         manager.Register(nameof(SolidSolidCutUtils.GetSolidsBeingCut), () => Variants.Value(SolidSolidCutUtils.GetSolidsBeingCut(_element)));
@@ -247,47 +248,59 @@ public partial class ElementDescriptor : Descriptor, IDescriptorResolver, IDescr
         manager.Register("GetBendingDetailTagRelativePosition", () => Variants.Value(RebarBendingDetail.GetTagRelativePosition(_element)));
         manager.Register("GetBendingDetailTagRelativeRotation", () => Variants.Value(RebarBendingDetail.GetTagRelativeRotation(_element)));
 #endif
-
-        RegisterNotSupportedExtensions();
-        return;
-
-        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-        void RegisterNotSupportedExtensions()
-        {
-            _ = nameof(InstanceVoidCutUtils.GetElementsBeingCut);
-            manager.Register("GetElementsBeingCut", Variants.NotSupported);
-
-            manager.Register(nameof(InstanceVoidCutUtils.AddInstanceVoidCut), Variants.NotSupported);
-            manager.Register(nameof(InstanceVoidCutUtils.InstanceVoidCutExists), Variants.NotSupported);
-            manager.Register(nameof(InstanceVoidCutUtils.RemoveInstanceVoidCut), Variants.NotSupported);
-
-            _ = nameof(ElementTransformUtils.CopyElement);
-            manager.Register("Copy", Variants.NotSupported);
-
-            _ = nameof(ElementTransformUtils.MirrorElement);
-            manager.Register("Mirror", Variants.NotSupported);
-
-            _ = nameof(ElementTransformUtils.MoveElement);
-            manager.Register("Move", Variants.NotSupported);
-
-            _ = nameof(ElementTransformUtils.RotateElement);
-            manager.Register("Rotate", Variants.NotSupported);
-
-            manager.Register(nameof(ParameterFilterUtilities.IsParameterApplicable), Variants.NotSupported);
-            manager.Register(nameof(SolidSolidCutUtils.AddCutBetweenSolids), Variants.NotSupported);
-            manager.Register(nameof(SolidSolidCutUtils.RemoveCutBetweenSolids), Variants.NotSupported);
-            manager.Register(nameof(SolidSolidCutUtils.CanElementCutElement), Variants.NotSupported);
-            manager.Register(nameof(SolidSolidCutUtils.CutExistsBetweenElements), Variants.NotSupported);
-            manager.Register(nameof(SolidSolidCutUtils.SplitFacesOfCuttingSolid), Variants.NotSupported);
-            manager.Register(nameof(JoinGeometryUtils.AreElementsJoined), Variants.NotSupported);
-            manager.Register(nameof(JoinGeometryUtils.IsCuttingElementInJoin), Variants.NotSupported);
-            manager.Register(nameof(JoinGeometryUtils.JoinGeometry), Variants.NotSupported);
-            manager.Register(nameof(JoinGeometryUtils.SwitchJoinOrder), Variants.NotSupported);
-            manager.Register(nameof(JoinGeometryUtils.UnjoinGeometry), Variants.NotSupported);
-#if REVIT2025_OR_GREATER
-            manager.Register(nameof(AnnotationMultipleAlignmentUtils.MoveWithAnchoredLeaders), Variants.NotSupported);
+#if REVIT2026_OR_GREATER
+        manager.Register(nameof(CoordinationModelLinkUtils.IsCoordinationModelInstance), () => Variants.Value(CoordinationModelLinkUtils.IsCoordinationModelInstance(_element.Document, _element)));
+        manager.Register(nameof(CoordinationModelLinkUtils.IsCoordinationModelType), () => Variants.Value(CoordinationModelLinkUtils.IsCoordinationModelType(_element.Document, _element)));
 #endif
-        }
+
+        RegisterNotSupportedExtensions(manager);
+    }
+
+    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+    private void RegisterNotSupportedExtensions(IExtensionManager manager)
+    {
+        manager.Register(nameof(InstanceVoidCutUtils.AddInstanceVoidCut), Variants.NotSupported);
+        manager.Register(nameof(InstanceVoidCutUtils.InstanceVoidCutExists), Variants.NotSupported);
+        manager.Register(nameof(InstanceVoidCutUtils.RemoveInstanceVoidCut), Variants.NotSupported);
+
+        _ = nameof(ElementTransformUtils.CopyElement);
+        manager.Register("Copy", Variants.NotSupported);
+
+        _ = nameof(ElementTransformUtils.MirrorElement);
+        manager.Register("Mirror", Variants.NotSupported);
+
+        _ = nameof(ElementTransformUtils.MoveElement);
+        manager.Register("Move", Variants.NotSupported);
+
+        _ = nameof(ElementTransformUtils.RotateElement);
+        manager.Register("Rotate", Variants.NotSupported);
+
+        manager.Register(nameof(ParameterFilterUtilities.IsParameterApplicable), Variants.NotSupported);
+        manager.Register(nameof(SolidSolidCutUtils.AddCutBetweenSolids), Variants.NotSupported);
+        manager.Register(nameof(SolidSolidCutUtils.RemoveCutBetweenSolids), Variants.NotSupported);
+        manager.Register(nameof(SolidSolidCutUtils.CanElementCutElement), Variants.NotSupported);
+        manager.Register(nameof(SolidSolidCutUtils.CutExistsBetweenElements), Variants.NotSupported);
+        manager.Register(nameof(SolidSolidCutUtils.SplitFacesOfCuttingSolid), Variants.NotSupported);
+        manager.Register(nameof(JoinGeometryUtils.AreElementsJoined), Variants.NotSupported);
+        manager.Register(nameof(JoinGeometryUtils.IsCuttingElementInJoin), Variants.NotSupported);
+        manager.Register(nameof(JoinGeometryUtils.JoinGeometry), Variants.NotSupported);
+        manager.Register(nameof(JoinGeometryUtils.SwitchJoinOrder), Variants.NotSupported);
+        manager.Register(nameof(JoinGeometryUtils.UnjoinGeometry), Variants.NotSupported);
+        manager.Register(nameof(DetailElementOrderUtils.IsDetailElement), Variants.NotSupported);
+        manager.Register(nameof(DetailElementOrderUtils.BringForward), Variants.NotSupported);
+        manager.Register(nameof(DetailElementOrderUtils.BringToFront), Variants.NotSupported);
+        manager.Register(nameof(DetailElementOrderUtils.SendBackward), Variants.NotSupported);
+        manager.Register(nameof(DetailElementOrderUtils.SendToBack), Variants.NotSupported);
+#if REVIT2025_OR_GREATER
+        manager.Register(nameof(AnnotationMultipleAlignmentUtils.MoveWithAnchoredLeaders), Variants.NotSupported);
+#endif
+#if REVIT2026_OR_GREATER
+        _ = nameof(CoordinationModelLinkUtils.GetVisibilityOverride);
+        manager.Register("GetCoordinationModelVisibilityOverride", Variants.NotSupported);
+
+        _ = nameof(CoordinationModelLinkUtils.SetVisibilityOverride);
+        manager.Register("SetCoordinationModelVisibilityOverride", Variants.NotSupported);
+#endif
     }
 
     public virtual void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)

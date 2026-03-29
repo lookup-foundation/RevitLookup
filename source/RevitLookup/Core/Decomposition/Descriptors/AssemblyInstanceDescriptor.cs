@@ -21,21 +21,20 @@ public sealed class AssemblyInstanceDescriptor(AssemblyInstance assemblyInstance
 {
     public override void RegisterExtensions(IExtensionManager manager)
     {
-        RegisterNotSupportedExtensions();
-        return;
+        RegisterNotSupportedExtensions(manager);
+    }
 
-        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-        void RegisterNotSupportedExtensions()
-        {
-            _ = nameof(AssemblyViewUtils.AcquireAssemblyViews);
-            manager.Register("AcquireViews", Variants.NotSupported);
-            
-            manager.Register(nameof(AssemblyViewUtils.Create3DOrthographic), Variants.NotSupported);
-            manager.Register(nameof(AssemblyViewUtils.CreateDetailSection), Variants.NotSupported);
-            manager.Register(nameof(AssemblyViewUtils.CreateMaterialTakeoff), Variants.NotSupported);
-            manager.Register(nameof(AssemblyViewUtils.CreatePartList), Variants.NotSupported);
-            manager.Register(nameof(AssemblyViewUtils.CreateSheet), Variants.NotSupported);
-            manager.Register(nameof(AssemblyViewUtils.CreateSingleCategorySchedule), Variants.NotSupported);
-        }
+    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+    private void RegisterNotSupportedExtensions(IExtensionManager manager)
+    {
+        _ = nameof(AssemblyViewUtils.AcquireAssemblyViews);
+        manager.Register("AcquireViews", Variants.NotSupported);
+
+        manager.Register(nameof(AssemblyViewUtils.Create3DOrthographic), Variants.NotSupported);
+        manager.Register(nameof(AssemblyViewUtils.CreateDetailSection), Variants.NotSupported);
+        manager.Register(nameof(AssemblyViewUtils.CreateMaterialTakeoff), Variants.NotSupported);
+        manager.Register(nameof(AssemblyViewUtils.CreatePartList), Variants.NotSupported);
+        manager.Register(nameof(AssemblyViewUtils.CreateSheet), Variants.NotSupported);
+        manager.Register(nameof(AssemblyViewUtils.CreateSingleCategorySchedule), Variants.NotSupported);
     }
 }

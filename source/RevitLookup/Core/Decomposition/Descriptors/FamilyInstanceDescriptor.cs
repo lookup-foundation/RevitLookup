@@ -182,45 +182,8 @@ public sealed class FamilyInstanceDescriptor(FamilyInstance familyInstance) : El
         manager.Register(nameof(StructuralSectionUtils.GetStructuralSection), () => Variants.Value(StructuralSectionUtils.GetStructuralSection(familyInstance.Document, familyInstance.Id)));
         manager.Register(nameof(StructuralSectionUtils.GetStructuralElementDefinitionData), GetStructuralElementDefinitionData);
 
-        RegisterNotSupportedExtensions();
+        RegisterNotSupportedExtensions(manager);
         return;
-
-        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-        void RegisterNotSupportedExtensions()
-        {
-            _ = nameof(AdaptiveComponentInstanceUtils.MoveAdaptiveComponentInstance);
-            manager.Register("MoveAdaptiveComponentInstance", Variants.NotSupported);
-            
-            _ = nameof(AdaptiveComponentInstanceUtils.SetInstanceFlipped);
-            manager.Register("SetAdaptiveInstanceFlipped", Variants.NotSupported);
-            
-            _ = nameof(InstanceVoidCutUtils.IsVoidInstanceCuttingElement);
-            manager.Register("IsVoidInstanceCuttingElement", Variants.NotSupported);
-            
-            _ = nameof(MassInstanceUtils.AddMassLevelDataToMassInstance);
-            manager.Register("AddMassLevelData", Variants.NotSupported);
-            
-            _ = nameof(MassInstanceUtils.RemoveMassLevelDataFromMassInstance);
-            manager.Register("RemoveMassLevelData", Variants.NotSupported);
-            
-            _ = nameof(StructuralFramingUtils.AllowJoinAtEnd);
-            manager.Register("AllowFramingJoinAtEnd", Variants.NotSupported);
-            
-            _ = nameof(StructuralFramingUtils.DisallowJoinAtEnd);
-            manager.Register("DisallowFramingJoinAtEnd", Variants.NotSupported);
-            
-            _ = nameof(StructuralFramingUtils.FlipEnds);
-            manager.Register("FlipFramingEnds", Variants.NotSupported);
-            
-            _ = nameof(StructuralFramingUtils.IsEndReferenceValid);
-            manager.Register("IsFramingEndReferenceValid", Variants.NotSupported);
-            
-            _ = nameof(StructuralFramingUtils.RemoveEndReference);
-            manager.Register("RemoveFramingEndReference", Variants.NotSupported);
-            
-            _ = nameof(StructuralFramingUtils.SetEndReference);
-            manager.Register("SetFramingEndReference", Variants.NotSupported);
-        }
 
         IVariant ResolveIsJoinAllowedAtEnd()
         {
@@ -257,5 +220,45 @@ public sealed class FamilyInstanceDescriptor(FamilyInstance familyInstance) : El
             StructuralSectionUtils.GetStructuralElementDefinitionData(familyInstance.Document, familyInstance.Id, out var data);
             return Variants.Value(data);
         }
+    }
+
+    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+    private void RegisterNotSupportedExtensions(IExtensionManager manager)
+    {
+        _ = nameof(AdaptiveComponentInstanceUtils.MoveAdaptiveComponentInstance);
+        manager.Register("MoveAdaptiveComponentInstance", Variants.NotSupported);
+            
+        _ = nameof(AdaptiveComponentInstanceUtils.SetInstanceFlipped);
+        manager.Register("SetAdaptiveInstanceFlipped", Variants.NotSupported);
+            
+        _ = nameof(InstanceVoidCutUtils.IsVoidInstanceCuttingElement);
+        manager.Register("IsVoidInstanceCuttingElement", Variants.NotSupported);
+
+        _ = nameof(InstanceVoidCutUtils.GetElementsBeingCut);
+        manager.Register("GetElementsBeingCut", Variants.NotSupported);
+
+        _ = nameof(MassInstanceUtils.AddMassLevelDataToMassInstance);
+        manager.Register("AddMassLevelData", Variants.NotSupported);
+            
+        _ = nameof(MassInstanceUtils.RemoveMassLevelDataFromMassInstance);
+        manager.Register("RemoveMassLevelData", Variants.NotSupported);
+            
+        _ = nameof(StructuralFramingUtils.AllowJoinAtEnd);
+        manager.Register("AllowFramingJoinAtEnd", Variants.NotSupported);
+            
+        _ = nameof(StructuralFramingUtils.DisallowJoinAtEnd);
+        manager.Register("DisallowFramingJoinAtEnd", Variants.NotSupported);
+            
+        _ = nameof(StructuralFramingUtils.FlipEnds);
+        manager.Register("FlipFramingEnds", Variants.NotSupported);
+            
+        _ = nameof(StructuralFramingUtils.IsEndReferenceValid);
+        manager.Register("IsFramingEndReferenceValid", Variants.NotSupported);
+            
+        _ = nameof(StructuralFramingUtils.RemoveEndReference);
+        manager.Register("RemoveFramingEndReference", Variants.NotSupported);
+            
+        _ = nameof(StructuralFramingUtils.SetEndReference);
+        manager.Register("SetFramingEndReference", Variants.NotSupported);
     }
 }

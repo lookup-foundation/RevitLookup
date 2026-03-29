@@ -74,17 +74,23 @@ public sealed class ViewDescriptor(View view) : ElementDescriptor(view)
         manager.Register(nameof(SpatialFieldManager.GetSpatialFieldManager), () => Variants.Value(SpatialFieldManager.GetSpatialFieldManager(view)));
         manager.Register(nameof(ReferenceableViewUtils.GetReferencedViewId), () => Variants.Value(ReferenceableViewUtils.GetReferencedViewId(view.Document, view.Id)));
 
-        RegisterNotSupportedExtensions();
-        return;
+#if REVIT2024_OR_GREATER
+        manager.Register(nameof(DetailElementOrderUtils.GetDrawOrderForDetails), Variants.NotSupported);
+#endif
 
-        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-        void RegisterNotSupportedExtensions()
-        {
-            manager.Register(nameof(ReferenceableViewUtils.ChangeReferencedView), Variants.NotSupported);
-            manager.Register(nameof(ElementTransformUtils.GetTransformFromViewToView), Variants.NotSupported);
+        RegisterNotSupportedExtensions(manager);
+    }
 
-            _ = nameof(ElementTransformUtils.CopyElements);
-            manager.Register("CopyElementsBetweenViews", Variants.NotSupported);
-        }
+    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+    private void RegisterNotSupportedExtensions(IExtensionManager manager)
+    {
+        manager.Register(nameof(ReferenceableViewUtils.ChangeReferencedView), Variants.NotSupported);
+        manager.Register(nameof(ElementTransformUtils.GetTransformFromViewToView), Variants.NotSupported);
+
+        _ = nameof(ElementTransformUtils.CopyElements);
+        manager.Register("CopyElementsBetweenViews", Variants.NotSupported);
+
+        _ = nameof(BoundaryValidation.IsValidBoundaryOnView);
+        manager.Register("IsValidBoundaryOnView", Variants.NotSupported);
     }
 }

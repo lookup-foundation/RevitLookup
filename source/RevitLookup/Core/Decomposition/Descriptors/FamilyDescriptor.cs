@@ -36,16 +36,9 @@ public sealed class FamilyDescriptor(Family family) : ElementDescriptor(family)
         manager.Register(nameof(AdaptiveComponentFamilyUtils.IsAdaptiveComponentFamily), () => Variants.Value(AdaptiveComponentFamilyUtils.IsAdaptiveComponentFamily(family)));
         manager.Register(nameof(LoadedFamilyIntegrityCheck.CheckFamily), () => Variants.Value(LoadedFamilyIntegrityCheck.CheckFamily(family.Document, family.Id)));
 
-        RegisterNotSupportedExtensions();
+        RegisterNotSupportedExtensions(manager);
         return;
         
-        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-        void RegisterNotSupportedExtensions()
-        {
-            _ = nameof(FamilyUtils.ConvertFamilyToFaceHostBased);
-            manager.Register("ConvertToFaceHostBased", Variants.NotSupported);
-        }
-
         IVariant RegisterProfileSymbols()
         {
             var values = Enum.GetValues(typeof(ProfileFamilyUsage));
@@ -59,5 +52,12 @@ public sealed class FamilyDescriptor(Family family) : ElementDescriptor(family)
 
             return variants.Consume();
         }
+    }
+
+    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+    private void RegisterNotSupportedExtensions(IExtensionManager manager)
+    {
+        _ = nameof(FamilyUtils.ConvertFamilyToFaceHostBased);
+        manager.Register("ConvertToFaceHostBased", Variants.NotSupported);
     }
 }

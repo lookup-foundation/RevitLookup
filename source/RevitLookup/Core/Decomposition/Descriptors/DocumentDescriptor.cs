@@ -16,6 +16,7 @@
 using Autodesk.Revit.DB.Macros;
 #endif
 using System.Reflection;
+using Autodesk.Revit.DB.Fabrication;
 using Autodesk.Revit.DB.Lighting;
 using Autodesk.Revit.DB.Structure;
 using LookupEngine.Abstractions.Configuration;
@@ -118,19 +119,20 @@ public sealed class DocumentDescriptor : Descriptor, IDescriptorResolver, IDescr
         manager.Register(nameof(CoordinationModelLinkUtils.GetAllCoordinationModelTypeIds), () => Variants.Value(CoordinationModelLinkUtils.GetAllCoordinationModelTypeIds(_document)));
 #endif
 
-        RegisterNotSupportedExtensions();
-        return;
+        RegisterNotSupportedExtensions(manager);
+    }
 
-        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-        void RegisterNotSupportedExtensions()
-        {
-            manager.Register(nameof(LoadedFamilyIntegrityCheck.CheckAllFamilies), Variants.NotSupported); //TODO add impl after Lazy invocation feature
-            manager.Register(nameof(LoadedFamilyIntegrityCheck.CheckAllFamiliesSlow), Variants.NotSupported); //TODO add impl after Lazy invocation feature
-            manager.Register(nameof(WorksharingUtils.GetUserWorksetInfo), Variants.NotSupported); //TODO slow performance
+    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+    private void RegisterNotSupportedExtensions(IExtensionManager manager)
+    {
+        manager.Register(nameof(LoadedFamilyIntegrityCheck.CheckAllFamilies), Variants.NotSupported); //TODO add impl after Lazy invocation feature
+        manager.Register(nameof(LoadedFamilyIntegrityCheck.CheckAllFamiliesSlow), Variants.NotSupported); //TODO add impl after Lazy invocation feature
+        manager.Register(nameof(WorksharingUtils.GetUserWorksetInfo), Variants.NotSupported); //TODO slow performance
+        manager.Register(nameof(WorksharingUtils.RelinquishOwnership), Variants.NotSupported);
+        manager.Register(nameof(FabricationUtils.ExportToPCF), Variants.NotSupported);
 #if REVIT2026_OR_GREATER
-            manager.Register(nameof(CoordinationModelLinkUtils.Link3DViewFromAutodeskDocs), Variants.NotSupported);
-            manager.Register(nameof(CoordinationModelLinkUtils.LinkCoordinationModelFromLocalPath), Variants.NotSupported);
+        manager.Register(nameof(CoordinationModelLinkUtils.Link3DViewFromAutodeskDocs), Variants.NotSupported);
+        manager.Register(nameof(CoordinationModelLinkUtils.LinkCoordinationModelFromLocalPath), Variants.NotSupported);
 #endif
-        }
     }
 }

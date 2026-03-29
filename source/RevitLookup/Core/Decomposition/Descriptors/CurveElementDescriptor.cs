@@ -128,20 +128,19 @@ public sealed class CurveElementDescriptor(CurveElement element) : ElementDescri
         manager.Register(nameof(CurveByPointsUtils.GetProjectionType), () => Variants.Value(CurveByPointsUtils.GetProjectionType(element)));
         manager.Register(nameof(CurveByPointsUtils.GetSketchOnSurface), () => Variants.Value(CurveByPointsUtils.GetSketchOnSurface(element)));
 
-        RegisterNotSupportedExtensions();
-        return;
+        RegisterNotSupportedExtensions(manager);
+    }
 
-        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-        void RegisterNotSupportedExtensions()
-        {
-            manager.Register(nameof(CurveByPointsUtils.SetProjectionType), Variants.NotSupported);
-            manager.Register(nameof(CurveByPointsUtils.SetSketchOnSurface), Variants.NotSupported);
-            manager.Register(nameof(CurveByPointsUtils.CreateArcThroughPoints), Variants.NotSupported);
-            manager.Register(nameof(CurveByPointsUtils.AddCurvesToFaceRegion), Variants.NotSupported);
-            manager.Register(nameof(CurveByPointsUtils.CreateRectangle), Variants.NotSupported);
+    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+    private void RegisterNotSupportedExtensions(IExtensionManager manager)
+    {
+        manager.Register(nameof(CurveByPointsUtils.SetProjectionType), Variants.NotSupported);
+        manager.Register(nameof(CurveByPointsUtils.SetSketchOnSurface), Variants.NotSupported);
+        manager.Register(nameof(CurveByPointsUtils.CreateArcThroughPoints), Variants.NotSupported);
+        manager.Register(nameof(CurveByPointsUtils.AddCurvesToFaceRegion), Variants.NotSupported);
+        manager.Register(nameof(CurveByPointsUtils.CreateRectangle), Variants.NotSupported);
             
-            _ = nameof(CurveByPointsUtils.ValidateCurveElementIdArrayForFaceRegions);
-            manager.Register("ValidateForFaceRegions", Variants.NotSupported);
-        }
+        _ = nameof(CurveByPointsUtils.ValidateCurveElementIdArrayForFaceRegions);
+        manager.Register("ValidateForFaceRegions", Variants.NotSupported);
     }
 }

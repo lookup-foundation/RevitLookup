@@ -74,17 +74,16 @@ public sealed class CategoryDescriptor : Descriptor, IDescriptorResolver, IDescr
         manager.Register(nameof(DirectContext3DDocumentUtils.IsADirectContext3DHandleCategory), () => Variants.Value(DirectContext3DDocumentUtils.IsADirectContext3DHandleCategory(_category.Id)));
         manager.Register(nameof(ParameterFilterUtilities.GetAllFilterableCategories), () => Variants.Value(ParameterFilterUtilities.GetAllFilterableCategories()));
 
-        RegisterNotSupportedExtensions();
-        return;
+        RegisterNotSupportedExtensions(manager);
+    }
 
-        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-        void RegisterNotSupportedExtensions()
-        {
+    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+    private void RegisterNotSupportedExtensions(IExtensionManager manager)
+    {
 #if REVIT2024_OR_GREATER
-            _ = nameof(SSEPointVisibilitySettings.SetVisibility);
-            manager.Register("SetSSEPointVisibility", Variants.NotSupported);
+        _ = nameof(SSEPointVisibilitySettings.SetVisibility);
+        manager.Register("SetSSEPointVisibility", Variants.NotSupported);
 #endif
-        }
     }
 
     public void RegisterExtensions(IExtensionManager<Document> manager)

@@ -24,15 +24,14 @@ public sealed class ExternalDefinitionDescriptor(ExternalDefinition externalDefi
     {
         manager.Register(nameof(RebarShapeParameters.IsValidExternalDefinition), () => Variants.Value(RebarShapeParameters.IsValidExternalDefinition(externalDefinition)));
 
-        RegisterNotSupportedExtensions();
-        return;
+        RegisterNotSupportedExtensions(manager);
+    }
 
-        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-        void RegisterNotSupportedExtensions()
-        {
-            _ = nameof(RebarShapeParameters.GetExternalDefinitionForElementId);
-            manager.Register("SearchExternalDefinition", Variants.NotSupported);
-        }
+    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+    private void RegisterNotSupportedExtensions(IExtensionManager manager)
+    {
+        _ = nameof(RebarShapeParameters.GetExternalDefinitionForElementId);
+        manager.Register("SearchExternalDefinition", Variants.NotSupported);
     }
 
     public void RegisterExtensions(IExtensionManager<Document> manager)

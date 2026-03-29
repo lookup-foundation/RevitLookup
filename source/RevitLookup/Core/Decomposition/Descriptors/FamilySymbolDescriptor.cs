@@ -24,22 +24,21 @@ public sealed class FamilySymbolDescriptor(FamilySymbol familySymbol) : ElementD
     {
         manager.Register(nameof(AdaptiveComponentInstanceUtils.IsAdaptiveFamilySymbol), () => Variants.Value(AdaptiveComponentInstanceUtils.IsAdaptiveFamilySymbol(familySymbol)));
 
-        RegisterNotSupportedExtensions();
-        return;
+        RegisterNotSupportedExtensions(manager);
+    }
 
-        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-        void RegisterNotSupportedExtensions()
-        {
-            _ = nameof(AdaptiveComponentInstanceUtils.CreateAdaptiveComponentInstance);
-            manager.Register("CreateAdaptiveComponentInstance", Variants.NotSupported);
+    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+    private void RegisterNotSupportedExtensions(IExtensionManager manager)
+    {
+        _ = nameof(AdaptiveComponentInstanceUtils.CreateAdaptiveComponentInstance);
+        manager.Register("CreateAdaptiveComponentInstance", Variants.NotSupported);
 
-            _ = nameof(StructuralSectionUtils.SetStructuralSection);
-            manager.Register("SetStructuralSection", Variants.NotSupported);
+        _ = nameof(StructuralSectionUtils.SetStructuralSection);
+        manager.Register("SetStructuralSection", Variants.NotSupported);
 #if REVIT2024_OR_GREATER
 
-            _ = nameof(MEPSupportUtils.CreateDuctworkStiffener);
-            manager.Register("NewDuctworkStiffener", Variants.NotSupported);
+        _ = nameof(MEPSupportUtils.CreateDuctworkStiffener);
+        manager.Register("NewDuctworkStiffener", Variants.NotSupported);
 #endif
-        }
     }
 }

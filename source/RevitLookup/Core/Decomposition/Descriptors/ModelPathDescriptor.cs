@@ -35,18 +35,17 @@ public sealed class ModelPathDescriptor : Descriptor, IDescriptorExtension
         manager.Register(nameof(TransmissionData.ReadTransmissionData), () => Variants.Value(TransmissionData.ReadTransmissionData(_modelPath)));
         manager.Register(nameof(WorksharingUtils.GetUserWorksetInfo), () => Variants.Value(WorksharingUtils.GetUserWorksetInfo(_modelPath)));
 
-        RegisterNotSupportedExtensions();
-        return;
-
-        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-        void RegisterNotSupportedExtensions()
-        {
-            _ = nameof(WorksharingUtils.CreateNewLocal);
-            manager.Register("CreateNewLocal", Variants.NotSupported);
+        RegisterNotSupportedExtensions(manager);
+    }
+    
+    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+    private void RegisterNotSupportedExtensions(IExtensionManager manager)
+    {
+        _ = nameof(WorksharingUtils.CreateNewLocal);
+        manager.Register("CreateNewLocal", Variants.NotSupported);
             
-            manager.Register(nameof(ModelPathUtils.ConvertUserVisiblePathToModelPath), Variants.NotSupported);
-            manager.Register(nameof(ModelPathUtils.IsValidUserVisibleFullServerPath), Variants.NotSupported);
-            manager.Register(nameof(ModelPathUtils.ConvertCloudGUIDsToCloudPath), Variants.NotSupported);
-        }
+        manager.Register(nameof(ModelPathUtils.ConvertUserVisiblePathToModelPath), Variants.NotSupported);
+        manager.Register(nameof(ModelPathUtils.IsValidUserVisibleFullServerPath), Variants.NotSupported);
+        manager.Register(nameof(ModelPathUtils.ConvertCloudGUIDsToCloudPath), Variants.NotSupported);
     }
 }

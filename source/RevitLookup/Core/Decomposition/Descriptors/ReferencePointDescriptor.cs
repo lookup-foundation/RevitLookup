@@ -34,22 +34,21 @@ public sealed class ReferencePointDescriptor(ReferencePoint referencePoint) : El
         manager.Register(nameof(AdaptiveComponentFamilyUtils.IsAdaptivePoint), () => Variants.Value(AdaptiveComponentFamilyUtils.IsAdaptivePoint(referencePoint.Document, referencePoint.Id)));
         manager.Register(nameof(AdaptiveComponentFamilyUtils.IsAdaptiveShapeHandlePoint), () => Variants.Value(AdaptiveComponentFamilyUtils.IsAdaptiveShapeHandlePoint(referencePoint.Document, referencePoint.Id)));
 
-        RegisterNotSupportedExtensions();
-        return;
+        RegisterNotSupportedExtensions(manager);
+    }
 
-        // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-        void RegisterNotSupportedExtensions()
-        {
-            _ = nameof(AdaptiveComponentFamilyUtils.SetPlacementNumber);
-            manager.Register("SetAdaptivePlacementNumber", Variants.NotSupported);
+    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+    private void RegisterNotSupportedExtensions(IExtensionManager manager)
+    {
+        _ = nameof(AdaptiveComponentFamilyUtils.SetPlacementNumber);
+        manager.Register("SetAdaptivePlacementNumber", Variants.NotSupported);
             
-            _ = nameof(AdaptiveComponentFamilyUtils.SetPointConstraintType);
-            manager.Register("SetAdaptivePointConstraintType", Variants.NotSupported);
+        _ = nameof(AdaptiveComponentFamilyUtils.SetPointConstraintType);
+        manager.Register("SetAdaptivePointConstraintType", Variants.NotSupported);
             
-            _ = nameof(AdaptiveComponentFamilyUtils.SetPointOrientationType);
-            manager.Register("SetAdaptivePointOrientationType", Variants.NotSupported);
+        _ = nameof(AdaptiveComponentFamilyUtils.SetPointOrientationType);
+        manager.Register("SetAdaptivePointOrientationType", Variants.NotSupported);
             
-            manager.Register(nameof(AdaptiveComponentFamilyUtils.MakeAdaptivePoint), Variants.NotSupported);
-        }
+        manager.Register(nameof(AdaptiveComponentFamilyUtils.MakeAdaptivePoint), Variants.NotSupported);
     }
 }
