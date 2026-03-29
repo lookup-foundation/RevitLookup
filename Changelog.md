@@ -2,18 +2,154 @@
 
 # **2027.0.0**
 
+A new major RevitLookup update with official Revit 2027 support and a massive coverage for Revit API Utils 🎉
+
+This release focuses on dramatically extending the number of API Utils members, adding new supported types, and improving the overall architecture.
+
 ## General
 
-- Revit 2027 support.
+- **Revit 2027** support.
+- **Enabled addin isolation** starting from Revit 2027. Finally, Autodesk fixed it.
 
-## Improvements
+## API Coverage
 
-- Added new **ModelPath** extensions:
-  - `ModelPathUtils.ConvertModelPathToUserVisiblePath`
-  - `TransmissionData.IsDocumentTransmitted`
-  - `TransmissionData.DocumentIsNotTransmitted`
-  - `TransmissionData.ReadTransmissionData`
-  - `WorksharingUtils.GetUserWorksetInfo`
+This release brings the largest expansion for Revit API Utils coverage. Hundreds of new members are now visible directly in the inspector.
+
+### New descriptor types
+
+New types can now be inspected:
+
+- **`ModelPath`** — model path information and transmission data.
+- **`DefinitionFile`** — shared parameter file definitions.
+- **`ExternalResourceType`** — external resource type metadata.
+- **`RebarShape`** — rebar shape parameters via `RebarShapeParameters.GetAllRebarShapeParameters`.
+- **`FailureDefinitionAccessor`** — failure definition details.
+
+### Element extensions
+
+New extensions added to `Element`, available for every element in the model:
+
+- `JoinGeometryUtils.GetJoinedElements`
+- `SolidSolidCutUtils.GetCuttingSolids`
+- `SolidSolidCutUtils.GetSolidsBeingCut`
+- `SolidSolidCutUtils.IsAllowedForSolidCut`
+- `SolidSolidCutUtils.IsElementFromAppropriateContext`
+- `WorksharingUtils.GetCheckoutStatus`
+- `WorksharingUtils.GetWorksharingTooltipInfo`
+- `WorksharingUtils.GetModelUpdatesStatus`
+- `PartUtils.GetAssociatedParts`
+- `PartUtils.HasAssociatedParts`
+- `DirectContext3DDocumentUtils.IsADirectContext3DHandleInstance`
+- `DirectContext3DDocumentUtils.IsADirectContext3DHandleType`
+- `ElementIntersectsFilter.IsCategorySupported`
+- `ElementIntersectsFilter.IsElementSupported`
+- `ExportUtils.GetExportId`
+- `ExternalFileUtils.GetExternalFileReference`
+- `ExternalFileUtils.IsExternalFileReference`
+- `InstanceVoidCutUtils.CanBeCutWithVoid`
+- `InstanceVoidCutUtils.GetCuttingVoidInstances`
+- `DetailElementOrderUtils.IsDetailElement`
+- `ElementTransformUtils.CanMirrorElement`
+- `DocumentValidation.CanDeleteElement`
+- `RebarBendingDetail.IsBendingDetail`
+
+### Document extensions
+
+New extensions added to `Document`:
+
+- `Document.GetDocumentVersion`
+- `Document.GetUnusedElements`
+- `Document.GetAllUnusedElements`
+- `AssemblyCodeTable.GetAssemblyCodeTable`
+- `ExternalFileUtils.GetAllExternalFileReferences`
+- `ExternalResourceUtils.GetAllExternalResourceReferences`
+- `GlobalParametersManager.AreGlobalParametersAllowed`
+- `GlobalParametersManager.GetGlobalParametersOrdered`
+- `KeynoteTable.GetKeynoteTable`
+- `UpdaterRegistry.GetRegisteredUpdaterInfos`
+- `LightFamily.GetLightFamily`
+- `FamilySizeTableManager.GetFamilySizeTableManager`
+- `ExportUtils.GetGBXMLDocumentId`
+- `AnalyticalToPhysicalAssociationManager.GetAnalyticalToPhysicalAssociationManager`
+- `CoordinationModelLinkUtils.GetAllCoordinationModelInstanceIds`
+- `CoordinationModelLinkUtils.GetAllCoordinationModelTypeIds`
+
+### Category extensions
+
+New extensions added to `Category`:
+
+- `DirectContext3DDocumentUtils.IsADirectContext3DHandleCategory`
+- `DirectContext3DDocumentUtils.GetDirectContext3DHandleInstances`
+- `DirectContext3DDocumentUtils.GetDirectContext3DHandleTypes`
+- `ParameterFilterUtilities.GetAllFilterableCategories`
+- `ParameterFilterUtilities.GetFilterableParametersInCommon`
+- `SSEPointVisibilitySettings.GetVisibility`
+
+### FamilyInstance extensions
+
+New extensions added to `FamilyInstance`:
+
+- `AdaptiveComponentInstanceUtils.IsAdaptiveComponentInstance`
+- `AdaptiveComponentInstanceUtils.GetInstancePlacementPointElementRefIds`
+- `AdaptiveComponentInstanceUtils.GetInstancePointElementRefIds`
+- `AdaptiveComponentInstanceUtils.GetInstanceShapeHandlePointElementRefIds`
+- `AdaptiveComponentInstanceUtils.HasAdaptiveFamilySymbol`
+- `AdaptiveComponentInstanceUtils.IsInstanceFlipped`
+- `MassLevelData.IsMassFamilyInstance`
+- `MassInstanceUtils.GetGrossFloorArea`
+- `MassInstanceUtils.GetGrossSurfaceArea`
+- `MassInstanceUtils.GetGrossVolume`
+
+### ForgeTypeId extensions
+
+`ForgeTypeId` now exposes a comprehensive set of unit, spec, parameter and label utilities:
+
+- `LabelUtils.GetLabelForUnit`
+- `LabelUtils.GetLabelForSpec`
+- `LabelUtils.GetLabelForSymbol`
+- `LabelUtils.GetLabelForGroup`
+- `LabelUtils.GetLabelForDiscipline`
+- `LabelUtils.GetLabelForBuiltInParameter`
+- `UnitUtils.IsUnit`
+- `UnitUtils.IsSymbol`
+- `UnitUtils.GetAllUnits`
+- `UnitUtils.GetTypeCatalogStringForSpec`
+- `UnitUtils.GetTypeCatalogStringForUnit`
+- `UnitUtils.GetValidUnits`
+- `UnitUtils.IsValidUnit`
+- `UnitUtils.IsMeasurableSpec`
+- `UnitUtils.GetDiscipline`
+- `UnitUtils.GetAllDisciplines`
+- `UnitUtils.GetAllMeasurableSpecs`
+- `SpecUtils.IsSpec`
+- `SpecUtils.IsValidDataType`
+- `SpecUtils.GetAllSpecs`
+- `ParameterUtils.IsBuiltInParameter`
+- `ParameterUtils.IsBuiltInGroup`
+- `ParameterUtils.GetBuiltInParameter`
+- `ParameterUtils.GetAllBuiltInParameters`
+- `ParameterUtils.GetAllBuiltInGroups`
+- `ParameterUtils.DownloadParameterOptions`
+- `ParameterUtils.GetBuiltInParameterGroupTypeId`
+
+### ModelPath extensions
+
+- `ModelPathUtils.ConvertModelPathToUserVisiblePath`
+- `TransmissionData.IsDocumentTransmitted`
+- `TransmissionData.DocumentIsNotTransmitted`
+- `TransmissionData.ReadTransmissionData`
+- `WorksharingUtils.GetUserWorksetInfo`
+
+## Development
+
+- Migrated application startup and shutdown to fully async implementation.
+- Rewrote external events to use `ExternalEvent` source generator.
+- Extracted shared service configuration into a new `RevitLookup.ServiceDefaults` project.
+- Migrated MVVM from partial fields to partial properties.
+- Replaced Markup converters with converter factories.
+- Refactored `UiOrchestratorService` and event subscription model for better performance.
+- Added `RevitLookup.ServiceDefaults` project for shared host configuration between Revit and Playground environments.
+- Added unit tests for Revit API inheritance report generation and static method coverage.
 
 # 2025-07-26 **2026.0.1**
 
