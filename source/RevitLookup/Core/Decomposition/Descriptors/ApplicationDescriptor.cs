@@ -60,13 +60,13 @@ public sealed class ApplicationDescriptor : Descriptor, IDescriptorExtension
         manager.Define(nameof(OptionalFunctionalityUtils.IsSATImportLinkAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsSATImportLinkAvailable()));
         manager.Define(nameof(OptionalFunctionalityUtils.IsShapeImporterAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsShapeImporterAvailable()));
         manager.Define(nameof(OptionalFunctionalityUtils.IsSKPImportLinkAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsSKPImportLinkAvailable()));
-#if !REVIT2027_OR_GREATER
-        manager.Define(nameof(OptionalFunctionalityUtils.IsAXMImportLinkAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsAXMImportLinkAvailable()));
-#endif
 #if REVIT2022_OR_GREATER
         manager.Define(nameof(OptionalFunctionalityUtils.Is3DMImportLinkAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.Is3DMImportLinkAvailable()));
         manager.Define(nameof(OptionalFunctionalityUtils.IsOBJImportLinkAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsOBJImportLinkAvailable()));
         manager.Define(nameof(OptionalFunctionalityUtils.IsSTLImportLinkAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsSTLImportLinkAvailable()));
+#if !REVIT2027_OR_GREATER
+        manager.Define(nameof(OptionalFunctionalityUtils.IsAXMImportLinkAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsAXMImportLinkAvailable()));
+#endif
 #endif
 #if REVIT2024_OR_GREATER
         manager.Define(nameof(OptionalFunctionalityUtils.IsSTEPImportLinkAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsSTEPImportLinkAvailable()));
