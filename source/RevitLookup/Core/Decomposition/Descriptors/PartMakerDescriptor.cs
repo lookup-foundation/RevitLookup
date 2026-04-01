@@ -27,6 +27,6 @@ public sealed class PartMakerDescriptor(PartMaker partMaker) : ElementDescriptor
 
     public override void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(PartUtils.GetPartMakerMethodToDivideVolumeFW), () => Variants.Value(PartUtils.GetPartMakerMethodToDivideVolumeFW(partMaker)));
+        manager.Define(nameof(PartUtils.GetPartMakerMethodToDivideVolumeFW)).Register(() => Variants.Value(PartUtils.GetPartMakerMethodToDivideVolumeFW(partMaker)));
     }
 }

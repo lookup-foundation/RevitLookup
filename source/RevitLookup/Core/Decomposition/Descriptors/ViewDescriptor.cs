@@ -70,21 +70,13 @@ public sealed class ViewDescriptor(View view) : ElementDescriptor(view)
 
     public override void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register("GetInstances", () => Variants.Value(view.Document.CollectElements(view.Id).Instances().ToElements()));
-        manager.Register(nameof(SpatialFieldManager.GetSpatialFieldManager), () => Variants.Value(SpatialFieldManager.GetSpatialFieldManager(view)));
-        manager.Register(nameof(ReferenceableViewUtils.GetReferencedViewId), () => Variants.Value(ReferenceableViewUtils.GetReferencedViewId(view.Document, view.Id)));
-
+        manager.Define("GetInstances").Register(() => Variants.Value(view.Document.CollectElements(view.Id).Instances().ToElements()));
+        manager.Define(nameof(SpatialFieldManager.GetSpatialFieldManager)).Register(() => Variants.Value(SpatialFieldManager.GetSpatialFieldManager(view)));
+        manager.Define(nameof(ReferenceableViewUtils.GetReferencedViewId)).Register(() => Variants.Value(ReferenceableViewUtils.GetReferencedViewId(view.Document, view.Id)));
+        manager.Define(nameof(ReferenceableViewUtils.ChangeReferencedView)).AsNotSupported();
+        manager.Define(nameof(ElementTransformUtils.GetTransformFromViewToView)).AsNotSupported();
 #if REVIT2024_OR_GREATER
-        manager.Register(nameof(DetailElementOrderUtils.GetDrawOrderForDetails), Variants.NotSupported);
+        manager.Define(nameof(DetailElementOrderUtils.GetDrawOrderForDetails)).AsNotSupported();
 #endif
-
-        RegisterNotSupportedExtensions(manager);
-    }
-
-    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-    private void RegisterNotSupportedExtensions(IExtensionManager manager)
-    {
-        manager.Register(nameof(ReferenceableViewUtils.ChangeReferencedView), Variants.NotSupported);
-        manager.Register(nameof(ElementTransformUtils.GetTransformFromViewToView), Variants.NotSupported);
     }
 }

@@ -32,20 +32,20 @@ public sealed class ColorDescriptor : Descriptor, IDescriptorExtension
 
     public void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register("HEX", () => Variants.Value(ColorRepresentationUtils.ColorToHex(_color.GetDrawingColor())));
-        manager.Register("HEX int", () => Variants.Value(ColorRepresentationUtils.ColorToHexInteger(_color.GetDrawingColor())));
-        manager.Register("RGB", () => Variants.Value(ColorRepresentationUtils.ColorToRgb(_color.GetDrawingColor())));
-        manager.Register("HSL", () => Variants.Value(ColorRepresentationUtils.ColorToHsl(_color.GetDrawingColor())));
-        manager.Register("HSV", () => Variants.Value(ColorRepresentationUtils.ColorToHsv(_color.GetDrawingColor())));
-        manager.Register("CMYK", () => Variants.Value(ColorRepresentationUtils.ColorToCmyk(_color.GetDrawingColor())));
-        manager.Register("HSB", () => Variants.Value(ColorRepresentationUtils.ColorToHsb(_color.GetDrawingColor())));
-        manager.Register("HSI", () => Variants.Value(ColorRepresentationUtils.ColorToHsi(_color.GetDrawingColor())));
-        manager.Register("HWB", () => Variants.Value(ColorRepresentationUtils.ColorToHwb(_color.GetDrawingColor())));
-        manager.Register("NCol", () => Variants.Value(ColorRepresentationUtils.ColorToNCol(_color.GetDrawingColor())));
-        manager.Register("CIELAB", () => Variants.Value(ColorRepresentationUtils.ColorToCielab(_color.GetDrawingColor())));
-        manager.Register("CIEXYZ", () => Variants.Value(ColorRepresentationUtils.ColorToCieXyz(_color.GetDrawingColor())));
-        manager.Register("VEC4", () => Variants.Value(ColorRepresentationUtils.ColorToFloat(_color.GetDrawingColor())));
-        manager.Register("Decimal", () => Variants.Value(ColorRepresentationUtils.ColorToDecimal(_color.GetDrawingColor())));
-        manager.Register("Name", () => Variants.Value(ColorRepresentationUtils.GetColorName(_color.GetDrawingColor())));
+        manager.Define("HEX").Register(() => Variants.Value(ColorRepresentationUtils.ColorToHex(_color.GetDrawingColor())));
+        manager.Define("HEX int").Register(() => Variants.Value(ColorRepresentationUtils.ColorToHexInteger(_color.GetDrawingColor())));
+        manager.Define("RGB").Register(() => Variants.Value(ColorRepresentationUtils.ColorToRgb(_color.GetDrawingColor())));
+        manager.Define("HSL").Register(() => Variants.Value(ColorRepresentationUtils.ColorToHsl(_color.GetDrawingColor())));
+        manager.Define("HSV").Register(() => Variants.Value(ColorRepresentationUtils.ColorToHsv(_color.GetDrawingColor())));
+        manager.Define("CMYK").Register(() => Variants.Value(ColorRepresentationUtils.ColorToCmyk(_color.GetDrawingColor())));
+        manager.Define("HSB").Register(() => Variants.Value(ColorRepresentationUtils.ColorToHsb(_color.GetDrawingColor())));
+        manager.Define("HSI").Register(() => Variants.Value(ColorRepresentationUtils.ColorToHsi(_color.GetDrawingColor())));
+        manager.Define("HWB").Register(() => Variants.Value(ColorRepresentationUtils.ColorToHwb(_color.GetDrawingColor())));
+        manager.Define("NCol").Register(() => Variants.Value(ColorRepresentationUtils.ColorToNCol(_color.GetDrawingColor())));
+        manager.Define("CIELAB").Register(() => Variants.Value(ColorRepresentationUtils.ColorToCielab(_color.GetDrawingColor())));
+        manager.Define("CIEXYZ").Register(() => Variants.Value(ColorRepresentationUtils.ColorToCieXyz(_color.GetDrawingColor())));
+        manager.Define("VEC4").Register(() => Variants.Value(ColorRepresentationUtils.ColorToFloat(_color.GetDrawingColor())));
+        manager.Define("Decimal").Register(() => Variants.Value(ColorRepresentationUtils.ColorToDecimal(_color.GetDrawingColor())));
+        manager.Define("Name").Register(() => Variants.Value(ColorRepresentationUtils.GetColorName(_color.GetDrawingColor())));
     }
 }

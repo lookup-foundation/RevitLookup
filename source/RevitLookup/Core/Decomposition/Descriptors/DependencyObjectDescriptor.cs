@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lookup Foundation and Contributors
+// Copyright (c) Lookup Foundation and Contributors
 // 
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -33,11 +33,11 @@ public class DependencyObjectDescriptor(DependencyObject dependencyObject) : Des
 
     public virtual void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register("GetVisualParent", () => Variants.Value(VisualTreeHelper.GetParent(dependencyObject)));
-        manager.Register("GetVisualChild", RegisterGetVisualChild);
-        manager.Register("GetVisualChildrenCount", () => Variants.Value(VisualTreeHelper.GetChildrenCount(dependencyObject)));
-        manager.Register("GetLogicalParent", () => Variants.Value(LogicalTreeHelper.GetParent(dependencyObject)));
-        manager.Register("GetLogicalChildren", () => Variants.Value(LogicalTreeHelper.GetChildren(dependencyObject)));
+        manager.Define("GetVisualParent").Register(() => Variants.Value(VisualTreeHelper.GetParent(dependencyObject)));
+        manager.Define("GetVisualChild").Register(RegisterGetVisualChild);
+        manager.Define("GetVisualChildrenCount").Register(() => Variants.Value(VisualTreeHelper.GetChildrenCount(dependencyObject)));
+        manager.Define("GetLogicalParent").Register(() => Variants.Value(LogicalTreeHelper.GetParent(dependencyObject)));
+        manager.Define("GetLogicalChildren").Register(() => Variants.Value(LogicalTreeHelper.GetChildren(dependencyObject)));
         return;
 
         IVariant RegisterGetVisualChild()

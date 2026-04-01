@@ -29,23 +29,14 @@ public sealed class ConnectorDescriptor : Descriptor, IDescriptorExtension
 
     public void RegisterExtensions(IExtensionManager manager)
     {
-        RegisterNotSupportedExtensions(manager);
+        manager.Define(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtElbow)).AsNotSupported();
+        manager.Define(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtTee)).AsNotSupported();
+        manager.Define(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtCross)).AsNotSupported();
+        manager.Define(nameof(PlumbingUtils.ConnectPipePlaceholdersAtElbow)).AsNotSupported();
+        manager.Define(nameof(PlumbingUtils.ConnectPipePlaceholdersAtTee)).AsNotSupported();
+        manager.Define(nameof(PlumbingUtils.ConnectPipePlaceholdersAtCross)).AsNotSupported();
+        manager.Define("ValidateFabricationConnectivity").Map(nameof(FabricationUtils.ValidateConnectivity)).AsNotSupported();
+        manager.Define("CreateFabricationPartRouteEnd").Map(nameof(FabricationPartRouteEnd.CreateFromConnector)).AsNotSupported();
     }
 
-    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-    private void RegisterNotSupportedExtensions(IExtensionManager manager)
-    {
-        manager.Register(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtElbow), Variants.NotSupported);
-        manager.Register(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtTee), Variants.NotSupported);
-        manager.Register(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtCross), Variants.NotSupported);
-        manager.Register(nameof(PlumbingUtils.ConnectPipePlaceholdersAtElbow), Variants.NotSupported);
-        manager.Register(nameof(PlumbingUtils.ConnectPipePlaceholdersAtTee), Variants.NotSupported);
-        manager.Register(nameof(PlumbingUtils.ConnectPipePlaceholdersAtCross), Variants.NotSupported);
-
-        _ = nameof(FabricationUtils.ValidateConnectivity);
-        manager.Register("ValidateFabricationConnectivity", Variants.NotSupported);
-
-        _ = nameof(FabricationPartRouteEnd.CreateFromConnector);
-        manager.Register("CreateFabricationPartRouteEnd", Variants.NotSupported);
-    }
 }

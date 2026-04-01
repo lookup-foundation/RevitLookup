@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lookup Foundation and Contributors
+// Copyright (c) Lookup Foundation and Contributors
 // 
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -22,11 +22,11 @@ public sealed class UiApplicationDescriptor : Descriptor, IDescriptorExtension
 {
     public void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(UIThemeManager.CurrentTheme), () => Variants.Value(UIThemeManager.CurrentTheme));
+        manager.Define(nameof(UIThemeManager.CurrentTheme)).Register(() => Variants.Value(UIThemeManager.CurrentTheme));
 #if REVIT2024_OR_GREATER
-        manager.Register(nameof(UIThemeManager.CurrentCanvasTheme), () => Variants.Value(UIThemeManager.CurrentCanvasTheme));
-        manager.Register(nameof(UIThemeManager.FollowSystemColorTheme), () => Variants.Value(UIThemeManager.FollowSystemColorTheme));
-        manager.Register(nameof(UIThemeManager.GetThemeName), () => VariantsResolver.ResolveEnum<UITheme, string>(UIThemeManager.GetThemeName));
+        manager.Define(nameof(UIThemeManager.CurrentCanvasTheme)).Register(() => Variants.Value(UIThemeManager.CurrentCanvasTheme));
+        manager.Define(nameof(UIThemeManager.FollowSystemColorTheme)).Register(() => Variants.Value(UIThemeManager.FollowSystemColorTheme));
+        manager.Define(nameof(UIThemeManager.GetThemeName)).Register(() => VariantsResolver.ResolveEnum<UITheme, string>(UIThemeManager.GetThemeName));
 #endif
     }
 }

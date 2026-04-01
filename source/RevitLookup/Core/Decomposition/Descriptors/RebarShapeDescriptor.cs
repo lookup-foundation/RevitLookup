@@ -24,6 +24,6 @@ public sealed class RebarShapeDescriptor(RebarShape rebarShape) : Descriptor, ID
 {
     public void RegisterExtensions(IExtensionManager<Document> manager)
     {
-        manager.Register("GetAllParameters", context => Variants.Value(RebarShapeParameters.GetAllRebarShapeParameters(context)));
+        manager.Define("GetAllParameters").Register(context => Variants.Value(RebarShapeParameters.GetAllRebarShapeParameters(context)));
     }
 }

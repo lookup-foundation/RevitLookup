@@ -21,6 +21,6 @@ public sealed class SubelementDescriptor(Subelement subelement) : Descriptor, ID
 {
     public void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register("ExportId", () => Variants.Value(ExportUtils.GetExportId(subelement)));
+        manager.Define("ExportId").Register(() => Variants.Value(ExportUtils.GetExportId(subelement)));
     }
 }

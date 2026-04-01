@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lookup Foundation and Contributors
+// Copyright (c) Lookup Foundation and Contributors
 // 
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -68,18 +68,20 @@ public sealed class CategoryDescriptor : Descriptor, IDescriptorResolver, IDescr
 
     public void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(DirectContext3DDocumentUtils.IsADirectContext3DHandleCategory), () => Variants.Value(DirectContext3DDocumentUtils.IsADirectContext3DHandleCategory(_category.Id)));
-        manager.Register(nameof(ParameterFilterUtilities.GetAllFilterableCategories), () => Variants.Value(ParameterFilterUtilities.GetAllFilterableCategories()));
+        manager.Define(nameof(DirectContext3DDocumentUtils.IsADirectContext3DHandleCategory)).Register(() => Variants.Value(DirectContext3DDocumentUtils.IsADirectContext3DHandleCategory(_category.Id)));
+        manager.Define(nameof(ParameterFilterUtilities.GetAllFilterableCategories)).AsStatic().Register(() => Variants.Value(ParameterFilterUtilities.GetAllFilterableCategories()));
 #if !REVIT2023_OR_GREATER
-        manager.Register("BuiltInCategory", () => Variants.Value((BuiltInCategory) _category.Id.IntegerValue));
+        manager.Define("BuiltInCategory").Register(() => Variants.Value((BuiltInCategory) _category.Id.IntegerValue));
 #endif
-        
-        RegisterNotSupportedExtensions(manager);
+#if REVIT2024_OR_GREATER
+        manager.Define("SetSSEPointVisibility").Map(nameof(SSEPointVisibilitySettings.SetVisibility)).AsNotSupported();
+#endif
     }
 
     public void RegisterExtensions(IExtensionManager<Document> manager)
     {
-        manager.Register("GetElements", context => Variants.Value(context.CollectElements()
+        manager.Define(nameof(ParameterFilterUtilities.GetFilterableParametersInCommon)).Register(context => Variants.Value(ParameterFilterUtilities.GetFilterableParametersInCommon(context, [_category.Id])));
+        manager.Define("GetElements").Register(context => Variants.Value(context.CollectElements()
             .Instances()
 #if REVIT2023_OR_GREATER
             .OfCategory(_category.BuiltInCategory)
@@ -88,25 +90,14 @@ public sealed class CategoryDescriptor : Descriptor, IDescriptorResolver, IDescr
 #endif
             .ToElements()));
         
-        manager.Register(nameof(ParameterFilterUtilities.GetFilterableParametersInCommon), context => Variants.Value(ParameterFilterUtilities.GetFilterableParametersInCommon(context, [_category.Id])));
-
         if (DirectContext3DDocumentUtils.IsADirectContext3DHandleCategory(_category.Id))
         {
-            manager.Register(nameof(DirectContext3DDocumentUtils.GetDirectContext3DHandleInstances), context => Variants.Value(DirectContext3DDocumentUtils.GetDirectContext3DHandleInstances(context, _category.Id)));
-            manager.Register(nameof(DirectContext3DDocumentUtils.GetDirectContext3DHandleTypes), context => Variants.Value(DirectContext3DDocumentUtils.GetDirectContext3DHandleTypes(context, _category.Id)));
+            manager.Define(nameof(DirectContext3DDocumentUtils.GetDirectContext3DHandleInstances)).Register(context => Variants.Value(DirectContext3DDocumentUtils.GetDirectContext3DHandleInstances(context, _category.Id)));
+            manager.Define(nameof(DirectContext3DDocumentUtils.GetDirectContext3DHandleTypes)).Register(context => Variants.Value(DirectContext3DDocumentUtils.GetDirectContext3DHandleTypes(context, _category.Id)));
         }
         
 #if REVIT2024_OR_GREATER
-        manager.Register("GetSSEPointVisibility", context => Variants.Value(SSEPointVisibilitySettings.GetVisibility(context, _category.Id)));
-#endif
-    }
-
-    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-    private void RegisterNotSupportedExtensions(IExtensionManager manager)
-    {
-#if REVIT2024_OR_GREATER
-        _ = nameof(SSEPointVisibilitySettings.SetVisibility);
-        manager.Register("SetSSEPointVisibility", Variants.NotSupported);
+        manager.Define("GetSSEPointVisibility").Register(context => Variants.Value(SSEPointVisibilitySettings.GetVisibility(context, _category.Id)));
 #endif
     }
 }

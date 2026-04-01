@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lookup Foundation and Contributors
+// Copyright (c) Lookup Foundation and Contributors
 // 
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -27,20 +27,19 @@ public sealed class FamilyDescriptor(Family family) : ElementDescriptor(family)
 
     public override void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(FamilySizeTableManager.GetFamilySizeTableManager), () => Variants.Value(FamilySizeTableManager.GetFamilySizeTableManager(family.Document, family.Id)));
-        manager.Register("CanBeConvertedToFaceHostBased", () => Variants.Value(FamilyUtils.FamilyCanConvertToFaceHostBased(family.Document, family.Id)));
-        manager.Register(nameof(FamilyUtils.GetProfileSymbols), RegisterProfileSymbols);
-        manager.Register(nameof(LoadedFamilyIntegrityCheck.CheckFamily), () => Variants.Value(LoadedFamilyIntegrityCheck.CheckFamily(family.Document, family.Id)));
-        manager.Register(nameof(AdaptiveComponentFamilyUtils.IsAdaptiveComponentFamily), () => Variants.Value(AdaptiveComponentFamilyUtils.IsAdaptiveComponentFamily(family)));
-
-        if (AdaptiveComponentFamilyUtils.IsAdaptiveComponentFamily(family))
+        manager.Define(nameof(FamilySizeTableManager.GetFamilySizeTableManager)).Register(() => Variants.Value(FamilySizeTableManager.GetFamilySizeTableManager(family.Document, family.Id)));
+        manager.Define("CanBeConvertedToFaceHostBased").Register(() => Variants.Value(FamilyUtils.FamilyCanConvertToFaceHostBased(family.Document, family.Id)));
+        manager.Define(nameof(FamilyUtils.GetProfileSymbols)).Register(RegisterProfileSymbols);
+        manager.Define(nameof(LoadedFamilyIntegrityCheck.CheckFamily)).Register(() => Variants.Value(LoadedFamilyIntegrityCheck.CheckFamily(family.Document, family.Id)));
+        manager.Define("ConvertToFaceHostBased").Map(nameof(FamilyUtils.ConvertFamilyToFaceHostBased)).AsNotSupported();
+        
+        if (manager.Define(nameof(AdaptiveComponentFamilyUtils.IsAdaptiveComponentFamily)).TryRegister(() => Variants.Value(AdaptiveComponentFamilyUtils.IsAdaptiveComponentFamily(family))))
         {
-            manager.Register(nameof(AdaptiveComponentFamilyUtils.GetNumberOfAdaptivePoints), () => Variants.Value(AdaptiveComponentFamilyUtils.GetNumberOfAdaptivePoints(family)));
-            manager.Register(nameof(AdaptiveComponentFamilyUtils.GetNumberOfPlacementPoints), () => Variants.Value(AdaptiveComponentFamilyUtils.GetNumberOfPlacementPoints(family)));
-            manager.Register(nameof(AdaptiveComponentFamilyUtils.GetNumberOfShapeHandlePoints), () => Variants.Value(AdaptiveComponentFamilyUtils.GetNumberOfShapeHandlePoints(family)));
+            manager.Define(nameof(AdaptiveComponentFamilyUtils.GetNumberOfAdaptivePoints)).Register(() => Variants.Value(AdaptiveComponentFamilyUtils.GetNumberOfAdaptivePoints(family)));
+            manager.Define(nameof(AdaptiveComponentFamilyUtils.GetNumberOfPlacementPoints)).Register(() => Variants.Value(AdaptiveComponentFamilyUtils.GetNumberOfPlacementPoints(family)));
+            manager.Define(nameof(AdaptiveComponentFamilyUtils.GetNumberOfShapeHandlePoints)).Register(() => Variants.Value(AdaptiveComponentFamilyUtils.GetNumberOfShapeHandlePoints(family)));
         }
 
-        RegisterNotSupportedExtensions(manager);
         return;
         
         IVariant RegisterProfileSymbols()
@@ -58,10 +57,4 @@ public sealed class FamilyDescriptor(Family family) : ElementDescriptor(family)
         }
     }
 
-    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-    private void RegisterNotSupportedExtensions(IExtensionManager manager)
-    {
-        _ = nameof(FamilyUtils.ConvertFamilyToFaceHostBased);
-        manager.Register("ConvertToFaceHostBased", Variants.NotSupported);
-    }
 }

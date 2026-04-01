@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lookup Foundation and Contributors
+// Copyright (c) Lookup Foundation and Contributors
 // 
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -39,46 +39,47 @@ public sealed class ForgeTypeIdDescriptor : Descriptor, IDescriptorResolver, IDe
 
     public void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(LabelUtils.GetLabelForUnit), () => Variants.Value(LabelUtils.GetLabelForUnit(_typeId)));
-        manager.Register(nameof(LabelUtils.GetLabelForSpec), () => Variants.Value(LabelUtils.GetLabelForSpec(_typeId)));
-        manager.Register(nameof(LabelUtils.GetLabelForSymbol), () => Variants.Value(LabelUtils.GetLabelForSymbol(_typeId)));
-        manager.Register(nameof(UnitUtils.IsUnit), () => Variants.Value(UnitUtils.IsUnit(_typeId)));
-        manager.Register(nameof(UnitUtils.IsSymbol), () => Variants.Value(UnitUtils.IsSymbol(_typeId)));
-        manager.Register(nameof(UnitUtils.GetAllUnits), () => Variants.Value(UnitUtils.GetAllUnits()));
-        manager.Register(nameof(UnitUtils.GetTypeCatalogStringForSpec), () => Variants.Value(UnitUtils.GetTypeCatalogStringForSpec(_typeId)));
-        manager.Register(nameof(UnitUtils.GetTypeCatalogStringForUnit), () => Variants.Value(UnitUtils.GetTypeCatalogStringForUnit(_typeId)));
-        manager.Register(nameof(UnitUtils.GetValidUnits), () => Variants.Value(UnitUtils.GetValidUnits(_typeId)));
-        manager.Register(nameof(UnitUtils.IsValidUnit), ResolveIsValidUnit);
+        manager.Define(nameof(LabelUtils.GetLabelForUnit)).Register(() => Variants.Value(LabelUtils.GetLabelForUnit(_typeId)));
+        manager.Define(nameof(LabelUtils.GetLabelForSpec)).Register(() => Variants.Value(LabelUtils.GetLabelForSpec(_typeId)));
+        manager.Define(nameof(LabelUtils.GetLabelForSymbol)).Register(() => Variants.Value(LabelUtils.GetLabelForSymbol(_typeId)));
+        manager.Define(nameof(UnitUtils.IsUnit)).Register(() => Variants.Value(UnitUtils.IsUnit(_typeId)));
+        manager.Define(nameof(UnitUtils.IsSymbol)).Register(() => Variants.Value(UnitUtils.IsSymbol(_typeId)));
+        manager.Define(nameof(UnitUtils.GetAllUnits)).AsStatic().Register(() => Variants.Value(UnitUtils.GetAllUnits()));
+        manager.Define(nameof(UnitUtils.GetTypeCatalogStringForSpec)).Register(() => Variants.Value(UnitUtils.GetTypeCatalogStringForSpec(_typeId)));
+        manager.Define(nameof(UnitUtils.GetTypeCatalogStringForUnit)).Register(() => Variants.Value(UnitUtils.GetTypeCatalogStringForUnit(_typeId)));
+        manager.Define(nameof(UnitUtils.GetValidUnits)).Register(() => Variants.Value(UnitUtils.GetValidUnits(_typeId)));
+        manager.Define(nameof(UnitUtils.IsValidUnit)).Register(ResolveIsValidUnit);
+        manager.Define(nameof(UnitUtils.Convert)).AsNotSupported();
+        manager.Define(nameof(UnitUtils.ConvertFromInternalUnits)).AsNotSupported();
+        manager.Define(nameof(UnitUtils.ConvertToInternalUnits)).AsNotSupported();
 #if REVIT2022_OR_GREATER
-        manager.Register(nameof(LabelUtils.GetLabelForGroup), () => Variants.Value(LabelUtils.GetLabelForGroup(_typeId)));
-        manager.Register(nameof(LabelUtils.GetLabelForDiscipline), () => Variants.Value(LabelUtils.GetLabelForDiscipline(_typeId)));
-        manager.Register(nameof(LabelUtils.GetLabelForBuiltInParameter), () => Variants.Value(LabelUtils.GetLabelForBuiltInParameter(_typeId)));
-        manager.Register(nameof(ParameterUtils.IsBuiltInParameter), () => Variants.Value(ParameterUtils.IsBuiltInParameter(_typeId)));
-        manager.Register(nameof(ParameterUtils.IsBuiltInGroup), () => Variants.Value(ParameterUtils.IsBuiltInGroup(_typeId)));
-        manager.Register(nameof(ParameterUtils.GetBuiltInParameter), () => Variants.Value(ParameterUtils.GetBuiltInParameter(_typeId)));
-        manager.Register(nameof(ParameterUtils.GetAllBuiltInParameters), () => Variants.Value(ParameterUtils.GetAllBuiltInParameters()));
-        manager.Register(nameof(ParameterUtils.GetAllBuiltInGroups), () => Variants.Value(ParameterUtils.GetAllBuiltInGroups()));
-        manager.Register(nameof(UnitUtils.IsMeasurableSpec), () => Variants.Value(UnitUtils.IsMeasurableSpec(_typeId)));
-        manager.Register(nameof(UnitUtils.GetDiscipline), () => Variants.Value(UnitUtils.GetDiscipline(_typeId)));
-        manager.Register(nameof(UnitUtils.GetAllDisciplines), () => Variants.Value(UnitUtils.GetAllDisciplines()));
-        manager.Register(nameof(UnitUtils.GetAllMeasurableSpecs), () => Variants.Value(UnitUtils.GetAllMeasurableSpecs()));
-        manager.Register(nameof(SpecUtils.IsSpec), () => Variants.Value(SpecUtils.IsSpec(_typeId)));
-        manager.Register(nameof(SpecUtils.IsValidDataType), () => Variants.Value(SpecUtils.IsValidDataType(_typeId)));
-        manager.Register(nameof(SpecUtils.GetAllSpecs), () => Variants.Value(SpecUtils.GetAllSpecs()));
+        manager.Define(nameof(LabelUtils.GetLabelForGroup)).Register(() => Variants.Value(LabelUtils.GetLabelForGroup(_typeId)));
+        manager.Define(nameof(LabelUtils.GetLabelForDiscipline)).Register(() => Variants.Value(LabelUtils.GetLabelForDiscipline(_typeId)));
+        manager.Define(nameof(LabelUtils.GetLabelForBuiltInParameter)).Register(() => Variants.Value(LabelUtils.GetLabelForBuiltInParameter(_typeId)));
+        manager.Define(nameof(ParameterUtils.IsBuiltInParameter)).Register(() => Variants.Value(ParameterUtils.IsBuiltInParameter(_typeId)));
+        manager.Define(nameof(ParameterUtils.IsBuiltInGroup)).Register(() => Variants.Value(ParameterUtils.IsBuiltInGroup(_typeId)));
+        manager.Define(nameof(ParameterUtils.GetBuiltInParameter)).Register(() => Variants.Value(ParameterUtils.GetBuiltInParameter(_typeId)));
+        manager.Define(nameof(ParameterUtils.GetAllBuiltInParameters)).AsStatic().Register(() => Variants.Value(ParameterUtils.GetAllBuiltInParameters()));
+        manager.Define(nameof(ParameterUtils.GetAllBuiltInGroups)).AsStatic().Register(() => Variants.Value(ParameterUtils.GetAllBuiltInGroups()));
+        manager.Define(nameof(UnitUtils.IsMeasurableSpec)).Register(() => Variants.Value(UnitUtils.IsMeasurableSpec(_typeId)));
+        manager.Define(nameof(UnitUtils.GetDiscipline)).Register(() => Variants.Value(UnitUtils.GetDiscipline(_typeId)));
+        manager.Define(nameof(UnitUtils.GetAllDisciplines)).AsStatic().Register(() => Variants.Value(UnitUtils.GetAllDisciplines()));
+        manager.Define(nameof(UnitUtils.GetAllMeasurableSpecs)).AsStatic().Register(() => Variants.Value(UnitUtils.GetAllMeasurableSpecs()));
+        manager.Define(nameof(SpecUtils.IsSpec)).Register(() => Variants.Value(SpecUtils.IsSpec(_typeId)));
+        manager.Define(nameof(SpecUtils.IsValidDataType)).Register(() => Variants.Value(SpecUtils.IsValidDataType(_typeId)));
+        manager.Define(nameof(SpecUtils.GetAllSpecs)).AsStatic().Register(() => Variants.Value(SpecUtils.GetAllSpecs()));
 #endif
 #if REVIT2024_OR_GREATER
-        manager.Register(nameof(ParameterUtils.DownloadParameter), Variants.NotSupported); //TODO slow
-        manager.Register(nameof(ParameterUtils.DownloadCompanyName), Variants.NotSupported); //TODO slow
-        manager.Register(nameof(ParameterUtils.DownloadParameterOptions), Variants.NotSupported); //TODO slow
-        // manager.Register(nameof(ParameterUtils.DownloadParameter), context => Variants.Value(ParameterUtils.DownloadParameter(context, new ParameterDownloadOptions(), _typeId)));
-        // manager.Register(nameof(ParameterUtils.DownloadCompanyName), context => Variants.Value(ParameterUtils.DownloadCompanyName(context, _typeId)));
-        // manager.Register(nameof(ParameterUtils.DownloadParameterOptions), () => Variants.Value(ParameterUtils.DownloadParameterOptions(_typeId)));
+        manager.Define(nameof(ParameterUtils.DownloadParameter)).AsNotSupported(); //TODO slow
+        manager.Define(nameof(ParameterUtils.DownloadCompanyName)).AsNotSupported(); //TODO slow
+        manager.Define(nameof(ParameterUtils.DownloadParameterOptions)).AsNotSupported(); //TODO slow
+        // manager.Define(nameof(ParameterUtils.DownloadParameter)).Register(context => Variants.Value(ParameterUtils.DownloadParameter(context, new ParameterDownloadOptions(), _typeId)));
+        // manager.Define(nameof(ParameterUtils.DownloadCompanyName)).Register(context => Variants.Value(ParameterUtils.DownloadCompanyName(context, _typeId)));
+        // manager.Define(nameof(ParameterUtils.DownloadParameterOptions)).Register(() => Variants.Value(ParameterUtils.DownloadParameterOptions(_typeId)));
 #endif
 #if REVIT2026_OR_GREATER
-        manager.Register(nameof(ParameterUtils.GetBuiltInParameterGroupTypeId), () => Variants.Value(ParameterUtils.GetBuiltInParameterGroupTypeId(_typeId)));
+        manager.Define(nameof(ParameterUtils.GetBuiltInParameterGroupTypeId)).Register(() => Variants.Value(ParameterUtils.GetBuiltInParameterGroupTypeId(_typeId)));
 #endif
-
-        RegisterNotSupportedExtensions(manager);
         return;
 
         IVariant ResolveIsValidUnit()
@@ -103,11 +104,4 @@ public sealed class ForgeTypeIdDescriptor : Descriptor, IDescriptorResolver, IDe
         }
     }
     
-    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-    private void RegisterNotSupportedExtensions(IExtensionManager manager)
-    {
-        manager.Register(nameof(UnitUtils.Convert), Variants.NotSupported);
-        manager.Register(nameof(UnitUtils.ConvertFromInternalUnits), Variants.NotSupported);
-        manager.Register(nameof(UnitUtils.ConvertToInternalUnits), Variants.NotSupported);
-    }
 }

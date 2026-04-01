@@ -27,7 +27,6 @@ public sealed class DefinitionFileDescriptor : Descriptor, IDescriptorExtension
 
     public void RegisterExtensions(IExtensionManager manager)
     {
-        _ = nameof(RebarShapeParameters.GetExternalDefinitionForElementId);
-        manager.Register("SearchExternalDefinition", Variants.NotSupported);
+        manager.Define("SearchExternalDefinition").Map(nameof(RebarShapeParameters.GetExternalDefinitionForElementId)).AsNotSupported();
     }
 }

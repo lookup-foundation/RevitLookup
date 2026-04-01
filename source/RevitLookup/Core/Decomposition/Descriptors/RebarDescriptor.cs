@@ -23,25 +23,13 @@ public sealed class RebarDescriptor(Rebar rebar) : ElementDescriptor(rebar)
     public override void RegisterExtensions(IExtensionManager manager)
     {
 #if REVIT2025_OR_GREATER
-        manager.Register(nameof(RebarSpliceUtils.GetSpliceChain), () => Variants.Value(RebarSpliceUtils.GetSpliceChain(rebar)));
-
-        RegisterNotSupportedExtensions(manager);
+        manager.Define("CanBeSpliced").Map(nameof(RebarSpliceUtils.CanRebarBeSpliced)).AsNotSupported();
+        manager.Define("Splice").Map(nameof(RebarSpliceUtils.SpliceRebar)).AsNotSupported();
+        manager.Define(nameof(RebarSpliceUtils.GetSpliceChain)).Register(() => Variants.Value(RebarSpliceUtils.GetSpliceChain(rebar)));
+        manager.Define(nameof(RebarSpliceUtils.GetLapDirectionForSpliceGeometryAndPosition)).AsNotSupported();
+        manager.Define(nameof(RebarSpliceUtils.UnifyRebarsIntoOne)).AsNotSupported();
+        manager.Define(nameof(RebarSpliceUtils.GetSpliceGeometries)).AsNotSupported();
 #endif
     }
 
-    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-    private void RegisterNotSupportedExtensions(IExtensionManager manager)
-    {
-#if REVIT2025_OR_GREATER
-        _ = nameof(RebarSpliceUtils.CanRebarBeSpliced);
-        manager.Register("CanBeSpliced", Variants.NotSupported);
-            
-        _ = nameof(RebarSpliceUtils.SpliceRebar);
-        manager.Register("Splice", Variants.NotSupported);
-
-        manager.Register(nameof(RebarSpliceUtils.GetLapDirectionForSpliceGeometryAndPosition), Variants.NotSupported);
-        manager.Register(nameof(RebarSpliceUtils.UnifyRebarsIntoOne), Variants.NotSupported);
-        manager.Register(nameof(RebarSpliceUtils.GetSpliceGeometries), Variants.NotSupported);
-#endif
-    }
 }

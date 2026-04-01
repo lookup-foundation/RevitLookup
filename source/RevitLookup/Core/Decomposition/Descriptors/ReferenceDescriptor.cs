@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lookup Foundation and Contributors
+// Copyright (c) Lookup Foundation and Contributors
 // 
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -47,7 +47,7 @@ public sealed partial class ReferenceDescriptor : Descriptor, IDescriptorResolve
 
     public void RegisterExtensions(IExtensionManager<Document> manager)
     {
-        manager.Register(nameof(CurveByPointsUtils.GetFaceRegions), context => Variants.Value(CurveByPointsUtils.GetFaceRegions(context, _reference)));
+        manager.Define(nameof(CurveByPointsUtils.GetFaceRegions)).Register(context => Variants.Value(CurveByPointsUtils.GetFaceRegions(context, _reference)));
     }
 
     public void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)

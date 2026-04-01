@@ -21,6 +21,6 @@ public sealed class ExternalResourceTypeDescriptor(ExternalResourceType external
 {
     public void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register("GetServers", () => Variants.Value(ExternalResourceServiceUtils.GetServersByType(externalResourceType)));
+        manager.Define("GetServers").Register(() => Variants.Value(ExternalResourceServiceUtils.GetServersByType(externalResourceType)));
     }
 }

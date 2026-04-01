@@ -21,6 +21,6 @@ public sealed class SurfaceDescriptor(Surface surface) : Descriptor, IDescriptor
 {
     public void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(ExportUtils.GetNurbsSurfaceDataForSurface), () => Variants.Value(ExportUtils.GetNurbsSurfaceDataForSurface(surface)));
+        manager.Define(nameof(ExportUtils.GetNurbsSurfaceDataForSurface)).Register(() => Variants.Value(ExportUtils.GetNurbsSurfaceDataForSurface(surface)));
     }
 }

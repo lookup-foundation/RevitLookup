@@ -22,21 +22,10 @@ public sealed class FamilySymbolDescriptor(FamilySymbol familySymbol) : ElementD
 {
     public override void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(AdaptiveComponentInstanceUtils.IsAdaptiveFamilySymbol), () => Variants.Value(AdaptiveComponentInstanceUtils.IsAdaptiveFamilySymbol(familySymbol)));
-
-        RegisterNotSupportedExtensions(manager);
-    }
-
-    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-    private void RegisterNotSupportedExtensions(IExtensionManager manager)
-    {
-        if (AdaptiveComponentInstanceUtils.IsAdaptiveFamilySymbol(familySymbol))
+        manager.Define("SetStructuralSection").Map(nameof(StructuralSectionUtils.SetStructuralSection)).AsNotSupported();
+        if (manager.Define(nameof(AdaptiveComponentInstanceUtils.IsAdaptiveFamilySymbol)).TryRegister(() => Variants.Value(AdaptiveComponentInstanceUtils.IsAdaptiveFamilySymbol(familySymbol))))
         {
-            _ = nameof(AdaptiveComponentInstanceUtils.CreateAdaptiveComponentInstance);
-            manager.Register("CreateAdaptiveComponentInstance", Variants.NotSupported);
+            manager.Define("CreateAdaptiveComponentInstance").Map(nameof(AdaptiveComponentInstanceUtils.CreateAdaptiveComponentInstance)).AsNotSupported();
         }
-
-        _ = nameof(StructuralSectionUtils.SetStructuralSection);
-        manager.Register("SetStructuralSection", Variants.NotSupported);
     }
 }

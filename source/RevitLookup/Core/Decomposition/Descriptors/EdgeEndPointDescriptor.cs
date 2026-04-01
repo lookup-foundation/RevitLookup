@@ -21,6 +21,6 @@ public sealed class EdgeEndPointDescriptor(EdgeEndPoint edgeEndPoint) : Descript
 {
     public void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(SolidUtils.FindAllEdgeEndPointsAtVertex), () => Variants.Value(SolidUtils.FindAllEdgeEndPointsAtVertex(edgeEndPoint)));
+        manager.Define(nameof(SolidUtils.FindAllEdgeEndPointsAtVertex)).Register(() => Variants.Value(SolidUtils.FindAllEdgeEndPointsAtVertex(edgeEndPoint)));
     }
 }

@@ -21,6 +21,6 @@ public sealed class WallTypeDescriptor(WallType wallType) : ElementDescriptor(wa
 {
     public override void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(FaceWall.IsWallTypeValidForFaceWall), () => Variants.Value(FaceWall.IsWallTypeValidForFaceWall(wallType.Document, wallType.Id)));
+        manager.Define(nameof(FaceWall.IsWallTypeValidForFaceWall)).Register(() => Variants.Value(FaceWall.IsWallTypeValidForFaceWall(wallType.Document, wallType.Id)));
     }
 }

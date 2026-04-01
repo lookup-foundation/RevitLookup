@@ -21,6 +21,6 @@ public sealed class TriangulationInterfaceDescriptor(TriangulationInterface tria
 {
     public void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(FacetingUtils.ConvertTrianglesToQuads), () => Variants.Value(FacetingUtils.ConvertTrianglesToQuads(triangulation)));
+        manager.Define(nameof(FacetingUtils.ConvertTrianglesToQuads)).Register(() => Variants.Value(FacetingUtils.ConvertTrianglesToQuads(triangulation)));
     }
 }

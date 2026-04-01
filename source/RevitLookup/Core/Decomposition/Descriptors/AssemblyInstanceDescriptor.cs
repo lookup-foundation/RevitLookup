@@ -13,7 +13,6 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using LookupEngine.Abstractions.Configuration;
-using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
@@ -21,20 +20,13 @@ public sealed class AssemblyInstanceDescriptor(AssemblyInstance assemblyInstance
 {
     public override void RegisterExtensions(IExtensionManager manager)
     {
-        RegisterNotSupportedExtensions(manager);
+        manager.Define("AcquireViews").Map(nameof(AssemblyViewUtils.AcquireAssemblyViews)).AsNotSupported();
+        manager.Define(nameof(AssemblyViewUtils.Create3DOrthographic)).AsNotSupported();
+        manager.Define(nameof(AssemblyViewUtils.CreateDetailSection)).AsNotSupported();
+        manager.Define(nameof(AssemblyViewUtils.CreateMaterialTakeoff)).AsNotSupported();
+        manager.Define(nameof(AssemblyViewUtils.CreatePartList)).AsNotSupported();
+        manager.Define(nameof(AssemblyViewUtils.CreateSheet)).AsNotSupported();
+        manager.Define(nameof(AssemblyViewUtils.CreateSingleCategorySchedule)).AsNotSupported();
     }
 
-    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-    private void RegisterNotSupportedExtensions(IExtensionManager manager)
-    {
-        _ = nameof(AssemblyViewUtils.AcquireAssemblyViews);
-        manager.Register("AcquireViews", Variants.NotSupported);
-
-        manager.Register(nameof(AssemblyViewUtils.Create3DOrthographic), Variants.NotSupported);
-        manager.Register(nameof(AssemblyViewUtils.CreateDetailSection), Variants.NotSupported);
-        manager.Register(nameof(AssemblyViewUtils.CreateMaterialTakeoff), Variants.NotSupported);
-        manager.Register(nameof(AssemblyViewUtils.CreatePartList), Variants.NotSupported);
-        manager.Register(nameof(AssemblyViewUtils.CreateSheet), Variants.NotSupported);
-        manager.Register(nameof(AssemblyViewUtils.CreateSingleCategorySchedule), Variants.NotSupported);
-    }
 }

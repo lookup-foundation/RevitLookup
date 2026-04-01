@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lookup Foundation and Contributors
+// Copyright (c) Lookup Foundation and Contributors
 // 
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -95,8 +95,8 @@ public sealed class BoundingBoxXyzDescriptor(BoundingBoxXYZ box) : Descriptor, I
 
     public void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register("Centroid", () => Variants.Value((box.Min + box.Max) / 2));
-        manager.Register("Vertices", () => Variants.Values<XYZ>(8)
+        manager.Define("Centroid").Register(() => Variants.Value((box.Min + box.Max) / 2));
+        manager.Define("Vertices").Register(() => Variants.Values<XYZ>(8)
             .Add(new XYZ(box.Min.X, box.Min.Y, box.Min.Z))
             .Add(new XYZ(box.Min.X, box.Min.Y, box.Max.Z))
             .Add(new XYZ(box.Min.X, box.Max.Y, box.Min.Z))
@@ -107,7 +107,7 @@ public sealed class BoundingBoxXyzDescriptor(BoundingBoxXYZ box) : Descriptor, I
             .Add(new XYZ(box.Max.X, box.Max.Y, box.Max.Z))
             .Consume());
 
-        manager.Register("Volume", () =>
+        manager.Define("Volume").Register(() =>
         {
             var length = box.Max.X - box.Min.X;
             var width = box.Max.Y - box.Min.Y;
@@ -116,7 +116,7 @@ public sealed class BoundingBoxXyzDescriptor(BoundingBoxXYZ box) : Descriptor, I
             return Variants.Value(length * width * height);
         });
 
-        manager.Register("SurfaceArea", () =>
+        manager.Define("SurfaceArea").Register(() =>
         {
             var length = box.Max.X - box.Min.X;
             var width = box.Max.Y - box.Min.Y;

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lookup Foundation and Contributors
+// Copyright (c) Lookup Foundation and Contributors
 // 
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -31,9 +31,9 @@ public sealed class HostObjectDescriptor(HostObject hostObject) : ElementDescrip
 
     public override void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(HostObjectUtils.GetBottomFaces), () => Variants.Value(HostObjectUtils.GetBottomFaces(hostObject)));
-        manager.Register(nameof(HostObjectUtils.GetTopFaces), () => Variants.Value(HostObjectUtils.GetTopFaces(hostObject)));
-        manager.Register(nameof(HostObjectUtils.GetSideFaces), () => Variants.Values<IList<Reference>>(2)
+        manager.Define(nameof(HostObjectUtils.GetBottomFaces)).Register(() => Variants.Value(HostObjectUtils.GetBottomFaces(hostObject)));
+        manager.Define(nameof(HostObjectUtils.GetTopFaces)).Register(() => Variants.Value(HostObjectUtils.GetTopFaces(hostObject)));
+        manager.Define(nameof(HostObjectUtils.GetSideFaces)).Register(() => Variants.Values<IList<Reference>>(2)
             .Add(HostObjectUtils.GetSideFaces(hostObject, ShellLayerType.Interior), "Interior")
             .Add(HostObjectUtils.GetSideFaces(hostObject, ShellLayerType.Exterior), "Exterior")
             .Consume());

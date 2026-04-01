@@ -28,92 +28,45 @@ public sealed class ElementTypeDescriptor(ElementType elementType) : ElementDesc
 #if REVIT2025_OR_GREATER
         if (elementType.Category?.Id.IsCategory(BuiltInCategory.OST_RebarSpliceType) == true)
         {
-            manager.Register("GetRebarSpliceLapLengthMultiplier", () => Variants.Value(RebarSpliceTypeUtils.GetLapLengthMultiplier(elementType.Document, elementType.Id)));
-            manager.Register("GetRebarSpliceShiftOption", () => Variants.Value(RebarSpliceTypeUtils.GetShiftOption(elementType.Document, elementType.Id)));
-            manager.Register("GetRebarSpliceStaggerLengthMultiplier", () => Variants.Value(RebarSpliceTypeUtils.GetStaggerLengthMultiplier(elementType.Document, elementType.Id)));
+            manager.Define("GetRebarSpliceLapLengthMultiplier").Register(() => Variants.Value(RebarSpliceTypeUtils.GetLapLengthMultiplier(elementType.Document, elementType.Id)));
+            manager.Define("GetRebarSpliceShiftOption").Register(() => Variants.Value(RebarSpliceTypeUtils.GetShiftOption(elementType.Document, elementType.Id)));
+            manager.Define("GetRebarSpliceStaggerLengthMultiplier").Register(() => Variants.Value(RebarSpliceTypeUtils.GetStaggerLengthMultiplier(elementType.Document, elementType.Id)));
+            manager.Define("SetRebarSpliceLapLengthMultiplier").Map(nameof(RebarSpliceTypeUtils.SetLapLengthMultiplier)).AsNotSupported();
+            manager.Define("SetRebarSpliceShiftOption").Map(nameof(RebarSpliceTypeUtils.SetShiftOption)).AsNotSupported();
+            manager.Define("SetRebarSpliceStaggerLengthMultiplier").Map(nameof(RebarSpliceTypeUtils.SetStaggerLengthMultiplier)).AsNotSupported();
         }
 #endif
 #if REVIT2026_OR_GREATER
         if (CoordinationModelLinkUtils.IsCoordinationModelType(elementType.Document, elementType))
         {
-            manager.Register("GetCoordinationModelTransparencyOverride", () => Variants.Value(CoordinationModelLinkUtils.GetTransparencyOverride(elementType.Document, elementType.Document.ActiveView, elementType)));
-            manager.Register(nameof(CoordinationModelLinkUtils.GetCoordinationModelTypeData), () => Variants.Value(CoordinationModelLinkUtils.GetCoordinationModelTypeData(elementType.Document, elementType)));
+            manager.Define("GetCoordinationModelTransparencyOverride").Register(() => Variants.Value(CoordinationModelLinkUtils.GetTransparencyOverride(elementType.Document, elementType.Document.ActiveView, elementType)));
+            manager.Define(nameof(CoordinationModelLinkUtils.GetCoordinationModelTypeData)).Register(() => Variants.Value(CoordinationModelLinkUtils.GetCoordinationModelTypeData(elementType.Document, elementType)));
         }
 
         if (elementType.Category?.Id.IsCategory(BuiltInCategory.OST_RebarCrankType) == true)
         {
-            manager.Register("GetRebarCrankLengthMultiplier", () => Variants.Value(RebarCrankTypeUtils.GetCrankLengthMultiplier(elementType.Document, elementType.Id)));
-            manager.Register("GetRebarCrankOffsetMultiplier", () => Variants.Value(RebarCrankTypeUtils.GetCrankOffsetMultiplier(elementType.Document, elementType.Id)));
-            manager.Register("GetRebarCrankRatio", () => Variants.Value(RebarCrankTypeUtils.GetCrankRatio(elementType.Document, elementType.Id)));
-        }
-#endif
-
-        RegisterNotSupportedExtensions(manager);
-    }
-
-    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-    private void RegisterNotSupportedExtensions(IExtensionManager manager)
-    {
-#if REVIT2025_OR_GREATER
-        if (elementType.Category?.Id.IsCategory(BuiltInCategory.OST_RebarSpliceType) == true)
-        {
-            _ = nameof(RebarSpliceTypeUtils.SetLapLengthMultiplier);
-            manager.Register("SetRebarSpliceLapLengthMultiplier", Variants.NotSupported);
-
-            _ = nameof(RebarSpliceTypeUtils.SetShiftOption);
-            manager.Register("SetRebarSpliceShiftOption", Variants.NotSupported);
-
-            _ = nameof(RebarSpliceTypeUtils.SetStaggerLengthMultiplier);
-            manager.Register("SetRebarSpliceStaggerLengthMultiplier", Variants.NotSupported);
-        }
-#endif
-#if REVIT2026_OR_GREATER
-        if (elementType.Category?.Id.IsCategory(BuiltInCategory.OST_RebarCrankType) == true)
-        {
-            _ = nameof(RebarCrankTypeUtils.SetCrankLengthMultiplier);
-            manager.Register("SetRebarCrankLengthMultiplier", Variants.NotSupported);
-
-            _ = nameof(RebarCrankTypeUtils.SetCrankOffsetMultiplier);
-            manager.Register("SetRebarCrankOffsetMultiplier", Variants.NotSupported);
-
-            _ = nameof(RebarCrankTypeUtils.SetCrankRatio);
-            manager.Register("SetRebarCrankRatio", Variants.NotSupported);
+            manager.Define("GetRebarCrankLengthMultiplier").Register(() => Variants.Value(RebarCrankTypeUtils.GetCrankLengthMultiplier(elementType.Document, elementType.Id)));
+            manager.Define("GetRebarCrankOffsetMultiplier").Register(() => Variants.Value(RebarCrankTypeUtils.GetCrankOffsetMultiplier(elementType.Document, elementType.Id)));
+            manager.Define("GetRebarCrankRatio").Register(() => Variants.Value(RebarCrankTypeUtils.GetCrankRatio(elementType.Document, elementType.Id)));
+            manager.Define("SetRebarCrankLengthMultiplier").Map(nameof(RebarCrankTypeUtils.SetCrankLengthMultiplier)).AsNotSupported();
+            manager.Define("SetRebarCrankOffsetMultiplier").Map(nameof(RebarCrankTypeUtils.SetCrankOffsetMultiplier)).AsNotSupported();
+            manager.Define("SetRebarCrankRatio").Map(nameof(RebarCrankTypeUtils.SetCrankRatio)).AsNotSupported();
         }
 
         if (CoordinationModelLinkUtils.IsCoordinationModelType(elementType.Document, elementType))
         {
-            manager.Register(nameof(CoordinationModelLinkUtils.ReloadLocalCoordinationModelFrom), Variants.NotSupported);
-            manager.Register(nameof(CoordinationModelLinkUtils.ReloadAutodeskDocsCoordinationModelFrom), Variants.NotSupported);
-            
-            _ = nameof(CoordinationModelLinkUtils.ContainsCategory);
-            manager.Register("ContainsCoordinationModelCategory", Variants.NotSupported);
-
-            _ = nameof(CoordinationModelLinkUtils.GetColorOverride);
-            manager.Register("GetCoordinationModelColorOverride", Variants.NotSupported);
-
-            _ = nameof(CoordinationModelLinkUtils.GetColorOverrideForCategory);
-            manager.Register("GetCoordinationModelColorOverrideForCategory", Variants.NotSupported);
-
-            _ = nameof(CoordinationModelLinkUtils.GetVisibilityOverrideForCategory);
-            manager.Register("GetCoordinationModelVisibilityOverrideForCategory", Variants.NotSupported);
-
-            _ = nameof(CoordinationModelLinkUtils.Reload);
-            manager.Register("ReloadCoordinationModel", Variants.NotSupported);
-
-            _ = nameof(CoordinationModelLinkUtils.Unload);
-            manager.Register("UnloadCoordinationModel", Variants.NotSupported);
-
-            _ = nameof(CoordinationModelLinkUtils.SetColorOverride);
-            manager.Register("SetCoordinationModelColorOverride", Variants.NotSupported);
-
-            _ = nameof(CoordinationModelLinkUtils.SetColorOverrideForCategory);
-            manager.Register("SetCoordinationModelColorOverrideForCategory", Variants.NotSupported);
-
-            _ = nameof(CoordinationModelLinkUtils.SetTransparencyOverride);
-            manager.Register("SetCoordinationModelTransparencyOverride", Variants.NotSupported);
-
-            _ = nameof(CoordinationModelLinkUtils.SetVisibilityOverrideForCategory);
-            manager.Register("SetCoordinationModelVisibilityOverrideForCategory", Variants.NotSupported);
+            manager.Define(nameof(CoordinationModelLinkUtils.ReloadLocalCoordinationModelFrom)).AsNotSupported();
+            manager.Define(nameof(CoordinationModelLinkUtils.ReloadAutodeskDocsCoordinationModelFrom)).AsNotSupported();
+            manager.Define("ContainsCoordinationModelCategory").Map(nameof(CoordinationModelLinkUtils.ContainsCategory)).AsNotSupported();
+            manager.Define("GetCoordinationModelColorOverride").Map(nameof(CoordinationModelLinkUtils.GetColorOverride)).AsNotSupported();
+            manager.Define("GetCoordinationModelColorOverrideForCategory").Map(nameof(CoordinationModelLinkUtils.GetColorOverrideForCategory)).AsNotSupported();
+            manager.Define("GetCoordinationModelVisibilityOverrideForCategory").Map(nameof(CoordinationModelLinkUtils.GetVisibilityOverrideForCategory)).AsNotSupported();
+            manager.Define("ReloadCoordinationModel").Map(nameof(CoordinationModelLinkUtils.Reload)).AsNotSupported();
+            manager.Define("UnloadCoordinationModel").Map(nameof(CoordinationModelLinkUtils.Unload)).AsNotSupported();
+            manager.Define("SetCoordinationModelColorOverride").Map(nameof(CoordinationModelLinkUtils.SetColorOverride)).AsNotSupported();
+            manager.Define("SetCoordinationModelColorOverrideForCategory").Map(nameof(CoordinationModelLinkUtils.SetColorOverrideForCategory)).AsNotSupported();
+            manager.Define("SetCoordinationModelTransparencyOverride").Map(nameof(CoordinationModelLinkUtils.SetTransparencyOverride)).AsNotSupported();
+            manager.Define("SetCoordinationModelVisibilityOverrideForCategory").Map(nameof(CoordinationModelLinkUtils.SetVisibilityOverrideForCategory)).AsNotSupported();
         }
 #endif
     }

@@ -26,8 +26,7 @@ public sealed class DocumentCreationDescriptor(Document document) : Descriptor, 
     {
 #if REVIT2024_OR_GREATER
 
-        _ = nameof(MEPSupportUtils.CreateDuctworkStiffener);
-        manager.Register("NewDuctworkStiffener", Variants.NotSupported);
+        manager.Define("NewDuctworkStiffener").Map(nameof(MEPSupportUtils.CreateDuctworkStiffener)).AsNotSupported();
 #endif
     }
 }

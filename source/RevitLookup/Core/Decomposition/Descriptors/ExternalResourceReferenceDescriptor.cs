@@ -21,10 +21,10 @@ public sealed class ExternalResourceReferenceDescriptor(ExternalResourceReferenc
 {
     public void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(ExternalResourceServerUtils.ServerSupportsAssemblyCodeData), () => Variants.Value(ExternalResourceServerUtils.ServerSupportsAssemblyCodeData(externalResourceReference)));
-        manager.Register(nameof(ExternalResourceServerUtils.ServerSupportsCADLinks), () => Variants.Value(ExternalResourceServerUtils.ServerSupportsCADLinks(externalResourceReference)));
-        manager.Register(nameof(ExternalResourceServerUtils.ServerSupportsIFCLinks), () => Variants.Value(ExternalResourceServerUtils.ServerSupportsIFCLinks(externalResourceReference)));
-        manager.Register(nameof(ExternalResourceServerUtils.ServerSupportsKeynotes), () => Variants.Value(ExternalResourceServerUtils.ServerSupportsKeynotes(externalResourceReference)));
-        manager.Register(nameof(ExternalResourceServerUtils.ServerSupportsRevitLinks), () => Variants.Value(ExternalResourceServerUtils.ServerSupportsRevitLinks(externalResourceReference)));
+        manager.Define(nameof(ExternalResourceServerUtils.ServerSupportsAssemblyCodeData)).Register(() => Variants.Value(ExternalResourceServerUtils.ServerSupportsAssemblyCodeData(externalResourceReference)));
+        manager.Define(nameof(ExternalResourceServerUtils.ServerSupportsCADLinks)).Register(() => Variants.Value(ExternalResourceServerUtils.ServerSupportsCADLinks(externalResourceReference)));
+        manager.Define(nameof(ExternalResourceServerUtils.ServerSupportsIFCLinks)).Register(() => Variants.Value(ExternalResourceServerUtils.ServerSupportsIFCLinks(externalResourceReference)));
+        manager.Define(nameof(ExternalResourceServerUtils.ServerSupportsKeynotes)).Register(() => Variants.Value(ExternalResourceServerUtils.ServerSupportsKeynotes(externalResourceReference)));
+        manager.Define(nameof(ExternalResourceServerUtils.ServerSupportsRevitLinks)).Register(() => Variants.Value(ExternalResourceServerUtils.ServerSupportsRevitLinks(externalResourceReference)));
     }
 }

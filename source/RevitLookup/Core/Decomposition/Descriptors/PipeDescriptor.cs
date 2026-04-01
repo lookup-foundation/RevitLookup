@@ -28,15 +28,9 @@ public sealed class PipeDescriptor(Pipe pipe) : ElementDescriptor(pipe)
 
     public override void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(PlumbingUtils.HasOpenConnector), () => Variants.Value(PlumbingUtils.HasOpenConnector(pipe.Document, pipe.Id)));
-
-        RegisterNotSupportedExtensions(manager);
+        manager.Define(nameof(PlumbingUtils.HasOpenConnector)).Register(() => Variants.Value(PlumbingUtils.HasOpenConnector(pipe.Document, pipe.Id)));
+        manager.Define(nameof(PlumbingUtils.PlaceCapOnOpenEnds)).AsNotSupported();
+        manager.Define(nameof(PlumbingUtils.BreakCurve)).AsNotSupported();
     }
 
-    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-    private void RegisterNotSupportedExtensions(IExtensionManager manager)
-    {
-        manager.Register(nameof(PlumbingUtils.PlaceCapOnOpenEnds), Variants.NotSupported);
-        manager.Register(nameof(PlumbingUtils.BreakCurve), Variants.NotSupported);
-    }
 }

@@ -54,9 +54,9 @@ public sealed partial class ParameterDescriptor : Descriptor, IDescriptorResolve
 
     public void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(ParameterExtensions.AsBool), () => Variants.Value(_parameter.AsBool()));
-        manager.Register(nameof(ParameterExtensions.AsColor), () => Variants.Value(_parameter.AsColor()));
-        manager.Register(nameof(FamilyManager.GetAssociatedFamilyParameter), () => Variants.Value(_parameter.Element?.Document.FamilyManager.GetAssociatedFamilyParameter(_parameter)));
+        manager.Define(nameof(ParameterExtensions.AsBool)).Register(() => Variants.Value(_parameter.AsBool()));
+        manager.Define(nameof(ParameterExtensions.AsColor)).Register(() => Variants.Value(_parameter.AsColor()));
+        manager.Define(nameof(FamilyManager.GetAssociatedFamilyParameter)).Register(() => Variants.Value(_parameter.Element?.Document.FamilyManager.GetAssociatedFamilyParameter(_parameter)));
     }
 
     public void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)

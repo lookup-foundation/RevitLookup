@@ -124,19 +124,13 @@ public sealed class CurveElementDescriptor(CurveElement element) : ElementDescri
 
     public override void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(CurveByPointsUtils.GetHostFace), () => Variants.Value(CurveByPointsUtils.GetHostFace(element)));
-        manager.Register(nameof(CurveByPointsUtils.GetProjectionType), () => Variants.Value(CurveByPointsUtils.GetProjectionType(element)));
-        manager.Register(nameof(CurveByPointsUtils.GetSketchOnSurface), () => Variants.Value(CurveByPointsUtils.GetSketchOnSurface(element)));
-
-        RegisterNotSupportedExtensions(manager);
+        manager.Define(nameof(CurveByPointsUtils.GetHostFace)).Register(() => Variants.Value(CurveByPointsUtils.GetHostFace(element)));
+        manager.Define(nameof(CurveByPointsUtils.GetProjectionType)).Register(() => Variants.Value(CurveByPointsUtils.GetProjectionType(element)));
+        manager.Define(nameof(CurveByPointsUtils.GetSketchOnSurface)).Register(() => Variants.Value(CurveByPointsUtils.GetSketchOnSurface(element)));
+        manager.Define(nameof(CurveByPointsUtils.SetProjectionType)).AsNotSupported();
+        manager.Define(nameof(CurveByPointsUtils.SetSketchOnSurface)).AsNotSupported();
+        manager.Define(nameof(CurveByPointsUtils.CreateArcThroughPoints)).AsNotSupported();
+        manager.Define(nameof(CurveByPointsUtils.CreateRectangle)).AsNotSupported();
     }
 
-    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-    private void RegisterNotSupportedExtensions(IExtensionManager manager)
-    {
-        manager.Register(nameof(CurveByPointsUtils.SetProjectionType), Variants.NotSupported);
-        manager.Register(nameof(CurveByPointsUtils.SetSketchOnSurface), Variants.NotSupported);
-        manager.Register(nameof(CurveByPointsUtils.CreateArcThroughPoints), Variants.NotSupported);
-        manager.Register(nameof(CurveByPointsUtils.CreateRectangle), Variants.NotSupported);
-    }
 }

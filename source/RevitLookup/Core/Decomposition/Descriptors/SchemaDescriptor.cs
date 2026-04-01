@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lookup Foundation and Contributors
+// Copyright (c) Lookup Foundation and Contributors
 // 
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -30,7 +30,7 @@ public sealed class SchemaDescriptor : Descriptor, IDescriptorExtension<Document
 
     public void RegisterExtensions(IExtensionManager<Document> manager)
     {
-        manager.Register("GetElements", context => Variants.Value(context.CollectElements()
+        manager.Define("GetElements").Register(context => Variants.Value(context.CollectElements()
             .WithExtensibleStorage(_schema.GUID)
             .ToElements()));
     }

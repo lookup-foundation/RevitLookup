@@ -27,20 +27,20 @@ public sealed class PartDescriptor(Part part) : ElementDescriptor(part), IDescri
 
     public override void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(PartUtils.IsMergedPart), () => Variants.Value(PartUtils.IsMergedPart(part)));
-        manager.Register(nameof(PartUtils.IsPartDerivedFromLink), () => Variants.Value(PartUtils.IsPartDerivedFromLink(part)));
-        manager.Register(nameof(PartUtils.GetChainLengthToOriginal), () => Variants.Value(PartUtils.GetChainLengthToOriginal(part)));
-        manager.Register(nameof(PartUtils.GetMergedParts), () => Variants.Value(PartUtils.GetMergedParts(part)));
+        manager.Define(nameof(PartUtils.IsMergedPart)).Register(() => Variants.Value(PartUtils.IsMergedPart(part)));
+        manager.Define(nameof(PartUtils.IsPartDerivedFromLink)).Register(() => Variants.Value(PartUtils.IsPartDerivedFromLink(part)));
+        manager.Define(nameof(PartUtils.GetChainLengthToOriginal)).Register(() => Variants.Value(PartUtils.GetChainLengthToOriginal(part)));
+        manager.Define(nameof(PartUtils.GetMergedParts)).Register(() => Variants.Value(PartUtils.GetMergedParts(part)));
     }
 
     public void RegisterExtensions(IExtensionManager<Document> manager)
     {
-        manager.Register(nameof(PartUtils.ArePartsValidForDivide), context => Variants.Value(PartUtils.ArePartsValidForDivide(context, [part.Id])));
-        manager.Register(nameof(PartUtils.FindMergeableClusters), context => Variants.Value(PartUtils.FindMergeableClusters(context, [part.Id])));
-        manager.Register(nameof(PartUtils.ArePartsValidForMerge), context => Variants.Value(PartUtils.ArePartsValidForMerge(context, [part.Id])));
-        manager.Register(nameof(PartUtils.GetAssociatedPartMaker), context => Variants.Value(PartUtils.GetAssociatedPartMaker(context, part.Id)));
-        manager.Register(nameof(PartUtils.GetSplittingCurves), context => Variants.Value(PartUtils.GetSplittingCurves(context, part.Id)));
-        manager.Register(nameof(PartUtils.GetSplittingElements), context => Variants.Value(PartUtils.GetSplittingElements(context, part.Id)));
-        manager.Register(nameof(PartUtils.HasAssociatedParts), context => Variants.Value(PartUtils.HasAssociatedParts(context, part.Id)));
+        manager.Define(nameof(PartUtils.ArePartsValidForDivide)).Register(context => Variants.Value(PartUtils.ArePartsValidForDivide(context, [part.Id])));
+        manager.Define(nameof(PartUtils.FindMergeableClusters)).Register(context => Variants.Value(PartUtils.FindMergeableClusters(context, [part.Id])));
+        manager.Define(nameof(PartUtils.ArePartsValidForMerge)).Register(context => Variants.Value(PartUtils.ArePartsValidForMerge(context, [part.Id])));
+        manager.Define(nameof(PartUtils.GetAssociatedPartMaker)).Register(context => Variants.Value(PartUtils.GetAssociatedPartMaker(context, part.Id)));
+        manager.Define(nameof(PartUtils.GetSplittingCurves)).Register(context => Variants.Value(PartUtils.GetSplittingCurves(context, part.Id)));
+        manager.Define(nameof(PartUtils.GetSplittingElements)).Register(context => Variants.Value(PartUtils.GetSplittingElements(context, part.Id)));
+        manager.Define(nameof(PartUtils.HasAssociatedParts)).Register(context => Variants.Value(PartUtils.HasAssociatedParts(context, part.Id)));
     }
 }

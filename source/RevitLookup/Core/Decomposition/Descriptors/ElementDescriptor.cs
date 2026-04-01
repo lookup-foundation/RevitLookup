@@ -1,4 +1,4 @@
-﻿// Copyright (c) Lookup Foundation and Contributors
+// Copyright (c) Lookup Foundation and Contributors
 // 
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -208,125 +208,95 @@ public partial class ElementDescriptor : Descriptor, IDescriptorResolver, IDescr
 
     public virtual void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(JoinGeometryUtils.GetJoinedElements), () => Variants.Value(JoinGeometryUtils.GetJoinedElements(_element.Document, _element)));
-        manager.Register(nameof(SolidSolidCutUtils.GetCuttingSolids), () => Variants.Value(SolidSolidCutUtils.GetCuttingSolids(_element)));
-        manager.Register(nameof(SolidSolidCutUtils.GetSolidsBeingCut), () => Variants.Value(SolidSolidCutUtils.GetSolidsBeingCut(_element)));
-        manager.Register(nameof(SolidSolidCutUtils.IsAllowedForSolidCut), () => Variants.Value(SolidSolidCutUtils.IsAllowedForSolidCut(_element)));
-        manager.Register(nameof(SolidSolidCutUtils.IsElementFromAppropriateContext), () => Variants.Value(SolidSolidCutUtils.IsElementFromAppropriateContext(_element)));
-        manager.Register(nameof(WorksharingUtils.GetCheckoutStatus), () => Variants.Value(WorksharingUtils.GetCheckoutStatus(_element.Document, _element.Id)));
-        manager.Register(nameof(WorksharingUtils.GetWorksharingTooltipInfo), () => Variants.Value(WorksharingUtils.GetWorksharingTooltipInfo(_element.Document, _element.Id)));
-        manager.Register(nameof(WorksharingUtils.GetModelUpdatesStatus), () => Variants.Value(WorksharingUtils.GetModelUpdatesStatus(_element.Document, _element.Id)));
-        manager.Register("IsValidForCreateParts", () => Variants.Value(PartUtils.AreElementsValidForCreateParts(_element.Document, [_element.Id])));
-        manager.Register(nameof(DirectContext3DDocumentUtils.IsADirectContext3DHandleInstance), () => Variants.Value(DirectContext3DDocumentUtils.IsADirectContext3DHandleInstance(_element.Document, _element.Id)));
-        manager.Register(nameof(DirectContext3DDocumentUtils.IsADirectContext3DHandleType), () => Variants.Value(DirectContext3DDocumentUtils.IsADirectContext3DHandleType(_element.Document, _element.Id)));
-        manager.Register("IsCategorySupportedByElementIntersectsFilter", () => Variants.Value(ElementIntersectsFilter.IsCategorySupported(_element)));
-        manager.Register("IsSupportedByElementIntersectsFilter", () => Variants.Value(ElementIntersectsFilter.IsElementSupported(_element)));
-        manager.Register("ExportId", () => Variants.Value(ExportUtils.GetExportId(_element.Document, _element.Id)));
-        manager.Register(nameof(ExternalFileUtils.GetExternalFileReference), () => Variants.Value(ExternalFileUtils.GetExternalFileReference(_element.Document, _element.Id)));
-        manager.Register(nameof(ExternalFileUtils.IsExternalFileReference), () => Variants.Value(ExternalFileUtils.IsExternalFileReference(_element.Document, _element.Id)));
-        manager.Register(nameof(InstanceVoidCutUtils.CanBeCutWithVoid), () => Variants.Value(InstanceVoidCutUtils.CanBeCutWithVoid(_element)));
-        manager.Register(nameof(InstanceVoidCutUtils.GetCuttingVoidInstances), () => Variants.Value(InstanceVoidCutUtils.GetCuttingVoidInstances(_element)));
-        manager.Register(nameof(PartUtils.GetAssociatedParts), () => Variants.Value(PartUtils.GetAssociatedParts(_element.Document, _element.Id, true, true)));
-        manager.Register(nameof(PartUtils.HasAssociatedParts), () => Variants.Value(PartUtils.HasAssociatedParts(_element.Document, _element.Id)));
-        manager.Register(nameof(DetailElementOrderUtils.IsDetailElement), () => Variants.Value(DetailElementOrderUtils.IsDetailElement(_element.Document, _element.Document.ActiveView, _element.Id)));
+        manager.Define(nameof(JoinGeometryUtils.GetJoinedElements)).Register(() => Variants.Value(JoinGeometryUtils.GetJoinedElements(_element.Document, _element)));
+        manager.Define(nameof(SolidSolidCutUtils.GetCuttingSolids)).Register(() => Variants.Value(SolidSolidCutUtils.GetCuttingSolids(_element)));
+        manager.Define(nameof(SolidSolidCutUtils.GetSolidsBeingCut)).Register(() => Variants.Value(SolidSolidCutUtils.GetSolidsBeingCut(_element)));
+        manager.Define(nameof(SolidSolidCutUtils.IsAllowedForSolidCut)).Register(() => Variants.Value(SolidSolidCutUtils.IsAllowedForSolidCut(_element)));
+        manager.Define(nameof(SolidSolidCutUtils.IsElementFromAppropriateContext)).Register(() => Variants.Value(SolidSolidCutUtils.IsElementFromAppropriateContext(_element)));
+        manager.Define(nameof(WorksharingUtils.GetCheckoutStatus)).Register(() => Variants.Value(WorksharingUtils.GetCheckoutStatus(_element.Document, _element.Id)));
+        manager.Define(nameof(WorksharingUtils.GetWorksharingTooltipInfo)).Register(() => Variants.Value(WorksharingUtils.GetWorksharingTooltipInfo(_element.Document, _element.Id)));
+        manager.Define(nameof(WorksharingUtils.GetModelUpdatesStatus)).Register(() => Variants.Value(WorksharingUtils.GetModelUpdatesStatus(_element.Document, _element.Id)));
+        manager.Define("IsValidForCreateParts").Register(() => Variants.Value(PartUtils.AreElementsValidForCreateParts(_element.Document, [_element.Id])));
+        manager.Define(nameof(DirectContext3DDocumentUtils.IsADirectContext3DHandleInstance)).Register(() => Variants.Value(DirectContext3DDocumentUtils.IsADirectContext3DHandleInstance(_element.Document, _element.Id)));
+        manager.Define(nameof(DirectContext3DDocumentUtils.IsADirectContext3DHandleType)).Register(() => Variants.Value(DirectContext3DDocumentUtils.IsADirectContext3DHandleType(_element.Document, _element.Id)));
+        manager.Define("IsCategorySupportedByElementIntersectsFilter").Register(() => Variants.Value(ElementIntersectsFilter.IsCategorySupported(_element)));
+        manager.Define("IsSupportedByElementIntersectsFilter").Register(() => Variants.Value(ElementIntersectsFilter.IsElementSupported(_element)));
+        manager.Define("ExportId").Register(() => Variants.Value(ExportUtils.GetExportId(_element.Document, _element.Id)));
+        manager.Define(nameof(ExternalFileUtils.GetExternalFileReference)).Register(() => Variants.Value(ExternalFileUtils.GetExternalFileReference(_element.Document, _element.Id)));
+        manager.Define(nameof(ExternalFileUtils.IsExternalFileReference)).Register(() => Variants.Value(ExternalFileUtils.IsExternalFileReference(_element.Document, _element.Id)));
+        manager.Define(nameof(InstanceVoidCutUtils.CanBeCutWithVoid)).Register(() => Variants.Value(InstanceVoidCutUtils.CanBeCutWithVoid(_element)));
+        manager.Define(nameof(InstanceVoidCutUtils.GetCuttingVoidInstances)).Register(() => Variants.Value(InstanceVoidCutUtils.GetCuttingVoidInstances(_element)));
+        manager.Define(nameof(PartUtils.GetAssociatedParts)).Register(() => Variants.Value(PartUtils.GetAssociatedParts(_element.Document, _element.Id, true, true)));
+        manager.Define(nameof(PartUtils.HasAssociatedParts)).Register(() => Variants.Value(PartUtils.HasAssociatedParts(_element.Document, _element.Id)));
+        manager.Define(nameof(DetailElementOrderUtils.IsDetailElement)).Register(() => Variants.Value(DetailElementOrderUtils.IsDetailElement(_element.Document, _element.Document.ActiveView, _element.Id)));
+        manager.Define("CanBeMirrored").Register(() => Variants.Value(ElementTransformUtils.CanMirrorElement(_element.Document, _element.Id)));
+        manager.Define("CanBeDeleted").Register(() => Variants.Value(DocumentValidation.CanDeleteElement(_element.Document, _element.Id)));
+        manager.Define(nameof(InstanceVoidCutUtils.AddInstanceVoidCut)).AsNotSupported();
+        manager.Define(nameof(InstanceVoidCutUtils.InstanceVoidCutExists)).AsNotSupported();
+        manager.Define(nameof(InstanceVoidCutUtils.RemoveInstanceVoidCut)).AsNotSupported();
+        manager.Define(nameof(ParameterFilterUtilities.IsParameterApplicable)).AsNotSupported();
+        manager.Define(nameof(SolidSolidCutUtils.AddCutBetweenSolids)).AsNotSupported();
+        manager.Define(nameof(SolidSolidCutUtils.RemoveCutBetweenSolids)).AsNotSupported();
+        manager.Define(nameof(SolidSolidCutUtils.CanElementCutElement)).AsNotSupported();
+        manager.Define(nameof(SolidSolidCutUtils.CutExistsBetweenElements)).AsNotSupported();
+        manager.Define(nameof(SolidSolidCutUtils.SplitFacesOfCuttingSolid)).AsNotSupported();
+        manager.Define(nameof(JoinGeometryUtils.AreElementsJoined)).AsNotSupported();
+        manager.Define(nameof(JoinGeometryUtils.IsCuttingElementInJoin)).AsNotSupported();
+        manager.Define(nameof(JoinGeometryUtils.JoinGeometry)).AsNotSupported();
+        manager.Define(nameof(JoinGeometryUtils.SwitchJoinOrder)).AsNotSupported();
+        manager.Define(nameof(JoinGeometryUtils.UnjoinGeometry)).AsNotSupported();
+        manager.Define("Copy").Map(nameof(ElementTransformUtils.CopyElement)).AsNotSupported();
+        manager.Define("Mirror").Map(nameof(ElementTransformUtils.MirrorElement)).AsNotSupported();
+        manager.Define("Move").Map(nameof(ElementTransformUtils.MoveElement)).AsNotSupported();
+        manager.Define("Rotate").Map(nameof(ElementTransformUtils.RotateElement)).AsNotSupported();
 
-        _ = nameof(ElementTransformUtils.CanMirrorElement);
-        manager.Register("CanBeMirrored", () => Variants.Value(ElementTransformUtils.CanMirrorElement(_element.Document, _element.Id)));
-
-        _ = nameof(DocumentValidation.CanDeleteElement);
-        manager.Register("CanBeDeleted", () => Variants.Value(DocumentValidation.CanDeleteElement(_element.Document, _element.Id)));
-
-#if REVIT2024_OR_GREATER
-        manager.Register(nameof(RebarBendingDetail.IsBendingDetail), () => Variants.Value(RebarBendingDetail.IsBendingDetail(_element)));
-
-        if (RebarBendingDetail.IsBendingDetail(_element))
-        {
-            manager.Register("GetBendingDetailHost", () => Variants.Value(RebarBendingDetail.GetHost(_element)));
-            manager.Register("GetBendingDetailPosition", () => Variants.Value(RebarBendingDetail.GetPosition(_element)));
-            manager.Register("GetBendingDetailRotation", () => Variants.Value(RebarBendingDetail.GetRotation(_element)));
-
-#if REVIT2025_OR_GREATER
-            manager.Register(nameof(RebarBendingDetail.IsRealisticBendingDetail), () => Variants.Value(RebarBendingDetail.IsRealisticBendingDetail(_element)));
-            manager.Register(nameof(RebarBendingDetail.IsSchematicBendingDetail), () => Variants.Value(RebarBendingDetail.IsSchematicBendingDetail(_element)));
-            manager.Register("GetBendingDetailHosts", () => Variants.Value(RebarBendingDetail.GetHosts(_element)));
-            manager.Register("GetBendingDetailTagRelativePosition", () => Variants.Value(RebarBendingDetail.GetTagRelativePosition(_element)));
-            manager.Register("GetBendingDetailTagRelativeRotation", () => Variants.Value(RebarBendingDetail.GetTagRelativeRotation(_element)));
-#endif
-        }
-#endif
-#if REVIT2025_OR_GREATER
-        manager.Register("IsMultiAlignSupported", () => Variants.Value(AnnotationMultipleAlignmentUtils.ElementSupportsMultiAlign(_element)));
-
-        if (AnnotationMultipleAlignmentUtils.ElementSupportsMultiAlign(_element))
-        {
-            manager.Register(nameof(AnnotationMultipleAlignmentUtils.GetAnnotationOutlineWithoutLeaders), () => Variants.Value(AnnotationMultipleAlignmentUtils.GetAnnotationOutlineWithoutLeaders(_element)));
-        }
-#endif
-#if REVIT2026_OR_GREATER
-        manager.Register(nameof(CoordinationModelLinkUtils.IsCoordinationModelInstance), () => Variants.Value(CoordinationModelLinkUtils.IsCoordinationModelInstance(_element.Document, _element)));
-        manager.Register(nameof(CoordinationModelLinkUtils.IsCoordinationModelType), () => Variants.Value(CoordinationModelLinkUtils.IsCoordinationModelType(_element.Document, _element)));
-#endif
-
-        RegisterNotSupportedExtensions(manager);
-    }
-
-    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-    private void RegisterNotSupportedExtensions(IExtensionManager manager)
-    {
-        manager.Register(nameof(InstanceVoidCutUtils.AddInstanceVoidCut), Variants.NotSupported);
-        manager.Register(nameof(InstanceVoidCutUtils.InstanceVoidCutExists), Variants.NotSupported);
-        manager.Register(nameof(InstanceVoidCutUtils.RemoveInstanceVoidCut), Variants.NotSupported);
-        manager.Register(nameof(ParameterFilterUtilities.IsParameterApplicable), Variants.NotSupported);
-        manager.Register(nameof(SolidSolidCutUtils.AddCutBetweenSolids), Variants.NotSupported);
-        manager.Register(nameof(SolidSolidCutUtils.RemoveCutBetweenSolids), Variants.NotSupported);
-        manager.Register(nameof(SolidSolidCutUtils.CanElementCutElement), Variants.NotSupported);
-        manager.Register(nameof(SolidSolidCutUtils.CutExistsBetweenElements), Variants.NotSupported);
-        manager.Register(nameof(SolidSolidCutUtils.SplitFacesOfCuttingSolid), Variants.NotSupported);
-        manager.Register(nameof(JoinGeometryUtils.AreElementsJoined), Variants.NotSupported);
-        manager.Register(nameof(JoinGeometryUtils.IsCuttingElementInJoin), Variants.NotSupported);
-        manager.Register(nameof(JoinGeometryUtils.JoinGeometry), Variants.NotSupported);
-        manager.Register(nameof(JoinGeometryUtils.SwitchJoinOrder), Variants.NotSupported);
-        manager.Register(nameof(JoinGeometryUtils.UnjoinGeometry), Variants.NotSupported);
-        
         if (_element.Document.ActiveView is not null && DetailElementOrderUtils.IsDetailElement(_element.Document, _element.Document.ActiveView, _element.Id))
         {
-            manager.Register(nameof(DetailElementOrderUtils.BringForward), Variants.NotSupported);
-            manager.Register(nameof(DetailElementOrderUtils.BringToFront), Variants.NotSupported);
-            manager.Register(nameof(DetailElementOrderUtils.SendBackward), Variants.NotSupported);
-            manager.Register(nameof(DetailElementOrderUtils.SendToBack), Variants.NotSupported);
+            manager.Define(nameof(DetailElementOrderUtils.BringForward)).AsNotSupported();
+            manager.Define(nameof(DetailElementOrderUtils.BringToFront)).AsNotSupported();
+            manager.Define(nameof(DetailElementOrderUtils.SendBackward)).AsNotSupported();
+            manager.Define(nameof(DetailElementOrderUtils.SendToBack)).AsNotSupported();
         }
-        
-        _ = nameof(ElementTransformUtils.CopyElement);
-        manager.Register("Copy", Variants.NotSupported);
 
-        _ = nameof(ElementTransformUtils.MirrorElement);
-        manager.Register("Mirror", Variants.NotSupported);
-
-        _ = nameof(ElementTransformUtils.MoveElement);
-        manager.Register("Move", Variants.NotSupported);
-
-        _ = nameof(ElementTransformUtils.RotateElement);
-        manager.Register("Rotate", Variants.NotSupported);
-
+#if REVIT2024_OR_GREATER
+        if (manager.Define(nameof(RebarBendingDetail.IsBendingDetail)).TryRegister(() => Variants.Value(RebarBendingDetail.IsBendingDetail(_element))))
+        {
+            manager.Define("GetBendingDetailHost").Register(() => Variants.Value(RebarBendingDetail.GetHost(_element)));
+            manager.Define("GetBendingDetailPosition").Register(() => Variants.Value(RebarBendingDetail.GetPosition(_element)));
+            manager.Define("GetBendingDetailRotation").Register(() => Variants.Value(RebarBendingDetail.GetRotation(_element)));
 #if REVIT2025_OR_GREATER
-        manager.Register(nameof(AnnotationMultipleAlignmentUtils.MoveWithAnchoredLeaders), Variants.NotSupported);
+            manager.Define(nameof(RebarBendingDetail.IsRealisticBendingDetail)).Register(() => Variants.Value(RebarBendingDetail.IsRealisticBendingDetail(_element)));
+            manager.Define(nameof(RebarBendingDetail.IsSchematicBendingDetail)).Register(() => Variants.Value(RebarBendingDetail.IsSchematicBendingDetail(_element)));
+            manager.Define("GetBendingDetailHosts").Register(() => Variants.Value(RebarBendingDetail.GetHosts(_element)));
+            manager.Define("GetBendingDetailTagRelativePosition").Register(() => Variants.Value(RebarBendingDetail.GetTagRelativePosition(_element)));
+            manager.Define("GetBendingDetailTagRelativeRotation").Register(() => Variants.Value(RebarBendingDetail.GetTagRelativeRotation(_element)));
+#endif
+        }
+#endif
+#if REVIT2025_OR_GREATER
+        manager.Define(nameof(AnnotationMultipleAlignmentUtils.MoveWithAnchoredLeaders)).AsNotSupported();
+
+        if (manager.Define("IsMultiAlignSupported").TryRegister(() => Variants.Value(AnnotationMultipleAlignmentUtils.ElementSupportsMultiAlign(_element))))
+        {
+            manager.Define(nameof(AnnotationMultipleAlignmentUtils.GetAnnotationOutlineWithoutLeaders)).Register(() => Variants.Value(AnnotationMultipleAlignmentUtils.GetAnnotationOutlineWithoutLeaders(_element)));
+        }
 #endif
 #if REVIT2026_OR_GREATER
-        if (CoordinationModelLinkUtils.IsCoordinationModelInstance(_element.Document, _element) || CoordinationModelLinkUtils.IsCoordinationModelType(_element.Document, _element))
-        {
-            _ = nameof(CoordinationModelLinkUtils.GetVisibilityOverride);
-            manager.Register("GetCoordinationModelVisibilityOverride", Variants.NotSupported);
+        var isCoordinationModelInstance = manager.Define(nameof(CoordinationModelLinkUtils.IsCoordinationModelInstance)).TryRegister(() => Variants.Value(CoordinationModelLinkUtils.IsCoordinationModelInstance(_element.Document, _element)));
+        var isCoordinationModelType = manager.Define(nameof(CoordinationModelLinkUtils.IsCoordinationModelType)).TryRegister(() => Variants.Value(CoordinationModelLinkUtils.IsCoordinationModelType(_element.Document, _element)));
 
-            _ = nameof(CoordinationModelLinkUtils.SetVisibilityOverride);
-            manager.Register("SetCoordinationModelVisibilityOverride", Variants.NotSupported);
-        }
-
-        if (CoordinationModelLinkUtils.IsCoordinationModelInstance(_element.Document, _element))
+        if (isCoordinationModelInstance || isCoordinationModelType)
         {
-            manager.Register(nameof(CoordinationModelLinkUtils.GetAllPropertiesForReferenceInsideCoordinationModel), Variants.NotSupported);
-            manager.Register(nameof(CoordinationModelLinkUtils.GetCategoryForReferenceInsideCoordinationModel), Variants.NotSupported);
-            manager.Register(nameof(CoordinationModelLinkUtils.GetVisibilityOverrideForReferenceInsideCoordinationModel), Variants.NotSupported);
-            manager.Register(nameof(CoordinationModelLinkUtils.SetVisibilityOverrideForReferenceInsideCoordinationModel), Variants.NotSupported);
+            manager.Define("GetCoordinationModelVisibilityOverride").Map(nameof(CoordinationModelLinkUtils.GetVisibilityOverride)).AsNotSupported();
+            manager.Define("SetCoordinationModelVisibilityOverride").Map(nameof(CoordinationModelLinkUtils.SetVisibilityOverride)).AsNotSupported();
+            
+            if (isCoordinationModelInstance)
+            {
+                manager.Define(nameof(CoordinationModelLinkUtils.GetAllPropertiesForReferenceInsideCoordinationModel)).AsNotSupported();
+                manager.Define(nameof(CoordinationModelLinkUtils.GetCategoryForReferenceInsideCoordinationModel)).AsNotSupported();
+                manager.Define(nameof(CoordinationModelLinkUtils.GetVisibilityOverrideForReferenceInsideCoordinationModel)).AsNotSupported();
+                manager.Define(nameof(CoordinationModelLinkUtils.SetVisibilityOverrideForReferenceInsideCoordinationModel)).AsNotSupported();
+            }
         }
 #endif
     }

@@ -29,23 +29,15 @@ public sealed class ModelPathDescriptor : Descriptor, IDescriptorExtension
 
     public void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(ModelPathUtils.ConvertModelPathToUserVisiblePath), () => Variants.Value(ModelPathUtils.ConvertModelPathToUserVisiblePath(_modelPath)));
-        manager.Register(nameof(TransmissionData.IsDocumentTransmitted), () => Variants.Value(TransmissionData.IsDocumentTransmitted(_modelPath)));
-        manager.Register(nameof(TransmissionData.DocumentIsNotTransmitted), () => Variants.Value(TransmissionData.DocumentIsNotTransmitted(_modelPath)));
-        manager.Register(nameof(TransmissionData.ReadTransmissionData), () => Variants.Value(TransmissionData.ReadTransmissionData(_modelPath)));
-        manager.Register(nameof(WorksharingUtils.GetUserWorksetInfo), () => Variants.Value(WorksharingUtils.GetUserWorksetInfo(_modelPath)));
-
-        RegisterNotSupportedExtensions(manager);
+        manager.Define(nameof(ModelPathUtils.ConvertModelPathToUserVisiblePath)).Register(() => Variants.Value(ModelPathUtils.ConvertModelPathToUserVisiblePath(_modelPath)));
+        manager.Define(nameof(TransmissionData.IsDocumentTransmitted)).Register(() => Variants.Value(TransmissionData.IsDocumentTransmitted(_modelPath)));
+        manager.Define(nameof(TransmissionData.DocumentIsNotTransmitted)).Register(() => Variants.Value(TransmissionData.DocumentIsNotTransmitted(_modelPath)));
+        manager.Define(nameof(TransmissionData.ReadTransmissionData)).Register(() => Variants.Value(TransmissionData.ReadTransmissionData(_modelPath)));
+        manager.Define(nameof(WorksharingUtils.GetUserWorksetInfo)).Register(() => Variants.Value(WorksharingUtils.GetUserWorksetInfo(_modelPath)));
+        manager.Define(nameof(ModelPathUtils.ConvertUserVisiblePathToModelPath)).AsNotSupported();
+        manager.Define(nameof(ModelPathUtils.IsValidUserVisibleFullServerPath)).AsNotSupported();
+        manager.Define(nameof(ModelPathUtils.ConvertCloudGUIDsToCloudPath)).AsNotSupported();
+        manager.Define("CreateNewLocal").Map(nameof(WorksharingUtils.CreateNewLocal)).AsNotSupported();
     }
     
-    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
-    private void RegisterNotSupportedExtensions(IExtensionManager manager)
-    {
-        _ = nameof(WorksharingUtils.CreateNewLocal);
-        manager.Register("CreateNewLocal", Variants.NotSupported);
-            
-        manager.Register(nameof(ModelPathUtils.ConvertUserVisiblePathToModelPath), Variants.NotSupported);
-        manager.Register(nameof(ModelPathUtils.IsValidUserVisibleFullServerPath), Variants.NotSupported);
-        manager.Register(nameof(ModelPathUtils.ConvertCloudGUIDsToCloudPath), Variants.NotSupported);
-    }
 }
