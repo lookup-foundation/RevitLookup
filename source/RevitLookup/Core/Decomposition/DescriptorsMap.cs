@@ -122,7 +122,6 @@ public static class DescriptorsMap
             AreaVolumeSettings value when type is null || type == typeof(AreaVolumeSettings) => new AreaVolumeSettingsDescriptor(value),
             Rebar value when type is null || type == typeof(Rebar) => new RebarDescriptor(value),
             RebarShape value when type is null || type == typeof(RebarShape) => new RebarShapeDescriptor(value),
-            SketchPlane value when type is null || type == typeof(SketchPlane) => new SketchPlaneDescriptor(value),
             CurveElement value when type is null || type == typeof(CurveElement) => new CurveElementDescriptor(value),
             GlobalParameter value when type is null || type == typeof(GlobalParameter) => new GlobalParameterDescriptor(value),
             ReferencePoint value when type is null || type == typeof(ReferencePoint) => new ReferencePointDescriptor(value),

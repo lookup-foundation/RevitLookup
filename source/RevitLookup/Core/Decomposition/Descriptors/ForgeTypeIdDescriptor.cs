@@ -18,7 +18,7 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class ForgeTypeIdDescriptor : Descriptor, IDescriptorResolver, IDescriptorExtension, IDescriptorExtension<Document>
+public sealed class ForgeTypeIdDescriptor : Descriptor, IDescriptorResolver, IDescriptorExtension
 {
     private readonly ForgeTypeId _typeId;
 
@@ -67,7 +67,12 @@ public sealed class ForgeTypeIdDescriptor : Descriptor, IDescriptorResolver, IDe
         manager.Register(nameof(SpecUtils.GetAllSpecs), () => Variants.Value(SpecUtils.GetAllSpecs()));
 #endif
 #if REVIT2024_OR_GREATER
-        manager.Register(nameof(ParameterUtils.DownloadParameterOptions), () => Variants.Value(ParameterUtils.DownloadParameterOptions(_typeId)));
+        manager.Register(nameof(ParameterUtils.DownloadParameter), Variants.NotSupported); //TODO slow
+        manager.Register(nameof(ParameterUtils.DownloadCompanyName), Variants.NotSupported); //TODO slow
+        manager.Register(nameof(ParameterUtils.DownloadParameterOptions), Variants.NotSupported); //TODO slow
+        // manager.Register(nameof(ParameterUtils.DownloadParameter), context => Variants.Value(ParameterUtils.DownloadParameter(context, new ParameterDownloadOptions(), _typeId)));
+        // manager.Register(nameof(ParameterUtils.DownloadCompanyName), context => Variants.Value(ParameterUtils.DownloadCompanyName(context, _typeId)));
+        // manager.Register(nameof(ParameterUtils.DownloadParameterOptions), () => Variants.Value(ParameterUtils.DownloadParameterOptions(_typeId)));
 #endif
 #if REVIT2026_OR_GREATER
         manager.Register(nameof(ParameterUtils.GetBuiltInParameterGroupTypeId), () => Variants.Value(ParameterUtils.GetBuiltInParameterGroupTypeId(_typeId)));
@@ -96,14 +101,6 @@ public sealed class ForgeTypeIdDescriptor : Descriptor, IDescriptorResolver, IDe
 
             return values.Consume();
         }
-    }
-
-    public void RegisterExtensions(IExtensionManager<Document> manager)
-    {
-#if REVIT2024_OR_GREATER
-        manager.Register(nameof(ParameterUtils.DownloadParameter), context => Variants.Value(ParameterUtils.DownloadParameter(context, new ParameterDownloadOptions(), _typeId)));
-        manager.Register(nameof(ParameterUtils.DownloadCompanyName), context => Variants.Value(ParameterUtils.DownloadCompanyName(context, _typeId)));
-#endif
     }
     
     // Indicates API methods that exist but cannot produce a read-only value in RevitLookup

@@ -255,7 +255,7 @@ public partial class ElementDescriptor : Descriptor, IDescriptorResolver, IDescr
         }
 #endif
 #if REVIT2025_OR_GREATER
-        manager.Register(nameof(AnnotationMultipleAlignmentUtils.ElementSupportsMultiAlign), () => Variants.Value(AnnotationMultipleAlignmentUtils.ElementSupportsMultiAlign(_element)));
+        manager.Register("IsMultiAlignSupported", () => Variants.Value(AnnotationMultipleAlignmentUtils.ElementSupportsMultiAlign(_element)));
 
         if (AnnotationMultipleAlignmentUtils.ElementSupportsMultiAlign(_element))
         {

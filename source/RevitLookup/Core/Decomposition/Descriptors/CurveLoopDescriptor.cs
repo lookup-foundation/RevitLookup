@@ -17,7 +17,7 @@ using Nice3point.Revit.Toolkit.External;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed partial class CurveLoopDescriptor : Descriptor, IDescriptorResolver, IDescriptorExtension, IContextMenuConnector
+public sealed partial class CurveLoopDescriptor : Descriptor, IDescriptorResolver, IDescriptorExtension, IDescriptorExtension<Document>, IContextMenuConnector
 {
     private readonly CurveLoop _curveLoop;
 
@@ -41,8 +41,24 @@ public sealed partial class CurveLoopDescriptor : Descriptor, IDescriptorResolve
     public void RegisterExtensions(IExtensionManager manager)
     {
 #if REVIT2022_OR_GREATER
-        _ = nameof(BoundaryValidation.IsValidHorizontalBoundary);
-        manager.Register("IsValidHorizontalBoundary", Variants.NotSupported);
+        manager.Register("IsValidHorizontalBoundary", () => Variants.Value(BoundaryValidation.IsValidHorizontalBoundary([_curveLoop])));
+#endif
+        RegisterNotSupportedExtensions(manager);
+    }
+
+    public void RegisterExtensions(IExtensionManager<Document> manager)
+    {
+#if REVIT2023_OR_GREATER
+        manager.Register(nameof(BoundaryValidation.IsValidBoundaryOnView), context => Variants.Value(BoundaryValidation.IsValidBoundaryOnView(context, context.ActiveView.Id, [_curveLoop])));
+#endif
+    }
+
+    // Indicates API methods that exist but cannot produce a read-only value in RevitLookup
+    private void RegisterNotSupportedExtensions(IExtensionManager manager)
+    {
+#if REVIT2023_OR_GREATER
+        _ = nameof(BoundaryValidation.IsValidBoundaryOnSketchPlane);
+        manager.Register("IsValidBoundaryOnSketchPlane", Variants.NotSupported);
 #endif
     }
 
