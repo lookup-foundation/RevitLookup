@@ -114,15 +114,15 @@ public sealed class EnumerableDescriptor : Descriptor, IDescriptorEnumerator, ID
             VoltageTypeSet enumerable => enumerable.IsEmpty,
             WireTypeSet enumerable => enumerable.IsEmpty,
             WireSet enumerable => enumerable.IsEmpty,
-            WireSizeSet enumerable => enumerable.IsEmpty,
             WireConduitTypeSet enumerable => enumerable.IsEmpty,
-            WireMaterialTypeSet enumerable => enumerable.IsEmpty,
             DistributionSysTypeSet enumerable => enumerable.IsEmpty,
-            GroundConductorSizeSet enumerable => enumerable.IsEmpty,
-            CorrectionFactorSet enumerable => enumerable.IsEmpty,
 #if !REVIT2027_OR_GREATER
             InsulationTypeSet enumerable => enumerable.IsEmpty,
             TemperatureRatingTypeSet enumerable => enumerable.IsEmpty,
+            WireSizeSet enumerable => enumerable.IsEmpty,
+            WireMaterialTypeSet enumerable => enumerable.IsEmpty,
+            GroundConductorSizeSet enumerable => enumerable.IsEmpty,
+            CorrectionFactorSet enumerable => enumerable.IsEmpty,
 #endif
 
             // Rendering
