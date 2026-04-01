@@ -60,7 +60,7 @@ public sealed partial class AboutViewModel : ObservableObject, IAboutViewModel
     public partial SoftwareUpdateState State { get; set; } = (SoftwareUpdateState) (-1);
 
     [ObservableProperty]
-    public partial Version? CurrentVersion { get; set; }
+    public partial Version CurrentVersion { get; set; }
 
     [ObservableProperty]
     public partial string? NewVersion { get; set; }
@@ -75,7 +75,7 @@ public sealed partial class AboutViewModel : ObservableObject, IAboutViewModel
     public partial string? ErrorMessage { get; set; }
 
     [ObservableProperty]
-    public partial string? Runtime { get; set; }
+    public partial string Runtime { get; set; }
 
     [RelayCommand]
     private async Task CheckUpdatesAsync()

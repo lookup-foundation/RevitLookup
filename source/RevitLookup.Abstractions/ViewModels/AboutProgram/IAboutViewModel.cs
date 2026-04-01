@@ -21,22 +21,22 @@ public interface IAboutViewModel
     /// <summary>
     ///     A new available version to download.
     /// </summary>
-    string NewVersion { get; set; }
+    string? NewVersion { get; set; }
     
     /// <summary>
     ///     The error message during updating.
     /// </summary>
-    string ErrorMessage { get; set; }
+    string? ErrorMessage { get; set; }
     
     /// <summary>
     ///     The URL to the release notes of the new version.
     /// </summary>
-    string ReleaseNotesUrl { get; set; }
+    string? ReleaseNotesUrl { get; set; }
     
     /// <summary>
     ///     The date of the latest check for updates.
     /// </summary>
-    string LatestCheckDate { get; set; }
+    string? LatestCheckDate { get; set; }
     
     /// <summary>
     ///     The current .NET version.
