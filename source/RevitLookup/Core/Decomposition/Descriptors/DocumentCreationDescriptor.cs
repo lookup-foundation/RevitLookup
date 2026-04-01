@@ -18,7 +18,9 @@ using Document = Autodesk.Revit.Creation.Document;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
+#pragma warning disable CS9113 // Parameter is unread.
 public sealed class DocumentCreationDescriptor(Document document) : Descriptor, IDescriptorExtension
+#pragma warning restore CS9113 // Parameter is unread.
 {
     public void RegisterExtensions(IExtensionManager manager)
     {
