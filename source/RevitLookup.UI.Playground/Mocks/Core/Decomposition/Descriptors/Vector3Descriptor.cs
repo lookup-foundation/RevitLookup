@@ -20,15 +20,10 @@ public sealed class Vector3Descriptor : Descriptor, IDescriptorResolver
     {
         return target switch
         {
-            nameof(Vector3.Equals) when parameters[0].ParameterType == typeof(Vector3) => ResolveVectorEquals,
+            nameof(Vector3.Equals) when parameters[0].ParameterType == typeof(Vector3) => () => Variants.Value(_vector3.Equals(Vector3.Zero), $"Vector-vector comparison"),
             nameof(Vector3.Equals) when parameters.Length == 1 => ResolveObjectEquals,
             _ => null
         };
-
-        IVariant ResolveVectorEquals()
-        {
-            return Variants.Value(_vector3.Equals(Vector3.Zero), $"Vector-vector comparison");
-        }
 
         [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
         IVariant ResolveObjectEquals()
