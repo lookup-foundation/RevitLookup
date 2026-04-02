@@ -43,9 +43,6 @@
 
     <!-- Core Dependencies -->
     <ItemGroup>
-        <!-- MVVM -->
-        <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2"/>
-
         <!-- Application Hosting -->
         <PackageVersion Include="Scrutor" Version="7.0.0"/>
         <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.5"/>
@@ -60,9 +57,9 @@
         <PackageVersion Include="Serilog.Sinks.Autodesk.Revit" Version="2.0.1"/>
         <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.5"/>
 
-        <!-- Data Utilities -->
-        <PackageVersion Include="Bogus" Version="35.6.5"/>
+        <!-- MVVM -->
         <PackageVersion Include="Riok.Mapperly" Version="4.3.1"/>
+        <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2"/>
 
         <!-- Build Automation -->
         <PackageVersion Include="Autodesk.PackageBuilder" Version="2.0.2"/>
@@ -80,18 +77,17 @@
 
         <!-- Testing -->
         <PackageVersion Include="TUnit" Version="1.22.6"/>
+        <PackageVersion Include="Bogus" Version="35.6.5"/>
         <PackageVersion Include="Shouldly" Version="4.3.0"/>
 
         <!-- System Dependencies -->
         <PackageVersion Include="System.Text.Json" Version="10.0.5"/>
-
-        <!-- Development Utilities -->
-        <PackageVersion Include="JetBrains.Annotations" Version="2025.2.4"/>
     </ItemGroup>
 
     <!-- Development Dependencies -->
     <ItemGroup>
         <GlobalPackageReference Include="Polyfill" Version="9.23.0"/>
+        <GlobalPackageReference Include="JetBrains.Annotations.Sources" Version="2025.2.4"/>
     </ItemGroup>
 
 </Project>

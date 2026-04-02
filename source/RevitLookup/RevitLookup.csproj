@@ -34,7 +34,6 @@
         <PackageReference Include="CommunityToolkit.Mvvm"/>
         <PackageReference Include="Microsoft.Extensions.Http"/>
         <PackageReference Include="ILRepack" PrivateAssets="all" IncludeAssets="build"/>
-        <PackageReference Include="JetBrains.Annotations" PrivateAssets="all"/>
     </ItemGroup>
 
     <ItemGroup>

@@ -14,7 +14,6 @@
         <PackageReference Include="ModularPipelines.DotNet"/>
         <PackageReference Include="Autodesk.PackageBuilder"/>
         <PackageReference Include="Microsoft.VisualStudio.SolutionPersistence"/>
-        <PackageReference Include="JetBrains.Annotations" PrivateAssets="all"/>
     </ItemGroup>
 
     <ItemGroup>

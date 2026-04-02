@@ -6,7 +6,6 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations"/>
-        <PackageReference Include="JetBrains.Annotations" PrivateAssets="all"/>
     </ItemGroup>
 
     <ItemGroup>
