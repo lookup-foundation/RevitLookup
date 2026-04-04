@@ -2,127 +2,133 @@
 
 # **2027.0.0**
 
-A new major RevitLookup update with official Revit 2027 support and a massive coverage for Revit API Utils 🎉
+Revit 2027 is here, and so is a massive update for RevitLookup!
 
-This release focuses on dramatically extending the number of API Utils members, adding new supported types, and improving the overall architecture.
+The Revit API has hundreds of static utility methods that were previously hard to find. We've now linked these "Utils" directly to the elements and types they affect. You can now see all related utility data for an object in one place, without having to search for static methods elsewhere.
 
 ## General
 
 - **Revit 2027** support.
 - **Enabled addin isolation** starting from Revit 2027. Finally, Autodesk fixed it.
-- **Event Monitor** refactored, improved performance, event discovery, reduced reflection overhead.
+- **Async startup** makes Revit to continue loading while RevitLookup initializes in the background.
+- **Event Monitor** is now faster when inspecting incoming events.
 
 ## API Coverage
 
-This release brings the largest expansion for Revit API Utils coverage. Hundreds of new members are now visible directly in the inspector.
+This release covers most of the Revit API Utils methods. Hundreds of new members are now visible directly in the inspector.
 
-### New descriptor types
+### New supported types
 
-New types can now be inspected:
+- `AssemblyInstance`
+- `Connector`
+- `DefinitionFile`
+- `DocumentCreation`
+- `Duct`
+- `EdgeEndPoint`
+- `ExternalDefinition`
+- `ExternalResourceReference`
+- `ExternalResourceType`
+- `FailureDefinitionAccessor`
+- `FamilySymbol`
+- `GeometryObject`
+- `GlobalParameter`
+- `ModelPath`
+- `PointCloudFilter`
+- `Rebar`
+- `RebarShape`
+- `ReferencePoint`
+- `SketchPlane`
+- `Subelement`
+- `Surface`
+- `TriangulationInterface`
+- `Units`
+- `WallType`
 
-- **`AssemblyInstance`** — assembly instance members and associated views.
-- **`Connector`** — MEP connector properties and mechanical utilities.
-- **`DefinitionFile`** — shared parameter file definitions.
-- **`DocumentCreation`** — document creation API members.
-- **`Duct`** — duct element properties and mechanical utilities.
-- **`EdgeEndPoint`** — edge end point properties and vertex utilities.
-- **`ExternalDefinition`** — external shared parameter definition details.
-- **`ExternalResourceReference`** — external resource reference metadata.
-- **`ExternalResourceType`** — external resource type metadata.
-- **`FailureDefinitionAccessor`** — failure definition details.
-- **`FamilySymbol`** — family symbol members and activation utilities.
-- **`GeometryObject`** — geometry object validation and tagging support.
-- **`GlobalParameter`** — global parameter properties and values.
-- **`ModelPath`** — model path information and transmission data.
-- **`PointCloudFilter`** — point cloud filter properties.
-- **`Rebar`** — rebar element properties and shape parameters.
-- **`RebarShape`** — rebar shape parameters and bend data.
-- **`ReferencePoint`** — reference point properties for adaptive components.
-- **`SketchPlane`** — sketch plane members and boundary validation.
-- **`Subelement`** — subelement properties and geometry access.
-- **`Surface`** — surface geometry properties.
-- **`TriangulationInterface`** — triangulation and quad conversion utilities.
-- **`Units`** — unit formatting and parsing members.
-- **`WallType`** — wall type compound structure and properties.
+### Application extensions
+
+- `FormulaManager.GetFunctions`
+- `FormulaManager.GetOperators`
+- `PointCloudEngineRegistry.GetSupportedEngines`
+- `OptionalFunctionalityUtils.IsDGNExportAvailable`
+- `OptionalFunctionalityUtils.IsDGNImportLinkAvailable`
+- `OptionalFunctionalityUtils.IsDWFExportAvailable`
+- `OptionalFunctionalityUtils.IsDWGExportAvailable`
+- `OptionalFunctionalityUtils.IsDWGImportLinkAvailable`
+- `OptionalFunctionalityUtils.IsDXFExportAvailable`
+- `OptionalFunctionalityUtils.IsFBXExportAvailable`
+- `OptionalFunctionalityUtils.IsGraphicsAvailable`
+- `OptionalFunctionalityUtils.IsIFCAvailable`
+- `OptionalFunctionalityUtils.IsNavisworksExporterAvailable`
+- `OptionalFunctionalityUtils.IsSATImportLinkAvailable`
+- `OptionalFunctionalityUtils.IsShapeImporterAvailable`
+- `OptionalFunctionalityUtils.IsSKPImportLinkAvailable`
+- `OptionalFunctionalityUtils.Is3DMImportLinkAvailable`
+- `OptionalFunctionalityUtils.IsOBJImportLinkAvailable`
+- `OptionalFunctionalityUtils.IsSTLImportLinkAvailable`
+- `OptionalFunctionalityUtils.IsSTEPImportLinkAvailable`
+- `OptionalFunctionalityUtils.IsMaterialLibraryAvailable`
+- `ModelPathUtils.GetAllCloudRegions`
+
+### UIApplication extensions
+
+- `UIThemeManager.GetThemeName`
+
+### Document extensions
+
+- `Document.GetDocumentVersion`
+- `Document.GetUnusedElements`
+- `Document.GetAllUnusedElements`
+- `GlobalParametersManager.AreGlobalParametersAllowed`
+- `GlobalParametersManager.GetGlobalParametersOrdered`
+- `UpdaterRegistry.GetRegisteredUpdaterInfos`
+- `CoordinationModelLinkUtils.GetAllCoordinationModelInstanceIds`
+- `CoordinationModelLinkUtils.GetAllCoordinationModelTypeIds`
 
 ### Element extensions
 
-New extensions added to `Element`, available for every element in the model:
-
-- `JoinGeometryUtils.GetJoinedElements`
-- `SolidSolidCutUtils.GetCuttingSolids`
-- `SolidSolidCutUtils.GetSolidsBeingCut`
-- `SolidSolidCutUtils.IsAllowedForSolidCut`
-- `SolidSolidCutUtils.IsElementFromAppropriateContext`
-- `WorksharingUtils.GetCheckoutStatus`
-- `WorksharingUtils.GetWorksharingTooltipInfo`
-- `WorksharingUtils.GetModelUpdatesStatus`
-- `PartUtils.GetAssociatedParts`
-- `PartUtils.HasAssociatedParts`
+- `RebarBendingDetail.IsBendingDetail`
+- `RebarBendingDetail.GetHost`
+- `RebarBendingDetail.GetPosition`
+- `RebarBendingDetail.GetRotation`
+- `RebarBendingDetail.IsRealisticBendingDetail`
+- `RebarBendingDetail.IsSchematicBendingDetail`
+- `RebarBendingDetail.GetHosts`
+- `RebarBendingDetail.GetTagRelativePosition`
+- `RebarBendingDetail.GetTagRelativeRotation`
+- `AnnotationMultipleAlignmentUtils.IsMultiAlignSupported`
+- `AnnotationMultipleAlignmentUtils.GetAnnotationOutlineWithoutLeaders`
+- `CoordinationModelLinkUtils.IsCoordinationModelInstance`
+- `CoordinationModelLinkUtils.IsCoordinationModelType`
 - `DirectContext3DDocumentUtils.IsADirectContext3DHandleInstance`
 - `DirectContext3DDocumentUtils.IsADirectContext3DHandleType`
-- `ElementIntersectsFilter.IsCategorySupported`
-- `ElementIntersectsFilter.IsElementSupported`
 - `ExportUtils.GetExportId`
 - `ExternalFileUtils.GetExternalFileReference`
 - `ExternalFileUtils.IsExternalFileReference`
 - `InstanceVoidCutUtils.CanBeCutWithVoid`
 - `InstanceVoidCutUtils.GetCuttingVoidInstances`
-- `DetailElementOrderUtils.IsDetailElement`
-- `ElementTransformUtils.CanMirrorElement`
-- `DocumentValidation.CanDeleteElement`
-- `RebarBendingDetail.IsBendingDetail`
-
-### Document extensions
-
-New extensions added to `Document`:
-
-- `Document.GetDocumentVersion`
-- `Document.GetUnusedElements`
-- `Document.GetAllUnusedElements`
-- `AssemblyCodeTable.GetAssemblyCodeTable`
-- `ExternalFileUtils.GetAllExternalFileReferences`
-- `ExternalResourceUtils.GetAllExternalResourceReferences`
-- `GlobalParametersManager.AreGlobalParametersAllowed`
-- `GlobalParametersManager.GetGlobalParametersOrdered`
-- `KeynoteTable.GetKeynoteTable`
-- `UpdaterRegistry.GetRegisteredUpdaterInfos`
-- `LightFamily.GetLightFamily`
-- `FamilySizeTableManager.GetFamilySizeTableManager`
-- `ExportUtils.GetGBXMLDocumentId`
-- `AnalyticalToPhysicalAssociationManager.GetAnalyticalToPhysicalAssociationManager`
-- `CoordinationModelLinkUtils.GetAllCoordinationModelInstanceIds`
-- `CoordinationModelLinkUtils.GetAllCoordinationModelTypeIds`
-
-### Category extensions
-
-New extensions added to `Category`:
-
-- `DirectContext3DDocumentUtils.IsADirectContext3DHandleCategory`
-- `DirectContext3DDocumentUtils.GetDirectContext3DHandleInstances`
-- `DirectContext3DDocumentUtils.GetDirectContext3DHandleTypes`
-- `ParameterFilterUtilities.GetAllFilterableCategories`
-- `ParameterFilterUtilities.GetFilterableParametersInCommon`
-- `SSEPointVisibilitySettings.GetVisibility`
 
 ### FamilyInstance extensions
 
-New extensions added to `FamilyInstance`:
-
+- `StructuralFramingUtils.CanHaveStructuralSection`
+- `StructuralFramingUtils.GetSectionTypeId`
 - `AdaptiveComponentInstanceUtils.IsAdaptiveComponentInstance`
-- `AdaptiveComponentInstanceUtils.GetInstancePlacementPointElementRefIds`
-- `AdaptiveComponentInstanceUtils.GetInstancePointElementRefIds`
-- `AdaptiveComponentInstanceUtils.GetInstanceShapeHandlePointElementRefIds`
-- `AdaptiveComponentInstanceUtils.HasAdaptiveFamilySymbol`
-- `AdaptiveComponentInstanceUtils.IsInstanceFlipped`
-- `MassLevelData.IsMassFamilyInstance`
-- `MassInstanceUtils.GetGrossFloorArea`
-- `MassInstanceUtils.GetGrossSurfaceArea`
-- `MassInstanceUtils.GetGrossVolume`
+- `AdaptiveComponentInstanceUtils.GetInstancePlacementPointElementIds`
+- `AdaptiveComponentInstanceUtils.GetInstancePointElementIds`
+- `MassInstanceUtils.IsMassInstance`
+
+### Family extensions
+
+- `LoadedFamilyIntegrityCheck.CheckFamily`
+- `AdaptiveComponentFamilyUtils.IsAdaptiveComponentFamily`
+- `AdaptiveComponentFamilyUtils.GetNumberOfAdaptivePoints`
+- `AdaptiveComponentFamilyUtils.GetNumberOfPlacementPoints`
+- `AdaptiveComponentFamilyUtils.GetNumberOfShapeHandlePoints`
+
+### View extensions
+
+- `ReferenceableViewUtils.GetReferencedViewId`
 
 ### ForgeTypeId extensions
-
-`ForgeTypeId` now exposes a comprehensive set of unit, spec, parameter and label utilities:
 
 - `LabelUtils.GetLabelForUnit`
 - `LabelUtils.GetLabelForSpec`
@@ -130,46 +136,33 @@ New extensions added to `FamilyInstance`:
 - `LabelUtils.GetLabelForGroup`
 - `LabelUtils.GetLabelForDiscipline`
 - `LabelUtils.GetLabelForBuiltInParameter`
-- `UnitUtils.IsUnit`
-- `UnitUtils.IsSymbol`
 - `UnitUtils.GetAllUnits`
+- `UnitUtils.GetAllDisciplines`
+- `UnitUtils.GetAllMeasurableSpecs`
 - `UnitUtils.GetTypeCatalogStringForSpec`
 - `UnitUtils.GetTypeCatalogStringForUnit`
 - `UnitUtils.GetValidUnits`
 - `UnitUtils.IsValidUnit`
-- `UnitUtils.IsMeasurableSpec`
-- `UnitUtils.GetDiscipline`
-- `UnitUtils.GetAllDisciplines`
-- `UnitUtils.GetAllMeasurableSpecs`
-- `SpecUtils.IsSpec`
-- `SpecUtils.IsValidDataType`
 - `SpecUtils.GetAllSpecs`
-- `ParameterUtils.IsBuiltInParameter`
-- `ParameterUtils.IsBuiltInGroup`
-- `ParameterUtils.GetBuiltInParameter`
+- `SpecUtils.IsValidDataType`
 - `ParameterUtils.GetAllBuiltInParameters`
 - `ParameterUtils.GetAllBuiltInGroups`
-- `ParameterUtils.DownloadParameterOptions`
+- `ParameterUtils.GetBuiltInParameter`
 - `ParameterUtils.GetBuiltInParameterGroupTypeId`
-
-### ModelPath extensions
-
-- `ModelPathUtils.ConvertModelPathToUserVisiblePath`
-- `TransmissionData.IsDocumentTransmitted`
-- `TransmissionData.DocumentIsNotTransmitted`
-- `TransmissionData.ReadTransmissionData`
-- `WorksharingUtils.GetUserWorksetInfo`
 
 ## Development
 
-- Migrated application startup and shutdown to fully async implementation.
-- Rewrote external events to use `ExternalEvent` source generator.
-- Extracted shared service configuration into a new `RevitLookup.ServiceDefaults` project.
-- Migrated MVVM from partial fields to partial properties.
-- Replaced Markup converters with converter factories.
-- Refactored `UiOrchestratorService` and event subscription model for better performance.
-- Added `RevitLookup.ServiceDefaults` project for shared host configuration between Revit and Playground environments.
-- Added unit tests for Revit API inheritance report generation and static method coverage.
+- Rewrote external events using the `[ExternalEvent]` source generator.
+- Refactored the decomposition architecture to use the new extensions' syntax.
+- Refactored `UiOrchestratorService`, removed extra memory allocations.
+- Added utils to unify object decomposition and member evaluation.
+- Added `ServiceDefaults` shared project with host configurations.
+- Added unit tests for Revit API inheritance and static method coverage.
+- Migrated application startup and shutdown to async implementation.
+- Migrated MVVM properties to the new CommunityToolkit partial property syntax.
+- Optimized descriptor mapping, significantly reducing overhead when analyzing complex object trees.
+- Optimized the event subscription model to save memory and keep the UI responsive.
+- Optimized UI converters to Avalonia-like style.
 
 # 2025-07-26 **2026.0.1**
 
@@ -188,7 +181,7 @@ A new minor release with a few bug fixes and improvements.
 
 A new major RevitLookup update with official Revit 2026 support and a lot of enhancements 🎉
 
-This release focuses on performance, a renewed UI, expanded functionality, redesigned application architecture, clearer separation of core components and user flow improvements. Let's move to the details.
+This release focuses on performance, a renewed UI, expanded functionality, redesigned application architecture, clearer separation of core components, and user flow improvements. Let's move to the details.
 
 ## General
 
@@ -526,7 +519,7 @@ objects that constitute your models.
 This release includes comprehensive Geometry Visualization capabilities, enabling users to visualize various geometry objects directly within the RevitLookup interface.
 
 In Revit, geometry is at the core of every model.
-Whether you are dealing with simple shapes or intricate structures, having the ability to visualize geometric elements can significantly improve your workflow, analysis and
+Whether you are dealing with simple shapes or intricate structures, having the ability to visualize geometric elements can significantly improve your workflow, analysis, and
 understanding of the BIM.
 
 To illustrate the power of these visualization capabilities, here's a glimpse of the geometric objects you can now explore directly within RevitLookup:
@@ -1354,12 +1347,12 @@ to include previous versions in the installer
 # 2021-10-28 **2022.0.1.6**
 
 integrated pull request [#107](https://github.com/jeremytammik/RevitLookup/pull/107) by Roman @Nice3point
-to rename Build, fix hello world version and move version number into csproj
+to rename Build, fix hello world version, and move version number into csproj
 
 # 2021-10-28 **2022.0.1.4**
 
 integrated pull request [#105](https://github.com/jeremytammik/RevitLookup/pull/105) by Roman @Nice3point
-to update badges, consolidate version number management, clean up builder and remove gitlab CI
+to update badges, consolidate version number management, clean up builder, and remove gitlab CI
 
 # 2021-10-28 **2022.0.1.3**
 
@@ -1626,7 +1619,7 @@ incremented copyright year to 2018
 
 # 2018-01-05 **2018.0.0.5**
 
-readme enhancements: badges, installer and updated link to MSI installer
+readme enhancements: badges, installer, and updated link to MSI installer
 
 # 2017-08-28 **2018.0.0.3**
 
@@ -1636,7 +1629,7 @@ switch target platform to.Net 4.6 and replace Revit 2017 NuGet package by Revit 
 # 2017-06-05 **2018.0.0.1**
 
 merged pull request [#34](https://github.com/jeremytammik/RevitLookup/pull/34) from @CADBIMDeveloper:
-annotative family instance geometry, element enumerations instead of ids, parameter names and byte property values
+annotative family instance geometry, element enumerations instead of ids, parameter names, and byte property values
 
 # 2017-04-21 **2018.0.0.0**
 
@@ -1674,7 +1667,7 @@ fixing bugs initialising type and opening background documents
 # 2017-03-02 **2017.0.0.18**
 
 merged pull request [#27](https://github.com/jeremytammik/RevitLookup/pull/27) from @CADBIMDeveloper
-to display category BuiltInCategory, nullable double properties and empty lists
+to display category BuiltInCategory, nullable double properties, and empty lists
 
 # 2017-02-21 **2017.0.0.17**
 
@@ -1844,7 +1837,7 @@ double checked that this version corresponds with florian's
 # 2014-01-27 **2014.0.0.7**
 
 merged pull request from FlorianSchmid of SOFiSTiK:
-extended (added) snooping of geometry, FormatOptions and RevitLinkInstances plus some fixes of compiler errors/warnings; bumped copyright year from 2013 to 2014
+extended (added) snooping of geometry, FormatOptions, and RevitLinkInstances plus some fixes of compiler errors/warnings; bumped copyright year from 2013 to 2014
 
 # 2014-01-11 **2014.0.0.6**
 
