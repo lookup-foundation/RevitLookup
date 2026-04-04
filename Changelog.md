@@ -46,8 +46,6 @@ This release covers most of the Revit API Utils methods. Hundreds of new members
 
 ### Application extensions
 
-- `FormulaManager.GetFunctions`
-- `FormulaManager.GetOperators`
 - `PointCloudEngineRegistry.GetSupportedEngines`
 - `OptionalFunctionalityUtils.IsDGNExportAvailable`
 - `OptionalFunctionalityUtils.IsDGNImportLinkAvailable`
@@ -68,24 +66,35 @@ This release covers most of the Revit API Utils methods. Hundreds of new members
 - `OptionalFunctionalityUtils.IsSTEPImportLinkAvailable`
 - `OptionalFunctionalityUtils.IsMaterialLibraryAvailable`
 - `ModelPathUtils.GetAllCloudRegions`
-
-### UIApplication extensions
-
 - `UIThemeManager.GetThemeName`
+- `LabelUtils.GetFailureSeverityName`
+- `LabelUtils.GetStructuralSectionShapeName`
 
 ### Document extensions
 
-- `Document.GetDocumentVersion`
-- `Document.GetUnusedElements`
-- `Document.GetAllUnusedElements`
 - `GlobalParametersManager.AreGlobalParametersAllowed`
 - `GlobalParametersManager.GetGlobalParametersOrdered`
+- `ExportUtils.GetGBXMLDocumentId`
 - `UpdaterRegistry.GetRegisteredUpdaterInfos`
 - `CoordinationModelLinkUtils.GetAllCoordinationModelInstanceIds`
 - `CoordinationModelLinkUtils.GetAllCoordinationModelTypeIds`
+- `ExternalFileUtils.GetAllExternalFileReferences`
+- `ExternalResourceUtils.GetAllExternalResourceReferences`
+- `AssemblyCodeTable.GetAssemblyCodeTable`
+- `KeynoteTable.GetKeynoteTable`
 
 ### Element extensions
 
+- `DirectContext3DDocumentUtils.IsADirectContext3DHandleInstance`
+- `DirectContext3DDocumentUtils.IsADirectContext3DHandleType`
+- `ElementIntersectsFilter.IsCategorySupported`
+- `ElementIntersectsFilter.IsElementSupported`
+- `ExportUtils.GetExportId`
+- `ExternalFileUtils.GetExternalFileReference`
+- `ExternalFileUtils.IsExternalFileReference`
+- `InstanceVoidCutUtils.CanBeCutWithVoid`
+- `InstanceVoidCutUtils.GetCuttingVoidInstances`
+- `DetailElementOrderUtils.IsDetailElement`
 - `RebarBendingDetail.IsBendingDetail`
 - `RebarBendingDetail.GetHost`
 - `RebarBendingDetail.GetPosition`
@@ -99,22 +108,146 @@ This release covers most of the Revit API Utils methods. Hundreds of new members
 - `AnnotationMultipleAlignmentUtils.GetAnnotationOutlineWithoutLeaders`
 - `CoordinationModelLinkUtils.IsCoordinationModelInstance`
 - `CoordinationModelLinkUtils.IsCoordinationModelType`
-- `DirectContext3DDocumentUtils.IsADirectContext3DHandleInstance`
-- `DirectContext3DDocumentUtils.IsADirectContext3DHandleType`
-- `ExportUtils.GetExportId`
-- `ExternalFileUtils.GetExternalFileReference`
-- `ExternalFileUtils.IsExternalFileReference`
-- `InstanceVoidCutUtils.CanBeCutWithVoid`
-- `InstanceVoidCutUtils.GetCuttingVoidInstances`
+
+### ElementType extensions
+
+- `CoordinationModelLinkUtils.GetCoordinationModelTypeData`
+- `CoordinationModelLinkUtils.GetTransparencyOverride`
+- `RebarCrankTypeUtils.GetCrankLengthMultiplier`
+- `RebarCrankTypeUtils.GetCrankOffsetMultiplier`
+- `RebarCrankTypeUtils.GetCrankRatio`
+- `RebarSpliceTypeUtils.GetLapLengthMultiplier`
+- `RebarSpliceTypeUtils.GetShiftOption`
+- `RebarSpliceTypeUtils.GetStaggerLengthMultiplier`
 
 ### FamilyInstance extensions
 
-- `StructuralFramingUtils.CanHaveStructuralSection`
-- `StructuralFramingUtils.GetSectionTypeId`
-- `AdaptiveComponentInstanceUtils.IsAdaptiveComponentInstance`
-- `AdaptiveComponentInstanceUtils.GetInstancePlacementPointElementIds`
-- `AdaptiveComponentInstanceUtils.GetInstancePointElementIds`
-- `MassInstanceUtils.IsMassInstance`
+- `MassLevelData.IsMassFamilyInstance`
+- `MassInstanceUtils.GetMassLevelDataIds`
+- `MassInstanceUtils.GetMassLevelIds`
+- `MassInstanceUtils.GetGrossFloorArea`
+- `MassInstanceUtils.GetGrossSurfaceArea`
+- `MassInstanceUtils.GetGrossVolume`
+- `MassInstanceUtils.GetJoinedElementIds`
+- `StructuralSectionUtils.GetStructuralSection`
+- `StructuralSectionUtils.GetStructuralElementDefinitionData`
+- `AdaptiveComponentInstanceUtils.GetInstancePointElementRefIds`
+- `AdaptiveComponentInstanceUtils.GetInstanceShapeHandlePointElementRefIds`
+- `AdaptiveComponentInstanceUtils.HasAdaptiveFamilySymbol`
+- `AdaptiveComponentInstanceUtils.IsInstanceFlipped`
+- `StructuralFramingUtils.CanFlipEnds`
+- `StructuralFramingUtils.IsJoinAllowedAtEnd`
+
+### Family extensions
+
+- `FamilyUtils.GetProfileSymbols`
+- `FamilyUtils.FamilyCanConvertToFaceHostBased`
+- `AdaptiveComponentFamilyUtils.IsAdaptiveComponentFamily`
+- `AdaptiveComponentFamilyUtils.GetNumberOfAdaptivePoints`
+- `AdaptiveComponentFamilyUtils.GetNumberOfPlacementPoints`
+- `AdaptiveComponentFamilyUtils.GetNumberOfShapeHandlePoints`
+- `LoadedFamilyIntegrityCheck.CheckFamily`
+
+### View extensions
+
+- `ReferenceableViewUtils.GetReferencedViewId`
+- `View.GetInstances`
+
+### Category extensions
+
+- `SSEPointVisibilitySettings.GetVisibility`
+- `DirectContext3DDocumentUtils.IsADirectContext3DHandleCategory`
+- `DirectContext3DDocumentUtils.GetDirectContext3DHandleInstances`
+- `DirectContext3DDocumentUtils.GetDirectContext3DHandleTypes`
+- `ParameterFilterUtilities.GetAllFilterableCategories`
+- `ParameterFilterUtilities.GetFilterableParametersInCommon`
+
+### CurveElement extensions
+
+- `CurveByPointsUtils.GetHostFace`
+- `CurveByPointsUtils.GetProjectionType`
+- `CurveByPointsUtils.GetSketchOnSurface`
+
+### ReferencePoint extensions
+
+- `AdaptiveComponentFamilyUtils.IsAdaptivePoint`
+- `AdaptiveComponentFamilyUtils.IsAdaptivePlacementPoint`
+- `AdaptiveComponentFamilyUtils.IsAdaptiveShapeHandlePoint`
+- `AdaptiveComponentFamilyUtils.GetPlacementNumber`
+- `AdaptiveComponentFamilyUtils.GetPointConstraintType`
+- `AdaptiveComponentFamilyUtils.GetPointOrientationType`
+
+### GeometryObject extensions
+
+- `ExternallyTaggedGeometryValidation.IsNonSolid`
+- `ExternallyTaggedGeometryValidation.IsSolid`
+- `ExternallyTaggedGeometryValidation.LacksSubnodes`
+
+### ForgeTypeId extensions
+
+- `SpecUtils.IsValidDataType`
+- `UnitUtils.IsValidUnit`
+- `UnitUtils.GetDiscipline`
+- `UnitUtils.GetValidUnits`
+- `UnitUtils.GetAllUnits`
+- `UnitUtils.GetAllMeasurableSpecs`
+- `UnitUtils.GetAllDisciplines`
+- `SpecUtils.GetAllSpecs`
+- `UnitUtils.GetTypeCatalogStringForSpec`
+- `UnitUtils.GetTypeCatalogStringForUnit`
+- `ParameterUtils.GetBuiltInParameter`
+- `ParameterUtils.GetAllBuiltInParameters`
+- `ParameterUtils.GetAllBuiltInGroups`
+- `ParameterUtils.GetBuiltInParameterGroupTypeId`
+- `ParameterUtils.DownloadParameterOptions`
+- `ParameterUtils.DownloadParameter`
+- `ParameterUtils.DownloadCompanyName`
+
+### Solid extensions
+
+- `SolidUtils.ComputeIsGeometricallyClosed`
+- `SolidUtils.ComputeIsTopologicallyClosed`
+- `SolidUtils.TessellateSolidOrShell`
+
+### Other extensions
+
+- `AssemblyViewUtils.AcquireAssemblyViews`
+- `FabricationUtils.ValidateConnectivity`
+- `PlumbingUtils.HasOpenConnector`
+- `RebarSpliceUtils.GetSpliceChain`
+- `RebarShapeParameters.GetAllRebarShapeParameters`
+- `RebarShapeParameters.IsValidExternalDefinition`
+- `RebarShapeParameters.GetElementIdForExternalDefinition`
+- `RebarShapeParameters.GetOrCreateElementIdForExternalDefinition`
+- `ExternalResourceServiceUtils.GetServersByType`
+- `ExportUtils.GetNurbsSurfaceDataForSurface`
+- `FacetingUtils.ConvertTrianglesToQuads`
+- `SolidUtils.FindAllEdgeEndPointsAtVertex`
+- `ColorRepresentationUtils.GetColorName`
+- `CoordinationModelLinkUtils.IsCoordinationModelInstance`
+- `CoordinationModelLinkUtils.IsCoordinationModelType`
+- `AnnotationMultipleAlignmentUtils.ElementSupportsMultiAlign`
+- `AnnotationMultipleAlignmentUtils.GetAnnotationOutlineWithoutLeaders`
+
+### FamilyInstance extensions
+
+- `StructuralSectionUtils.GetStructuralSection`
+- `StructuralSectionUtils.GetStructuralElementDefinitionData`
+- `AdaptiveComponentInstanceUtils.GetInstancePointElementRefIds`
+- `AdaptiveComponentInstanceUtils.GetInstanceShapeHandlePointElementRefIds`
+- `AdaptiveComponentInstanceUtils.HasAdaptiveFamilySymbol`
+- `AdaptiveComponentInstanceUtils.IsInstanceFlipped`
+- `MassLevelData.IsMassFamilyInstance`
+- `MassInstanceUtils.GetMassGrossFloorArea`
+- `MassInstanceUtils.GetMassGrossSurfaceArea`
+- `MassInstanceUtils.GetMassGrossVolume`
+- `MassInstanceUtils.GetMassJoinedElementIds`
+- `MassInstanceUtils.GetMassLevelDataIds`
+- `MassInstanceUtils.GetMassLevelIds`
+- `StructuralFramingUtils.CanFlipFramingEnds`
+- `StructuralFramingUtils.IsFramingJoinAllowedAtEnd`
+- `StructuralFramingUtils.CanSetFramingEndReference`
+- `StructuralFramingUtils.GetFramingEndReference`
 
 ### Family extensions
 
@@ -127,28 +260,7 @@ This release covers most of the Revit API Utils methods. Hundreds of new members
 ### View extensions
 
 - `ReferenceableViewUtils.GetReferencedViewId`
-
-### ForgeTypeId extensions
-
-- `LabelUtils.GetLabelForUnit`
-- `LabelUtils.GetLabelForSpec`
-- `LabelUtils.GetLabelForSymbol`
-- `LabelUtils.GetLabelForGroup`
-- `LabelUtils.GetLabelForDiscipline`
-- `LabelUtils.GetLabelForBuiltInParameter`
-- `UnitUtils.GetAllUnits`
-- `UnitUtils.GetAllDisciplines`
-- `UnitUtils.GetAllMeasurableSpecs`
-- `UnitUtils.GetTypeCatalogStringForSpec`
-- `UnitUtils.GetTypeCatalogStringForUnit`
-- `UnitUtils.GetValidUnits`
-- `UnitUtils.IsValidUnit`
-- `SpecUtils.GetAllSpecs`
-- `SpecUtils.IsValidDataType`
-- `ParameterUtils.GetAllBuiltInParameters`
-- `ParameterUtils.GetAllBuiltInGroups`
-- `ParameterUtils.GetBuiltInParameter`
-- `ParameterUtils.GetBuiltInParameterGroupTypeId`
+- `View.GetInstances`
 
 ## Development
 
