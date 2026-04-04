@@ -28,9 +28,9 @@ public sealed class FamilyDescriptor(Family family) : ElementDescriptor(family)
     public override void RegisterExtensions(IExtensionManager manager)
     {
         manager.Define(nameof(FamilySizeTableManager.GetFamilySizeTableManager)).Register(() => Variants.Value(FamilySizeTableManager.GetFamilySizeTableManager(family.Document, family.Id)));
-        manager.Define("CanBeConvertedToFaceHostBased").Register(() => Variants.Value(FamilyUtils.FamilyCanConvertToFaceHostBased(family.Document, family.Id)));
         manager.Define(nameof(FamilyUtils.GetProfileSymbols)).Register(RegisterProfileSymbols);
         manager.Define(nameof(LoadedFamilyIntegrityCheck.CheckFamily)).Register(() => Variants.Value(LoadedFamilyIntegrityCheck.CheckFamily(family.Document, family.Id)));
+        manager.Define("CanBeConvertedToFaceHostBased").Register(() => Variants.Value(FamilyUtils.FamilyCanConvertToFaceHostBased(family.Document, family.Id)));
         manager.Define("ConvertToFaceHostBased").Map(nameof(FamilyUtils.ConvertFamilyToFaceHostBased)).AsNotSupported();
         
         if (manager.Define(nameof(AdaptiveComponentFamilyUtils.IsAdaptiveComponentFamily)).TryRegister(() => Variants.Value(AdaptiveComponentFamilyUtils.IsAdaptiveComponentFamily(family))))

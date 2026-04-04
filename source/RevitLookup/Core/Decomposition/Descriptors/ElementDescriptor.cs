@@ -228,7 +228,6 @@ public partial class ElementDescriptor : Descriptor, IDescriptorResolver, IDescr
         manager.Define(nameof(InstanceVoidCutUtils.GetCuttingVoidInstances)).Register(() => Variants.Value(InstanceVoidCutUtils.GetCuttingVoidInstances(_element)));
         manager.Define(nameof(PartUtils.GetAssociatedParts)).Register(() => Variants.Value(PartUtils.GetAssociatedParts(_element.Document, _element.Id, true, true)));
         manager.Define(nameof(PartUtils.HasAssociatedParts)).Register(() => Variants.Value(PartUtils.HasAssociatedParts(_element.Document, _element.Id)));
-        manager.Define(nameof(DetailElementOrderUtils.IsDetailElement)).Register(() => Variants.Value(DetailElementOrderUtils.IsDetailElement(_element.Document, _element.Document.ActiveView, _element.Id)));
         manager.Define("CanBeMirrored").Register(() => Variants.Value(ElementTransformUtils.CanMirrorElement(_element.Document, _element.Id)));
         manager.Define("CanBeDeleted").Register(() => Variants.Value(DocumentValidation.CanDeleteElement(_element.Document, _element.Id)));
         manager.Define(nameof(InstanceVoidCutUtils.AddInstanceVoidCut)).AsNotSupported();
@@ -250,7 +249,7 @@ public partial class ElementDescriptor : Descriptor, IDescriptorResolver, IDescr
         manager.Define("Move").Map(nameof(ElementTransformUtils.MoveElement)).AsNotSupported();
         manager.Define("Rotate").Map(nameof(ElementTransformUtils.RotateElement)).AsNotSupported();
 
-        if (_element.Document.ActiveView is not null && DetailElementOrderUtils.IsDetailElement(_element.Document, _element.Document.ActiveView, _element.Id))
+        if (manager.Define(nameof(DetailElementOrderUtils.IsDetailElement)).TryRegister(() => Variants.Value(DetailElementOrderUtils.IsDetailElement(_element.Document, _element.Document.ActiveView, _element.Id))))
         {
             manager.Define(nameof(DetailElementOrderUtils.BringForward)).AsNotSupported();
             manager.Define(nameof(DetailElementOrderUtils.BringToFront)).AsNotSupported();
@@ -274,11 +273,10 @@ public partial class ElementDescriptor : Descriptor, IDescriptorResolver, IDescr
         }
 #endif
 #if REVIT2025_OR_GREATER
-        manager.Define(nameof(AnnotationMultipleAlignmentUtils.MoveWithAnchoredLeaders)).AsNotSupported();
-
         if (manager.Define("IsMultiAlignSupported").TryRegister(() => Variants.Value(AnnotationMultipleAlignmentUtils.ElementSupportsMultiAlign(_element))))
         {
             manager.Define(nameof(AnnotationMultipleAlignmentUtils.GetAnnotationOutlineWithoutLeaders)).Register(() => Variants.Value(AnnotationMultipleAlignmentUtils.GetAnnotationOutlineWithoutLeaders(_element)));
+            manager.Define(nameof(AnnotationMultipleAlignmentUtils.MoveWithAnchoredLeaders)).AsNotSupported();
         }
 #endif
 #if REVIT2026_OR_GREATER
@@ -289,7 +287,7 @@ public partial class ElementDescriptor : Descriptor, IDescriptorResolver, IDescr
         {
             manager.Define("GetCoordinationModelVisibilityOverride").Map(nameof(CoordinationModelLinkUtils.GetVisibilityOverride)).AsNotSupported();
             manager.Define("SetCoordinationModelVisibilityOverride").Map(nameof(CoordinationModelLinkUtils.SetVisibilityOverride)).AsNotSupported();
-            
+
             if (isCoordinationModelInstance)
             {
                 manager.Define(nameof(CoordinationModelLinkUtils.GetAllPropertiesForReferenceInsideCoordinationModel)).AsNotSupported();
