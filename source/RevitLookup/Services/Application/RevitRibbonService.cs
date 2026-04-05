@@ -46,7 +46,7 @@ public sealed partial class RevitRibbonService(ISettingsService settingsService)
         if (!settingsService.ApplicationSettings.UseModifyTab)
         {
             pullButton.AddPushButton<DecomposeSelectionCommand>("Snoop Selection")
-                .TryAddShortcuts("SS", "SSS");
+                .TryAddShortcuts("SS", "Fn12");
         }
 
         pullButton.AddPushButton<DecomposeViewCommand>("Snoop Active view");
