@@ -12,6 +12,16 @@ The Revit API has hundreds of static utility methods that were previously hard t
 - **Enabled addin isolation** starting from Revit 2027. Finally, Autodesk fixed it.
 - **Async startup** makes Revit to continue loading while RevitLookup initializes in the background.
 - **Event Monitor** is now faster when inspecting incoming events.
+- **Shortcuts** no longer conflict with user settings. The default shortcut is only applied if the user has not configured one. 
+    There are now two hotkeys to open the Snoop Selection window: `F12` and `SS`. https://github.com/lookup-foundation/RevitLookup/issues/316.
+
+## Postable commands
+
+Postable commands are Revit's built-in UI actions — toolbar buttons, menu items, dialog triggers — that can be invoked programmatically via the PostCommand API. 
+They're the go-to tool when you need to automate UI behavior that has no direct API equivalent.
+RevitLookup now exposes the full list in one place: browse, search, and execute any Postable command directly.
+
+![image](https://github.com/user-attachments/assets/2441f8b7-eeb5-4787-879d-55309c2f94d1)
 
 ## API Coverage
 

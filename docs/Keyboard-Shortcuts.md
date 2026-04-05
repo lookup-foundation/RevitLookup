@@ -4,7 +4,7 @@ Global shortcuts work at Revit level, you can override it in the settings.
 
 | Action          | Shortcut | Description                                               |
 |-----------------|----------|-----------------------------------------------------------|
-| Snoop selection | SS       | Open the RevitLookup window and analyze selected elements |
+| Snoop selection | SS, Fn12 | Open the RevitLookup window and analyze selected elements |
 
 ## RevitLookup shortcuts
 
@@ -23,29 +23,30 @@ These shortcuts only work within the RevitLookup window and only in the specifie
 
 Context menus are available for most tables in RevitLookup, and you can invoke some commands both with shortcuts for the highlighted row, and in the right-click context menu.
 
-| Item type | Action        | Shortcut         | Description                                   |
-|-----------|---------------|------------------|-----------------------------------------------|
-| Anything  | Copy          | Ctrl + C         | Copies the text of the selected line          |
-| Anything  | Copy value    | Ctrl + Shift + C | Copies the value of the selected line         |
-| Anything  | Help          | F1               | Shows the documentation for the selected type |
-| Parameter | Edit value    | F2               | Edit parameter value                          |
-| Element   | Delete        | Delete           | Delete an element from project                |
-| Element   | Select        | F6               | Select the element in model                   |
-| Element   | Show in model | F7               | Shows and select the element by zoom to fit   |
-| Element   | Visualize     | F8               | Visualize geometry                            |
-| Face      | Select        | F6               | Select the face in model                      |
-| Face      | Show in model | F7               | Shows and select the face by zoom to fit      |
-| Face      | Visualize     | F8               | Visualize geometry                            |
-| Edge      | Select        | F6               | Select the edge in model                      |
-| Edge      | Show in model | F7               | Shows and select the edge by zoom to fit      |
-| Edge      | Visualize     | F8               | Visualize geometry                            |
-| Curve     | Select        | F6               | Select the curve in model                     |
-| Curve     | Show in model | F7               | Shows and select the curve by zoom to fit     |
-| Curve     | Visualize     | F8               | Visualize geometry                            |
-| Solid     | Select        | F6               | Select the solid in model                     |
-| Solid     | Show in model | F7               | Shows and select the solid by zoom to fit     |
-| Solid     | Visualize     | F8               | Visualize geometry                            |
-| Reference | Select        | F6               | Select the reference in model                 |
+| Item type        | Action        | Shortcut         | Description                                   |
+|------------------|---------------|------------------|-----------------------------------------------|
+| Anything         | Copy          | Ctrl + C         | Copies the text of the selected line          |
+| Anything         | Copy value    | Ctrl + Shift + C | Copies the value of the selected line         |
+| Anything         | Help          | F1               | Shows the documentation for the selected type |
+| Parameter        | Edit value    | F2               | Edit parameter value                          |
+| Element          | Delete        | Delete           | Delete an element from project                |
+| Element          | Select        | F6               | Select the element in model                   |
+| Element          | Show in model | F7               | Shows and select the element by zoom to fit   |
+| Element          | Visualize     | F8               | Visualize geometry                            |
+| Face             | Select        | F6               | Select the face in model                      |
+| Face             | Show in model | F7               | Shows and select the face by zoom to fit      |
+| Face             | Visualize     | F8               | Visualize geometry                            |
+| Edge             | Select        | F6               | Select the edge in model                      |
+| Edge             | Show in model | F7               | Shows and select the edge by zoom to fit      |
+| Edge             | Visualize     | F8               | Visualize geometry                            |
+| Curve            | Select        | F6               | Select the curve in model                     |
+| Curve            | Show in model | F7               | Shows and select the curve by zoom to fit     |
+| Curve            | Visualize     | F8               | Visualize geometry                            |
+| Solid            | Select        | F6               | Select the solid in model                     |
+| Solid            | Show in model | F7               | Shows and select the solid by zoom to fit     |
+| Solid            | Visualize     | F8               | Visualize geometry                            |
+| Reference        | Select        | F6               | Select the reference in model                 |
+| Postable command | Execute       | Ctrl + X         | Execute Postable command                      |
 
 All actions available via keyboard shortcuts can also be accessed through the RevitLookup user interface.
 

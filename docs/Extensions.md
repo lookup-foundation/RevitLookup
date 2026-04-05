@@ -8,8 +8,8 @@ The table below lists the extensions that are available in RevitLookup:
 
 | Type                      | Extension                                    | API method                                                                       |
 |:--------------------------|----------------------------------------------|----------------------------------------------------------------------------------|
-| Application               | GetFormulaFunctions                          | FormulaManager.GetFunctions                                                     |
-| Application               | GetFormulaOperators                          | FormulaManager.GetOperators                                                     |
+| Application               | GetFormulaFunctions                          | FormulaManager.GetFunctions                                                      |
+| Application               | GetFormulaOperators                          | FormulaManager.GetOperators                                                      |
 | Application               | GetMacroManager                              | MacroManager.GetMacroManager                                                     |
 | Application               | GetSupportedPointCloudEngines                | PointCloudEngineRegistry.GetSupportedEngines                                     |
 | Application               | GetAllCloudRegions                           | ModelPathUtils.GetAllCloudRegions                                                |
@@ -198,20 +198,20 @@ The table below lists the extensions that are available in RevitLookup:
 | GeometryObject            | IsSolid                                      | ExternallyTaggedGeometryValidation.IsSolid                                       |
 | GeometryObject            | LacksSubnodes                                | ExternallyTaggedGeometryValidation.LacksSubnodes                                 |
 | Color                     | Name                                         | ColorRepresentationUtils.GetColorName                                            |
-| Color                     | HEX                                          | ColorRepresentationUtils.ColorToHex                                             |
-| Color                     | HEX int                                      | ColorRepresentationUtils.ColorToHexInteger                                      |
-| Color                     | RGB                                          | ColorRepresentationUtils.ColorToRgb                                             |
-| Color                     | HSL                                          | ColorRepresentationUtils.ColorToHsl                                             |
-| Color                     | HSV                                          | ColorRepresentationUtils.ColorToHsv                                             |
-| Color                     | CMYK                                         | ColorRepresentationUtils.ColorToCmyk                                            |
-| Color                     | HSB                                          | ColorRepresentationUtils.ColorToHsb                                             |
-| Color                     | HSI                                          | ColorRepresentationUtils.ColorToHsi                                             |
-| Color                     | HWB                                          | ColorRepresentationUtils.ColorToHwb                                             |
-| Color                     | NCol                                         | ColorRepresentationUtils.ColorToNCol                                            |
-| Color                     | CIELAB                                       | ColorRepresentationUtils.ColorToCielab                                          |
-| Color                     | CIEXYZ                                       | ColorRepresentationUtils.ColorToCieXyz                                          |
-| Color                     | VEC4                                         | ColorRepresentationUtils.ColorToFloat                                           |
-| Color                     | Decimal                                      | ColorRepresentationUtils.ColorToDecimal                                         |
+| Color                     | HEX                                          | ColorRepresentationUtils.ColorToHex                                              |
+| Color                     | HEX int                                      | ColorRepresentationUtils.ColorToHexInteger                                       |
+| Color                     | RGB                                          | ColorRepresentationUtils.ColorToRgb                                              |
+| Color                     | HSL                                          | ColorRepresentationUtils.ColorToHsl                                              |
+| Color                     | HSV                                          | ColorRepresentationUtils.ColorToHsv                                              |
+| Color                     | CMYK                                         | ColorRepresentationUtils.ColorToCmyk                                             |
+| Color                     | HSB                                          | ColorRepresentationUtils.ColorToHsb                                              |
+| Color                     | HSI                                          | ColorRepresentationUtils.ColorToHsi                                              |
+| Color                     | HWB                                          | ColorRepresentationUtils.ColorToHwb                                              |
+| Color                     | NCol                                         | ColorRepresentationUtils.ColorToNCol                                             |
+| Color                     | CIELAB                                       | ColorRepresentationUtils.ColorToCielab                                           |
+| Color                     | CIEXYZ                                       | ColorRepresentationUtils.ColorToCieXyz                                           |
+| Color                     | VEC4                                         | ColorRepresentationUtils.ColorToFloat                                            |
+| Color                     | Decimal                                      | ColorRepresentationUtils.ColorToDecimal                                          |
 | Solid                     | SplitVolumes                                 | SolidUtils.SplitVolumes                                                          |
 | Solid                     | IsValidForTessellation                       | SolidUtils.IsValidForTessellation                                                |
 | Solid                     | ComputeIsGeometricallyClosed                 | SolidUtils.ComputeIsGeometricallyClosed                                          |
