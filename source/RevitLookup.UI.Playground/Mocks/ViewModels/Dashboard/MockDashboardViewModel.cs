@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.Input;
-using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using RevitLookup.Abstractions.Decomposition;
 using RevitLookup.Abstractions.Models.UserInterface;
@@ -234,6 +233,14 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
                         Icon = SymbolRegular.LeafThree24,
                         Command = OpenDialogCommand,
                         CommandParameter = "forge"
+                    },
+                    new NavigationCardItem
+                    {
+                        Title = "Postable Commands",
+                        Description = "Explore and execute Revit postable commands",
+                        Icon = SymbolRegular.ShieldKeyhole24,
+                        Command = OpenDialogCommand,
+                        CommandParameter = "commands"
                     }
                 ]
             },
@@ -387,6 +394,10 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
                 case "forge":
                     unitsDialog = _serviceProvider.GetRequiredService<UnitsDialog>();
                     await unitsDialog.ShowForgeSchemaDialogAsync();
+                    return;
+                case "commands":
+                    var commandsDialog = _serviceProvider.GetRequiredService<PostableCommandsDialog>();
+                    await commandsDialog.ShowAsync();
                     return;
                 case "search":
                     var searchDialog = _serviceProvider.GetRequiredService<SearchElementsDialog>();

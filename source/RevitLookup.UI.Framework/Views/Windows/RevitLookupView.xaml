@@ -24,7 +24,7 @@
             x:Name="TitleBar"
             Title="RevitLookup"
             Height="42"
-            Padding="13 4"/>
+            Padding="13 4" />
 
         <ui:NavigationView
             x:Name="RootNavigation"
@@ -91,7 +91,9 @@
             </ui:NavigationView.ContentOverlay>
         </ui:NavigationView>
 
-        <ui:ContentDialogHost x:Name="DialogHost" />
+        <ui:ContentDialogHost
+            x:Name="DialogHost" />
+
     </Grid>
 
 </ui:FluentWindow>

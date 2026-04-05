@@ -233,6 +233,14 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
                         Icon = SymbolRegular.LeafThree24,
                         Command = OpenDialogCommand,
                         CommandParameter = "forge"
+                    },
+                    new NavigationCardItem
+                    {
+                        Title = "Postable Commands",
+                        Description = "Explore and execute Revit postable commands",
+                        Icon = SymbolRegular.ShieldKeyhole24,
+                        Command = OpenDialogCommand,
+                        CommandParameter = "commands"
                     }
                 ]
             },
@@ -425,6 +433,10 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
                 case "modules":
                     var modulesDialog = _serviceProvider.GetRequiredService<ModulesDialog>();
                     await modulesDialog.ShowAsync();
+                    return;
+                case "commands":
+                    var commandsDialog = _serviceProvider.GetRequiredService<PostableCommandsDialog>();
+                    await commandsDialog.ShowAsync();
                     return;
             }
         }

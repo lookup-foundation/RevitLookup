@@ -1,0 +1,86 @@
+<ui:ContentDialog
+    x:Class="RevitLookup.UI.Framework.Views.Tools.PostableCommandsDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ui="http://lookupengine.com/xaml"
+    xmlns:local="clr-namespace:RevitLookup.UI.Framework.Views.Tools"
+    xmlns:tools="clr-namespace:RevitLookup.Abstractions.ViewModels.Tools;assembly=RevitLookup.Abstractions"
+    mc:Ignorable="d"
+    d:DesignHeight="540"
+    d:DesignWidth="600"
+    d:DataContext="{d:DesignInstance tools:IPostableCommandsViewModel}"
+    Title="Postable Commands"
+    DialogMaxWidth="500"
+    ScrollViewer.VerticalScrollBarVisibility="Disabled">
+
+    <ui:ContentDialog.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ui:ControlsDictionary />
+            </ResourceDictionary.MergedDictionaries>
+            <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
+            <Style
+                BasedOn="{StaticResource DefaultContentDialogStyle}"
+                TargetType="{x:Type local:PostableCommandsDialog}" />
+        </ResourceDictionary>
+    </ui:ContentDialog.Resources>
+
+    <DockPanel>
+        <ui:TextBox
+            DockPanel.Dock="Top"
+            Icon="{ui:SymbolIcon Search24}"
+            IconPlacement="Right"
+            PlaceholderText="Search..."
+            Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <DataGrid
+            Margin="0 8 0 0"
+            AutoGenerateColumns="False"
+            GridLinesVisibility="None"
+            HeadersVisibility="Column"
+            IsReadOnly="True"
+            ColumnHeaderHeight="30"
+            CanUserReorderColumns="False"
+            CanUserResizeColumns="True"
+            CanUserSortColumns="True"
+            MinColumnWidth="100"
+            ScrollViewer.VerticalScrollBarVisibility="Visible"
+            ItemsSource="{Binding FilteredCommands}">
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Name}"
+                    TextElement.FontSize="12">
+                    <DataGridTextColumn.Header>
+                        <ui:TextBlock
+                            FontTypography="Caption"
+                            Text="Command"
+                            FontWeight="Medium" />
+                    </DataGridTextColumn.Header>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+            <DataGrid.CellStyle>
+                <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
+                <Style
+                    TargetType="DataGridCell"
+                    BasedOn="{StaticResource DefaultDataGridCellStyle}">
+                    <Setter
+                        Property="Height"
+                        Value="15" />
+                </Style>
+            </DataGrid.CellStyle>
+            <DataGrid.RowStyle>
+                <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
+                <Style
+                    TargetType="DataGridRow"
+                    BasedOn="{StaticResource DefaultDataGridRowStyle}">
+                    <EventSetter
+                        Event="MouseEnter"
+                        Handler="OnMouseEnter" />
+                </Style>
+            </DataGrid.RowStyle>
+        </DataGrid>
+    </DockPanel>
+
+</ui:ContentDialog>
