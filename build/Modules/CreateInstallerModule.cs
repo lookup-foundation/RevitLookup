@@ -92,11 +92,17 @@ public sealed class CreateInstallerModule(IOptions<BuildOptions> buildOptions) :
         var wixToolFolder = Folder.CreateTemporaryFolder();
         await context.DotNet().Tool.Execute(new DotNetToolOptions
         {
-            Arguments = ["install", "wix", "--tool-path", wixToolFolder.Path]
+            Arguments = ["install", "wix", "--version", "7.*", "--tool-path", wixToolFolder.Path]
         }, cancellationToken: cancellationToken);
 
         var wixExe = wixToolFolder.GetFile("wix.exe");
         var wixVersion = FileVersionInfo.GetVersionInfo(wixExe.Path).FileVersion!;
+
+        await context.Shell.Command.ExecuteCommandLineTool(
+            new GenericCommandLineToolOptions(wixExe.Path)
+            {
+                Arguments = ["eula", "accept", "wix7"]
+            }, cancellationToken: cancellationToken);
 
         await context.Shell.Command.ExecuteCommandLineTool(
             new GenericCommandLineToolOptions(wixExe.Path)
