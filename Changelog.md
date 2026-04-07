@@ -2,7 +2,7 @@
 
 # **2027.0.0**
 
-Revit 2027 is here, and so is a massive update for RevitLookup!
+Revit 2027 is here, and so is a major update for RevitLookup!
 
 The Revit API has hundreds of static utility methods that were previously hard to find. We've now linked these "Utils" directly to the elements and types they affect. You can now see all related utility data for an object in one place, without having to search for static methods elsewhere.
 
