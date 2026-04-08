@@ -12,6 +12,7 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
+using System.Runtime.CompilerServices;
 using Autodesk.Revit.DB.Structure;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
@@ -36,12 +37,6 @@ public sealed class ElementTypeDescriptor(ElementType elementType) : ElementDesc
             manager.Define("SetRebarSpliceStaggerLengthMultiplier").Map(nameof(RebarSpliceTypeUtils.SetStaggerLengthMultiplier)).AsNotSupported();
         }
 #endif
-#if REVIT2026_OR_GREATER
-        if (CoordinationModelLinkUtils.IsCoordinationModelType(elementType.Document, elementType))
-        {
-            manager.Define("GetCoordinationModelTransparencyOverride").Register(() => Variants.Value(CoordinationModelLinkUtils.GetTransparencyOverride(elementType.Document, elementType.Document.ActiveView, elementType)));
-            manager.Define(nameof(CoordinationModelLinkUtils.GetCoordinationModelTypeData)).Register(() => Variants.Value(CoordinationModelLinkUtils.GetCoordinationModelTypeData(elementType.Document, elementType)));
-        }
 
         if (elementType.Category?.Id.IsCategory(BuiltInCategory.OST_RebarCrankType) == true)
         {
@@ -52,9 +47,27 @@ public sealed class ElementTypeDescriptor(ElementType elementType) : ElementDesc
             manager.Define("SetRebarCrankOffsetMultiplier").Map(nameof(RebarCrankTypeUtils.SetCrankOffsetMultiplier)).AsNotSupported();
             manager.Define("SetRebarCrankRatio").Map(nameof(RebarCrankTypeUtils.SetCrankRatio)).AsNotSupported();
         }
+#if REVIT2026_OR_GREATER
 
+        try
+        {
+            RegisterCoordinationModelExtensions(manager);
+        }
+        catch (TypeLoadException)
+        {
+            // Type available starting from Revit 2026.3 patch
+        }
+#endif
+    }
+
+#if REVIT2026_OR_GREATER
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private void RegisterCoordinationModelExtensions(IExtensionManager manager)
+    {
         if (CoordinationModelLinkUtils.IsCoordinationModelType(elementType.Document, elementType))
         {
+            manager.Define("GetCoordinationModelTransparencyOverride").Register(() => Variants.Value(CoordinationModelLinkUtils.GetTransparencyOverride(elementType.Document, elementType.Document.ActiveView, elementType)));
+            manager.Define(nameof(CoordinationModelLinkUtils.GetCoordinationModelTypeData)).Register(() => Variants.Value(CoordinationModelLinkUtils.GetCoordinationModelTypeData(elementType.Document, elementType)));
             manager.Define(nameof(CoordinationModelLinkUtils.ReloadLocalCoordinationModelFrom)).AsNotSupported();
             manager.Define(nameof(CoordinationModelLinkUtils.ReloadAutodeskDocsCoordinationModelFrom)).AsNotSupported();
             manager.Define("ContainsCoordinationModelCategory").Map(nameof(CoordinationModelLinkUtils.ContainsCategory)).AsNotSupported();
@@ -68,6 +81,6 @@ public sealed class ElementTypeDescriptor(ElementType elementType) : ElementDesc
             manager.Define("SetCoordinationModelTransparencyOverride").Map(nameof(CoordinationModelLinkUtils.SetTransparencyOverride)).AsNotSupported();
             manager.Define("SetCoordinationModelVisibilityOverrideForCategory").Map(nameof(CoordinationModelLinkUtils.SetVisibilityOverrideForCategory)).AsNotSupported();
         }
-#endif
     }
+#endif
 }

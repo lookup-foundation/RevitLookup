@@ -13,6 +13,7 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using Autodesk.Revit.DB.DirectContext3D;
@@ -280,6 +281,22 @@ public partial class ElementDescriptor : Descriptor, IDescriptorResolver, IDescr
         }
 #endif
 #if REVIT2026_OR_GREATER
+
+        try
+        {
+            RegisterCoordinationModelExtensions(manager);
+        }
+        catch (TypeLoadException)
+        {
+            // Type available starting from Revit 2026.3 patch
+        }
+#endif
+    }
+#if REVIT2026_OR_GREATER
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private void RegisterCoordinationModelExtensions(IExtensionManager manager)
+    {
         var isCoordinationModelInstance = manager.Define(nameof(CoordinationModelLinkUtils.IsCoordinationModelInstance)).TryRegister(() => Variants.Value(CoordinationModelLinkUtils.IsCoordinationModelInstance(_element.Document, _element)));
         var isCoordinationModelType = manager.Define(nameof(CoordinationModelLinkUtils.IsCoordinationModelType)).TryRegister(() => Variants.Value(CoordinationModelLinkUtils.IsCoordinationModelType(_element.Document, _element)));
 
@@ -296,8 +313,8 @@ public partial class ElementDescriptor : Descriptor, IDescriptorResolver, IDescr
                 manager.Define(nameof(CoordinationModelLinkUtils.SetVisibilityOverrideForReferenceInsideCoordinationModel)).AsNotSupported();
             }
         }
-#endif
     }
+#endif
 
     public virtual void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)
     {
