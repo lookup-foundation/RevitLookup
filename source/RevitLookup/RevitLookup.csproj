@@ -1,4 +1,4 @@
-﻿<Project Sdk="Nice3point.Revit.Sdk/6.2.0">
+﻿<Project Sdk="Nice3point.Revit.Sdk/6.2.1">
 
     <PropertyGroup>
         <UseWPF>true</UseWPF>
