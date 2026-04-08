@@ -294,21 +294,14 @@ public partial class ElementDescriptor : Descriptor, IDescriptorResolver, IDescr
     [MethodImpl(MethodImplOptions.NoInlining)]
     private void RegisterCoordinationModelExtensions(IExtensionManager manager)
     {
-        var isCoordinationModelInstance = manager.Define(nameof(CoordinationModelLinkUtils.IsCoordinationModelInstance)).TryRegister(() => Variants.Value(CoordinationModelLinkUtils.IsCoordinationModelInstance(_element.Document, _element)));
-        var isCoordinationModelType = manager.Define(nameof(CoordinationModelLinkUtils.IsCoordinationModelType)).TryRegister(() => Variants.Value(CoordinationModelLinkUtils.IsCoordinationModelType(_element.Document, _element)));
-
-        if (isCoordinationModelInstance || isCoordinationModelType)
+        if (manager.Define(nameof(CoordinationModelLinkUtils.IsCoordinationModelInstance)).TryRegister(() => Variants.Value(CoordinationModelLinkUtils.IsCoordinationModelInstance(_element.Document, _element))))
         {
+            manager.Define(nameof(CoordinationModelLinkUtils.GetAllPropertiesForReferenceInsideCoordinationModel)).AsNotSupported();
+            manager.Define(nameof(CoordinationModelLinkUtils.GetCategoryForReferenceInsideCoordinationModel)).AsNotSupported();
+            manager.Define(nameof(CoordinationModelLinkUtils.GetVisibilityOverrideForReferenceInsideCoordinationModel)).AsNotSupported();
+            manager.Define(nameof(CoordinationModelLinkUtils.SetVisibilityOverrideForReferenceInsideCoordinationModel)).AsNotSupported();
             manager.Define("GetCoordinationModelVisibilityOverride").Map(nameof(CoordinationModelLinkUtils.GetVisibilityOverride)).AsNotSupported();
             manager.Define("SetCoordinationModelVisibilityOverride").Map(nameof(CoordinationModelLinkUtils.SetVisibilityOverride)).AsNotSupported();
-
-            if (isCoordinationModelInstance)
-            {
-                manager.Define(nameof(CoordinationModelLinkUtils.GetAllPropertiesForReferenceInsideCoordinationModel)).AsNotSupported();
-                manager.Define(nameof(CoordinationModelLinkUtils.GetCategoryForReferenceInsideCoordinationModel)).AsNotSupported();
-                manager.Define(nameof(CoordinationModelLinkUtils.GetVisibilityOverrideForReferenceInsideCoordinationModel)).AsNotSupported();
-                manager.Define(nameof(CoordinationModelLinkUtils.SetVisibilityOverrideForReferenceInsideCoordinationModel)).AsNotSupported();
-            }
         }
     }
 #endif
@@ -374,7 +367,7 @@ public partial class ElementDescriptor : Descriptor, IDescriptorResolver, IDescr
             throw;
         }
     }
-    
+
     private static async Task DeleteElementAsync(Element element, IServiceProvider serviceProvider, ContextMenu contextMenu)
     {
         var notificationService = serviceProvider.GetRequiredService<INotificationService>();

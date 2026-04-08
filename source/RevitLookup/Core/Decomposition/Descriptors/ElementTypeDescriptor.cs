@@ -61,7 +61,7 @@ public sealed class ElementTypeDescriptor(ElementType elementType) : ElementDesc
     [MethodImpl(MethodImplOptions.NoInlining)]
     private void RegisterCoordinationModelExtensions(IExtensionManager manager)
     {
-        if (CoordinationModelLinkUtils.IsCoordinationModelType(elementType.Document, elementType))
+        if (manager.Define(nameof(CoordinationModelLinkUtils.IsCoordinationModelType)).TryRegister(() => Variants.Value(CoordinationModelLinkUtils.IsCoordinationModelType(elementType.Document, elementType))))
         {
             manager.Define("GetCoordinationModelTransparencyOverride").Register(() => Variants.Value(CoordinationModelLinkUtils.GetTransparencyOverride(elementType.Document, elementType.Document.ActiveView, elementType)));
             manager.Define(nameof(CoordinationModelLinkUtils.GetCoordinationModelTypeData)).Register(() => Variants.Value(CoordinationModelLinkUtils.GetCoordinationModelTypeData(elementType.Document, elementType)));
@@ -70,12 +70,14 @@ public sealed class ElementTypeDescriptor(ElementType elementType) : ElementDesc
             manager.Define("ContainsCoordinationModelCategory").Map(nameof(CoordinationModelLinkUtils.ContainsCategory)).AsNotSupported();
             manager.Define("GetCoordinationModelColorOverride").Map(nameof(CoordinationModelLinkUtils.GetColorOverride)).AsNotSupported();
             manager.Define("GetCoordinationModelColorOverrideForCategory").Map(nameof(CoordinationModelLinkUtils.GetColorOverrideForCategory)).AsNotSupported();
+            manager.Define("GetCoordinationModelVisibilityOverride").Map(nameof(CoordinationModelLinkUtils.GetVisibilityOverride)).AsNotSupported();
             manager.Define("GetCoordinationModelVisibilityOverrideForCategory").Map(nameof(CoordinationModelLinkUtils.GetVisibilityOverrideForCategory)).AsNotSupported();
             manager.Define("ReloadCoordinationModel").Map(nameof(CoordinationModelLinkUtils.Reload)).AsNotSupported();
             manager.Define("UnloadCoordinationModel").Map(nameof(CoordinationModelLinkUtils.Unload)).AsNotSupported();
             manager.Define("SetCoordinationModelColorOverride").Map(nameof(CoordinationModelLinkUtils.SetColorOverride)).AsNotSupported();
             manager.Define("SetCoordinationModelColorOverrideForCategory").Map(nameof(CoordinationModelLinkUtils.SetColorOverrideForCategory)).AsNotSupported();
             manager.Define("SetCoordinationModelTransparencyOverride").Map(nameof(CoordinationModelLinkUtils.SetTransparencyOverride)).AsNotSupported();
+            manager.Define("SetCoordinationModelVisibilityOverride").Map(nameof(CoordinationModelLinkUtils.SetVisibilityOverride)).AsNotSupported();
             manager.Define("SetCoordinationModelVisibilityOverrideForCategory").Map(nameof(CoordinationModelLinkUtils.SetVisibilityOverrideForCategory)).AsNotSupported();
         }
     }
