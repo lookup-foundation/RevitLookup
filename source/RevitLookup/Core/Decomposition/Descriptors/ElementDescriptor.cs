@@ -27,6 +27,7 @@ using Nice3point.Revit.Toolkit.External;
 using RevitLookup.Abstractions.Decomposition;
 using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.ViewModels.Decomposition;
+using RevitLookup.Core.Decomposition.Extensions;
 using RevitLookup.UI.Framework.Extensions;
 using ContextMenu = System.Windows.Controls.ContextMenu;
 #if REVIT2024_OR_GREATER
@@ -282,13 +283,9 @@ public partial class ElementDescriptor : Descriptor, IDescriptorResolver, IDescr
 #endif
 #if REVIT2026_OR_GREATER
 
-        try
+        if (RevitApiContext.Application.Version.Minor >= 3)
         {
             RegisterCoordinationModelExtensions(manager);
-        }
-        catch (TypeLoadException)
-        {
-            // Type available starting from Revit 2026.3 patch
         }
 #endif
     }

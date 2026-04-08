@@ -16,6 +16,7 @@ using System.Runtime.CompilerServices;
 using Autodesk.Revit.DB.Structure;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
+using RevitLookup.Core.Decomposition.Extensions;
 #if REVIT2026_OR_GREATER
 using Autodesk.Revit.DB.ExternalData;
 #endif
@@ -49,13 +50,9 @@ public sealed class ElementTypeDescriptor(ElementType elementType) : ElementDesc
         }
 #if REVIT2026_OR_GREATER
 
-        try
+        if (RevitApiContext.Application.Version.Minor >= 3)
         {
             RegisterCoordinationModelExtensions(manager);
-        }
-        catch (TypeLoadException)
-        {
-            // Type available starting from Revit 2026.3 patch
         }
 #endif
     }
