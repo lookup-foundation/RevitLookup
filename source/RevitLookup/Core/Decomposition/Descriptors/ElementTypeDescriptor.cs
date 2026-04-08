@@ -38,6 +38,7 @@ public sealed class ElementTypeDescriptor(ElementType elementType) : ElementDesc
             manager.Define("SetRebarSpliceStaggerLengthMultiplier").Map(nameof(RebarSpliceTypeUtils.SetStaggerLengthMultiplier)).AsNotSupported();
         }
 #endif
+#if REVIT2026_OR_GREATER
 
         if (elementType.Category?.Id.IsCategory(BuiltInCategory.OST_RebarCrankType) == true)
         {
@@ -48,7 +49,6 @@ public sealed class ElementTypeDescriptor(ElementType elementType) : ElementDesc
             manager.Define("SetRebarCrankOffsetMultiplier").Map(nameof(RebarCrankTypeUtils.SetCrankOffsetMultiplier)).AsNotSupported();
             manager.Define("SetRebarCrankRatio").Map(nameof(RebarCrankTypeUtils.SetCrankRatio)).AsNotSupported();
         }
-#if REVIT2026_OR_GREATER
 
         if (RevitApiContext.Application.Version.Minor >= 3)
         {
