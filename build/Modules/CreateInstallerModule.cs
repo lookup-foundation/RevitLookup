@@ -1,4 +1,5 @@
-﻿using Build.Options;
+﻿using System.Diagnostics;
+using Build.Options;
 using EnumerableAsyncProcessor.Extensions;
 using Microsoft.Extensions.Options;
 using ModularPipelines.Attributes;
@@ -72,9 +73,12 @@ public sealed class CreateInstallerModule(IOptions<BuildOptions> buildOptions) :
                     }, cancellationToken: cancellationToken);
             }, cancellationToken)
             .ProcessInParallel();
-        
+
         var outputFolder = context.Git().RootDirectory.GetFolder(buildOptions.Value.OutputDirectory);
-        foreach (var outputFile in outputFolder.GetFiles(file => file.Extension == ".msi"))
+        var outputFiles = outputFolder.GetFiles(file => file.Extension == ".msi").ToArray();
+        outputFiles.ShouldNotBeEmpty("Failed to create an installer");
+
+        foreach (var outputFile in outputFiles)
         {
             context.Summary.KeyValue("Artifacts", "Installer", outputFile.Path);
         }
@@ -88,8 +92,23 @@ public sealed class CreateInstallerModule(IOptions<BuildOptions> buildOptions) :
         var wixToolFolder = Folder.CreateTemporaryFolder();
         await context.DotNet().Tool.Execute(new DotNetToolOptions
         {
-            Arguments = ["install", "wix", "--tool-path", wixToolFolder.Path]
+            Arguments = ["install", "wix", "--version", "7.*", "--tool-path", wixToolFolder.Path]
         }, cancellationToken: cancellationToken);
+
+        var wixExe = wixToolFolder.GetFile("wix.exe");
+        var wixVersion = FileVersionInfo.GetVersionInfo(wixExe.Path).FileVersion!;
+
+        await context.Shell.Command.ExecuteCommandLineTool(
+            new GenericCommandLineToolOptions(wixExe.Path)
+            {
+                Arguments = ["eula", "accept", "wix7"]
+            }, cancellationToken: cancellationToken);
+
+        await context.Shell.Command.ExecuteCommandLineTool(
+            new GenericCommandLineToolOptions(wixExe.Path)
+            {
+                Arguments = ["extension", "add", "-g", $"WixToolset.UI.wixext/{wixVersion}"]
+            }, cancellationToken: cancellationToken);
 
         return wixToolFolder;
     }
