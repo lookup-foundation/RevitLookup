@@ -313,7 +313,7 @@ public partial class ElementDescriptor : Descriptor, IDescriptorResolver, IDescr
         }
 
         contextMenu.AddMenuItem("DeleteMenuItem")
-            .SetCommand(_element, element => DeleteElementEvent.Raise(element, serviceProvider, contextMenu))
+            .SetCommand(_element, element => DeleteElementAsync(element, serviceProvider, contextMenu))
             .SetAvailability(DocumentValidation.CanDeleteElement(_element.Document, _element.Id))
             .SetShortcut(Key.Delete);
     }
@@ -338,29 +338,35 @@ public partial class ElementDescriptor : Descriptor, IDescriptorResolver, IDescr
     }
 
     [ExternalEvent(AllowDirectInvocation = true)]
-    private static void DeleteElement(UIApplication application, Element element, IServiceProvider serviceProvider, ContextMenu contextMenu)
+    private static ICollection<ElementId> DeleteElement(UIApplication application, Element element)
     {
-        if (application.ActiveUIDocument is null) return;
+        if (application.ActiveUIDocument is null) throw new InvalidOperationException("No active document");
 
+        using var transaction = new Transaction(element.Document);
+        transaction.Start($"Delete {element.Name}");
+
+        try
+        {
+            var deletedIds = element.Document.Delete(element.Id);
+            transaction.Commit();
+
+            if (transaction.GetStatus() == TransactionStatus.RolledBack) throw new OperationCanceledException("Element deletion cancelled by user");
+
+            return deletedIds;
+        }
+        catch
+        {
+            if (!transaction.HasEnded()) transaction.RollBack();
+            throw;
+        }
+    }
+    
+    private static async Task DeleteElementAsync(Element element, IServiceProvider serviceProvider, ContextMenu contextMenu)
+    {
         var notificationService = serviceProvider.GetRequiredService<INotificationService>();
         try
         {
-            using var transaction = new Transaction(element.Document);
-            transaction.Start($"Delete {element.Name}");
-
-            ICollection<ElementId>? removedIds;
-            try
-            {
-                removedIds = element.Document.Delete(element.Id);
-                transaction.Commit();
-
-                if (transaction.GetStatus() == TransactionStatus.RolledBack) throw new OperationCanceledException("Element deletion cancelled by user");
-            }
-            catch
-            {
-                if (!transaction.HasEnded()) transaction.RollBack();
-                throw;
-            }
+            var removedIds = await DeleteElementAsyncEvent.RaiseAsync(element);
 
             var summaryViewModel = serviceProvider.GetRequiredService<IDecompositionSummaryViewModel>();
             var placementTarget = (FrameworkElement) contextMenu.PlacementTarget;
