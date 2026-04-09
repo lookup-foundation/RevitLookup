@@ -1,4 +1,4 @@
-﻿// Copyright 2003-2024 by Autodesk, Inc.
+// Copyright 2003-2024 by Autodesk, Inc.
 // 
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -279,8 +279,8 @@ public class ElementDescriptor : Descriptor, IDescriptorResolver, IDescriptorCon
 
     public virtual void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(ElementExtensions.CanBeMirrored), _ => _element.CanBeMirrored());
-        manager.Register(nameof(GeometryExtensions.GetJoinedElements), _ => _element.GetJoinedElements());
+        manager.Register(nameof(ElementTransformUtilsExtensions.CanBeMirrored), _ => _element.CanBeMirrored);
+        manager.Register(nameof(JoinGeometryUtilsExtensions.GetJoinedElements), _ => _element.GetJoinedElements());
         manager.Register(nameof(SolidSolidCutUtils.GetCuttingSolids), _ => SolidSolidCutUtils.GetCuttingSolids(_element));
         manager.Register(nameof(SolidSolidCutUtils.GetSolidsBeingCut), _ => SolidSolidCutUtils.GetSolidsBeingCut(_element));
         manager.Register(nameof(SolidSolidCutUtils.IsAllowedForSolidCut), _ => SolidSolidCutUtils.IsAllowedForSolidCut(_element));

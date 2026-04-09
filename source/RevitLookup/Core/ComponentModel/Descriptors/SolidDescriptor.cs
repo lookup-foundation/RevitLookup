@@ -86,7 +86,7 @@ public sealed class SolidDescriptor : Descriptor, IDescriptorExtension, IDescrip
 #endif
 
         contextMenu.AddMenuItem("VisualizeMenuItem")
-            .SetAvailability(_solid.IsValidForTessellation())
+            .SetAvailability(SolidUtils.IsValidForTessellation(_solid))
             .SetCommand(_solid, async solid =>
             {
                 if (Context.ActiveUiDocument is null) return;

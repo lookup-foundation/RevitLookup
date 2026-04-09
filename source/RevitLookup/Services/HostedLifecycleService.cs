@@ -1,4 +1,4 @@
-﻿// Copyright 2003-2024 by Autodesk, Inc.
+// Copyright 2003-2024 by Autodesk, Inc.
 // 
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -56,7 +56,7 @@ public sealed class HostedLifecycleService(IServiceProvider serviceProvider, ILo
         {
             logger.LogInformation("RevitLookup {Version} is available to download", updateService.NewVersion);
         }
-        else if (!updateService.ErrorMessage.IsNullOrEmpty())
+        else if (!string.IsNullOrEmpty(updateService.ErrorMessage))
         {
             logger.LogWarning("Update service error: {Message}", updateService.ErrorMessage);
         }

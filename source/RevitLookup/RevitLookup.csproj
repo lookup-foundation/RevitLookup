@@ -40,56 +40,57 @@
     </PropertyGroup>
 
     <ItemGroup Condition="!$(DefineConstants.Contains('NETCOREAPP'))">
-        <Reference Include="System.Net.Http"/>
+        <Reference Include="System.Net.Http" />
     </ItemGroup>
 
     <ItemGroup>
         <!--Revit references-->
-        <PackageReference Include="Nice3point.Revit.Build.Tasks" Version="2.*"/>
-        <PackageReference Include="Nice3point.Revit.Toolkit" Version="$(RevitVersion).*"/>
-        <PackageReference Include="Nice3point.Revit.Extensions" Version="$(RevitVersion).*"/>
-        <PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="$(RevitVersion).*"/>
-        <PackageReference Include="Nice3point.Revit.Api.AdWindows" Version="$(RevitVersion).*"/>
-        <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*"/>
-        <PackageReference Include="Nice3point.Revit.Api.RevitAPIMacros" Version="$(RevitVersion).*"/>
-        <PackageReference Include="Nice3point.Revit.Api.UIFramework" Version="$(RevitVersion).*"/>
-        <PackageReference Include="Nice3point.Revit.Api.UIFrameworkServices" Version="$(RevitVersion).*"/>
+        <PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
+        <PackageReference Include="Nice3point.Revit.Build.Tasks" Version="2.*" />
+        <PackageReference Include="Nice3point.Revit.Toolkit" Version="$(RevitVersion).*" />
+        <PackageReference Include="Nice3point.Revit.Extensions" Version="$(RevitVersion).*" />
+        <PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="$(RevitVersion).*" />
+        <PackageReference Include="Nice3point.Revit.Api.AdWindows" Version="$(RevitVersion).*" />
+        <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*" />
+        <PackageReference Include="Nice3point.Revit.Api.RevitAPIMacros" Version="$(RevitVersion).*" />
+        <PackageReference Include="Nice3point.Revit.Api.UIFramework" Version="$(RevitVersion).*" />
+        <PackageReference Include="Nice3point.Revit.Api.UIFrameworkServices" Version="$(RevitVersion).*" />
 
         <!--MVVM-->
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*"/>
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*" />
 
         <!--IOC-->
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.*"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.*" />
 
         <!--Logging-->
-        <PackageReference Include="Serilog.Sinks.Debug" Version="3.*"/>
-        <PackageReference Include="Serilog.Sinks.Console" Version="6.*"/>
-        <PackageReference Include="Serilog.Sinks.Autodesk.Revit" Version="2.0.1"/>
-        <PackageReference Include="Serilog.Extensions.Hosting" Version="8.*"/>
+        <PackageReference Include="Serilog.Sinks.Debug" Version="3.*" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="6.*" />
+        <PackageReference Include="Serilog.Sinks.Autodesk.Revit" Version="2.0.1" />
+        <PackageReference Include="Serilog.Extensions.Hosting" Version="8.*" />
 
         <!--Compability-->
-        <PackageReference Include="PolySharp" Version="*" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
+        <PackageReference Include="PolySharp" Version="*" PrivateAssets="All" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\RevitLookup.UI\RevitLookup.UI.csproj"/>
+        <ProjectReference Include="..\RevitLookup.UI\RevitLookup.UI.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Using Include="RevitLookup.Core.Objects"/>
-        <Using Include="RevitLookup.Core.Contracts"/>
+        <Using Include="RevitLookup.Core.Objects" />
+        <Using Include="RevitLookup.Core.Contracts" />
     </ItemGroup>
 
     <ItemGroup>
-        <Resource Include="Resources\Images\RibbonIcon16.png"/>
-        <Resource Include="Resources\Images\RibbonIcon32.png"/>
-        <Resource Include="Resources\Images\AboutLogo200.png"/>
-        <Resource Include="Resources\Images\ShellIcon.ico"/>
+        <Resource Include="Resources\Images\RibbonIcon16.png" />
+        <Resource Include="Resources\Images\RibbonIcon32.png" />
+        <Resource Include="Resources\Images\AboutLogo200.png" />
+        <Resource Include="Resources\Images\ShellIcon.ico" />
     </ItemGroup>
 
     <ItemGroup>
-        <ApplicationDefinition Remove="App.xaml"/>
-        <Page Include="App.xaml"/>
+        <ApplicationDefinition Remove="App.xaml" />
+        <Page Include="App.xaml" />
     </ItemGroup>
 
     <ItemGroup>

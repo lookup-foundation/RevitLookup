@@ -1,4 +1,4 @@
-﻿// Copyright 2003-2024 by Autodesk, Inc.
+// Copyright 2003-2024 by Autodesk, Inc.
 // 
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -23,6 +23,7 @@ using System.IO;
 using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Nice3point.Revit.Extensions.Runtime;
 using RevitLookup.Core.Modules.Configuration;
 using RevitLookup.Services;
 using RevitLookup.Utils;
@@ -83,8 +84,8 @@ public sealed partial class RevitSettingsViewModel(
             var result = await dialog.ShowCreateDialogAsync(SelectedEntry);
             if (result == ContentDialogResult.Primary)
             {
-                if (dialog.Entry.Category.IsNullOrWhiteSpace()) return;
-                if (dialog.Entry.Property.IsNullOrWhiteSpace()) return;
+                if (string.IsNullOrWhiteSpace(dialog.Entry.Category)) return;
+                if (string.IsNullOrWhiteSpace(dialog.Entry.Property)) return;
 
                 Entries.Add(dialog.Entry);
                 FilteredEntries.Add(dialog.Entry);

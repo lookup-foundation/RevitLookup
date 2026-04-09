@@ -1,4 +1,4 @@
-﻿// Copyright 2003-2024 by Autodesk, Inc.
+// Copyright 2003-2024 by Autodesk, Inc.
 // 
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -40,9 +40,9 @@ public sealed class HostObjectDescriptor(HostObject hostObject) : ElementDescrip
     
     public override void RegisterExtensions(IExtensionManager manager)
     {
-        manager.Register(nameof(HostExtensions.GetBottomFaces), _ => hostObject.GetBottomFaces());
-        manager.Register(nameof(HostExtensions.GetTopFaces), _ => hostObject.GetTopFaces());
-        manager.Register(nameof(HostExtensions.GetSideFaces), _ => new Variants<IList<Reference>>(2)
+        manager.Register(nameof(HostObjectUtilsExtensions.GetBottomFaces), _ => hostObject.GetBottomFaces());
+        manager.Register(nameof(HostObjectUtilsExtensions.GetTopFaces), _ => hostObject.GetTopFaces());
+        manager.Register(nameof(HostObjectUtilsExtensions.GetSideFaces), _ => new Variants<IList<Reference>>(2)
             .Add(hostObject.GetSideFaces(ShellLayerType.Interior), "Interior")
             .Add(hostObject.GetSideFaces(ShellLayerType.Exterior), "Exterior"));
     }

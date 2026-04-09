@@ -20,13 +20,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\RevitLookup.UI\RevitLookup.UI.csproj"/>
-        <ProjectReference Include="..\RevitLookup\RevitLookup.csproj"/>
+        <ProjectReference Include="..\RevitLookup.UI\RevitLookup.UI.csproj" />
+        <ProjectReference Include="..\RevitLookup\RevitLookup.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Bogus" Version="34.*"/>
-        <PackageReference Include="JetBrains.Annotations" Version="2024.*"/>
+        <PackageReference Include="Bogus" Version="34.*" />
+        <PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
     </ItemGroup>
     
 </Project>

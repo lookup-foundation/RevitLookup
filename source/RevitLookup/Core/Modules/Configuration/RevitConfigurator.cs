@@ -1,4 +1,4 @@
-﻿// Copyright 2003-2024 by Autodesk, Inc.
+// Copyright 2003-2024 by Autodesk, Inc.
 // 
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -22,6 +22,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using Nice3point.Revit.Extensions.Runtime;
 using RevitLookup.ViewModels.ObservableObjects;
 
 namespace RevitLookup.Core.Modules.Configuration;
@@ -42,7 +43,10 @@ public sealed class RevitConfigurator
 
     private readonly string _defaultIniPath = Environment
         .GetFolderPath(Environment.SpecialFolder.CommonApplicationData)
-        .AppendPath("Autodesk", $"RVT {Context.Application.VersionNumber}", "UserDataCache", "Revit.ini");
+        .AppendPath("Autodesk")
+        .AppendPath($"RVT {Context.Application.VersionNumber}")
+        .AppendPath("UserDataCache")
+        .AppendPath("Revit.ini");
 
     private bool _backupDone;
 

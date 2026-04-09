@@ -1,4 +1,4 @@
-﻿// Copyright 2003-2024 by Autodesk, Inc.
+// Copyright 2003-2024 by Autodesk, Inc.
 // 
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -19,6 +19,7 @@
 // (Rights in Technical Data and Computer Software), as applicable.
 
 using Autodesk.Revit.DB.DirectContext3D;
+using Nice3point.Revit.Extensions.Runtime;
 using RevitLookup.Models.Render;
 
 namespace RevitLookup.Core.Visualization.Helpers;
