@@ -54,24 +54,25 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Using Include="Nice3point.Revit.Extensions"/>
-        <Using Include="JetBrains.Annotations"/>
+        <Using Include="Nice3point.Revit.Extensions" />
+        <Using Include="JetBrains.Annotations" />
     </ItemGroup>
 
     <ItemGroup>
-        <Reference Include="System.Net.Http"/>
+        <Reference Include="System.Net.Http" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Nice3point.Revit.Toolkit" Version="$(RevitVersion).*"/>
-        <PackageReference Include="Nice3point.Revit.Extensions" Version="$(RevitVersion).*"/>
-        <PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="$(RevitVersion).*-*"/>
-        <PackageReference Include="Nice3point.Revit.Api.AdWindows" Version="$(RevitVersion).*-*"/>
-        <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*-*"/>
-        <PackageReference Include="Nice3point.Revit.Api.UIFramework" Version="$(RevitVersion).*-*"/>
-        <PackageReference Include="Nice3point.Revit.Api.UIFrameworkServices" Version="$(RevitVersion).*-*"/>
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*"/>
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.*"/>
+        <PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
+        <PackageReference Include="Nice3point.Revit.Toolkit" Version="$(RevitVersion).*" />
+        <PackageReference Include="Nice3point.Revit.Extensions" Version="$(RevitVersion).*" />
+        <PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="$(RevitVersion).*-*" />
+        <PackageReference Include="Nice3point.Revit.Api.AdWindows" Version="$(RevitVersion).*-*" />
+        <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*-*" />
+        <PackageReference Include="Nice3point.Revit.Api.UIFramework" Version="$(RevitVersion).*-*" />
+        <PackageReference Include="Nice3point.Revit.Api.UIFrameworkServices" Version="$(RevitVersion).*-*" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.*" />
         <PackageReference Include="PolySharp" Version="1.*">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -79,19 +80,19 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\RevitLookup.UI\RevitLookup.UI.csproj"/>
+        <ProjectReference Include="..\RevitLookup.UI\RevitLookup.UI.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <Resource Include="Resources\Images\RibbonIcon16.png"/>
-        <Resource Include="Resources\Images\RibbonIcon32.png"/>
-        <Resource Include="Resources\Images\AboutLogo200.png"/>
-        <Resource Include="Resources\Images\ShellIcon.ico"/>
+        <Resource Include="Resources\Images\RibbonIcon16.png" />
+        <Resource Include="Resources\Images\RibbonIcon32.png" />
+        <Resource Include="Resources\Images\AboutLogo200.png" />
+        <Resource Include="Resources\Images\ShellIcon.ico" />
     </ItemGroup>
 
     <ItemGroup>
-        <ApplicationDefinition Remove="App.xaml"/>
-        <Page Include="App.xaml"/>
+        <ApplicationDefinition Remove="App.xaml" />
+        <Page Include="App.xaml" />
     </ItemGroup>
 
     <ItemGroup>
@@ -121,8 +122,8 @@
 
     <Target Name="CopyFiles" AfterTargets="CoreBuild">
         <ItemGroup>
-            <RootItem Include="$(ProjectDir)*.addin"/>
-            <AddinItem Include="$(TargetDir)**\*"/>
+            <RootItem Include="$(ProjectDir)*.addin" />
+            <AddinItem Include="$(TargetDir)**\*" />
         </ItemGroup>
 
         <PropertyGroup>
@@ -130,20 +131,19 @@
             <AddinDir>$(RootDir)$(AssemblyName)\</AddinDir>
         </PropertyGroup>
 
-        <Copy SourceFiles="@(RootItem)" DestinationFolder="$(RootDir)%(RecursiveDir)"/>
-        <Copy SourceFiles="@(AddinItem)" DestinationFolder="$(AddinDir)%(RecursiveDir)"/>
+        <Copy SourceFiles="@(RootItem)" DestinationFolder="$(RootDir)%(RecursiveDir)" />
+        <Copy SourceFiles="@(AddinItem)" DestinationFolder="$(AddinDir)%(RecursiveDir)" />
 
         <ItemGroup>
-            <AddinFiles Include="$(RootDir)**\*.*"/>
+            <AddinFiles Include="$(RootDir)**\*.*" />
         </ItemGroup>
 
-        <Copy SourceFiles="@(AddinFiles)"
-              DestinationFolder="$(AppData)\Autodesk\Revit\Addins\$(RevitVersion)\%(RecursiveDir)"/>
+        <Copy SourceFiles="@(AddinFiles)" DestinationFolder="$(AppData)\Autodesk\Revit\Addins\$(RevitVersion)\%(RecursiveDir)" />
     </Target>
 
     <Target Name="DeleteFiles" AfterTargets="Clean">
-        <RemoveDir Directories="$(AppData)\Autodesk\Revit\Addins\$(RevitVersion)\$(ProjectName)"/>
-        <Delete Files="$(AppData)\Autodesk\Revit\Addins\$(RevitVersion)\$(ProjectName).addin"/>
+        <RemoveDir Directories="$(AppData)\Autodesk\Revit\Addins\$(RevitVersion)\$(ProjectName)" />
+        <Delete Files="$(AppData)\Autodesk\Revit\Addins\$(RevitVersion)\$(ProjectName).addin" />
     </Target>
 
 </Project>

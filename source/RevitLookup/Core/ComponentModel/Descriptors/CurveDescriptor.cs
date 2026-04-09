@@ -1,4 +1,4 @@
-﻿// Copyright 2003-2023 by Autodesk, Inc.
+// Copyright 2003-2023 by Autodesk, Inc.
 // 
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -27,6 +27,7 @@ using System.Windows.Input;
 using RevitLookup.Views.Extensions;
 #endif
 using Autodesk.Revit.DB;
+using Nice3point.Revit.Extensions.Runtime;
 using RevitLookup.Core.Contracts;
 using RevitLookup.Core.Objects;
 

@@ -24,7 +24,7 @@
         <ProjectReference Include="..\RevitLookup\RevitLookup.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Bogus" Version="34.*" />
-        <PackageReference Include="JetBrains.Annotations" Version="2023.*" />
+        <PackageReference Include="Bogus" Version="35.6.5" />
+        <PackageReference Include="JetBrains.Annotations" Version="2025.2.4" />
     </ItemGroup>
 </Project>

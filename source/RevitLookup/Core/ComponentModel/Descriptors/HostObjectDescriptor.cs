@@ -1,4 +1,4 @@
-﻿// Copyright 2003-2023 by Autodesk, Inc.
+// Copyright 2003-2023 by Autodesk, Inc.
 // 
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -31,17 +31,17 @@ public sealed class HostObjectDescriptor(HostObject hostObject) : ElementDescrip
     {
         manager.Register(hostObject, extension =>
         {
-            extension.Name = nameof(HostExtensions.GetBottomFaces);
+            extension.Name = nameof(HostObjectUtilsExtensions.GetBottomFaces);
             extension.Result = extension.Value.GetBottomFaces();
         });
         manager.Register(hostObject, extension =>
         {
-            extension.Name = nameof(HostExtensions.GetTopFaces);
+            extension.Name = nameof(HostObjectUtilsExtensions.GetTopFaces);
             extension.Result = extension.Value.GetTopFaces();
         });
         manager.Register(hostObject, extension =>
         {
-            extension.Name = nameof(HostExtensions.GetSideFaces);
+            extension.Name = nameof(HostObjectUtilsExtensions.GetSideFaces);
             extension.Result = new ResolveSet(2)
                 .AppendVariant(extension.Value.GetSideFaces(ShellLayerType.Interior), "Interior")
                 .AppendVariant(extension.Value.GetSideFaces(ShellLayerType.Exterior), "Exterior");

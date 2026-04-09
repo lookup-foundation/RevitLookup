@@ -1,4 +1,4 @@
-﻿// Copyright 2003-2023 by Autodesk, Inc.
+// Copyright 2003-2023 by Autodesk, Inc.
 // 
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -62,12 +62,12 @@ public class ElementDescriptor : Descriptor, IDescriptorResolver, IDescriptorCon
     {
         manager.Register(_element, extension =>
         {
-            extension.Name = nameof(ElementExtensions.CanBeMirrored);
-            extension.Result = extension.Value.CanBeMirrored();
+            extension.Name = nameof(ElementTransformUtilsExtensions.CanBeMirrored);
+            extension.Result = extension.Value.CanBeMirrored;
         });
         manager.Register(_element, extension =>
         {
-            extension.Name = nameof(GeometryExtensions.GetJoinedElements);
+            extension.Name = nameof(JoinGeometryUtilsExtensions.GetJoinedElements);
             extension.Result = extension.Value.GetJoinedElements();
         });
     }
