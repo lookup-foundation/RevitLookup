@@ -13,6 +13,7 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using System.Diagnostics.CodeAnalysis;
+using InvalidOperationException = Autodesk.Revit.Exceptions.InvalidOperationException;
 
 namespace RevitLookup.Core.Visualization.Helpers;
 
@@ -96,7 +97,7 @@ public static class RenderGeometryHelper
 
     public static Solid ScaleSolid(Solid solid, double scale)
     {
-        if (scale is 1) scale = EvaluateScale(solid, RevitApiContext.Application.VertexTolerance * 3);
+        if (scale is 1d) scale = EvaluateScale(solid, RevitApiContext.Application.VertexTolerance * 3);
 
         var centroid = solid.GetBoundingBox().Transform.Origin;
         var moveToCentroid = Transform.CreateTranslation(-centroid);
@@ -207,7 +208,6 @@ public static class RenderGeometryHelper
 #endif
     }
 
-    [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
     private static double EvaluateScale(Solid solid, double offset)
     {
         var boundingBox = solid.GetBoundingBox();
@@ -218,8 +218,8 @@ public static class RenderGeometryHelper
 
         var maxDimension = Math.Max(Math.Max(currentLength, currentWidth), currentHeight);
 
-        if (maxDimension == currentLength) return (currentLength + offset) / currentLength;
-        if (maxDimension == currentWidth) return (currentWidth + offset) / currentWidth;
+        if (Math.Abs(maxDimension - currentLength) < 1e-9) return (currentLength + offset) / currentLength;
+        if (Math.Abs(maxDimension - currentWidth) < 1e-9) return (currentWidth + offset) / currentWidth;
         return (currentHeight + offset) / currentHeight;
     }
 }

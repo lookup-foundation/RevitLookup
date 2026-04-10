@@ -233,7 +233,7 @@ public sealed class SettingsService(
             SolidSettings = new SolidVisualizationSettings
             {
                 Transparency = 20,
-                Scale = 1,
+                Scale = 100,
                 FaceColor = Colors.DodgerBlue,
                 EdgeColor = Color.FromArgb(255, 30, 81, 255),
                 ShowFace = true,

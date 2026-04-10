@@ -13,25 +13,14 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using Autodesk.Revit.DB.DirectContext3D;
-using Autodesk.Revit.DB.ExternalService;
-using Autodesk.Revit.UI;
-using Nice3point.Revit.Toolkit.External;
 using RevitLookup.Core.Visualization.Buffers;
-using RevitLookup.Core.Visualization.Events;
 using RevitLookup.Core.Visualization.Helpers;
 
 namespace RevitLookup.Core.Visualization;
 
-public sealed partial class SolidVisualizationServer : IDirectContext3DServer
+public sealed class SolidVisualizationServer : DirectContext3DServer
 {
-    private Solid _solid = null!; //Cant be null after registration
-    private bool _hasEffectsUpdates = true;
-    private bool _hasGeometryUpdates = true;
-
-    private readonly Guid _guid = Guid.NewGuid();
-    private readonly Lock _renderLock = new();
-    private readonly List<RenderingBufferStorage> _faceBuffers = new(4);
-    private readonly List<RenderingBufferStorage> _edgeBuffers = new(8);
+    private Solid _solid = null!;
 
     private double _transparency;
     private double _scale;
@@ -42,18 +31,14 @@ public sealed partial class SolidVisualizationServer : IDirectContext3DServer
     private bool _drawFace;
     private bool _drawEdge;
 
-    public Guid GetServerId() => _guid;
-    public string GetVendorId() => "RevitLookup";
-    public string GetName() => "Solid visualization server";
-    public string GetDescription() => "Solid geometry visualization";
-    public ExternalServiceId GetServiceId() => ExternalServices.BuiltInExternalServices.DirectContext3DService;
-    public string GetApplicationId() => string.Empty;
-    public string GetSourceId() => string.Empty;
-    public bool UsesHandles() => false;
-    public bool CanExecute(View view) => true;
-    public bool UseInTransparentPass(View view) => _drawFace && _transparency > 0;
+    private readonly List<RenderingBufferStorage> _faceBuffers = new(4);
+    private readonly List<RenderingBufferStorage> _edgeBuffers = new(8);
 
-    public Outline GetBoundingBox(View view)
+    public override string GetName() => "Solid visualization server";
+    public override string GetDescription() => "Solid geometry visualization";
+    public override bool UseInTransparentPass(View view) => _drawFace && _transparency > 0;
+
+    public override Outline GetBoundingBox(View view)
     {
         var boundingBox = _solid.GetBoundingBox();
         var minPoint = boundingBox.Transform.OfPoint(boundingBox.Min);
@@ -62,114 +47,75 @@ public sealed partial class SolidVisualizationServer : IDirectContext3DServer
         return new Outline(minPoint, maxPoint);
     }
 
-    public void RenderScene(View view, DisplayStyle displayStyle)
+    public void Register(Solid solid)
     {
-        lock (_renderLock)
-        {
-            try
-            {
-                if (_hasGeometryUpdates)
-                {
-                    MapGeometryBuffer();
-                    _hasGeometryUpdates = false;
-                }
-
-                if (_hasEffectsUpdates)
-                {
-                    UpdateEffects();
-                    _hasEffectsUpdates = false;
-                }
-
-                if (_drawFace)
-                {
-                    var isTransparentPass = DrawContext.IsTransparentPass();
-                    if (isTransparentPass && _transparency > 0 || !isTransparentPass && _transparency == 0)
-                    {
-                        foreach (var buffer in _faceBuffers)
-                        {
-                            DrawContext.FlushBuffer(buffer.VertexBuffer,
-                                buffer.VertexBufferCount,
-                                buffer.IndexBuffer,
-                                buffer.IndexBufferCount,
-                                buffer.VertexFormat,
-                                buffer.EffectInstance, PrimitiveType.TriangleList, 0,
-                                buffer.PrimitiveCount);
-                        }
-                    }
-                }
-
-                if (_drawEdge)
-                {
-                    foreach (var buffer in _edgeBuffers)
-                    {
-                        DrawContext.FlushBuffer(buffer.VertexBuffer,
-                            buffer.VertexBufferCount,
-                            buffer.IndexBuffer,
-                            buffer.IndexBufferCount,
-                            buffer.VertexFormat,
-                            buffer.EffectInstance, PrimitiveType.LineList, 0,
-                            buffer.PrimitiveCount);
-                    }
-                }
-            }
-            catch (Exception exception)
-            {
-                RenderFailed?.Invoke(this, new RenderFailedEventArgs
-                {
-                    ExceptionObject = exception
-                });
-            }
-        }
+        _solid = solid;
+        Register();
     }
 
-    private void MapGeometryBuffer()
+    public void UpdateFaceColor(Color value) => UpdateViews(() =>
+    {
+        _faceColor = value;
+        HasEffectsUpdates = true;
+    });
+
+    public void UpdateEdgeColor(Color value) => UpdateViews(() =>
+    {
+        _edgeColor = value;
+        HasEffectsUpdates = true;
+    });
+
+    public void UpdateTransparency(double value) => UpdateViews(() =>
+    {
+        _transparency = value;
+        HasEffectsUpdates = true;
+    });
+
+    public void UpdateScale(double value) => UpdateViews(() =>
+    {
+        _scale = value;
+        HasGeometryUpdates = true;
+        HasEffectsUpdates = true;
+        _faceBuffers.Clear();
+        _edgeBuffers.Clear();
+    });
+
+    public void UpdateFaceVisibility(bool value) => UpdateViews(() => { _drawFace = value; });
+
+    public void UpdateEdgeVisibility(bool value) => UpdateViews(() => { _drawEdge = value; });
+
+    protected override bool AreBuffersValid()
+    {
+        return _faceBuffers.TrueForAll(buffer => buffer.IsValid())
+               && _edgeBuffers.TrueForAll(buffer => buffer.IsValid());
+    }
+
+    protected override void MapGeometryBuffer()
     {
         var scaledSolid = RenderGeometryHelper.ScaleSolid(_solid, _scale);
 
         var faceIndex = 0;
         foreach (Face face in scaledSolid.Faces)
         {
-            var buffer = CreateOrUpdateBuffer(_faceBuffers, faceIndex++);
-            MapFaceBuffers(buffer, face);
+            var buffer = GetOrCreateBuffer(_faceBuffers, faceIndex++);
+            var triangulation = face.Triangulate();
+            if (triangulation is null) continue;
+            
+            RenderHelper.MapSurfaceBuffer(buffer, triangulation, 0);
         }
 
         var edgeIndex = 0;
         foreach (Edge edge in scaledSolid.Edges)
         {
-            var buffer = CreateOrUpdateBuffer(_edgeBuffers, edgeIndex++);
-            MapEdgeBuffers(buffer, edge);
+            var buffer = GetOrCreateBuffer(_edgeBuffers, edgeIndex++);
+            var tessellation = edge.Tessellate();
+            if (tessellation is null) continue;
+            
+            RenderHelper.MapCurveBuffer(buffer, tessellation);
         }
     }
 
-    private void MapFaceBuffers(RenderingBufferStorage buffer, Face face)
-    {
-        var mesh = face.Triangulate();
-        RenderHelper.MapSurfaceBuffer(buffer, mesh, 0);
-    }
-
-    private void MapEdgeBuffers(RenderingBufferStorage buffer, Edge edge)
-    {
-        var mesh = edge.Tessellate();
-        RenderHelper.MapCurveBuffer(buffer, mesh);
-    }
-
-    private RenderingBufferStorage CreateOrUpdateBuffer(List<RenderingBufferStorage> buffers, int index)
-    {
-        RenderingBufferStorage buffer;
-        if (buffers.Count > index)
-        {
-            buffer = buffers[index];
-        }
-        else
-        {
-            buffer = new RenderingBufferStorage();
-            buffers.Add(buffer);
-        }
-
-        return buffer;
-    }
-
-    private void UpdateEffects()
+    protected override void UpdateEffects()
     {
         foreach (var buffer in _faceBuffers)
         {
@@ -185,126 +131,31 @@ public sealed partial class SolidVisualizationServer : IDirectContext3DServer
         }
     }
 
-    public void UpdateFaceColor(Color value)
+    protected override void RenderBuffers()
     {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        lock (_renderLock)
+        if (_drawFace)
         {
-            _faceColor = value;
-            _hasEffectsUpdates = true;
+            foreach (var buffer in _faceBuffers)
+            {
+                FlushTriangleBuffer(buffer, _transparency);
+            }
+        }
 
-            uiDocument.UpdateAllOpenViews();
+        if (_drawEdge)
+        {
+            foreach (var buffer in _edgeBuffers)
+            {
+                FlushLineBuffer(buffer);
+            }
         }
     }
 
-    public void UpdateEdgeColor(Color value)
+    private static RenderingBufferStorage GetOrCreateBuffer(List<RenderingBufferStorage> buffers, int index)
     {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
+        if (buffers.Count > index) return buffers[index];
 
-        lock (_renderLock)
-        {
-            _edgeColor = value;
-            _hasEffectsUpdates = true;
-
-            uiDocument.UpdateAllOpenViews();
-        }
+        var buffer = new RenderingBufferStorage();
+        buffers.Add(buffer);
+        return buffer;
     }
-
-    public void UpdateTransparency(double value)
-    {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        lock (_renderLock)
-        {
-            _transparency = value;
-            _hasEffectsUpdates = true;
-
-            uiDocument.UpdateAllOpenViews();
-        }
-    }
-
-    public void UpdateScale(double value)
-    {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        _scale = value;
-
-        lock (_renderLock)
-        {
-            _hasGeometryUpdates = true;
-            _hasEffectsUpdates = true;
-            _faceBuffers.Clear();
-            _edgeBuffers.Clear();
-
-            uiDocument.UpdateAllOpenViews();
-        }
-    }
-
-    public void UpdateFaceVisibility(bool value)
-    {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        lock (_renderLock)
-        {
-            _drawFace = value;
-
-            uiDocument.UpdateAllOpenViews();
-        }
-    }
-
-    public void UpdateEdgeVisibility(bool value)
-    {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        lock (_renderLock)
-        {
-            _drawEdge = value;
-
-            uiDocument.UpdateAllOpenViews();
-        }
-    }
-
-    public void Register(Solid solid)
-    {
-        _solid = solid;
-        RegisterServerEvent.Raise();
-    }
-
-    public void Unregister()
-    {
-        UnregisterServerEvent.Raise();
-    }
-
-    [ExternalEvent(AllowDirectInvocation = true)]
-    private void RegisterServer(UIApplication application)
-    {
-        if (application.ActiveUIDocument is null) return;
-
-        var directContextService = (MultiServerService) ExternalServiceRegistry.GetService(ExternalServices.BuiltInExternalServices.DirectContext3DService);
-        var serverIds = directContextService.GetActiveServerIds();
-
-        directContextService.AddServer(this);
-        serverIds.Add(GetServerId());
-        directContextService.SetActiveServers(serverIds);
-
-        application.ActiveUIDocument.UpdateAllOpenViews();
-    }
-
-    [ExternalEvent(AllowDirectInvocation = true)]
-    private void UnregisterServer(UIApplication application)
-    {
-        var directContextService = (MultiServerService) ExternalServiceRegistry.GetService(ExternalServices.BuiltInExternalServices.DirectContext3DService);
-        directContextService.RemoveServer(GetServerId());
-
-        application.ActiveUIDocument?.UpdateAllOpenViews();
-    }
-
-    public event EventHandler<RenderFailedEventArgs>? RenderFailed;
 }

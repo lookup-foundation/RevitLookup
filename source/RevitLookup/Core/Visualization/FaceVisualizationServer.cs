@@ -13,50 +13,36 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using Autodesk.Revit.DB.DirectContext3D;
-using Autodesk.Revit.DB.ExternalService;
-using Autodesk.Revit.UI;
-using Nice3point.Revit.Toolkit.External;
+using Nice3point.Revit.Extensions.Runtime;
 using RevitLookup.Core.Visualization.Buffers;
-using RevitLookup.Core.Visualization.Events;
 using RevitLookup.Core.Visualization.Helpers;
 
 namespace RevitLookup.Core.Visualization;
 
-public sealed partial class FaceVisualizationServer : IDirectContext3DServer
+public sealed class FaceVisualizationServer : DirectContext3DServer
 {
-    private Face _face = null!; //Cant be null after registration
-    private bool _hasEffectsUpdates = true;
-    private bool _hasGeometryUpdates = true;
-
-    private readonly Guid _guid = Guid.NewGuid();
-    private readonly Lock _renderLock = new();
-    private readonly RenderingBufferStorage _meshGridBuffer = new();
-    private readonly RenderingBufferStorage _normalBuffer = new();
-    private readonly RenderingBufferStorage _surfaceBuffer = new();
+    private Face _face = null!;
 
     private double _extrusion;
     private double _transparency;
 
+    private Color _surfaceColor = Color.InvalidColorValue;
     private Color _meshColor = Color.InvalidColorValue;
     private Color _normalColor = Color.InvalidColorValue;
-    private Color _surfaceColor = Color.InvalidColorValue;
 
+    private bool _drawSurface;
     private bool _drawMeshGrid;
     private bool _drawNormalVector;
-    private bool _drawSurface;
 
-    public Guid GetServerId() => _guid;
-    public string GetVendorId() => "RevitLookup";
-    public string GetName() => "Face visualization server";
-    public string GetDescription() => "Face geometry visualization";
-    public ExternalServiceId GetServiceId() => ExternalServices.BuiltInExternalServices.DirectContext3DService;
-    public string GetApplicationId() => string.Empty;
-    public string GetSourceId() => string.Empty;
-    public bool UsesHandles() => false;
-    public bool CanExecute(View view) => true;
-    public bool UseInTransparentPass(View view) => _drawSurface && _transparency > 0;
+    private readonly RenderingBufferStorage _surfaceBuffer = new();
+    private readonly RenderingBufferStorage _meshGridBuffer = new();
+    private readonly RenderingBufferStorage _normalBuffer = new();
 
-    public Outline? GetBoundingBox(View view)
+    public override string GetName() => "Face visualization server";
+    public override string GetDescription() => "Face geometry visualization";
+    public override bool UseInTransparentPass(View view) => _drawSurface && _transparency > 0;
+
+    public override Outline? GetBoundingBox(View view)
     {
         if (_face.Reference is null) return null;
 
@@ -70,72 +56,54 @@ public sealed partial class FaceVisualizationServer : IDirectContext3DServer
         return new Outline(minPoint, maxPoint);
     }
 
-    public void RenderScene(View view, DisplayStyle displayStyle)
+    public void Register(Face face)
     {
-        lock (_renderLock)
-        {
-            try
-            {
-                if (_hasGeometryUpdates || !_surfaceBuffer.IsValid() || !_meshGridBuffer.IsValid() || !_normalBuffer.IsValid())
-                {
-                    MapGeometryBuffer();
-                    _hasGeometryUpdates = false;
-                }
-
-                if (_hasEffectsUpdates)
-                {
-                    UpdateEffects();
-                    _hasEffectsUpdates = false;
-                }
-
-                if (_drawSurface)
-                {
-                    var isTransparentPass = DrawContext.IsTransparentPass();
-                    if (isTransparentPass && _transparency > 0 || !isTransparentPass && _transparency == 0)
-                    {
-                        DrawContext.FlushBuffer(_surfaceBuffer.VertexBuffer,
-                            _surfaceBuffer.VertexBufferCount,
-                            _surfaceBuffer.IndexBuffer,
-                            _surfaceBuffer.IndexBufferCount,
-                            _surfaceBuffer.VertexFormat,
-                            _surfaceBuffer.EffectInstance, PrimitiveType.TriangleList, 0,
-                            _surfaceBuffer.PrimitiveCount);
-                    }
-                }
-
-                if (_drawMeshGrid)
-                {
-                    DrawContext.FlushBuffer(_meshGridBuffer.VertexBuffer,
-                        _meshGridBuffer.VertexBufferCount,
-                        _meshGridBuffer.IndexBuffer,
-                        _meshGridBuffer.IndexBufferCount,
-                        _meshGridBuffer.VertexFormat,
-                        _meshGridBuffer.EffectInstance, PrimitiveType.LineList, 0,
-                        _meshGridBuffer.PrimitiveCount);
-                }
-
-                if (_drawNormalVector)
-                {
-                    DrawContext.FlushBuffer(_normalBuffer.VertexBuffer,
-                        _normalBuffer.VertexBufferCount,
-                        _normalBuffer.IndexBuffer,
-                        _normalBuffer.IndexBufferCount,
-                        _normalBuffer.VertexFormat,
-                        _normalBuffer.EffectInstance, PrimitiveType.LineList, 0,
-                        _normalBuffer.PrimitiveCount);
-                }
-            }
-            catch (Exception exception)
-            {
-                RenderFailed?.Invoke(this, new RenderFailedEventArgs
-                {
-                    ExceptionObject = exception
-                });
-            }
-        }
+        _face = face;
+        Register();
     }
 
-    private void MapGeometryBuffer()
+    public void UpdateSurfaceColor(Color value) => UpdateViews(() =>
+    {
+        _surfaceColor = value;
+        HasEffectsUpdates = true;
+    });
+
+    public void UpdateMeshGridColor(Color value) => UpdateViews(() =>
+    {
+        _meshColor = value;
+        HasEffectsUpdates = true;
+    });
+
+    public void UpdateNormalVectorColor(Color value) => UpdateViews(() =>
+    {
+        _normalColor = value;
+        HasEffectsUpdates = true;
+    });
+
+    public void UpdateExtrusion(double value) => UpdateViews(() =>
+    {
+        _extrusion = value;
+        HasGeometryUpdates = true;
+    });
+
+    public void UpdateTransparency(double value) => UpdateViews(() =>
+    {
+        _transparency = value;
+        HasEffectsUpdates = true;
+    });
+
+    public void UpdateSurfaceVisibility(bool visible) => UpdateViews(() => { _drawSurface = visible; });
+
+    public void UpdateMeshGridVisibility(bool visible) => UpdateViews(() => { _drawMeshGrid = visible; });
+
+    public void UpdateNormalVectorVisibility(bool visible) => UpdateViews(() => { _drawNormalVector = visible; });
+
+    protected override bool AreBuffersValid()
+    {
+        return _surfaceBuffer.IsValid() && _meshGridBuffer.IsValid() && _normalBuffer.IsValid();
+    }
+
+    protected override void MapGeometryBuffer()
     {
         var mesh = _face.Triangulate();
         var faceBox = _face.GetBoundingBox();
@@ -146,14 +114,15 @@ public sealed partial class FaceVisualizationServer : IDirectContext3DServer
 
         RenderHelper.MapSurfaceBuffer(_surfaceBuffer, mesh, _extrusion);
         RenderHelper.MapMeshGridBuffer(_meshGridBuffer, mesh, _extrusion);
-        RenderHelper.MapNormalVectorBuffer(_normalBuffer, _face.Evaluate(center) + normal * (offset + _extrusion), normal, normalLength);
+        RenderHelper.MapNormalVectorBuffer(_normalBuffer, _face.Evaluate(center) + normal * (offset + _extrusion),
+            normal, normalLength);
     }
 
-    private void UpdateEffects()
+    protected override void UpdateEffects()
     {
         _surfaceBuffer.EffectInstance ??= new EffectInstance(_surfaceBuffer.FormatBits);
-        _meshGridBuffer.EffectInstance ??= new EffectInstance(_surfaceBuffer.FormatBits);
-        _normalBuffer.EffectInstance ??= new EffectInstance(_surfaceBuffer.FormatBits);
+        _meshGridBuffer.EffectInstance ??= new EffectInstance(_meshGridBuffer.FormatBits);
+        _normalBuffer.EffectInstance ??= new EffectInstance(_normalBuffer.FormatBits);
 
         _surfaceBuffer.EffectInstance.SetColor(_surfaceColor);
         _meshGridBuffer.EffectInstance.SetColor(_meshColor);
@@ -161,146 +130,10 @@ public sealed partial class FaceVisualizationServer : IDirectContext3DServer
         _surfaceBuffer.EffectInstance.SetTransparency(_transparency);
     }
 
-    public void UpdateSurfaceColor(Color value)
+    protected override void RenderBuffers()
     {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        lock (_renderLock)
-        {
-            _surfaceColor = value;
-            _hasEffectsUpdates = true;
-
-            uiDocument.UpdateAllOpenViews();
-        }
+        if (_drawSurface) FlushTriangleBuffer(_surfaceBuffer, _transparency);
+        if (_drawMeshGrid) FlushLineBuffer(_meshGridBuffer);
+        if (_drawNormalVector) FlushLineBuffer(_normalBuffer);
     }
-
-    public void UpdateMeshGridColor(Color value)
-    {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        lock (_renderLock)
-        {
-            _meshColor = value;
-            _hasEffectsUpdates = true;
-
-            uiDocument.UpdateAllOpenViews();
-        }
-    }
-
-    public void UpdateNormalVectorColor(Color value)
-    {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        lock (_renderLock)
-        {
-            _normalColor = value;
-            _hasEffectsUpdates = true;
-
-            uiDocument.UpdateAllOpenViews();
-        }
-    }
-
-    public void UpdateExtrusion(double value)
-    {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        lock (_renderLock)
-        {
-            _extrusion = value;
-            _hasGeometryUpdates = true;
-
-            uiDocument.UpdateAllOpenViews();
-        }
-    }
-
-    public void UpdateTransparency(double value)
-    {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        lock (_renderLock)
-        {
-            _transparency = value;
-            _hasEffectsUpdates = true;
-
-            uiDocument.UpdateAllOpenViews();
-        }
-    }
-
-    public void UpdateSurfaceVisibility(bool visible)
-    {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        lock (_renderLock)
-        {
-            _drawSurface = visible;
-            uiDocument.UpdateAllOpenViews();
-        }
-    }
-
-    public void UpdateMeshGridVisibility(bool visible)
-    {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        lock (_renderLock)
-        {
-            _drawMeshGrid = visible;
-            uiDocument.UpdateAllOpenViews();
-        }
-    }
-
-    public void UpdateNormalVectorVisibility(bool visible)
-    {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        lock (_renderLock)
-        {
-            _drawNormalVector = visible;
-            uiDocument.UpdateAllOpenViews();
-        }
-    }
-
-    public void Register(Face face)
-    {
-        _face = face;
-        RegisterServerEvent.Raise();
-    }
-
-    public void Unregister()
-    {
-        UnregisterServerEvent.Raise();
-    }
-
-    [ExternalEvent(AllowDirectInvocation = true)]
-    private void RegisterServer(UIApplication application)
-    {
-        if (application.ActiveUIDocument is null) return;
-
-        var directContextService = (MultiServerService) ExternalServiceRegistry.GetService(ExternalServices.BuiltInExternalServices.DirectContext3DService);
-        var serverIds = directContextService.GetActiveServerIds();
-
-        directContextService.AddServer(this);
-        serverIds.Add(GetServerId());
-        directContextService.SetActiveServers(serverIds);
-
-        application.ActiveUIDocument.UpdateAllOpenViews();
-    }
-
-    [ExternalEvent(AllowDirectInvocation = true)]
-    private void UnregisterServer(UIApplication application)
-    {
-        var directContextService = (MultiServerService) ExternalServiceRegistry.GetService(ExternalServices.BuiltInExternalServices.DirectContext3DService);
-        directContextService.RemoveServer(GetServerId());
-
-        application.ActiveUIDocument?.UpdateAllOpenViews();
-    }
-
-    public event EventHandler<RenderFailedEventArgs>? RenderFailed;
 }

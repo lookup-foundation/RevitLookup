@@ -13,23 +13,26 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using Autodesk.Revit.DB.DirectContext3D;
-using Autodesk.Revit.DB.ExternalService;
-using Autodesk.Revit.UI;
-using Nice3point.Revit.Toolkit.External;
 using RevitLookup.Core.Visualization.Buffers;
-using RevitLookup.Core.Visualization.Events;
 using RevitLookup.Core.Visualization.Helpers;
 
 namespace RevitLookup.Core.Visualization;
 
-public sealed partial class XyzVisualizationServer : IDirectContext3DServer
+public sealed class XyzVisualizationServer : DirectContext3DServer
 {
-    private XYZ _point = null!; //Cant be null after registration
-    private bool _hasEffectsUpdates = true;
-    private bool _hasGeometryUpdates = true;
+    private XYZ _point = null!;
 
-    private readonly Guid _guid = Guid.NewGuid();
-    private readonly Lock _renderLock = new();
+    private double _transparency;
+    private double _axisLength;
+
+    private Color _xColor = Color.InvalidColorValue;
+    private Color _yColor = Color.InvalidColorValue;
+    private Color _zColor = Color.InvalidColorValue;
+
+    private bool _drawPlane;
+    private bool _drawXAxis;
+    private bool _drawYAxis;
+    private bool _drawZAxis;
 
     private readonly RenderingBufferStorage[] _planeBuffers = Enumerable.Range(0, 3)
         .Select(_ => new RenderingBufferStorage())
@@ -46,30 +49,11 @@ public sealed partial class XyzVisualizationServer : IDirectContext3DServer
         XYZ.BasisZ
     ];
 
-    private double _transparency;
-    private double _axisLength;
+    public override string GetName() => "XYZ visualization server";
+    public override string GetDescription() => "XYZ geometry visualization";
+    public override bool UseInTransparentPass(View view) => _drawPlane && _transparency > 0;
 
-    private Color _xColor = Color.InvalidColorValue;
-    private Color _yColor = Color.InvalidColorValue;
-    private Color _zColor = Color.InvalidColorValue;
-
-    private bool _drawPlane;
-    private bool _drawXAxis;
-    private bool _drawYAxis;
-    private bool _drawZAxis;
-
-    public Guid GetServerId() => _guid;
-    public string GetVendorId() => "RevitLookup";
-    public string GetName() => "XYZ visualization server";
-    public string GetDescription() => "XYZ geometry visualization";
-    public ExternalServiceId GetServiceId() => ExternalServices.BuiltInExternalServices.DirectContext3DService;
-    public string GetApplicationId() => string.Empty;
-    public string GetSourceId() => string.Empty;
-    public bool UsesHandles() => false;
-    public bool CanExecute(View view) => true;
-    public bool UseInTransparentPass(View view) => _drawPlane && _transparency > 0;
-
-    public Outline GetBoundingBox(View view)
+    public override Outline GetBoundingBox(View view)
     {
         var minPoint = new XYZ(_point.X - _axisLength, _point.Y - _axisLength, _point.Z - _axisLength);
         var maxPoint = new XYZ(_point.X + _axisLength, _point.Y + _axisLength, _point.Z + _axisLength);
@@ -77,108 +61,70 @@ public sealed partial class XyzVisualizationServer : IDirectContext3DServer
         return new Outline(minPoint, maxPoint);
     }
 
-    public void RenderScene(View view, DisplayStyle displayStyle)
+    public void Register(XYZ point)
     {
-        lock (_renderLock)
-        {
-            try
-            {
-                if (_hasGeometryUpdates)
-                {
-                    UpdateGeometryBuffer();
-                    _hasGeometryUpdates = false;
-                }
-
-                if (_hasEffectsUpdates)
-                {
-                    UpdateEffects();
-                    _hasEffectsUpdates = false;
-                }
-
-                if (_drawXAxis)
-                {
-                    RenderAxisBuffer(_axisBuffers[0]);
-                    RenderPlaneBuffer(_planeBuffers[0]);
-                }
-
-                if (_drawYAxis)
-                {
-                    RenderAxisBuffer(_axisBuffers[1]);
-                    RenderPlaneBuffer(_planeBuffers[1]);
-                }
-
-                if (_drawZAxis)
-                {
-                    RenderAxisBuffer(_axisBuffers[2]);
-                    RenderPlaneBuffer(_planeBuffers[2]);
-                }
-            }
-            catch (Exception exception)
-            {
-                RenderFailed?.Invoke(this, new RenderFailedEventArgs
-                {
-                    ExceptionObject = exception
-                });
-            }
-        }
+        _point = point;
+        Register();
     }
 
-    private void RenderPlaneBuffer(RenderingBufferStorage buffer)
+    public void UpdateXColor(Color value) => UpdateViews(() =>
     {
-        if (!_drawPlane) return;
+        _xColor = value;
+        HasEffectsUpdates = true;
+    });
 
-        var isTransparentPass = DrawContext.IsTransparentPass();
-        if (isTransparentPass && _transparency > 0 || !isTransparentPass && _transparency == 0)
-        {
-            DrawContext.FlushBuffer(buffer.VertexBuffer,
-                buffer.VertexBufferCount,
-                buffer.IndexBuffer,
-                buffer.IndexBufferCount,
-                buffer.VertexFormat,
-                buffer.EffectInstance, PrimitiveType.TriangleList, 0,
-                buffer.PrimitiveCount);
-        }
+    public void UpdateYColor(Color value) => UpdateViews(() =>
+    {
+        _yColor = value;
+        HasEffectsUpdates = true;
+    });
+
+    public void UpdateZColor(Color value) => UpdateViews(() =>
+    {
+        _zColor = value;
+        HasEffectsUpdates = true;
+    });
+
+    public void UpdateAxisLength(double value) => UpdateViews(() =>
+    {
+        _axisLength = value;
+        HasGeometryUpdates = true;
+    });
+
+    public void UpdateTransparency(double value) => UpdateViews(() =>
+    {
+        _transparency = value;
+        HasEffectsUpdates = true;
+    });
+
+    public void UpdatePlaneVisibility(bool visible) => UpdateViews(() => { _drawPlane = visible; });
+
+    public void UpdateXAxisVisibility(bool visible) => UpdateViews(() => { _drawXAxis = visible; });
+
+    public void UpdateYAxisVisibility(bool visible) => UpdateViews(() => { _drawYAxis = visible; });
+
+    public void UpdateZAxisVisibility(bool visible) => UpdateViews(() => { _drawZAxis = visible; });
+
+    protected override bool AreBuffersValid()
+    {
+        return Array.TrueForAll(_planeBuffers, buffer => buffer.IsValid())
+               && Array.TrueForAll(_axisBuffers, buffer => buffer.IsValid());
     }
 
-    private void RenderAxisBuffer(RenderingBufferStorage buffer)
-    {
-        DrawContext.FlushBuffer(buffer.VertexBuffer,
-            buffer.VertexBufferCount,
-            buffer.IndexBuffer,
-            buffer.IndexBufferCount,
-            buffer.VertexFormat,
-            buffer.EffectInstance, PrimitiveType.LineList, 0,
-            buffer.PrimitiveCount);
-    }
-
-    private void UpdateGeometryBuffer()
-    {
-        MapNormalBuffer();
-        MapPlaneBuffer();
-    }
-
-    private void MapNormalBuffer()
+    protected override void MapGeometryBuffer()
     {
         var normalExtendLength = _axisLength > 1 ? 0.8 : _axisLength * 0.8;
+
         for (var i = 0; i < _normals.Length; i++)
         {
             var normal = _normals[i];
-            var buffer = _axisBuffers[i];
-            RenderHelper.MapNormalVectorBuffer(buffer, _point - normal * (_axisLength + normalExtendLength), normal, 2 * (_axisLength + normalExtendLength));
+            RenderHelper.MapNormalVectorBuffer(_axisBuffers[i], _point - normal * (_axisLength + normalExtendLength),
+                normal, 2 * (_axisLength + normalExtendLength));
+            RenderHelper.MapSideBuffer(_planeBuffers[i], _point - normal * _axisLength, _point + normal * _axisLength);
         }
     }
 
-    private void MapPlaneBuffer()
-    {
-        for (var i = 0; i < _normals.Length; i++)
-        {
-            var normal = _normals[i];
-            var buffer = _planeBuffers[i];
-            RenderHelper.MapSideBuffer(buffer, _point - normal * _axisLength, _point + normal * _axisLength);
-        }
-    }
-
-    private void UpdateEffects()
+    protected override void UpdateEffects()
     {
         foreach (var buffer in _planeBuffers)
         {
@@ -200,158 +146,24 @@ public sealed partial class XyzVisualizationServer : IDirectContext3DServer
         _axisBuffers[2].EffectInstance!.SetColor(_zColor);
     }
 
-    public void UpdateXColor(Color value)
+    protected override void RenderBuffers()
     {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        lock (_renderLock)
+        if (_drawXAxis)
         {
-            _xColor = value;
-            _hasEffectsUpdates = true;
+            FlushLineBuffer(_axisBuffers[0]);
+            if (_drawPlane) FlushTriangleBuffer(_planeBuffers[0], _transparency);
+        }
 
-            uiDocument.UpdateAllOpenViews();
+        if (_drawYAxis)
+        {
+            FlushLineBuffer(_axisBuffers[1]);
+            if (_drawPlane) FlushTriangleBuffer(_planeBuffers[1], _transparency);
+        }
+
+        if (_drawZAxis)
+        {
+            FlushLineBuffer(_axisBuffers[2]);
+            if (_drawPlane) FlushTriangleBuffer(_planeBuffers[2], _transparency);
         }
     }
-
-    public void UpdateYColor(Color value)
-    {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        lock (_renderLock)
-        {
-            _yColor = value;
-            _hasEffectsUpdates = true;
-
-            uiDocument.UpdateAllOpenViews();
-        }
-    }
-
-    public void UpdateZColor(Color value)
-    {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        lock (_renderLock)
-        {
-            _zColor = value;
-            _hasEffectsUpdates = true;
-
-            uiDocument.UpdateAllOpenViews();
-        }
-    }
-
-    public void UpdateAxisLength(double value)
-    {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        lock (_renderLock)
-        {
-            _axisLength = value;
-            _hasGeometryUpdates = true;
-
-            uiDocument.UpdateAllOpenViews();
-        }
-    }
-
-    public void UpdateTransparency(double value)
-    {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        lock (_renderLock)
-        {
-            _transparency = value;
-            _hasEffectsUpdates = true;
-
-            uiDocument.UpdateAllOpenViews();
-        }
-    }
-
-    public void UpdatePlaneVisibility(bool visible)
-    {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        lock (_renderLock)
-        {
-            _drawPlane = visible;
-            uiDocument.UpdateAllOpenViews();
-        }
-    }
-
-    public void UpdateXAxisVisibility(bool visible)
-    {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        lock (_renderLock)
-        {
-            _drawXAxis = visible;
-            uiDocument.UpdateAllOpenViews();
-        }
-    }
-
-    public void UpdateYAxisVisibility(bool visible)
-    {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        lock (_renderLock)
-        {
-            _drawYAxis = visible;
-            uiDocument.UpdateAllOpenViews();
-        }
-    }
-
-    public void UpdateZAxisVisibility(bool visible)
-    {
-        var uiDocument = RevitContext.ActiveUiDocument;
-        if (uiDocument is null) return;
-
-        lock (_renderLock)
-        {
-            _drawZAxis = visible;
-            uiDocument.UpdateAllOpenViews();
-        }
-    }
-
-    public void Register(XYZ point)
-    {
-        _point = point;
-        RegisterServerEvent.Raise();
-    }
-
-    public void Unregister()
-    {
-        UnregisterServerEvent.Raise();
-    }
-
-    [ExternalEvent(AllowDirectInvocation = true)]
-    private void RegisterServer(UIApplication application)
-    {
-        if (application.ActiveUIDocument is null) return;
-
-        var directContextService = (MultiServerService) ExternalServiceRegistry.GetService(ExternalServices.BuiltInExternalServices.DirectContext3DService);
-        var serverIds = directContextService.GetActiveServerIds();
-
-        directContextService.AddServer(this);
-        serverIds.Add(GetServerId());
-        directContextService.SetActiveServers(serverIds);
-
-        application.ActiveUIDocument.UpdateAllOpenViews();
-    }
-
-    [ExternalEvent(AllowDirectInvocation = true)]
-    private void UnregisterServer(UIApplication application)
-    {
-        var directContextService = (MultiServerService) ExternalServiceRegistry.GetService(ExternalServices.BuiltInExternalServices.DirectContext3DService);
-        directContextService.RemoveServer(GetServerId());
-
-        application.ActiveUIDocument?.UpdateAllOpenViews();
-    }
-
-    public event EventHandler<RenderFailedEventArgs>? RenderFailed;
 }
