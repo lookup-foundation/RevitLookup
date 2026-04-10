@@ -1,5 +1,13 @@
 # Changelog
 
+# **2027.0.1**
+
+- Fixed extensions. CoordinationModelLinkUtils extension is now available starting from Revit 2026.3 patch only.
+- Fixed the Delete element command using the wrong thread.
+- Fixed the visualization buffer for Solid and Mesh geometry.
+- Fixed the visualization thread lock for Solid and Mesh geometry.
+- Fixed the default visualization solid scale.
+
 # **2027.0.0**
 
 Revit 2027 is here, and so is a major update for RevitLookup!
