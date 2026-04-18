@@ -65,11 +65,11 @@
         <PackageVersion Include="Autodesk.PackageBuilder" Version="2.0.2"/>
         <PackageVersion Include="AzureSignTool" Version="7.0.1"/>
         <PackageVersion Include="Sourcy.DotNet" Version="1.1.1"/>
-        <PackageVersion Include="ModularPipelines" Version="3.1.90"/>
-        <PackageVersion Include="ModularPipelines.Git" Version="3.1.90"/>
-        <PackageVersion Include="ModularPipelines.GitHub" Version="3.1.90"/>
-        <PackageVersion Include="ModularPipelines.DotNet" Version="3.1.90"/>
-        <PackageVersion Include="ModularPipelines.Slack" Version="3.1.90"/>
+        <PackageVersion Include="ModularPipelines" Version="3.2.8"/>
+        <PackageVersion Include="ModularPipelines.Git" Version="3.2.8"/>
+        <PackageVersion Include="ModularPipelines.GitHub" Version="3.2.8"/>
+        <PackageVersion Include="ModularPipelines.DotNet" Version="3.2.8"/>
+        <PackageVersion Include="ModularPipelines.Slack" Version="3.2.8"/>
         <PackageVersion Include="Microsoft.VisualStudio.SolutionPersistence" Version="1.0.52"/>
         <PackageVersion Include="ILRepack" Version="2.0.44"/>
         <PackageVersion Include="WixSharp.Core" Version="2.12.3"/>
