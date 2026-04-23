@@ -87,7 +87,7 @@ For example, the util method `DocumentValidation.CanDeleteElement` in RevitLooku
 
 ![image](https://github.com/user-attachments/assets/20db8693-a619-4c3b-89a5-62d277377c23)
 
-List of available extensions: https://github.com/lookup-foundation/RevitLookup/blob/develop/docs/Extensions.md
+List of available extensions: https://github.com/lookup-foundation/RevitLookup/wiki/Extensions
 
 ### Unsupported Members
 

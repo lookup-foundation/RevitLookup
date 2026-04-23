@@ -1,9 +1,10 @@
 ### RevitLookup releases
 
-Current supported Revit versions: 2021-2026.
+Current supported Revit versions: 2021-2027.
 
 | Revit version | Link                                                                       |
 |---------------|----------------------------------------------------------------------------|
+| 2027          | https://github.com/lookup-foundation/RevitLookup/releases/latest           |
 | 2026          | https://github.com/lookup-foundation/RevitLookup/releases/latest           |
 | 2025          | https://github.com/lookup-foundation/RevitLookup/releases/latest           |
 | 2024          | https://github.com/lookup-foundation/RevitLookup/releases/latest           |
