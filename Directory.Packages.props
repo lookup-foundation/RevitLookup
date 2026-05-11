@@ -76,7 +76,7 @@
         <PackageVersion Include="WixSharp.Msi.Core" Version="2.12.3"/>
 
         <!-- Testing -->
-        <PackageVersion Include="TUnit" Version="1.33.0"/>
+        <PackageVersion Include="TUnit" Version="1.44.0"/>
         <PackageVersion Include="Bogus" Version="35.6.5"/>
         <PackageVersion Include="Shouldly" Version="4.3.0"/>
 
