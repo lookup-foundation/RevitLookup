@@ -186,7 +186,7 @@
                 Margin="0,12,0,0"
                 Content="Project website"
                 Icon="{ui:SymbolIcon Link48}"
-                NavigateUri="https://thebuildingcoder.typepad.com" />
+                NavigateUri="https://blog.autodesk.io/category/revit" />
             <ui:HyperlinkButton
                 Content="Source repository on GitHub"
                 Icon="{ui:SymbolIcon Link48}"
