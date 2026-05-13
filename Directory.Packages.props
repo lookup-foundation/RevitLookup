@@ -45,9 +45,9 @@
     <ItemGroup>
         <!-- Application Hosting -->
         <PackageVersion Include="Scrutor" Version="7.0.0"/>
-        <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.7"/>
-        <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.7"/>
-        <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="10.0.7"/>
+        <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.8"/>
+        <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.8"/>
+        <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="10.0.8"/>
 
         <!-- Logging -->
         <PackageVersion Include="Serilog" Version="4.3.1"/>
@@ -55,7 +55,7 @@
         <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1"/>
         <PackageVersion Include="Serilog.Extensions.Hosting" Version="10.0.0"/>
         <PackageVersion Include="Serilog.Sinks.Autodesk.Revit" Version="2.0.1"/>
-        <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.7"/>
+        <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.8"/>
 
         <!-- MVVM -->
         <PackageVersion Include="Riok.Mapperly" Version="4.3.1"/>
@@ -81,7 +81,7 @@
         <PackageVersion Include="Shouldly" Version="4.3.0"/>
 
         <!-- System Dependencies -->
-        <PackageVersion Include="System.Text.Json" Version="10.0.7"/>
+        <PackageVersion Include="System.Text.Json" Version="10.0.8"/>
     </ItemGroup>
 
     <!-- Development Dependencies -->
