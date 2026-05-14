@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using ModularPipelines.Attributes;
 using ModularPipelines.Context;
 using ModularPipelines.GitHub.Extensions;
@@ -45,7 +45,7 @@ public sealed class GenerateGitHubChangelogModule : Module<string>
             changelogBuilder ??= new StringBuilder(changelog);
             changelogBuilder.AppendLine()
                 .Append("**RevitLookup versions**: ")
-                .Append("https://github.com/lookup-foundation/RevitLookup/wiki/Versions");
+                .Append("https://github.com/lookup-foundation/RevitLookup/wiki/versions");
         }
 
         return changelogBuilder?.ToString() ?? changelog;

@@ -428,7 +428,7 @@ Isolating the engine also brings many new improvements:
     - `IsStructuralDeck`
     - `ParticipatesInWrapping`
 
-- Visualisation now supports the new [CurveLoop](https://github.com/lookup-foundation/RevitLookup/wiki/Visualization#curveloop-visualization) type, thanks @JieGou for the implementation!
+- Visualisation now supports the new [CurveLoop](https://github.com/lookup-foundation/RevitLookup/wiki/visualization#curveloop-visualization) type, thanks @JieGou for the implementation!
 
     ![image](https://github.com/user-attachments/assets/f4d935f5-2cfd-44d2-b1c7-d5fdc07e95a1)
 
@@ -445,7 +445,7 @@ Isolating the engine also brings many new improvements:
 - **Migrated to SLNX solution format**, to avoid Git merge conflicts.
 - **Changed API for ContextMenu**. Now it provides dependecies and execution context.
 - **Disabled PresentationFramework traces** for the entire domain to address UI performance issues and freezing under an attached debugger, leaving only Critical events enabled.
-- **Updated** [Contribution](https://github.com/lookup-foundation/RevitLookup/blob/dev/Contributing.md) guide.
+- **Updated** [Contribution](https://github.com/lookup-foundation/RevitLookup/blob/dev/CONTRIBUTING.md) guide.
 
 Made with love by @Nice3point 🕊️
 
@@ -472,7 +472,7 @@ working with Revit.
 This is our first public version, and we are excited for you to try it out for yourself!
 Make sure to file issues you encounter on our GitHub so we can continue to improve it.
 
-Documentation: https://github.com/jeremytammik/RevitLookup/wiki/Revit.ini-File-Editor
+Documentation: https://github.com/jeremytammik/RevitLookup/wiki/revit-ini-file-editor
 
 ## Static dependency conflict analyzer
 
@@ -664,7 +664,7 @@ To illustrate the power of these visualization capabilities, here's a glimpse of
 | BoundingBox | ![image](https://github.com/jeremytammik/RevitLookup/assets/20504884/f800a552-86df-4554-8d5b-c53561720f0d) |
 | XYZ         | ![image](https://github.com/jeremytammik/RevitLookup/assets/20504884/72b3f7cb-279c-4465-9cff-7918e0aaf37c) |
 
-For detailed documentation, visit: https://github.com/jeremytammik/RevitLookup/wiki/Visualization
+For detailed documentation, visit: https://github.com/jeremytammik/RevitLookup/wiki/visualization
 
 Feel free to leave comments and suggestions regarding visualization here: https://github.com/jeremytammik/RevitLookup/pull/245.
 Your input helps us improve this tool for everyone in the Revit community.
@@ -1015,7 +1015,7 @@ In this release RevitLookup welcomes you with improved visuals, support for temp
 
 ## Misc
 
-- Updated developer's [guide](https://github.com/jeremytammik/RevitLookup/blob/dev/Contributing.md#styles).
+- Updated developer's [guide](https://github.com/jeremytammik/RevitLookup/blob/dev/CONTRIBUTING.md#styles).
 
 Here, I'm wrapping things up. Wishing everyone a splendid New Year and a joyous Christmas ahead. As always, yours truly @Nice3point 🎅
 
@@ -1281,7 +1281,7 @@ Critical security patch
 
 ## Other
 
-* Added installers for previous RevitLookup versions https://github.com/jeremytammik/RevitLookup/wiki/Versions
+* Added installers for previous RevitLookup versions https://github.com/jeremytammik/RevitLookup/wiki/versions
 
 # 2023-04-04 **2024.0.0**
 
@@ -1338,7 +1338,7 @@ In this release, the entire code base has been completely rewritten from scratch
 
   ![image](https://user-images.githubusercontent.com/20504884/225852056-9bb523c6-85dd-44d8-b900-ef3ca1eefaa6.png)
 
-  Available extensions: https://github.com/jeremytammik/RevitLookup/wiki/Extensions
+  Available extensions: https://github.com/jeremytammik/RevitLookup/wiki/extensions
 
 * Displaying all methods that objects have, even if RevitLookup does not support them
 
@@ -1358,7 +1358,7 @@ In this release, the entire code base has been completely rewritten from scratch
 
 * Extensible storage moved to the `GetEntity()` method
 * Adding new features and extending the functionality of RevitLookup just got easier. Developer's
-  guide: https://github.com/jeremytammik/RevitLookup/blob/dev/Contributing.md#architecture
+  guide: https://github.com/jeremytammik/RevitLookup/blob/dev/CONTRIBUTING.md#architecture
 
 # New features
 

@@ -32,7 +32,7 @@ Whether you are a seasoned professional or just starting out, the RevitLookup is
 
 To ensure a proper code review, all code contributions must go through a pull request and be approved by a core developer before being merged.
 
-We truly love pull requests! If you wish to help, you can learn more about how to contribute to this project in the [contribution guide](Contributing.md).
+We truly love pull requests! If you wish to help, you can learn more about how to contribute to this project in the [contribution guide](CONTRIBUTING.md).
 
 |    Date     | Maintainer                                                                                                                                                                                                                                       |
 |:-----------:|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -42,7 +42,7 @@ We truly love pull requests! If you wish to help, you can learn more about how t
 
 ## License
 
-The source code is published under [MIT License](http://opensource.org/licenses/MIT), the license is available [here](License.md).
+The source code is published under [MIT License](http://opensource.org/licenses/MIT), the license is available [here](LICENSE.md).
 
 ## Sponsors
 

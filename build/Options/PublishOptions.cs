@@ -1,4 +1,4 @@
-﻿namespace Build.Options;
+namespace Build.Options;
 
 [Serializable]
 public sealed record PublishOptions
@@ -11,5 +11,5 @@ public sealed record PublishOptions
     /// <summary>
     ///     Path to the release changelog file
     /// </summary>
-    public string ChangelogFile { get; init; } = "Changelog.md";
+    public string ChangelogFile { get; init; } = "CHANGELOG.md";
 }

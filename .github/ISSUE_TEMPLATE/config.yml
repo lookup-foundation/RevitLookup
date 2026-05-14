@@ -4,5 +4,5 @@ contact_links:
     url: https://github.com/jeremytammik/RevitLookup/wiki
     about: Documentation for users of RevitLookup tool.
   - name: 📃 RevitLookup dev documentation
-    url: https://github.com/jeremytammik/RevitLookup/blob/dev/Contributing.md
+    url: https://github.com/jeremytammik/RevitLookup/blob/dev/CONTRIBUTING.md
     about: Documentation for people interested in developing and contributing for RevitLookup.

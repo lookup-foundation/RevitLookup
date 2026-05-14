@@ -1,4 +1,4 @@
-﻿## Table of contents
+## Table of contents
 
 <!-- TOC -->
 * [Fork, Clone, Branch and Create your PR](#fork-clone-branch-and-create-your-pr)
@@ -131,7 +131,7 @@ If no entry is found for the current version, GitHub will automatically generate
 To update the changelog manually:
 
 1. Navigate to the solution root.
-2. Open the file **Changelog.md**.
+2. Open the file **CHANGELOG.md**.
 3. Add a section for your version. The version separator is the `#` symbol.
 4. Specify the release number e.g. `# 1.0.0` or `# 25.01.01 v1.0.0`, the format does not matter, the main thing is that it contains the version.
 5. In the lines below, write a changelog for your version, style to your taste.

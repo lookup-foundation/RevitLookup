@@ -9,9 +9,9 @@ time it takes to analyze and manage your project.
 
 ### Member Explorer
 
-[<img align="left" src="https://github.com/user-attachments/assets/516e648a-18fe-43cc-98d5-393eb57adb01" width="350" />](https://github.com/lookup-foundation/RevitLookup/wiki/Member-Explorer)
+[<img align="left" src="https://github.com/user-attachments/assets/516e648a-18fe-43cc-98d5-393eb57adb01" width="350" />](https://github.com/lookup-foundation/RevitLookup/wiki/member-explorer)
 
-[Member Explorer](https://github.com/lookup-foundation/RevitLookup/wiki/Member-Explorer) explores properties, methods, events of any Revit object in Runtime.
+[Member Explorer](https://github.com/lookup-foundation/RevitLookup/wiki/member-explorer) explores properties, methods, events of any Revit object in Runtime.
 Values are evaluated on the fly, speeding up debugging, plugin development, or family modeling.
 RevitLookup provides a pretty large set of objects to explore,
 including the root objects Application, Document, UIApplication, as well as niche objects like Services, Updaters, and Performance Issues.
@@ -35,9 +35,9 @@ Monitoring only works when the tool is open, for performance reasons.
 
 ### Visualization
 
-[<img align="left" src="https://github.com/user-attachments/assets/c979a541-8c73-4a90-95ed-451f13e4a1ea" width="350" />](https://github.com/lookup-foundation/RevitLookup/wiki/Visualization)
+[<img align="left" src="https://github.com/user-attachments/assets/c979a541-8c73-4a90-95ed-451f13e4a1ea" width="350" />](https://github.com/lookup-foundation/RevitLookup/wiki/visualization)
 
-[Visualization](https://github.com/lookup-foundation/RevitLookup/wiki/Visualization) provides a visual representation of the geometry in the Revit API, how it is arranged in space and what part of the complete object it is.
+[Visualization](https://github.com/lookup-foundation/RevitLookup/wiki/visualization) provides a visual representation of the geometry in the Revit API, how it is arranged in space and what part of the complete object it is.
 RevitLookup supports all commonly used geometry primitives, and supports multi-visualization, just open multiple instances of RevitLookup side by side.
 <br/>
 <br/>
@@ -56,7 +56,7 @@ RevitLookup supports all commonly used geometry primitives, and supports multi-v
 
 RevitLookup provides an analysis of all commonly used Revit enumerations and units.
 Built-in parameters, Built-in categories, Forge units are all available out of the box,
-and in the context menu you can also go to [Member Explorer](https://github.com/lookup-foundation/RevitLookup/wiki/Member-Explorer)
+and in the context menu you can also go to [Member Explorer](https://github.com/lookup-foundation/RevitLookup/wiki/member-explorer)
 to explore the properties and methods of these units.
 <br/>
 <br/>
@@ -65,9 +65,9 @@ to explore the properties and methods of these units.
 
 ### Search Elements
 
-[<img align="left" src="https://github.com/user-attachments/assets/0008d7fc-8f81-4b10-9145-0139f54dad46" width="350" />](https://github.com/lookup-foundation/RevitLookup/wiki/Search-Elements)
+[<img align="left" src="https://github.com/user-attachments/assets/0008d7fc-8f81-4b10-9145-0139f54dad46" width="350" />](https://github.com/lookup-foundation/RevitLookup/wiki/search-elements)
 
-[Search](https://github.com/lookup-foundation/RevitLookup/wiki/Search-Elements) helps users to quickly find doors, walls, windows and other elements in the project.
+[Search](https://github.com/lookup-foundation/RevitLookup/wiki/search-elements) helps users to quickly find doors, walls, windows and other elements in the project.
 Search supports complex queries, search for multiple elements at once, search by both ID and Name, your element will always be found
 <br/>
 <br/>
@@ -79,9 +79,9 @@ Search supports complex queries, search for multiple elements at once, search by
 
 ### Revit.ini File editor
 
-[<img align="left" src="https://github.com/user-attachments/assets/169a076a-767c-4456-86ca-399ce9cccf99" width="350" />](https://github.com/lookup-foundation/RevitLookup/wiki/Revit.ini-File-Editor)
+[<img align="left" src="https://github.com/user-attachments/assets/169a076a-767c-4456-86ca-399ce9cccf99" width="350" />](https://github.com/lookup-foundation/RevitLookup/wiki/revit-ini-file-editor)
 
-[Revit.ini File editor](https://github.com/lookup-foundation/RevitLookup/wiki/Revit.ini-File-Editor) provides a simple way to manage Revit settings without a manual editing Revit.ini file.
+[Revit.ini File editor](https://github.com/lookup-foundation/RevitLookup/wiki/revit-ini-file-editor) provides a simple way to manage Revit settings without a manual editing Revit.ini file.
 Revit.ini is quite complicated to configure, and not all Revit configuration can be found in the official documentation. Editor will provide all available properties that are possible.
 <br/>
 <br/>

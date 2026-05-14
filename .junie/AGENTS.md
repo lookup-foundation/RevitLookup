@@ -12,10 +12,10 @@ RevitLookup is an inspection tool for Autodesk Revit. Core principles:
 
 Before doing specialized work, read the matching file:
 
-* [Project Structure](../docs/structure.md) – When searching for specific module responsibilities, adding new projects, submodules.
+* [Project Structure](../docs/project-structure.md) – When searching for specific module responsibilities, adding new projects, submodules.
 * [Architecture](../docs/architecture.md) – When extending LookupEngine (Descriptors, Resolvers, Extensions).
-* [Code Style](../docs/code_style.md) – When writing or refactoring C# code, implementing MVVM (CommunityToolkit).
-* [UI Development](../docs/ui.md) – When creating XAML templates, styling WPF components, or implementing custom type visualization.
-* [Revit Best Practices](../docs/revit.md) – When interacting with Revit API.
-* [Testing Strategy](../docs/testing.md) – When writing TUnit tests for Revit or creating mocks for the Playground environment.
-* [Package Management](../docs/packages.md) – When adding, updating, or managing NuGet dependencies.
+* [Code Style](../docs/code-style.md) – When writing or refactoring C# code, implementing MVVM (CommunityToolkit).
+* [UI Development](../docs/ui-development.md) – When creating XAML templates, styling WPF components, or implementing custom type visualization.
+* [Revit Best Practices](../docs/revit-best-practices.md) – When interacting with Revit API.
+* [Testing Strategy](../docs/testing-strategy.md) – When writing TUnit tests for Revit or creating mocks for the Playground environment.
+* [Package Management](../docs/package-management.md) – When adding, updating, or managing NuGet dependencies.
