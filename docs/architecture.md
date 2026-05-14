@@ -25,7 +25,7 @@ Descriptors are specialized classes that define how objects should be handled by
 To add a descriptor for a new class:
 
 1. Create a new descriptor class in the appropriate folder under `source/RevitLookup/Core/Decomposition/Descriptors/`
-2. Register the descriptor in the descriptor map located at `source/RevitLookup/Core/Decomposition/DescriptorMap.cs`
+2. Register the descriptor in the descriptor map located at `source/RevitLookup/Core/Decomposition/DescriptorsMap.cs`
 
 ### IDescriptorResolver
 
@@ -42,7 +42,7 @@ public class ElementDescriptor(Element element) : Descriptor, IDescriptorResolve
     {
         return target switch
         {
-            nameof(Element.IsHidden) => () => Variants.Value(element.IsHidden(context.ActiveView), "Active view"),
+            nameof(Element.IsHidden) => context => Variants.Value(element.IsHidden(context.ActiveView), "Active view"),
             _ => null
         };
     }
@@ -59,7 +59,7 @@ public class ElementDescriptor(Element element) : Descriptor, IDescriptorResolve
     {
         return target switch
         {
-            nameof(Element.GetBoundingBox) => ResolveBoundingBox,
+            "BoundingBox" => ResolveBoundingBox,
             _ => null
         };
 
@@ -140,9 +140,8 @@ public sealed class SchemaDescriptor(Schema schema) : Descriptor, IDescriptorExt
 {
     public void RegisterExtensions(IExtensionManager<Document> manager)
     {
-        manager.Define("GetElements").Register(context => Variants.Value(context
-            .GetElements()
-            .WherePasses(new ExtensibleStorageFilter(schema.GUID))
+        manager.Define("GetElements").Register(context => Variants.Value(context.CollectElements()
+            .WithExtensibleStorage(schema.GUID)
             .ToElements()));
     }
 }
@@ -158,14 +157,17 @@ public sealed class ElementIdDescriptor(ElementId elementId) : Descriptor, IDesc
 {
     public bool TryRedirect(string target, Document context, out object result)
     {
+        result = elementId;
         if (elementId == ElementId.InvalidElementId)
         {
-            result = null;
             return false;
         }
 
-        result = elementId.ToElement(context);
-        return result is not null;
+        var element = elementId.ToElement(context);
+        if (element is null) return false;
+
+        result = element;
+        return true;
     }
 }
 ```
@@ -175,35 +177,30 @@ public sealed class ElementIdDescriptor(ElementId elementId) : Descriptor, IDesc
 This interface serves as a marker indicating that the descriptor can decompose the object's members. It's essential for allowing users to inspect an object's internal structure.
 
 ```csharp
-// source/RevitLookup/Core/Decomposition/Descriptors/ApplicationDescriptor.cs
-public sealed class ApplicationDescriptor : Descriptor, IDescriptorCollector
+// source/RevitLookup/Core/Decomposition/Descriptors/WorksetDescriptor.cs
+public sealed class WorksetDescriptor : Descriptor, IDescriptorCollector
 {
-    public ApplicationDescriptor(Application application)
+    public WorksetDescriptor(Workset workset)
     {
-        Name = application.VersionName;
+        Name = workset.Name;
     }
 }
 ```
 
-### IDescriptorConnector
+### IContextMenuConnector
 
 This interface enables integration with the RevitLookup UI, allowing descriptors to add custom context menu options and commands.
 
 ```csharp
 // source/RevitLookup/Core/Decomposition/Descriptors/ElementDescriptor.cs
-public sealed class ElementDescriptor : Descriptor, IDescriptorConnector
+public sealed class ElementDescriptor : Descriptor, IContextMenuConnector
 {
-    public void RegisterMenu(ContextMenu contextMenu)
+    public void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)
     {
-        contextMenu.AddMenuItem()
-            .SetHeader("Show element")
+        contextMenu.AddMenuItem("ShowMenuItem")
+            .SetCommand(_element, element => ShowElementEvent.Raise(element))
             .SetAvailability(_element is not ElementType)
-            .SetCommand(_element, element =>
-            {
-                Context.UiDocument.ShowElements(element);
-                Context.UiDocument.Selection.SetElementIds([element.Id]);
-            })
-            .AddShortcut(ModifierKeys.Alt, Key.F7);
+            .SetShortcut(Key.F7);
     }
 }
 ```

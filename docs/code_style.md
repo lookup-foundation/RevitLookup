@@ -8,7 +8,7 @@ All code must adhere to enterprise-grade standards. "It works" is not enough; it
 * **DRY (Don't Repeat Yourself):** Extract common logic to `RevitLookup.Common` or `RevitLookup.Abstractions`.
 * **Explicit over Implicit:** Code should be self-explanatory. Avoid "magic" behavior.
 * **Modern C#:** Always use the latest language features.
-* **Use Span:** Utilize `Span<T>` and `ReadOnlySpan<T>` for memory-efficient data processing where applicable outside of buisness logic.
+* **Use Span:** Utilize `Span<T>` and `ReadOnlySpan<T>` for memory-efficient data processing where applicable outside of business logic.
 * **JetBrains Annotations:** Use JetBrains Annotations where applicable to improve code analysis.
 
 ## 2. Naming Conventions
@@ -25,7 +25,7 @@ All code must adhere to enterprise-grade standards. "It works" is not enough; it
 
 ## 3. Formatting & Layout
 
-* **File-Scoped Namespaces:** Always use `namespace RevitLookup;` (no braces).
+* **File-Scoped Namespaces:** Always use file-scoped namespaces matching the project/folder namespace (for example, `namespace RevitLookup.Core.Decomposition;`).
 * **Nullable Reference Types:** Enabled project-wide. Treat warnings as errors.
 * **Organization:**
     1. Private Fields (if strictly necessary)
@@ -52,10 +52,10 @@ All code must adhere to enterprise-grade standards. "It works" is not enough; it
 
 ## 7. Dependency Injection
 
-We use strict Constructor Injection via Primary Constructors.
+Use constructor injection for dependencies.
 
-* **Primary Constructors Only:** C# 12 syntax is mandatory.
-* **No Manual Fields:** Do not declare `private readonly` fields for injected services.
+* **Primary Constructors Preferred:** Use C# primary constructors for dependency injection when practical.
+* **No Manual DI Fields:** Do not declare `private readonly` fields only to mirror injected services. Regular fields are fine for instance state and constructor-derived values.
 * **Registration:**
     * Revit: `source/RevitLookup/Host.cs`
     * Playground: `source/RevitLookup.UI.Playground/Host.cs`.

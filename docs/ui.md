@@ -12,7 +12,7 @@ When adding a new window or page:
 2. Implement the interface twice:
     * **Revit implementation:** in `RevitLookup.ViewModels`, providing real data from the Revit API.
     * **Playground implementation:** in `RevitLookup.UI.Playground.Mocks.ViewModels`, providing mock or sample data.
-3. Registeration in DI container not required, it is automatically registered via Scrutor.
+3. Registration in the DI container is not required; views and ViewModels are automatically registered via Scrutor.
 
 ## Customizing Type Display
 

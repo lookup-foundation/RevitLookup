@@ -19,7 +19,7 @@ The solution follows a logical hierarchy to separate concerns, decouple the UI f
 * **`/Revit`**: The Production environment (Revit Plugin).
     * `RevitLookup`: The main Plugin Host (Entry Point).
 * **`/Tests`**: Testing projects.
-    * `RevitLookup.Tests.Unit`: Unit tests running on TUnit.
+    * `RevitLookup.Tests`: TUnit tests for RevitLookup.
 * **Root Level**: Shared projects. Pure C#, no Revit references.
     * `RevitLookup.Abstractions`: Interfaces and contract definitions.
     * `RevitLookup.Common`: General purpose utilities.

@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'docs/**'
+      - 'wiki/**'
   workflow_dispatch:
 
 concurrency:
@@ -25,5 +25,5 @@ jobs:
       - name: Publish wiki
         uses: Andrew-Chen-Wang/github-wiki-action@v5
         with:
-          path: docs/
+          path: wiki/
           disable-empty-commits: true

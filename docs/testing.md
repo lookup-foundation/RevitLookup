@@ -4,7 +4,7 @@ RevitLookup uses a combination of unit tests and a playground environment for ra
 
 ## 1. Unit Testing
 
-* **Project:** `RevitLookup.Tests.Unit`.
+* **Project:** `RevitLookup.Tests`.
 * **Framework:** TUnit.
 * **Configuration:** Use `Debug.R26` or any latest with `.R` suffix.
 * **Revit Integration:** Use `Nice3point.TUnit.Revit` to run tests within the Revit context.

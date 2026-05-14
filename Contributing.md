@@ -311,4 +311,4 @@ The Nuget package version must include wildcards `Version="$(RevitVersion).*"` t
 
 ## Architecture
 
-For more information about the project architecture, descriptors, and UI development, please refer to the [Specialized Guidelines](.junie/guidelines.md).
+For more information about the project architecture, descriptors, and UI development, please refer to the [AI agent guidelines](AGENTS.md).
