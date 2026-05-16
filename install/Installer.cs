@@ -36,7 +36,7 @@ var project = new Project
     BannerImage = @"install\Resources\Icons\BannerImage.png",
     ControlPanelInfo =
     {
-        Manufacturer = "Autodesk",
+        Manufacturer = "Lookup Foundation",
         HelpLink = "https://github.com/lookup-foundation/RevitLookup/issues",
         ProductIcon = @"install\Resources\Icons\ShellIcon.ico"
     }
