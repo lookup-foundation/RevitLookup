@@ -1,7 +1,7 @@
 #IDE folders
-*.idea/
-*.vs/
-*.vscode/
+.idea/
+.vs/
+.vscode/
 
 #Project-specific folders
 *obj/
@@ -9,6 +9,11 @@
 
 #Build output folder
 /output/
+
+#AI folders
+.junie/*
+!.junie/AGENTS.md
+.claude/
 
 #User-specific files
 *.user
