@@ -1,0 +1,56 @@
+# WinGet Publishing
+
+CI publishes updates to existing WinGet packages automatically via `PublishWinGetModule`. The **first** release of a new Revit-year package is a one-time manual step and is described below.
+
+## When this applies
+
+Adding a brand-new Revit-year identifier (e.g., `LookupFoundation.RevitLookup.2025`) to the `microsoft/winget-pkgs` repository. Subsequent version bumps of an existing package are submitted automatically by CI.
+
+## Prerequisites
+
+* The `lookup-foundation-bot` GitHub account (or a maintainer fork of `microsoft/winget-pkgs`).
+* A **classic** Personal Access Token with the `public_repo` scope issued from that account. Fine-grained PATs are rejected by `microsoft/winget-pkgs`.
+* [Komac](https://github.com/russellbanks/Komac) installed locally:
+
+  ```powershell
+  winget install RussellBanks.Komac
+  ```
+
+* A signed, public GitHub Release for the new Revit-year containing the `.msi` installer(s).
+
+## One-time submission
+
+Run from PowerShell. Substitute the version, URLs, and `package-name` with the new Revit year:
+
+```powershell
+$env:GITHUB_TOKEN = "<lookup-foundation-bot PAT>"
+
+komac new LookupFoundation.RevitLookup.2025 `
+  --version 2025.0.0 `
+  --urls https://github.com/lookup-foundation/RevitLookup/releases/download/2025.0.0/RevitLookup-2025.0.0-SingleUser.msi `
+         https://github.com/lookup-foundation/RevitLookup/releases/download/2025.0.0/RevitLookup-2025.0.0-MultiUser.msi `
+  --publisher "Lookup Foundation" `
+  --publisher-url https://github.com/lookup-foundation `
+  --publisher-support-url https://github.com/lookup-foundation/RevitLookup/issues `
+  --author Nice3point `
+  --package-name "RevitLookup 2025" `
+  --package-url https://github.com/lookup-foundation/RevitLookup `
+  --license MIT `
+  --license-url https://github.com/lookup-foundation/RevitLookup/blob/HEAD/LICENSE.md `
+  --copyright "Copyright (c) Lookup Foundation and Contributors" `
+  --short-description "Interactive Revit RFA and RVT project database exploration tool to view and navigate BIM element parameters, properties and relationships." `
+  --release-notes-url https://github.com/lookup-foundation/RevitLookup/releases/tag/2025.0.0 `
+  --submit
+```
+
+## After the pull request merges
+
+1. Append the new identifier to `.config/winget/packages.json`:
+
+   ```json
+   { "PackageIdentifier": "LookupFoundation.RevitLookup.2025" }
+   ```
+
+2. Ensure the Revit year is present in `build/appsettings.json` under `Build.Versions` (it usually already is).
+
+From the next CI release onward, `PublishWinGetModule` will update this package automatically — no further manual `komac new` is required for that year.

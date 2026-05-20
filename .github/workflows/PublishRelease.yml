@@ -45,6 +45,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOTNET_ENVIRONMENT: ${{ (github.ref_name == 'main' || github.ref_type == 'tag') && 'Production' || 'Development' }}
           Publish__Version: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.version || github.ref_name }}
+          Publish__WingetToken: ${{ secrets.WINGET_TOKEN }}
           Signing__VaultUri: ${{ secrets.AZURE_VAULT_URI }}
           Signing__ClientId: ${{ secrets.AZURE_VAULT_CLIENT_ID }}
           Signing__ClientSecret: ${{ secrets.AZURE_VAULT_CLIENT_SECRET }}

@@ -27,9 +27,30 @@ Current supported Revit versions: 2021-2027.
 > 
 > The compatible Revit version is specified in the installer name, e.g. **RevitLookup-2020.0.0-SingleUser.msi** is only compatible with **Revit 2020**.
 
-RevitLookup is also available as an AppBundle, to install the Bundle with all available versions in the release,
-use the [AppBundle](https://www.nuget.org/packages/ricaun.AppBundleTool) tool:
+### Installation methods
+
+#### WinGet (recommended)
+
+Install RevitLookup for every supported Revit version at once:
+
+```shell
+winget configure -f https://raw.githubusercontent.com/lookup-foundation/RevitLookup/develop/.config/winget/configuration.winget --accept-configuration-agreements
+```
+
+Or install a single Revit-year package:
+
+```shell
+winget install LookupFoundation.RevitLookup.2027
+```
+
+#### AppBundle
+
+Install the bundle with all available versions in the release using the [AppBundle](https://www.nuget.org/packages/ricaun.AppBundleTool) tool:
 
 ```shell
 AppBundleTool -a https://github.com/lookup-foundation/RevitLookup/releases/latest/download/RevitLookup.bundle.zip -i
 ```
+
+#### Manual
+
+Download the appropriate `.msi` for your Revit version from the [latest GitHub release](https://github.com/lookup-foundation/RevitLookup/releases/latest) and run it.

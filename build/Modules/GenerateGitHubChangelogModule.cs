@@ -31,6 +31,22 @@ public sealed class GenerateGitHubChangelogModule : Module<string>
         var repositoryInfo = context.GitHub().RepositoryInfo;
         StringBuilder? changelogBuilder = null;
 
+        if (!versioning.IsPrerelease)
+        {
+            changelogBuilder ??= new StringBuilder(changelog);
+            changelogBuilder.AppendLine()
+                .AppendLine()
+                .AppendLine("## Installation")
+                .AppendLine()
+                .AppendLine("```ps1")
+                .AppendLine("winget configure -f https://raw.githubusercontent.com/lookup-foundation/RevitLookup/main/.config/winget/configuration.winget --accept-configuration-agreements")
+                .Append("```")
+                .AppendLine()
+                .AppendLine()
+                .Append("Other installation methods: ")
+                .Append("https://github.com/lookup-foundation/RevitLookup/wiki/Versions");
+        }
+
         if (!changelog.Contains("Full changelog", StringComparison.OrdinalIgnoreCase))
         {
             changelogBuilder ??= new StringBuilder(changelog);
@@ -38,14 +54,6 @@ public sealed class GenerateGitHubChangelogModule : Module<string>
                 .AppendLine()
                 .Append("**Full changelog**: ")
                 .AppendLine($"https://github.com/{repositoryInfo.Identifier}/compare/{versioning.PreviousVersion}...{versioning.Version}");
-        }
-
-        if (!versioning.IsPrerelease)
-        {
-            changelogBuilder ??= new StringBuilder(changelog);
-            changelogBuilder.AppendLine()
-                .Append("**RevitLookup versions**: ")
-                .Append("https://github.com/lookup-foundation/RevitLookup/wiki/versions");
         }
 
         return changelogBuilder?.ToString() ?? changelog;
