@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=https://aka.ms/configuration-dsc-schema/0.2
+properties:
+  resources:
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: RevitLookup for Autodesk Revit 2021
+      settings:
+        id: LookupFoundation.RevitLookup.2021
+        source: winget
+        ensure: Absent
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: RevitLookup for Autodesk Revit 2022
+      settings:
+        id: LookupFoundation.RevitLookup.2022
+        source: winget
+        ensure: Absent
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: RevitLookup for Autodesk Revit 2023
+      settings:
+        id: LookupFoundation.RevitLookup.2023
+        source: winget
+        ensure: Absent
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: RevitLookup for Autodesk Revit 2024
+      settings:
+        id: LookupFoundation.RevitLookup.2024
+        source: winget
+        ensure: Absent
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: RevitLookup for Autodesk Revit 2025
+      settings:
+        id: LookupFoundation.RevitLookup.2025
+        source: winget
+        ensure: Absent
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: RevitLookup for Autodesk Revit 2026
+      settings:
+        id: LookupFoundation.RevitLookup.2026
+        source: winget
+        ensure: Absent
+    - resource: Microsoft.WinGet.DSC/WinGetPackage
+      directives:
+        description: RevitLookup for Autodesk Revit 2027
+      settings:
+        id: LookupFoundation.RevitLookup.2027
+        source: winget
+        ensure: Absent
+  configurationVersion: 0.2.0

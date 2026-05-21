@@ -40,15 +40,20 @@ komac new LookupFoundation.RevitLookup.2025 `
   --copyright "Copyright (c) Lookup Foundation and Contributors" `
   --short-description "Interactive Revit RFA and RVT project database exploration tool to view and navigate BIM element parameters, properties and relationships." `
   --release-notes-url https://github.com/lookup-foundation/RevitLookup/releases/tag/2025.0.0 `
-  --submit
 ```
 
 ## After the pull request merges
 
-1. Append the new identifier to `.config/winget/packages.json`:
+1. Append the new identifier to `.config/winget/configuration.winget` and `.config/winget/configuration-uninstall.winget`:
 
-   ```json
-   { "PackageIdentifier": "LookupFoundation.RevitLookup.2025" }
+   ```yaml
+   - resource: Microsoft.WinGet.DSC/WinGetPackage
+     directives:
+       description: RevitLookup for Autodesk Revit 2025
+     settings:
+       id: LookupFoundation.RevitLookup.2025
+       source: winget
+       ensure: Present   # use `Absent` in configuration-uninstall.winget
    ```
 
 2. Ensure the Revit year is present in `build/appsettings.json` under `Build.Versions` (it usually already is).

@@ -25,29 +25,35 @@ Current supported Revit versions: 2021-2027.
 > [!IMPORTANT]  
 > RevitLookup must be installed for each Revit version separately.
 > 
-> The compatible Revit version is specified in the installer name, e.g. **RevitLookup-2020.0.0-SingleUser.msi** is only compatible with **Revit 2020**.
+> The compatible Revit version is specified in the installer name, e.g. **RevitLookup-2025.0.0-SingleUser.msi** is only compatible with **Revit 2025**.
 
-### Installation methods
+### Installation
 
 #### WinGet (recommended)
 
-Install RevitLookup for every supported Revit version at once:
+Install RevitLookup for a single Revit version:
 
-```shell
-winget configure -f https://raw.githubusercontent.com/lookup-foundation/RevitLookup/develop/.config/winget/configuration.winget --accept-configuration-agreements
+```ps1
+winget install LookupFoundation.RevitLookup.2025
 ```
 
-Or install a single Revit-year package:
+Install RevitLookup for every supported Revit version at once using a [WinGet Configuration](https://learn.microsoft.com/en-us/windows/package-manager/configuration/):
 
-```shell
-winget install LookupFoundation.RevitLookup.2027
+```ps1
+winget configure -f https://raw.githubusercontent.com/lookup-foundation/RevitLookup/main/.config/winget/configuration.winget --accept-configuration-agreements
+```
+
+Uninstall every RevitLookup version:
+
+```ps1
+winget configure -f https://raw.githubusercontent.com/lookup-foundation/RevitLookup/main/.config/winget/configuration-uninstall.winget --accept-configuration-agreements
 ```
 
 #### AppBundle
 
-Install the bundle with all available versions in the release using the [AppBundle](https://www.nuget.org/packages/ricaun.AppBundleTool) tool:
+Install the bundle with every available Revit version using the [AppBundle](https://www.nuget.org/packages/ricaun.AppBundleTool) tool:
 
-```shell
+```ps1
 AppBundleTool -a https://github.com/lookup-foundation/RevitLookup/releases/latest/download/RevitLookup.bundle.zip -i
 ```
 
