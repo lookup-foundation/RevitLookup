@@ -5,15 +5,18 @@
     </picture>
 </div>
 
+<div align="center">
+<a href="https://github.com/lookup-foundation/RevitLookup/releases/latest"><img src="https://img.shields.io/github/downloads/lookup-foundation/RevitLookup/total?style=for-the-badge&labelColor=0F192F&color=0B6591" alt="Badge"></a>
+<a href="https://github.com/lookup-foundation/RevitLookup/commits/develop"><img src="https://img.shields.io/github/last-commit/lookup-foundation/RevitLookup/develop?style=for-the-badge&labelColor=0F192F&color=0B6591" alt="Badge"></a>
+<a href="https://github.com/lookup-foundation/RevitLookup/actions?query=branch%3Adevelop"><img src="https://img.shields.io/github/actions/workflow/status/lookup-foundation/RevitLookup/Compile.yml?branch=develop&style=for-the-badge&label=Build&labelColor=0F192F&color=0B6591" alt="Badge"></a>
+<a href="https://github.com/lookup-foundation/RevitLookup/releases/latest"><img src="https://img.shields.io/github/v/release/lookup-foundation/RevitLookup?style=for-the-badge&labelColor=0F192F&color=EBE6E1" alt="Badge"></a>
+<a href="https://winstall.app/apps/LookupFoundation.RevitLookup.2027"><img src="https://img.shields.io/winget/v/LookupFoundation.RevitLookup.2027?style=for-the-badge&label=WinGet&labelColor=0F192F&color=EBE6E1" alt="Badge"></a>
+</div>
+
 Interactive Revit project database exploration tool to view and navigate BIM element parameters, properties and relationships.
 
 Whether you are a seasoned professional or just starting out, the RevitLookup is an indispensable tool for anyone who works with Revit projects. Its ease of use and advanced features make it the perfect solution for exploring, analyzing and manipulating Revit databases.
-<div align="center">
-<a href="https://github.com/lookup-foundation/RevitLookup/releases/latest"><img src="https://img.shields.io/github/v/release/lookup-foundation/RevitLookup?style=for-the-badge" alt="Badge"></a>
-<a href="https://github.com/lookup-foundation/RevitLookup/releases/latest"><img src="https://img.shields.io/github/downloads/lookup-foundation/RevitLookup/total?style=for-the-badge" alt="Badge"></a>
-<a href="https://github.com/lookup-foundation/RevitLookup/commits/develop"><img src="https://img.shields.io/github/last-commit/lookup-foundation/RevitLookup/develop?style=for-the-badge" alt="Badge"></a>
-<a href="https://github.com/lookup-foundation/RevitLookup/actions?query=branch%3Adevelop"><img src="https://img.shields.io/github/check-runs/lookup-foundation/RevitLookup/develop?style=for-the-badge&logo=github&label=Build" alt="Badge"></a>
-</div>
+
 <br/>
 <div align="center">
     <picture>
@@ -24,25 +27,21 @@ Whether you are a seasoned professional or just starting out, the RevitLookup is
 
 ## Installation
 
-- [Download](https://github.com/lookup-foundation/RevitLookup/releases/latest) and run the MSI file.
-- Single-user installation is for one user only and does not require administrator rights.
-- Multi-user installation requires administrator rights and is installed for all users.
+- WinGet: https://github.com/lookup-foundation/RevitLookup/wiki/versions#winget-recommended
+- AppBundle: https://github.com/lookup-foundation/RevitLookup/wiki/versions#appbundle
+- MSI installer: https://github.com/lookup-foundation/RevitLookup/wiki/versions#manual
 
 ## Contributing
 
 To ensure a proper code review, all code contributions must go through a pull request and be approved by a core developer before being merged.
 
-We truly love pull requests! If you wish to help, you can learn more about how to contribute to this project in the [contribution guide](CONTRIBUTING.md).
+If you wish to help, you can learn more about how to contribute to this project in the [contribution guide](CONTRIBUTING.md).
 
 |    Date     | Maintainer                                                                                                                                                                                                                                       |
 |:-----------:|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Since 2022  | [Nice3point](https://github.com/Nice3point), with invaluable [contributions](https://github.com/lookup-foundation/RevitLookup/graphs/contributors) from the entire Revit add-in developer community                                              |
 | 2008 - 2022 | [Jeremy Tammik](https://github.com/jeremytammik), [The Building Coder](http://thebuildingcoder.typepad.com), [Autodesk Platform Services](https://aps.autodesk.com/), [ADN](http://www.autodesk.com/adn) [Open](http://www.autodesk.com/adnopen) |
 | 11 May 2005 | Originally implemented by [Jim Awe](https://www.linkedin.com/in/james-awe-4630a94/) of [Autodesk Inc.](https://www.autodesk.com) as [RvtMgdDbg](https://thebuildingcoder.typepad.com/blog/2009/02/rvtmgddbg.html)                                |
-
-## License
-
-The source code is published under [MIT License](http://opensource.org/licenses/MIT), the license is available [here](LICENSE.md).
 
 ## Sponsors
 
