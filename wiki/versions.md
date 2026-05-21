@@ -32,13 +32,19 @@ List all available RevitLookup packages:
 winget search LookupFoundation.RevitLookup
 ```
 
-Install RevitLookup for a single Revit version (replace `2025` with your Revit version):
+Install for a single Revit version, current user only (replace `2025` with your Revit version):
 
 ```ps1
 winget install LookupFoundation.RevitLookup.2025
 ```
 
-Install RevitLookup for every supported Revit version at once using a [WinGet Configuration](https://learn.microsoft.com/en-us/windows/package-manager/configuration/):
+Install for a single Revit version, all users (replace `2025` with your Revit version):
+
+```ps1
+winget install LookupFoundation.RevitLookup.2025 --scope machine
+```
+
+Install for every supported Revit version at once using a [WinGet Configuration](https://learn.microsoft.com/en-us/windows/package-manager/configuration/):
 
 ```ps1
 winget configure -f https://raw.githubusercontent.com/lookup-foundation/RevitLookup/main/.config/winget/configuration.winget --accept-configuration-agreements
