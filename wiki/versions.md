@@ -22,16 +22,17 @@ Current supported Revit versions: 2021-2027.
 > - Single-user installation is for one user only and does not require administrator rights.
 > - Multi-user installation requires administrator rights and is installed for all users.
 
-> [!IMPORTANT]  
-> RevitLookup must be installed for each Revit version separately.
-> 
-> The compatible Revit version is specified in the installer name, e.g. **RevitLookup-2025.0.0-SingleUser.msi** is only compatible with **Revit 2025**.
-
 ### Installation
 
 #### WinGet (recommended)
 
-Install RevitLookup for a single Revit version:
+List all available RevitLookup packages:
+
+```ps1
+winget search LookupFoundation.RevitLookup
+```
+
+Install RevitLookup for a single Revit version (replace `2025` with your Revit version):
 
 ```ps1
 winget install LookupFoundation.RevitLookup.2025
@@ -60,3 +61,8 @@ AppBundleTool -a https://github.com/lookup-foundation/RevitLookup/releases/lates
 #### Manual
 
 Download the appropriate `.msi` for your Revit version from the [latest GitHub release](https://github.com/lookup-foundation/RevitLookup/releases/latest) and run it.
+
+> [!IMPORTANT]  
+> RevitLookup must be installed for each Revit version separately.
+>
+> The compatible Revit version is specified in the installer name, e.g. **RevitLookup-2025.0.0-SingleUser.msi** is only compatible with **Revit 2025**.
