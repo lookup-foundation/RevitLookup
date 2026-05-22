@@ -8,7 +8,6 @@
 <div align="center">
 <a href="https://github.com/lookup-foundation/RevitLookup/releases/latest"><img src="https://img.shields.io/github/downloads/lookup-foundation/RevitLookup/total?style=for-the-badge&labelColor=0F192F&color=0B6591" alt="Badge"></a>
 <a href="https://github.com/lookup-foundation/RevitLookup/commits/develop"><img src="https://img.shields.io/github/last-commit/lookup-foundation/RevitLookup/develop?style=for-the-badge&labelColor=0F192F&color=0B6591" alt="Badge"></a>
-<a href="https://github.com/lookup-foundation/RevitLookup/actions?query=branch%3Adevelop"><img src="https://img.shields.io/github/actions/workflow/status/lookup-foundation/RevitLookup/Compile.yml?branch=develop&style=for-the-badge&label=Build&labelColor=0F192F&color=0B6591" alt="Badge"></a>
 <a href="https://github.com/lookup-foundation/RevitLookup/releases/latest"><img src="https://img.shields.io/github/v/release/lookup-foundation/RevitLookup?style=for-the-badge&labelColor=0F192F&color=EBE6E1" alt="Badge"></a>
 <a href="https://winstall.app/apps/LookupFoundation.RevitLookup.2027"><img src="https://img.shields.io/winget/v/LookupFoundation.RevitLookup.2027?style=for-the-badge&label=WinGet&labelColor=0F192F&color=EBE6E1" alt="Badge"></a>
 </div>
