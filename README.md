@@ -26,29 +26,25 @@ Whether you are a seasoned professional or just starting out, the RevitLookup is
 
 ## Installation
 
-- WinGet: https://github.com/lookup-foundation/RevitLookup/wiki/versions#winget-recommended
-- AppBundle: https://github.com/lookup-foundation/RevitLookup/wiki/versions#appbundle
-- MSI installer: https://github.com/lookup-foundation/RevitLookup/wiki/versions#manual
+- **[WinGet](https://github.com/lookup-foundation/RevitLookup/wiki/versions#winget-recommended)** — install and auto-update via Windows Package Manager.
+- **[AppBundle](https://github.com/lookup-foundation/RevitLookup/wiki/versions#appbundle)** — deploy as an Autodesk bundle without a system-wide installer.
+- **[MSI installer](https://github.com/lookup-foundation/RevitLookup/releases/latest)** — download the latest .msi from GitHub Releases and run the installer.
 
-## Contributing
+## Resources
 
-To ensure a proper code review, all code contributions must go through a pull request and be approved by a core developer before being merged.
-
-If you wish to help, you can learn more about how to contribute to this project in the [contribution guide](CONTRIBUTING.md).
-
-|    Date     | Maintainer                                                                                                                                                                                                                                       |
-|:-----------:|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Since 2022  | [Nice3point](https://github.com/Nice3point), with invaluable [contributions](https://github.com/lookup-foundation/RevitLookup/graphs/contributors) from the entire Revit add-in developer community                                              |
-| 2008 - 2022 | [Jeremy Tammik](https://github.com/jeremytammik), [The Building Coder](http://thebuildingcoder.typepad.com), [Autodesk Platform Services](https://aps.autodesk.com/), [ADN](http://www.autodesk.com/adn) [Open](http://www.autodesk.com/adnopen) |
-| 11 May 2005 | Originally implemented by [Jim Awe](https://www.linkedin.com/in/james-awe-4630a94/) of [Autodesk Inc.](https://www.autodesk.com) as [RvtMgdDbg](https://thebuildingcoder.typepad.com/blog/2009/02/rvtmgddbg.html)                                |
+- [Wiki](https://github.com/lookup-foundation/RevitLookup/wiki) — project documentation and usage guides.
+- [Releases](https://github.com/lookup-foundation/RevitLookup/releases) — download packages for all supported Revit versions.
+- [Changelog](CHANGELOG.md) — release history and what's new in each version.
+- [Discussions](https://github.com/lookup-foundation/RevitLookup/discussions) — questions, ideas, and community conversation.
+- [Issues](https://github.com/lookup-foundation/RevitLookup/issues) — bug reports and feature requests.
+- [Contributing](CONTRIBUTING.md) — build instructions, code style, and contribution guidelines.
 
 ## Sponsors
 
-Thanks to [Kinship](https://kinship.io/) for providing cloud services and digital technologies that improve user experience and development quality!
+<a href="https://kinship.io/"><img src="https://github.com/user-attachments/assets/b0d772fd-db50-4dd3-81ae-3c19df69dbb5" align="right" width="340" alt="Kinship" /></a>
+**[Kinship](https://kinship.io/)** provides cloud services and digital technologies that improve user experience and development quality of RevitLookup.
 
-[<img src="https://github.com/user-attachments/assets/b0d772fd-db50-4dd3-81ae-3c19df69dbb5" width="450" />](https://kinship.io/)
+<br clear="right"/>
 
-Thanks to [JetBrains](https://jetbrains.com) for providing licenses for [Rider](https://jetbrains.com/rider), [dotUltimate](https://www.jetbrains.com/dotnet/) and [Qodana Ultimate Plus](https://www.jetbrains.com/qodana/), which both
-make open-source development a real pleasure!
-
-[<img src="https://user-images.githubusercontent.com/20504884/217069735-6cb06fda-f07a-4bee-a92d-ad4dbc0ab428.png" width="450" />](https://jetbrains.com/)
+<a href="https://jetbrains.com/"><img src="https://user-images.githubusercontent.com/20504884/217069735-6cb06fda-f07a-4bee-a92d-ad4dbc0ab428.png" align="right" width="340" alt="JetBrains" /></a>
+**[JetBrains](https://jetbrains.com)** provides licenses for [Rider](https://jetbrains.com/rider), [dotUltimate](https://www.jetbrains.com/dotnet/), and [Qodana](https://www.jetbrains.com/qodana/) that make open-source development a real pleasure.
