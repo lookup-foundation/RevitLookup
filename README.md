@@ -26,9 +26,9 @@ Whether you are a seasoned professional or just starting out, the RevitLookup is
 
 ## Installation
 
-- **[WinGet](https://github.com/lookup-foundation/RevitLookup/wiki/versions#winget-recommended)** — install and auto-update via Windows Package Manager.
-- **[AppBundle](https://github.com/lookup-foundation/RevitLookup/wiki/versions#appbundle)** — deploy as an Autodesk bundle without a system-wide installer.
-- **[MSI installer](https://github.com/lookup-foundation/RevitLookup/releases/latest)** — download the latest .msi from GitHub Releases and run the installer.
+- [WinGet](https://github.com/lookup-foundation/RevitLookup/wiki/versions#winget-recommended) — install and auto-update via Windows Package Manager.
+- [AppBundle](https://github.com/lookup-foundation/RevitLookup/wiki/versions#appbundle) — deploy as an Autodesk bundle without a system-wide installer.
+- [MSI installer](https://github.com/lookup-foundation/RevitLookup/releases/latest) — download the latest .msi from GitHub Releases and run the installer.
 
 ## Resources
 
