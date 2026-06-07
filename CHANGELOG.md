@@ -1,5 +1,12 @@
 # Changelog
 
+# **2027.0.2**
+
+- Added `Rebar.GetFullGeometryForView` support https://github.com/lookup-foundation/RevitLookup/issues/413.
+- Added **WinGet** installation method https://github.com/lookup-foundation/RevitLookup/wiki/versions#installation.
+- Changed the "Project website" link to the new Autodesk blog https://github.com/lookup-foundation/RevitLookup/issues/396.
+- Changed the installer manufacturer from "Autodesk" to "Lookup Foundation".
+
 # **2027.0.1**
 
 - Fixed extensions. CoordinationModelLinkUtils extension is now available starting from Revit 2026.3 patch only.
