@@ -112,7 +112,11 @@ internal sealed
     {
         if (!VirtualProtect(address, PointerSize, PageReadWrite, out var oldProtect))
         {
+#if NET
             throw new SchemaAccessException($"VirtualProtect failed at 0x{address.ToInt64():X16}, error {Marshal.GetLastWin32Error()}.");
+#else
+            throw new SchemaAccessException($"VirtualProtect failed at 0x{address}, error {Marshal.GetLastWin32Error()}.");
+#endif
         }
 
         try
