@@ -16,6 +16,7 @@ using System.Reflection;
 using Autodesk.Revit.DB.ExtensibleStorage;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
+using RevitLookup.Utils;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
@@ -35,35 +36,41 @@ public sealed class EntityDescriptor(Entity entity) : Descriptor, IDescriptorRes
 
         IVariant ResolveGetByField()
         {
-            var fields = entity.Schema.ListFields();
-            var variants = Variants.Values<object>(fields.Count);
-            foreach (var field in fields)
+            using (entity.Schema.GrantAccess())
             {
-                //for double we always need UnitTypeId, so we can not see these fields when we use the overload with fieldName only
-                if (field.ValueType == typeof(double) || field.KeyType == typeof(double)) continue;
+                var fields = entity.Schema.ListFields();
+                var variants = Variants.Values<object>(fields.Count);
+                foreach (var field in fields)
+                {
+                    //for double we always need UnitTypeId, so we can not see these fields when we use the overload with fieldName only
+                    if (field.ValueType == typeof(double) || field.KeyType == typeof(double)) continue;
 
-                var method = entity.GetType().GetMethod(nameof(Entity.Get), [typeof(Field)])!;
-                var genericMethod = MakeGenericInvoker(field, method);
-                variants.Add(genericMethod.Invoke(entity, [field]), field.FieldName);
+                    var method = entity.GetType().GetMethod(nameof(Entity.Get), [typeof(Field)])!;
+                    var genericMethod = MakeGenericInvoker(field, method);
+                    variants.Add(genericMethod.Invoke(entity, [field]), field.FieldName);
+                }
+
+                return variants.Consume();
             }
-
-            return variants.Consume();
         }
 
         IVariant ResolveGetByFieldForge()
         {
-            var fields = entity.Schema.ListFields();
-            var variants = Variants.Values<object>(fields.Count);
-            foreach (var field in fields)
+            using (entity.Schema.GrantAccess())
             {
-                var forgeTypeId = field.GetSpecTypeId();
-                var unit = GetValidUnit(forgeTypeId);
-                var method = entity.GetType().GetMethod(nameof(Entity.Get), [typeof(Field), typeof(ForgeTypeId)])!;
-                var genericMethod = MakeGenericInvoker(field, method);
-                variants.Add(genericMethod.Invoke(entity, [field, unit]), field.FieldName);
-            }
+                var fields = entity.Schema.ListFields();
+                var variants = Variants.Values<object>(fields.Count);
+                foreach (var field in fields)
+                {
+                    var forgeTypeId = field.GetSpecTypeId();
+                    var unit = GetValidUnit(forgeTypeId);
+                    var method = entity.GetType().GetMethod(nameof(Entity.Get), [typeof(Field), typeof(ForgeTypeId)])!;
+                    var genericMethod = MakeGenericInvoker(field, method);
+                    variants.Add(genericMethod.Invoke(entity, [field, unit]), field.FieldName);
+                }
 
-            return variants.Consume();
+                return variants.Consume();
+            }
         }
     }
 

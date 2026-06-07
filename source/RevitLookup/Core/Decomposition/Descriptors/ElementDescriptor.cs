@@ -29,6 +29,7 @@ using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.ViewModels.Decomposition;
 using RevitLookup.Core.Decomposition.Extensions;
 using RevitLookup.UI.Framework.Extensions;
+using RevitLookup.Utils;
 using ContextMenu = System.Windows.Controls.ContextMenu;
 #if REVIT2024_OR_GREATER
 using Autodesk.Revit.DB.Structure;
@@ -119,12 +120,13 @@ public partial class ElementDescriptor : Descriptor, IDescriptorResolver, IDescr
             var variants = Variants.Values<Entity>(schemas.Count);
             foreach (var schema in schemas)
             {
-                if (!schema.ReadAccessGranted()) continue;
+                using (schema.GrantAccess())
+                {
+                    var entity = _element.GetEntity(schema);
+                    if (!entity.IsValid()) continue;
 
-                var entity = _element.GetEntity(schema);
-                if (!entity.IsValid()) continue;
-
-                variants.Add(entity, schema.SchemaName);
+                    variants.Add(entity, schema.SchemaName);
+                }
             }
 
             return variants.Consume();

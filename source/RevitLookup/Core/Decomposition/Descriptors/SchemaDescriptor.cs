@@ -12,13 +12,15 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
+using System.Reflection;
 using Autodesk.Revit.DB.ExtensibleStorage;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
+using RevitLookup.Utils;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class SchemaDescriptor : Descriptor, IDescriptorExtension<Document>
+public sealed class SchemaDescriptor : Descriptor, IDescriptorResolver, IDescriptorExtension<Document>
 {
     private readonly Schema _schema;
 
@@ -26,6 +28,23 @@ public sealed class SchemaDescriptor : Descriptor, IDescriptorExtension<Document
     {
         _schema = schema;
         Name = schema.SchemaName;
+    }
+
+    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    {
+        return target switch
+        {
+            nameof(Schema.ListFields) => ResolveListFields,
+            _ => null
+        };
+
+        IVariant ResolveListFields()
+        {
+            using (_schema.GrantAccess())
+            {
+                return Variants.Value(_schema.ListFields());
+            }
+        }
     }
 
     public void RegisterExtensions(IExtensionManager<Document> manager)
