@@ -12,6 +12,7 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
+using System.Reflection;
 using Autodesk.Revit.DB.Structure;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
@@ -20,6 +21,15 @@ namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class RebarDescriptor(Rebar rebar) : ElementDescriptor(rebar)
 {
+    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    {
+        return target switch
+        {
+            nameof(Rebar.GetFullGeometryForView) => () => Variants.Value(rebar.GetFullGeometryForView(RevitContext.ActiveView)),
+            _ => null
+        };
+    }
+
     public override void RegisterExtensions(IExtensionManager manager)
     {
 #if REVIT2025_OR_GREATER
@@ -31,5 +41,4 @@ public sealed class RebarDescriptor(Rebar rebar) : ElementDescriptor(rebar)
         manager.Define(nameof(RebarSpliceUtils.GetSpliceGeometries)).AsNotSupported();
 #endif
     }
-
 }
