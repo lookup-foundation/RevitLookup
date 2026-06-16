@@ -1,7 +1,5 @@
 ## Maintainers
 
-## Maintainers
-
 | Maintainer                                                                                                                 | Period         |
 |----------------------------------------------------------------------------------------------------------------------------|----------------|
 | <img src="https://github.com/Nice3point.png" width="20"/> [Nice3point](https://github.com/Nice3point)                      | 2022 - present |
@@ -13,24 +11,22 @@ Planning significant changes? Check in with the current maintainer before openin
 ## Table of contents
 
 <!-- TOC -->
-* [Fork, Clone, Branch and Create your PR](#fork-clone-branch-and-create-your-pr)
-* [Rules](#rules)
-* [Prerequisites](#prerequisites)
-* [Solution Structure](#solution-structure)
-* [Project Structure](#project-structure)
-* [Building](#building)
-  * [Building the MSI installer and the Autodesk bundle on local machine](#building-the-msi-installer-and-the-autodesk-bundle-on-local-machine)
-* [Publishing Releases](#publishing-releases)
-  * [Creating a new Release from the JetBrains Rider](#creating-a-new-release-from-the-jetbrains-rider)
-  * [Creating a new Release from the Terminal](#creating-a-new-release-from-the-terminal)
-  * [Creating a new Release on GitHub](#creating-a-new-release-on-github)
-* [Compiling a solution on GitHub](#compiling-a-solution-on-github)
-* [Conditional compilation for a specific Revit version](#conditional-compilation-for-a-specific-revit-version)
-* [Managing Supported Revit Versions](#managing-supported-revit-versions)
-  * [Solution configurations](#solution-configurations)
-  * [Project configurations](#project-configurations)
-* [API references](#api-references)
-* [Architecture](#architecture)
+  * [Fork, Clone, Branch and Create your PR](#fork-clone-branch-and-create-your-pr)
+  * [Prerequisites](#prerequisites)
+  * [Building](#building)
+    * [Building the MSI installer and the Autodesk bundle on local machine](#building-the-msi-installer-and-the-autodesk-bundle-on-local-machine)
+  * [Publishing Releases](#publishing-releases)
+    * [Updating the Changelog](#updating-the-changelog)
+    * [Creating a new Release from the JetBrains Rider](#creating-a-new-release-from-the-jetbrains-rider)
+    * [Creating a new Release from the Terminal](#creating-a-new-release-from-the-terminal)
+    * [Creating a new Release on GitHub](#creating-a-new-release-on-github)
+  * [Compiling a solution on GitHub](#compiling-a-solution-on-github)
+  * [Conditional compilation for a specific Revit version](#conditional-compilation-for-a-specific-revit-version)
+  * [Managing Supported Revit Versions](#managing-supported-revit-versions)
+    * [Solution configurations](#solution-configurations)
+    * [Project configurations](#project-configurations)
+  * [API references](#api-references)
+  * [Development Guidelines](#development-guidelines)
 <!-- TOC -->
 
 ## Fork, Clone, Branch and Create your PR
@@ -40,18 +36,6 @@ Planning significant changes? Check in with the current maintainer before openin
 3. Create & push a feature branch
 4. Create a [Draft Pull Request (PR)](https://github.blog/2019-02-14-introducing-draft-pull-requests/)
 5. Work on your changes
-
-## Rules
-
-- Follow the pattern of what you already see in the code.
-- When adding new classes/methods/changing existing code:
-    - Run the debugger and make sure everything works.
-    - Add appropriate XML documentation comments.
-    - Follow C# coding conventions.
-- The naming should be descriptive and direct, giving a clear idea of the functionality.
-- Keep commits atomic and write meaningful commit messages.
-- Follow semantic versioning guidelines for releases.
-- Address code review feedback promptly.
 
 ## Prerequisites
 
@@ -321,6 +305,6 @@ The Nuget package version must include wildcards `Version="$(RevitVersion).*"` t
 </ItemGroup>
 ```
 
-## Architecture
+## Development Guidelines
 
-For more information about the project architecture, descriptors, and UI development, please refer to the [AI agent guidelines](AGENTS.md).
+Information about the project architecture, core principles, please refer to the [guidelines](AGENTS.md) file.
