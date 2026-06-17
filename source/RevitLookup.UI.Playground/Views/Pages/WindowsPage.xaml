@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="RevitLookup.UI.Playground.Views.Pages.WindowsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,51 +7,299 @@
     xmlns:pages="clr-namespace:RevitLookup.UI.Playground.Views.Pages"
     xmlns:ui="http://lookupengine.com/xaml"
     mc:Ignorable="d"
-    d:DesignHeight="700"
+    d:DesignHeight="1900"
     d:DesignWidth="500"
     d:DataContext="{d:DesignInstance pages:WindowsPage}"
     Foreground="{DynamicResource TextFillColorPrimaryBrush}">
 
     <StackPanel
         Margin="0 24">
+
         <ui:TextBlock
             Text="Application"
             FontTypography="BodyStrong" />
+        <ui:TextBlock
+            Margin="0 2 0 0"
+            Text="Entry points, exactly as Revit launches them."
+            FontTypography="Caption"
+            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
         <ui:CardAction
-            Margin="0 4 0 0"
+            Margin="0 8 0 0"
             Icon="{ui:SymbolIcon AirplaneTakeOff24}"
-            Content="RevitLookup window"
-            Command="{Binding ViewModel.ShowRevitLookupWindowCommand}" />
+            Command="{Binding ViewModel.ShowRevitLookupWindowCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="RevitLookup window" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="The main window with the dashboard and object browser."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
         <ui:CardAction
             Margin="0 4 0 0"
             Icon="{ui:SymbolIcon DesktopPulse24}"
-            Content="Events monitor summary window"
-            Command="{Binding ViewModel.ShowEventsWindowCommand}" />
+            Command="{Binding ViewModel.ShowEventsWindowCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Event monitor" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Revit events captured and decomposed as they fire."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
 
         <ui:TextBlock
-            Text="Decomposition sets"
-            FontTypography="BodyStrong"
-            Margin="0 12 0 0" />
+            Margin="0 20 0 0"
+            Text="Data sets"
+            FontTypography="BodyStrong" />
+        <ui:TextBlock
+            Margin="0 2 0 0"
+            Text="Large collections for grouping, scrolling and search."
+            FontTypography="Caption"
+            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
         <ui:CardAction
-            Margin="0 4 0 0"
+            Margin="0 8 0 0"
             Icon="{ui:SymbolIcon Color24}"
-            Content="Colors window"
-            Command="{Binding ViewModel.ShowDecomposeColorsWindowCommand}" />
+            Command="{Binding ViewModel.ShowDecomposeColorsWindowCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Colors" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Colors with a color preview."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
         <ui:CardAction
             Margin="0 4 0 0"
             Icon="{ui:SymbolIcon Textbox24}"
-            Content="Strings window"
-            Command="{Binding ViewModel.ShowDecomposeTextWindowCommand}" />
-        <ui:CardAction
-            Margin="0 4 0 0"
-            Icon="{ui:SymbolIcon BuildingTownhouse24}"
-            Content="Types window"
-            Command="{Binding ViewModel.ShowDecomposeTypesWindowCommand}" />
+            Command="{Binding ViewModel.ShowDecomposeTextWindowCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Strings" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Plain text values."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
         <ui:CardAction
             Margin="0 4 0 0"
             Icon="{ui:SymbolIcon BranchCompare24}"
-            Content="Resolved members window"
-            Command="{Binding ViewModel.ShowDecomposeResolvedValuesWindowCommand}" />
+            Command="{Binding ViewModel.ShowDecomposeVectorsWindowCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Vectors" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Numeric vectors with their resolved variants."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
+        <ui:CardAction
+            Margin="0 4 0 0"
+            Icon="{ui:SymbolIcon BuildingTownhouse24}"
+            Command="{Binding ViewModel.ShowDecomposeTypesWindowCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Reflection types" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Real .NET types."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
+
+        <ui:TextBlock
+            Margin="0 20 0 0"
+            Text="Value formating"
+            FontTypography="BodyStrong" />
+        <ui:TextBlock
+            Margin="0 2 0 0"
+            Text="How each kind of member value is drawn in the grid."
+            FontTypography="Caption"
+            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+        <ui:CardAction
+            Margin="0 8 0 0"
+            Icon="{ui:SymbolIcon AppGeneric24}"
+            Command="{Binding ViewModel.ShowMembersWindowCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Members" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Every value kind and member state together in one object."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
+        <ui:CardAction
+            Margin="0 4 0 0"
+            Icon="{ui:SymbolIcon Hourglass24}"
+            Command="{Binding ViewModel.ShowDeferredMembersWindowCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Deferred members" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Members evaluated only on demand, behind a Force-evaluate action."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
+        <ui:CardAction
+            Margin="0 4 0 0"
+            Icon="{ui:SymbolIcon Prohibited24}"
+            Command="{Binding ViewModel.ShowDisabledMembersWindowCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Disabled members" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Members blocked from evaluation."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
+        <ui:CardAction
+            Margin="0 4 0 0"
+            Icon="{ui:SymbolIcon PlugDisconnected24}"
+            Command="{Binding ViewModel.ShowUnsupportedMembersWindowCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Unsupported members" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Members the engine cannot evaluate."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
+        <ui:CardAction
+            Margin="0 4 0 0"
+            Icon="{ui:SymbolIcon TextClearFormatting24}"
+            Command="{Binding ViewModel.ShowPlaceholderValuesWindowCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Placeholder values" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Empty and null results."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
+        <ui:CardAction
+            Margin="0 4 0 0"
+            Icon="{ui:SymbolIcon ErrorCircle24}"
+            Command="{Binding ViewModel.ShowExceptionMembersWindowCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Exception members" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Members that throw an exception."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
+
+        <ui:TextBlock
+            Margin="0 20 0 0"
+            Text="Engine options"
+            FontTypography="BodyStrong" />
+        <ui:TextBlock
+            Margin="0 2 0 0"
+            Text="Each option on its own, so you can see what it adds."
+            FontTypography="Caption"
+            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+        <ui:CardAction
+            Margin="0 8 0 0"
+            Icon="{ui:SymbolIcon PanelRightCursor24}"
+            Command="{Binding ViewModel.ShowStaticOptionWindowCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Static members" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Members that belong to the type."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
+        <ui:CardAction
+            Margin="0 4 0 0"
+            Icon="{ui:SymbolIcon SlideText24}"
+            Command="{Binding ViewModel.ShowFieldsOptionWindowCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Instance fields" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Field members of the object."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
+        <ui:CardAction
+            Margin="0 4 0 0"
+            Icon="{ui:SymbolIcon LauncherSettings24}"
+            Command="{Binding ViewModel.ShowPrivateOptionWindowCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Private members" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Non-public members."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
+        <ui:CardAction
+            Margin="0 4 0 0"
+            Icon="{ui:SymbolIcon Alert24}"
+            Command="{Binding ViewModel.ShowEventsOptionWindowCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Events" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Event members the object exposes."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
+        <ui:CardAction
+            Margin="0 4 0 0"
+            Icon="{ui:SymbolIcon Desktop24}"
+            Command="{Binding ViewModel.ShowRootOptionWindowCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Root object" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="The base System.Object level of the hierarchy."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
+        <ui:CardAction
+            Margin="0 4 0 0"
+            Icon="{ui:SymbolIcon SlideSearch24}"
+            Command="{Binding ViewModel.ShowUnsupportedOptionWindowCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Unsupported" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Members the engine reports as unsupported."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
+        <ui:CardAction
+            Margin="0 4 0 0"
+            Icon="{ui:SymbolIcon BroadActivityFeed24}"
+            Command="{Binding ViewModel.ShowExtensionsOptionWindowCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Extensions" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Synthetic object members."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
     </StackPanel>
 
 </Page>

@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
-using JetBrains.Annotations;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Application;
@@ -78,6 +78,20 @@ public sealed partial class MockDecompositionSummaryViewModel(
         catch (Exception exception)
         {
             logger.LogError(exception, "Members decomposing failed");
+            notificationService.ShowError("Lookup engine error", exception);
+        }
+    }
+
+    [RelayCommand]
+    private async Task ForceEvaluateMember(ObservableDecomposedMember member)
+    {
+        try
+        {
+            await decompositionService.EvaluateMemberAsync(member);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Member evaluation failed");
             notificationService.ShowError("Lookup engine error", exception);
         }
     }

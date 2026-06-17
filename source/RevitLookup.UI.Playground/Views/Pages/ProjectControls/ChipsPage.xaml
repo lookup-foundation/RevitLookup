@@ -1,0 +1,112 @@
+<Page
+    x:Class="RevitLookup.UI.Playground.Views.Pages.ProjectControls.ChipsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="clr-namespace:RevitLookup.UI.Playground.Controls"
+    xmlns:projectControls="clr-namespace:RevitLookup.UI.Framework.Controls;assembly=RevitLookup.UI.Framework"
+    xmlns:projectPages="clr-namespace:RevitLookup.UI.Playground.Views.Pages.ProjectControls"
+    d:DataContext="{d:DesignInstance projectPages:ChipsPage}"
+    d:DesignHeight="1000"
+    d:DesignWidth="500"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    mc:Ignorable="d">
+
+    <StackPanel
+        Margin="0,0,0,24">
+
+        <controls:ControlExample
+            Margin="0"
+            HeaderText="Severity palette"
+            XamlCode="&lt;projectControls:Chip Severity=&quot;Neutral&quot; Icon=&quot;Info16&quot; Text=&quot;Neutral&quot; /&gt;&#10;&lt;projectControls:Chip Severity=&quot;Info&quot; Icon=&quot;Clock16&quot; Text=&quot;Deferred&quot; /&gt;&#10;&lt;projectControls:Chip Severity=&quot;Success&quot; Icon=&quot;Checkmark16&quot; Text=&quot;Evaluated&quot; /&gt;&#10;&lt;projectControls:Chip Severity=&quot;Caution&quot; Icon=&quot;LockClosed16&quot; Text=&quot;Disabled&quot; /&gt;&#10;&lt;projectControls:Chip Severity=&quot;Critical&quot; Icon=&quot;ErrorCircle16&quot; Text=&quot;Exception&quot; /&gt;">
+            <StackPanel
+                Orientation="Horizontal">
+                <projectControls:Chip
+                    Margin="0,0,8,0"
+                    Severity="Neutral"
+                    Icon="Info16"
+                    Text="Neutral" />
+                <projectControls:Chip
+                    Margin="0,0,8,0"
+                    Severity="Info"
+                    Icon="Clock16"
+                    Text="Deferred" />
+                <projectControls:Chip
+                    Margin="0,0,8,0"
+                    Severity="Success"
+                    Icon="Checkmark16"
+                    Text="Evaluated" />
+                <projectControls:Chip
+                    Margin="0,0,8,0"
+                    Severity="Caution"
+                    Icon="LockClosed16"
+                    Text="Disabled" />
+                <projectControls:Chip
+                    Severity="Critical"
+                    Icon="ErrorCircle16"
+                    Text="Exception" />
+            </StackPanel>
+        </controls:ControlExample>
+
+        <controls:ControlExample
+            Margin="0,32,0,0"
+            HeaderText="Text only"
+            XamlCode="&lt;projectControls:Chip Severity=&quot;Info&quot; Text=&quot;On demand&quot; /&gt;">
+            <StackPanel
+                Orientation="Horizontal">
+                <projectControls:Chip
+                    Severity="Info"
+                    Text="On demand" />
+            </StackPanel>
+        </controls:ControlExample>
+
+        <controls:ControlExample
+            Margin="0,32,0,0"
+            HeaderText="Icon only"
+            XamlCode="&lt;projectControls:Chip Severity=&quot;Critical&quot; Icon=&quot;ErrorCircle16&quot; /&gt;">
+            <StackPanel
+                Orientation="Horizontal">
+                <projectControls:Chip
+                    Severity="Critical"
+                    Icon="ErrorCircle16" />
+            </StackPanel>
+        </controls:ControlExample>
+        
+        <controls:ControlExample
+            Margin="0,32,0,0"
+            HeaderText="Outline variant"
+            XamlCode="&lt;projectControls:Chip Severity=&quot;Neutral&quot; Outlined=&quot;True&quot; Text=&quot;Empty string&quot; /&gt;&#10;&lt;projectControls:Chip Severity=&quot;Neutral&quot; Outlined=&quot;True&quot; Text=&quot;Null reference&quot; /&gt;">
+            <StackPanel
+                Orientation="Horizontal">
+                <projectControls:Chip
+                    Margin="0,0,8,0"
+                    Severity="Neutral"
+                    Outlined="True"
+                    Text="Empty string" />
+                <projectControls:Chip
+                    Severity="Neutral"
+                    Outlined="True"
+                    Text="Null reference" />
+            </StackPanel>
+        </controls:ControlExample>
+
+        <controls:ControlExample
+            Margin="0,32,0,0"
+            HeaderText="Custom corner radius and icon size"
+            XamlCode="&lt;projectControls:Chip&#10;    Severity=&quot;Success&quot;&#10;    Icon=&quot;Checkmark16&quot;&#10;    Text=&quot;Pill&quot;&#10;    IconSize=&quot;16&quot;&#10;    CornerRadius=&quot;10&quot; /&gt;">
+            <StackPanel
+                Orientation="Horizontal">
+                <projectControls:Chip
+                    Severity="Success"
+                    Icon="Checkmark16"
+                    Text="Pill"
+                    IconSize="16"
+                    CornerRadius="10"
+                    Padding="8 2"/>
+            </StackPanel>
+        </controls:ControlExample>
+
+    </StackPanel>
+
+</Page>

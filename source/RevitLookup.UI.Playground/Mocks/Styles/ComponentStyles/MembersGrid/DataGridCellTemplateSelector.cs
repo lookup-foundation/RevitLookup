@@ -18,7 +18,10 @@ public sealed class DataGridCellTemplateSelector : DataTemplateSelector
         var presenter = (FrameworkElement) container;
         var templateName = member.Value.RawValue switch
         {
+            null => "NullSummaryCellTemplate",
+            string {Length: 0} => "InvalidSummaryCellTemplate",
             Color => "SummaryMediaColorCellTemplate",
+            Exception => "ExceptionSummaryCellTemplate",
             _ => "DefaultSummaryCellTemplate"
         };
 

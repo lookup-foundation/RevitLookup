@@ -6,6 +6,8 @@
     xmlns:decomposition="clr-namespace:RevitLookup.Abstractions.ObservableModels.Decomposition;assembly=RevitLookup.Abstractions"
     xmlns:ui="http://lookupengine.com/xaml"
     xmlns:converters="clr-namespace:RevitLookup.UI.Framework.Converters;assembly=RevitLookup.UI.Framework"
+    xmlns:views="clr-namespace:RevitLookup.UI.Framework.Views.Decomposition;assembly=RevitLookup.UI.Framework"
+    xmlns:controls="clr-namespace:RevitLookup.UI.Framework.Controls;assembly=RevitLookup.UI.Framework"
     xmlns:lookupConverters="clr-namespace:RevitLookup.Styles.Converters"
     mc:Ignorable="d">
 
@@ -20,6 +22,26 @@
             Text="{Binding .,
                 Converter={x:Static converters:DescriptorFormattingConverters.MemberDisplayText},
                 Mode=OneTime}" />
+    </DataTemplate>
+
+    <DataTemplate
+        x:Key="InvalidSummaryCellTemplate"
+        DataType="{x:Type decomposition:ObservableDecomposedMember}">
+        <controls:Chip
+            Severity="Neutral"
+            Outlined="True"
+            Text="Empty string"
+            ToolTip="The member value is an empty string" />
+    </DataTemplate>
+
+    <DataTemplate
+        x:Key="NullSummaryCellTemplate"
+        DataType="{x:Type decomposition:ObservableDecomposedMember}">
+        <controls:Chip
+            Severity="Neutral"
+            Outlined="True"
+            Text="Null reference"
+            ToolTip="The member value is null" />
     </DataTemplate>
 
     <DataTemplate
@@ -57,6 +79,100 @@
                     </Border.Background>
                 </Border>
             </Border>
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate
+        x:Key="DeferredSummaryCellTemplate"
+        DataType="{x:Type decomposition:ObservableDecomposedMember}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <controls:Chip
+                Grid.Column="0"
+                Severity="Info"
+                Icon="Clock16"
+                Text="Deferred" />
+            <ui:Button
+                x:Name="EvaluateButton"
+                Grid.Column="1"
+                Margin="8 0 0 0"
+                Padding="6 2"
+                VerticalAlignment="Center"
+                Cursor="Hand"
+                Appearance="Transparent"
+                Visibility="Collapsed"
+                Command="{Binding ViewModel.ForceEvaluateMemberCommand,
+                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SummaryViewBase}}}"
+                CommandParameter="{Binding}">
+                <StackPanel
+                    Orientation="Horizontal">
+                    <ui:SymbolIcon
+                        FontSize="14"
+                        Symbol="Calculator16"
+                        VerticalAlignment="Center" />
+                    <ui:TextBlock
+                        Margin="4 0 0 0"
+                        VerticalAlignment="Center"
+                        FontTypography="Caption"
+                        Text="Evaluate" />
+                </StackPanel>
+            </ui:Button>
+        </Grid>
+        <DataTemplate.Triggers>
+            <DataTrigger
+                Binding="{Binding IsMouseOver, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}}"
+                Value="True">
+                <Setter
+                    TargetName="EvaluateButton"
+                    Property="Visibility"
+                    Value="Visible" />
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
+
+    <DataTemplate
+        x:Key="DisabledSummaryCellTemplate"
+        DataType="{x:Type decomposition:ObservableDecomposedMember}">
+        <controls:Chip
+            Severity="Caution"
+            Icon="LockClosed16"
+            Text="Disabled"
+            ToolTip="Member evaluation permanently disabled" />
+    </DataTemplate>
+
+    <DataTemplate
+        x:Key="UnsupportedSummaryCellTemplate"
+        DataType="{x:Type decomposition:ObservableDecomposedMember}">
+        <controls:Chip
+            Severity="Neutral"
+            Icon="Prohibited16"
+            Text="Unsupported"
+            ToolTip="Member evaluation not supported by the engine" />
+    </DataTemplate>
+
+    <DataTemplate
+        x:Key="ExceptionSummaryCellTemplate"
+        DataType="{x:Type decomposition:ObservableDecomposedMember}">
+        <StackPanel
+            Orientation="Horizontal"
+            VerticalAlignment="Center">
+            <controls:Chip
+                Severity="Critical"
+                Icon="ErrorCircle16"
+                Text="Exception" />
+            <ui:TextBlock
+                Margin="8 0 0 0"
+                VerticalAlignment="Center"
+                FontTypography="Caption"
+                TextTrimming="CharacterEllipsis"
+                FontWeight="{Binding FontWeight,
+                    RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}}"
+                Text="{Binding .,
+                    Converter={x:Static converters:DescriptorFormattingConverters.MemberDisplayText},
+                    Mode=OneTime}" />
         </StackPanel>
     </DataTemplate>
 

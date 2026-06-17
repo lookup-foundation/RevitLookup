@@ -18,6 +18,12 @@
         Icon="{ui:SymbolIcon Copy16}" />
 
     <ui:MenuItem
+        x:Key="EvaluateMenuItem"
+        x:Shared="False"
+        Header="Evaluate"
+        Icon="{ui:SymbolIcon Calculator16}" />
+
+    <ui:MenuItem
         x:Key="HelpMenuItem"
         x:Shared="False"
         Header="Help"

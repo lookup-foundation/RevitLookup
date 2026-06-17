@@ -79,6 +79,20 @@ public sealed partial class DecompositionSummaryViewModel(
         }
     }
 
+    [RelayCommand]
+    private async Task ForceEvaluateMember(ObservableDecomposedMember member)
+    {
+        try
+        {
+            await decompositionService.EvaluateMemberAsync(member);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Member evaluation failed");
+            notificationService.ShowError("Lookup engine error", exception);
+        }
+    }
+
     public void RemoveItem(object target)
     {
         switch (target)

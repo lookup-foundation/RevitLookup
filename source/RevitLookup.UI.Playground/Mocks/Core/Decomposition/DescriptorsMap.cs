@@ -18,6 +18,7 @@ using System.Windows.Media;
 using LookupEngine.Abstractions.Decomposition;
 using LookupEngine.Descriptors;
 using RevitLookup.UI.Playground.Mocks.Core.Decomposition.Descriptors;
+using RevitLookup.UI.Playground.Mocks.Models;
 
 namespace RevitLookup.UI.Playground.Mocks.Core.Decomposition;
 
@@ -39,6 +40,11 @@ public static class DescriptorsMap
             Exception value when type is null || type == typeof(Exception) => new ExceptionDescriptor(value),
             Color color when type is null || type == typeof(Color) => new ColorMediaDescriptor(color),
             Vector3 value when type is null || type == typeof(Vector3) => new Vector3Descriptor(value),
+            DeferredSample value when type is null || type == typeof(DeferredSample) => new DeferredSampleDescriptor(value),
+            DisabledSample value when type is null || type == typeof(DisabledSample) => new DisabledSampleDescriptor(value),
+            UnsupportedSample value when type is null || type == typeof(UnsupportedSample) => new UnsupportedSampleDescriptor(value),
+            ExceptionSample value when type is null || type == typeof(ExceptionSample) => new ExceptionSampleDescriptor(value),
+            MixedSample value when type is null || type == typeof(MixedSample) => new MixedSampleDescriptor(value),
             IEnumerable value => new EnumerableDescriptor(value),
             _ => new ObjectDescriptor(obj)
         };

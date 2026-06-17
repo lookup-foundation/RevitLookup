@@ -5,8 +5,7 @@
     xmlns:menu="clr-namespace:RevitLookup.UI.Framework.Markup.Menu;assembly=RevitLookup.UI.Framework"
     xmlns:membersGrid="clr-namespace:RevitLookup.Styles.ComponentStyles.MembersGrid">
 
-    <membersGrid:DataGridCellTemplateSelector
-        x:Key="DataGridCellTemplateSelector" />
+    <membersGrid:DataGridCellTemplateSelector x:Key="DataGridCellTemplateSelector" />
 
     <ResourceDictionary.MergedDictionaries>
 
@@ -17,6 +16,7 @@
 
         <!-- Controls -->
         <ResourceDictionary Source="pack://application:,,,/RevitLookup.UI.Framework;component/Controls/ContentPlaceholder/ContentPlaceholder.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/RevitLookup.UI.Framework;component/Controls/Chip/Chip.xaml" />
 
         <!-- Components Styles -->
         <ResourceDictionary Source="pack://application:,,,/RevitLookup;component/Styles/ComponentStyles/ObjectsTree/TreeGroupTemplates.xaml" />

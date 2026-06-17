@@ -1,7 +1,6 @@
 using System.Windows.Controls;
 using Bogus;
 using CommunityToolkit.Mvvm.ComponentModel;
-using JetBrains.Annotations;
 using Person = RevitLookup.UI.Playground.Models.Person;
 
 namespace RevitLookup.UI.Playground.ViewModels.Pages.Collections;

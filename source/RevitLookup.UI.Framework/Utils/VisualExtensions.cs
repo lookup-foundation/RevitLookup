@@ -6,93 +6,96 @@ namespace RevitLookup.UI.Framework.Utils;
 
 public static class VisualExtensions
 {
-    public static T? FindVisualParent<T>(this DependencyObject element) where T : FrameworkElement
+    extension(DependencyObject element)
     {
-        var parentElement = (FrameworkElement?) VisualTreeHelper.GetParent(element);
-        while (parentElement is not null)
+        public T? FindVisualParent<T>() where T : FrameworkElement
         {
-            if (parentElement is T parent)
-                return parent;
+            var parentElement = (FrameworkElement?) VisualTreeHelper.GetParent(element);
+            while (parentElement is not null)
+            {
+                if (parentElement is T parent) return parent;
 
-            parentElement = (FrameworkElement?) VisualTreeHelper.GetParent(parentElement);
+                parentElement = (FrameworkElement?) VisualTreeHelper.GetParent(parentElement);
+            }
+
+            return null;
         }
 
-        return null;
-    }
-
-    public static T? FindVisualParent<T>(this DependencyObject element, string name) where T : FrameworkElement
-    {
-        var parentElement = (FrameworkElement?) VisualTreeHelper.GetParent(element);
-        while (parentElement is not null)
+        public T? FindVisualParent<T>(string name) where T : FrameworkElement
         {
-            if (parentElement is T parent)
-                if (parentElement.Name == name)
-                    return parent;
+            var parentElement = (FrameworkElement?) VisualTreeHelper.GetParent(element);
+            while (parentElement is not null)
+            {
+                if (parentElement is T parent)
+                {
+                    if (parentElement.Name == name) return parent;
+                }
 
-            parentElement = (FrameworkElement?) VisualTreeHelper.GetParent(parentElement);
+                parentElement = (FrameworkElement?) VisualTreeHelper.GetParent(parentElement);
+            }
+
+            return null;
         }
 
-        return null;
-    }
-
-    public static T? FindVisualChild<T>(this DependencyObject element) where T : Visual
-    {
-        for (var i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
+        public T? FindVisualChild<T>() where T : Visual
         {
-            var childElement = (FrameworkElement?) VisualTreeHelper.GetChild(element, i);
-            if (childElement is null) return null;
+            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
+            {
+                var childElement = (FrameworkElement?) VisualTreeHelper.GetChild(element, i);
+                if (childElement is null) return null;
 
-            if (childElement is T child)
-                return child;
+                if (childElement is T child) return child;
 
-            var descendent = FindVisualChild<T>(childElement);
-            if (descendent is not null) return descendent;
+                var descendent = childElement.FindVisualChild<T>();
+                if (descendent is not null) return descendent;
+            }
+
+            return null;
         }
 
-        return null;
-    }
-
-    public static T? FindVisualChild<T>(this DependencyObject element, string name) where T : Visual
-    {
-        for (var i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
+        public T? FindVisualChild<T>(string name) where T : Visual
         {
-            var childElement = (FrameworkElement?) VisualTreeHelper.GetChild(element, i);
-            if (childElement is null) return null;
+            for (var i = 0; i < VisualTreeHelper.GetChildrenCount(element); i++)
+            {
+                var childElement = (FrameworkElement?) VisualTreeHelper.GetChild(element, i);
+                if (childElement is null) return null;
 
-            if (childElement is T child)
-                if (childElement.Name == name)
-                    return child;
+                if (childElement is T child)
+                {
+                    if (childElement.Name == name) return child;
+                }
 
-            var descendent = FindVisualChild<T>(childElement, name);
-            if (descendent is not null) return descendent;
+                var descendent = childElement.FindVisualChild<T>(name);
+                if (descendent is not null) return descendent;
+            }
+
+            return null;
         }
 
-        return null;
-    }
-
-    public static T? FindLogicalChild<T>(this DependencyObject visual) where T : Visual
-    {
-        foreach (Visual child in LogicalTreeHelper.GetChildren(visual))
+        public T? FindLogicalChild<T>() where T : Visual
         {
-            if (child is T correctlyTyped) return correctlyTyped;
+            foreach (Visual child in LogicalTreeHelper.GetChildren(element))
+            {
+                if (child is T correctlyTyped) return correctlyTyped;
 
-            var descendent = FindLogicalChild<T>(child);
-            if (descendent is not null) return descendent;
+                var descendent = child.FindLogicalChild<T>();
+                if (descendent is not null) return descendent;
+            }
+
+            return null;
         }
 
-        return null;
-    }
-
-    public static T? FindLogicalParent<T>(this DependencyObject dependencyObject) where T : DependencyObject
-    {
-        var parentObject = LogicalTreeHelper.GetParent(dependencyObject);
-        while (parentObject is not null)
+        public T? FindLogicalParent<T>() where T : DependencyObject
         {
-            if (parentObject is T parent) return parent;
-            parentObject = LogicalTreeHelper.GetParent(parentObject);
-        }
+            var parentObject = LogicalTreeHelper.GetParent(element);
+            while (parentObject is not null)
+            {
+                if (parentObject is T parent) return parent;
+                parentObject = LogicalTreeHelper.GetParent(parentObject);
+            }
 
-        return null;
+            return null;
+        }
     }
 
     public static DependencyObject? GetItemAtIndex(this ItemsControl container, int index)
@@ -100,7 +103,9 @@ public static class VisualExtensions
         if (container.Items.Count == 0) return null;
 
         if (container is TreeViewItem {IsExpanded: false} viewItem)
+        {
             viewItem.SetCurrentValue(TreeViewItem.IsExpandedProperty, true);
+        }
 
         container.ApplyTemplate();
         var itemsPresenter = (ItemsPresenter) container.Template.FindName("ItemsHost", container);
@@ -110,11 +115,11 @@ public static class VisualExtensions
         }
         else
         {
-            itemsPresenter = FindVisualChild<ItemsPresenter>(container);
-            if (itemsPresenter == null)
+            itemsPresenter = container.FindVisualChild<ItemsPresenter>();
+            if (itemsPresenter is null)
             {
                 container.UpdateLayout();
-                itemsPresenter = FindVisualChild<ItemsPresenter>(container);
+                itemsPresenter = container.FindVisualChild<ItemsPresenter>();
             }
         }
 

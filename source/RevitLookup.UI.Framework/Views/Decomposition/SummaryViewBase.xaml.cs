@@ -235,6 +235,8 @@ public partial class SummaryViewBase : Page, INavigableView<ISummaryViewModel>
 
         row.MouseEnter += OnGridRowCaptured;
         row.PreviewMouseLeftButtonUp += OnGridRowClicked;
+
+        MonitorRowValueChanges(row);
     }
 
     /// <summary>

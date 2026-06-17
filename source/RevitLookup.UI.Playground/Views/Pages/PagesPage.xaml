@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="RevitLookup.UI.Playground.Views.Pages.PagesPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -14,44 +14,103 @@
 
     <StackPanel
         Margin="0 24">
+
         <ui:TextBlock
             Text="Navigation elements"
             FontTypography="BodyStrong" />
+        <ui:TextBlock
+            Margin="0 2 0 0"
+            Text="Pages hosted inside the main window."
+            FontTypography="Caption"
+            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
         <ui:CardAction
-            Margin="0 4 0 0"
+            Margin="0 8 0 0"
             Icon="{ui:SymbolIcon AppGeneric24}"
-            Content="Dashboard page"
-            Command="{Binding ViewModel.ShowDashboardPageCommand}" />
+            Command="{Binding ViewModel.ShowDashboardPageCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Dashboard page" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="The landing page with shortcuts to inspectable objects."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
         <ui:CardAction
             Margin="0 4 0 0"
             Icon="{ui:SymbolIcon SlideSearch24}"
-            Content="Decomposition summary page"
-            Command="{Binding ViewModel.ShowDecompositionSummaryPageCommand}" />
+            Command="{Binding ViewModel.ShowDecompositionSummaryPageCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Decomposition summary page" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="The object and member grid for a decomposition result."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
         <ui:CardAction
             Margin="0 4 0 0"
             Icon="{ui:SymbolIcon DesktopPulse24}"
-            Content="Events summary page"
-            Command="{Binding ViewModel.ShowEventsSummaryPageCommand}" />
+            Command="{Binding ViewModel.ShowEventsSummaryPageCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Events summary page" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="The live list of captured events."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
         <ui:CardAction
             Margin="0 4 0 0"
             Icon="{ui:SymbolIcon Settings24}"
-            Content="Settings page"
-            Command="{Binding ViewModel.ShowSettingsPageCommand}" />
+            Command="{Binding ViewModel.ShowSettingsPageCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Settings page" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Application preferences like theme and rendering."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
         <ui:CardAction
             Margin="0 4 0 0"
             Icon="{ui:SymbolIcon Info24}"
-            Content="About page"
-            Command="{Binding ViewModel.ShowAboutPageCommand}" />
+            Command="{Binding ViewModel.ShowAboutPageCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="About page" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Version, links and credits."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
 
         <ui:TextBlock
+            Margin="0 20 0 0"
             Text="Tools"
-            FontTypography="BodyStrong"
-            Margin="0 12 0 0" />
+            FontTypography="BodyStrong" />
+        <ui:TextBlock
+            Margin="0 2 0 0"
+            Text="Standalone tool pages."
+            FontTypography="Caption"
+            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
         <ui:CardAction
-            Margin="0 4 0 0"
+            Margin="0 8 0 0"
             Icon="{ui:SymbolIcon LauncherSettings24}"
-            Content="Revit settings page"
-            Command="{Binding ViewModel.ShowRevitSettingsPageCommand}" />
+            Command="{Binding ViewModel.ShowRevitSettingsPageCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Revit settings page" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="The Revit configuration editor."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
 
     </StackPanel>
 

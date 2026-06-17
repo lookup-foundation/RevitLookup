@@ -26,9 +26,5 @@
         <Resource Include="Resources\Images\ShellIcon.ico"/>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Templates\" />
-    </ItemGroup>
-
 </Project>
 

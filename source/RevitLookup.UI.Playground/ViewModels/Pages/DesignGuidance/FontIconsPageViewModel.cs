@@ -2,7 +2,6 @@
 using System.Reflection;
 using System.Text.Json;
 using CommunityToolkit.Mvvm.ComponentModel;
-using JetBrains.Annotations;
 using RevitLookup.UI.Playground.Models;
 #if NETFRAMEWORK
 using RevitLookup.UI.Framework.Extensions;

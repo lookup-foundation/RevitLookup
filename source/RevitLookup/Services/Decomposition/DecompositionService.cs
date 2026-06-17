@@ -35,6 +35,11 @@ public sealed partial class DecompositionService(ISettingsService settingsServic
         return await DecomposeMembersAsyncEvent.RaiseAsync(decomposedObject, options);
     }
 
+    public async Task EvaluateMemberAsync(ObservableDecomposedMember decomposedMember)
+    {
+        await EvaluateMemberAsyncEvent.RaiseAsync(decomposedMember);
+    }
+
     [ExternalEvent(AllowDirectInvocation = true)]
     private ObservableDecomposedObject Decompose(object? target, DecomposeOptions<Document> options)
     {
@@ -84,6 +89,18 @@ public sealed partial class DecompositionService(ISettingsService settingsServic
         }
 
         return members;
+    }
+
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private static void EvaluateMember(ObservableDecomposedMember decomposedMember)
+    {
+        if (decomposedMember.Member is null) return;
+
+        decomposedMember.Member.Evaluate();
+        decomposedMember.Value = DecompositionResultMapper.Convert(decomposedMember.Member.Value);
+        decomposedMember.ComputationTime = decomposedMember.Member.ComputationTime;
+        decomposedMember.AllocatedBytes = decomposedMember.Member.AllocatedBytes;
+        decomposedMember.EvaluationPolicy = decomposedMember.Member.EvaluationPolicy;
     }
 
     private bool TryFindRevitContext(object? obj, [MaybeNullWhen(false)] out Document context)
@@ -136,7 +153,14 @@ public sealed partial class DecompositionService(ISettingsService settingsServic
             IncludeStaticMembers = settingsService.DecompositionSettings.IncludeStatic,
             EnableExtensions = settingsService.DecompositionSettings.IncludeExtensions,
             EnableRedirection = true,
-            TypeResolver = DescriptorsMap.FindDescriptor
+            TypeResolver = DescriptorsMap.FindDescriptor,
+            EvaluationPolicy = new MethodEvaluationPolicy
+            {
+                EvaluatedNamespaces =
+                [
+                    "Autodesk.Revit.*"
+                ]
+            }
         };
     }
 }

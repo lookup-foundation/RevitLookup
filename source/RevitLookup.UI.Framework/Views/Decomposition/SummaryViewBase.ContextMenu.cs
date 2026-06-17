@@ -15,6 +15,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using LookupEngine.Abstractions.Enums;
 using Microsoft.Extensions.Logging;
 using RevitLookup.Abstractions.Decomposition;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
@@ -71,6 +72,14 @@ public partial class SummaryViewBase
         };
 
         row.ContextMenu = contextMenu;
+
+        if (member.EvaluationPolicy == MemberEvaluationPolicy.Deferred)
+        {
+            contextMenu.AddMenuItem("EvaluateMenuItem")
+                .SetCommand(member, async parameter => await ViewModel.ForceEvaluateMemberCommand.ExecuteAsync(parameter));
+            
+            contextMenu.AddSeparator();
+        }
 
         contextMenu.AddMenuItem("CopyMenuItem")
             .SetCommand(member, parameter => Clipboard.SetDataObject($"{parameter.Name}: {parameter.Value.Name}"))

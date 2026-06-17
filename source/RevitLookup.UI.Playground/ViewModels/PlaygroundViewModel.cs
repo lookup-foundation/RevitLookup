@@ -1,8 +1,6 @@
 ﻿using System.Windows.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using JetBrains.Annotations;
-using Kinship.UI.Playground.Views.Pages.ProjectControls;
 using RevitLookup.Abstractions.Services.Appearance;
 using RevitLookup.Abstractions.Services.Presentation;
 using RevitLookup.Abstractions.Services.Settings;
@@ -13,6 +11,7 @@ using RevitLookup.UI.Playground.Views.Pages.DesignGuidance;
 using RevitLookup.UI.Playground.Views.Pages.DialogsAndFlyouts;
 using RevitLookup.UI.Playground.Views.Pages.Layout;
 using RevitLookup.UI.Playground.Views.Pages.Navigation;
+using RevitLookup.UI.Playground.Views.Pages.ProjectControls;
 using RevitLookup.UI.Playground.Views.Pages.Text;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
@@ -68,6 +67,7 @@ public sealed class PlaygroundViewModel : ObservableObject
                 Icon = new FontIcon { Glyph = "\uEF58", FontSize = 16 },
                 MenuItemsSource = new object[]
                 {
+                    new NavigationViewItem("Chips", typeof(ChipsPage)),
                     new NavigationViewItem("Empty states", typeof(EmptyStatesPage)),
                 },
             },

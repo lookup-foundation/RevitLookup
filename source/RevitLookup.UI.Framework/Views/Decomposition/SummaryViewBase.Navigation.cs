@@ -16,6 +16,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using LookupEngine.Abstractions.Configuration;
+using LookupEngine.Abstractions.Enums;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.UI.Framework.Utils;
 
@@ -79,6 +80,8 @@ public partial class SummaryViewBase
         var row = (DataGridRow) sender;
         if (row.DataContext is not ObservableDecomposedMember context) return;
 
+        if (!CanAccessMemberValue(context)) return;
+
         if ((Keyboard.Modifiers & ModifierKeys.Control) == 0)
         {
             if (context.Value.Descriptor is not IDescriptorCollector) return;
@@ -86,6 +89,15 @@ public partial class SummaryViewBase
         }
 
         ViewModel.Navigate(context.Value);
+    }
+
+    /// <summary>
+    ///     A member can be navigated into only when it has an evaluated, non-null value
+    /// </summary>
+    private static bool CanAccessMemberValue(ObservableDecomposedMember member)
+    {
+        if (member.EvaluationPolicy != MemberEvaluationPolicy.Evaluated) return false;
+        return member.Value.RawValue is not null;
     }
 
     /// <summary>
@@ -108,6 +120,12 @@ public partial class SummaryViewBase
         };
 
         if (item is null)
+        {
+            presenter.Cursor = null;
+            return;
+        }
+
+        if (item is DataGridRow {DataContext: ObservableDecomposedMember member} && !CanAccessMemberValue(member))
         {
             presenter.Cursor = null;
             return;

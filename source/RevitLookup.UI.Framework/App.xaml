@@ -17,6 +17,7 @@
 
                 <!-- Controls -->
                 <ResourceDictionary Source="pack://application:,,,/RevitLookup.UI.Framework;component/Controls/ContentPlaceholder/ContentPlaceholder.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/RevitLookup.UI.Framework;component/Controls/Chip/Chip.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

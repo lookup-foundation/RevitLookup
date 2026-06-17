@@ -1,4 +1,5 @@
-﻿using RevitLookup.Abstractions.ObservableModels.Decomposition;
+﻿using CommunityToolkit.Mvvm.Input;
+using RevitLookup.Abstractions.ObservableModels.Decomposition;
 
 namespace RevitLookup.Abstractions.ViewModels.Decomposition;
 
@@ -21,6 +22,11 @@ public interface ISummaryViewModel
     ///     The list of decomposed objects.
     /// </summary>
     List<ObservableDecomposedObject> DecomposedObjects { get; set; }
+    
+    /// <summary>
+    ///     Force the evaluation of a deferred member.
+    /// </summary>
+    IAsyncRelayCommand<ObservableDecomposedMember> ForceEvaluateMemberCommand { get; }
 
     /// <summary>
     ///     Decompose members of the selected object avoiding cache.

@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="RevitLookup.UI.Playground.Views.Pages.DialogsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -14,103 +14,252 @@
 
     <StackPanel
         Margin="0 24">
+
         <ui:TextBlock
             Text="About program"
             FontTypography="BodyStrong" />
+        <ui:TextBlock
+            Margin="0 2 0 0"
+            Text="Informational dialogs."
+            FontTypography="Caption"
+            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
         <ui:CardAction
-            Margin="0 4 0 0"
+            Margin="0 8 0 0"
             Icon="{ui:SymbolIcon HandOpenHeart32}"
-            Content="Open source dialog"
-            Command="{Binding ViewModel.ShowOpenSourceDialogCommand}" />
+            Command="{Binding ViewModel.ShowOpenSourceDialogCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Open source dialog" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Licenses and open-source acknowledgements."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
 
         <ui:TextBlock
-            Margin="0 12 0 0"
+            Margin="0 20 0 0"
             Text="Tools"
             FontTypography="BodyStrong" />
+        <ui:TextBlock
+            Margin="0 2 0 0"
+            Text="Pickers and browsers for Revit data."
+            FontTypography="Caption"
+            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
         <ui:CardAction
-            Margin="0 4 0 0"
+            Margin="0 8 0 0"
             Icon="{ui:SymbolIcon SlideSearch24}"
-            Content="Search elements dialog"
-            Command="{Binding ViewModel.ShowSearchElementsDialogCommand}" />
+            Command="{Binding ViewModel.ShowSearchElementsDialogCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Search elements dialog" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Find elements by id or name."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
         <ui:CardAction
             Margin="0 4 0 0"
             Icon="{ui:SymbolIcon BroadActivityFeed24}"
-            Content="Modules dialog"
-            Command="{Binding ViewModel.ShowModulesDialogCommand}" />
+            Command="{Binding ViewModel.ShowModulesDialogCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Modules dialog" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Loaded assemblies and modules."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
         <ui:CardAction
             Margin="0 4 0 0"
             Icon="{ui:SymbolIcon LeafOne24}"
-            Content="BuiltIn parameters dialog"
-            Command="{Binding ViewModel.ShowParametersDialogCommand}" />
+            Command="{Binding ViewModel.ShowParametersDialogCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="BuiltIn parameters dialog" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Browse built-in parameters."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
         <ui:CardAction
             Margin="0 4 0 0"
             Icon="{ui:SymbolIcon LeafTwo24}"
-            Content="BuiltIn categories dialog"
-            Command="{Binding ViewModel.ShowCategoriesDialogCommand}" />
+            Command="{Binding ViewModel.ShowCategoriesDialogCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="BuiltIn categories dialog" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Browse built-in categories."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
         <ui:CardAction
             Margin="0 4 0 0"
             Icon="{ui:SymbolIcon LeafThree24}"
-            Content="Forge schema dialog"
-            Command="{Binding ViewModel.ShowForgeSchemaDialogCommand}" />
+            Command="{Binding ViewModel.ShowForgeSchemaDialogCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Forge schema dialog" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Browse Forge type schemas."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
 
         <ui:TextBlock
-            Margin="0 12 0 0"
+            Margin="0 20 0 0"
             Text="Visualization"
             FontTypography="BodyStrong" />
+        <ui:TextBlock
+            Margin="0 2 0 0"
+            Text="Overlay appearance settings for each geometry kind."
+            FontTypography="Caption"
+            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+        <ui:CardAction
+            Margin="0 8 0 0"
+            Icon="{ui:SymbolIcon Wallpaper24}"
+            Command="{Binding ViewModel.ShowBoundingBoxVisualizationDialogCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="BoundingBox visualization dialog" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Tune the bounding-box overlay colors and visibility."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
         <ui:CardAction
             Margin="0 4 0 0"
             Icon="{ui:SymbolIcon Wallpaper24}"
-            Content="BoundingBox visualization dialog"
-            Command="{Binding ViewModel.ShowBoundingBoxVisualizationDialogCommand}" />
+            Command="{Binding ViewModel.ShowFaceVisualizationDialogCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Face visualization dialog" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Tune the face overlay appearance."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
         <ui:CardAction
             Margin="0 4 0 0"
             Icon="{ui:SymbolIcon Wallpaper24}"
-            Content="Face visualization dialog"
-            Command="{Binding ViewModel.ShowFaceVisualizationDialogCommand}" />
+            Command="{Binding ViewModel.ShowMeshVisualizationDialogCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Mesh visualization dialog" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Tune the mesh overlay appearance."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
         <ui:CardAction
             Margin="0 4 0 0"
             Icon="{ui:SymbolIcon Wallpaper24}"
-            Content="Mesh visualization dialog"
-            Command="{Binding ViewModel.ShowMeshVisualizationDialogCommand}" />
+            Command="{Binding ViewModel.ShowPolylineVisualizationDialogCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Polyline visualization dialog" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Tune the polyline overlay appearance."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
         <ui:CardAction
             Margin="0 4 0 0"
             Icon="{ui:SymbolIcon Wallpaper24}"
-            Content="Polyline visualization dialog"
-            Command="{Binding ViewModel.ShowPolylineVisualizationDialogCommand}" />
+            Command="{Binding ViewModel.ShowCurveLoopVisualizationDialogCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="CurveLoop visualization dialog" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Tune the curve-loop overlay appearance."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
         <ui:CardAction
             Margin="0 4 0 0"
             Icon="{ui:SymbolIcon Wallpaper24}"
-            Content="CurveLoop visualization dialog"
-            Command="{Binding ViewModel.ShowCurveLoopVisualizationDialogCommand}" />
+            Command="{Binding ViewModel.ShowSolidVisualizationDialogCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Solid visualization dialog" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Tune the solid overlay appearance."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
         <ui:CardAction
             Margin="0 4 0 0"
             Icon="{ui:SymbolIcon Wallpaper24}"
-            Content="Solid visualization dialog"
-            Command="{Binding ViewModel.ShowSolidVisualizationDialogCommand}" />
-        <ui:CardAction
-            Margin="0 4 0 0"
-            Icon="{ui:SymbolIcon Wallpaper24}"
-            Content="XYZ visualization dialog"
-            Command="{Binding ViewModel.ShowXyzVisualizationDialogCommand}" />
+            Command="{Binding ViewModel.ShowXyzVisualizationDialogCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="XYZ visualization dialog" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Tune the XYZ axis overlay appearance."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
 
         <ui:TextBlock
-            Margin="0 12 0 0"
+            Margin="0 20 0 0"
             Text="Edit dialogs"
             FontTypography="BodyStrong" />
+        <ui:TextBlock
+            Margin="0 2 0 0"
+            Text="Value and INI entry editors."
+            FontTypography="Caption"
+            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
         <ui:CardAction
-            Margin="0 4 0 0"
+            Margin="0 8 0 0"
             Icon="{ui:SymbolIcon Edit24}"
-            Content="Edit value dialog"
-            Command="{Binding ViewModel.ShowEditValueDialogCommand}" />
+            Command="{Binding ViewModel.ShowEditValueDialogCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Edit value dialog" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Edit a member's value inline."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
         <ui:CardAction
             Margin="0 4 0 0"
             Icon="{ui:SymbolIcon EditSettings24}"
-            Content="Edit INI entry dialog"
-            Command="{Binding ViewModel.ShowUpdateIniEntryDialogCommand}" />
+            Command="{Binding ViewModel.ShowUpdateIniEntryDialogCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Edit INI entry dialog" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Update an existing INI setting."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
         <ui:CardAction
             Margin="0 4 0 0"
             Icon="{ui:SymbolIcon EditSettings24}"
-            Content="Create INI entry dialog"
-            Command="{Binding ViewModel.ShowCreateIniEntryDialogCommand}" />
+            Command="{Binding ViewModel.ShowCreateIniEntryDialogCommand}">
+            <StackPanel>
+                <ui:TextBlock Text="Create INI entry dialog" FontTypography="BodyStrong" />
+                <ui:TextBlock
+                    Text="Add a new INI setting."
+                    FontTypography="Caption"
+                    TextWrapping="Wrap"
+                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+        </ui:CardAction>
     </StackPanel>
 </Page>

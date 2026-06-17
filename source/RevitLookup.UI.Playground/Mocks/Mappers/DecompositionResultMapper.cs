@@ -8,5 +8,16 @@ namespace RevitLookup.UI.Playground.Mocks.Mappers;
 public static partial class DecompositionResultMapper
 {
     public static partial ObservableDecomposedObject Convert(DecomposedObject decomposedObject);
-    public static partial ObservableDecomposedMember Convert(DecomposedMember decomposedMember);
+    public static partial ObservableDecomposedValue Convert(DecomposedValue decomposedValue);
+    
+    [UserMapping(Default = true)]
+    public static ObservableDecomposedMember Convert(DecomposedMember decomposedMember)
+    {
+        var member = MapMember(decomposedMember);
+        member.Member = decomposedMember;
+        return member;
+    }
+
+    [MapperIgnoreSource(nameof(DecomposedMember.Evaluator))]
+    private static partial ObservableDecomposedMember MapMember(DecomposedMember decomposedMember);
 }

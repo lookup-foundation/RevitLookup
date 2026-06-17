@@ -13,7 +13,6 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using CommunityToolkit.Mvvm.ComponentModel;
-using JetBrains.Annotations;
 using RevitLookup.Abstractions.Models.AboutProgram;
 using RevitLookup.Abstractions.ViewModels.AboutProgram;
 

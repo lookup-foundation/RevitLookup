@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using JetBrains.Annotations;
 using RevitLookup.UI.Playground.Models;
 using Wpf.Ui.Controls;
 #if NETFRAMEWORK

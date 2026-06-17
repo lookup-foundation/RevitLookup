@@ -135,16 +135,54 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
                     <DataGridTemplateColumn
-                        Width="2*"
-                        CellTemplateSelector="{StaticResource DataGridCellTemplateSelector}">
+                        Width="2*">
                         <DataGridTemplateColumn.Header>
                             <ui:TextBlock
                                 FontTypography="Caption"
                                 Text="Value"
                                 FontWeight="Bold" />
                         </DataGridTemplateColumn.Header>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <!-- ReSharper disable once Xaml.StaticResourceNotResolved -->
+                                <ContentControl
+                                    Focusable="False"
+                                    Content="{Binding}"
+                                    ContentTemplateSelector="{StaticResource DataGridCellTemplateSelector}">
+                                    <ContentControl.Style>
+                                        <Style
+                                            TargetType="ContentControl">
+                                            <Style.Triggers>
+                                                <!-- ReSharper disable Xaml.StaticResourceNotResolved -->
+                                                <DataTrigger
+                                                    Binding="{Binding EvaluationPolicy}"
+                                                    Value="Deferred">
+                                                    <Setter
+                                                        Property="ContentTemplate"
+                                                        Value="{StaticResource DeferredSummaryCellTemplate}" />
+                                                </DataTrigger>
+                                                <DataTrigger
+                                                    Binding="{Binding EvaluationPolicy}"
+                                                    Value="Disabled">
+                                                    <Setter
+                                                        Property="ContentTemplate"
+                                                        Value="{StaticResource DisabledSummaryCellTemplate}" />
+                                                </DataTrigger>
+                                                <DataTrigger
+                                                    Binding="{Binding EvaluationPolicy}"
+                                                    Value="Unsupported">
+                                                    <Setter
+                                                        Property="ContentTemplate"
+                                                        Value="{StaticResource UnsupportedSummaryCellTemplate}" />
+                                                </DataTrigger>
+                                                <!-- ReSharper restore Xaml.StaticResourceNotResolved -->
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ContentControl.Style>
+                                </ContentControl>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTemplateColumn
                         Width="61"
@@ -164,8 +202,7 @@
                                     FontWeight="{Binding FontWeight, 
                                         RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}}"
                                     Text="{Binding ComputationTime,
-                                        Converter={x:Static converters:FormattingConverters.TimeDisplayText},
-                                        Mode=OneTime}" />
+                                        Converter={x:Static converters:FormattingConverters.TimeDisplayText}}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -187,8 +224,7 @@
                                     FontWeight="{Binding FontWeight, 
                                         RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}}"
                                     Text="{Binding AllocatedBytes,
-                                        Converter={x:Static converters:FormattingConverters.BytesDisplayText},
-                                        Mode=OneTime}" />
+                                        Converter={x:Static converters:FormattingConverters.BytesDisplayText}}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

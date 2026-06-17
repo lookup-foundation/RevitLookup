@@ -3,7 +3,6 @@ using System.Linq.Expressions;
 using Bogus;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using RevitLookup.Abstractions.ObservableModels.Entries;
 using RevitLookup.Abstractions.Services.Presentation;

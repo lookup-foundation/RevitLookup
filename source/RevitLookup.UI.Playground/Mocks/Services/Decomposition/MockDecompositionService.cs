@@ -59,6 +59,18 @@ public sealed class MockDecompositionService(ISettingsService settingsService) :
         });
     }
 
+    public async Task EvaluateMemberAsync(ObservableDecomposedMember decomposedMember)
+    {
+        if (decomposedMember.Member is null) return;
+
+        await Task.Run(() => decomposedMember.Member.Evaluate());
+
+        decomposedMember.Value = DecompositionResultMapper.Convert(decomposedMember.Member.Value);
+        decomposedMember.ComputationTime = decomposedMember.Member.ComputationTime;
+        decomposedMember.AllocatedBytes = decomposedMember.Member.AllocatedBytes;
+        decomposedMember.EvaluationPolicy = decomposedMember.Member.EvaluationPolicy;
+    }
+
     private static DecomposeOptions CreateDecomposeOptions()
     {
         return new DecomposeOptions

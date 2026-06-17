@@ -1,7 +1,6 @@
 ﻿using System.Windows.Media;
 using Bogus;
 using CommunityToolkit.Mvvm.ComponentModel;
-using JetBrains.Annotations;
 using RevitLookup.Abstractions.ViewModels.Visualization;
 
 namespace RevitLookup.UI.Playground.Mocks.ViewModels.Visualization;

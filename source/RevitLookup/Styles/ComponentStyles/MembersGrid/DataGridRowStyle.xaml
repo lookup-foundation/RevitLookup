@@ -38,13 +38,4 @@
             Value="Hand" />
     </Style>
 
-    <Style
-        x:Key="ExceptionDataGridRowStyle"
-        TargetType="DataGridRow"
-        BasedOn="{StaticResource DefaultLookupDataGridRowStyle}">
-        <Setter
-            Property="Foreground"
-            Value="{DynamicResource PaletteRedBrush}" />
-    </Style>
-
 </ResourceDictionary>

@@ -76,7 +76,15 @@ public partial class SummaryViewBase
             .Append("Type: ")
             .AppendLine(member.Value.TypeName)
             .Append("Full type: ")
-            .AppendLine(member.Value.TypeFullName)
+            .Append(member.Value.TypeFullName);
+
+        if (member.EvaluationPolicy != MemberEvaluationPolicy.Evaluated)
+        {
+            row.ToolTip = builder.ToString();
+            return;
+        }
+
+        builder.AppendLine()
             .Append("Value: ")
             .Append(member.Value.Name);
 

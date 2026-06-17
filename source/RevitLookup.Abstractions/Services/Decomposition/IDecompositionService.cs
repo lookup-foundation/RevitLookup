@@ -27,4 +27,9 @@ public interface IDecompositionService
     ///     Decompose the object members into observable models.
     /// </summary>
     Task<List<ObservableDecomposedMember>> DecomposeMembersAsync(ObservableDecomposedObject decomposedObject);
+
+    /// <summary>
+    ///     Force the evaluation of a deferred member, updating its observable model in place.
+    /// </summary>
+    Task EvaluateMemberAsync(ObservableDecomposedMember decomposedMember);
 }

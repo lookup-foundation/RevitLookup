@@ -2,7 +2,7 @@
 using System.Windows.Media;
 using Bogus;
 using CommunityToolkit.Mvvm.ComponentModel;
-using JetBrains.Annotations;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Application;
@@ -60,6 +60,20 @@ public sealed partial class MockEventsSummaryViewModel(
             .AddParent(serviceProvider)
             .Decompose(values)
             .Show<DecompositionSummaryPage>();
+    }
+
+    [RelayCommand]
+    private async Task ForceEvaluateMember(ObservableDecomposedMember member)
+    {
+        try
+        {
+            await decompositionService.EvaluateMemberAsync(member);
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Member evaluation failed");
+            notificationService.ShowError("Lookup engine error", exception);
+        }
     }
 
     public async Task RefreshMembersAsync()

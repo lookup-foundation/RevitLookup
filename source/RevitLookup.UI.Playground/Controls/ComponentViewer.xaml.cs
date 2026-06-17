@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace RevitLookup.UI.Playground.Controls;
