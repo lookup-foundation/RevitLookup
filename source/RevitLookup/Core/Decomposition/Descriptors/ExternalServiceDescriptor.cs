@@ -12,14 +12,13 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using Autodesk.Revit.DB.ExternalService;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class ExternalServiceDescriptor : Descriptor, IDescriptorResolver
+public sealed class ExternalServiceDescriptor : Descriptor, IDescriptorConfigurator
 {
     private readonly ExternalService _service;
 
@@ -29,13 +28,10 @@ public sealed class ExternalServiceDescriptor : Descriptor, IDescriptorResolver
         Name = service.Name;
     }
 
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(ExternalService.GetServer) => ResolveGetServer,
-            _ => null
-        };
+        configuration.Member(nameof(ExternalService.GetServer)).Resolve(ResolveGetServer);
+        return;
 
         IVariant ResolveGetServer()
         {

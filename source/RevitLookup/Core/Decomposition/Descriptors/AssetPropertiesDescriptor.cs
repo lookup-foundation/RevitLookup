@@ -12,22 +12,16 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using Autodesk.Revit.DB.Visual;
 using LookupEngine.Abstractions.Configuration;
-using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class AssetPropertiesDescriptor(AssetProperties assetProperties) : Descriptor, IDescriptorResolver
+public sealed class AssetPropertiesDescriptor(AssetProperties assetProperties) : ResolvingDescriptor, IDescriptorConfigurator
 {
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(AssetProperties.Get) => () => VariantsResolver.ResolveIndex(assetProperties.Size, assetProperties.Get),
-            nameof(AssetProperties.FindByName) => () => VariantsResolver.ResolveIndex(assetProperties.Size, assetProperties.Get),
-            _ => null
-        };
+        configuration.Member(nameof(AssetProperties.Get)).Resolve(() => ResolveRange(assetProperties.Size, assetProperties.Get));
+        configuration.Member(nameof(AssetProperties.FindByName)).Resolve(() => ResolveRange(assetProperties.Size, assetProperties.Get));
     }
 }

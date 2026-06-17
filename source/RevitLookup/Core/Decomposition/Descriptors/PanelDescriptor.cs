@@ -12,20 +12,17 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
+using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class PanelDescriptor(Panel panel) : ElementDescriptor(panel)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(Panel.GetRefGridLines) => ResolveGridLines,
-            _ => null
-        };
+        configuration.Member(nameof(Panel.GetRefGridLines)).Resolve(ResolveGridLines);
+        return;
 
         IVariant ResolveGridLines()
         {

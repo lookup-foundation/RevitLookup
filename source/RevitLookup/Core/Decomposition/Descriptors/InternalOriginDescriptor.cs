@@ -12,19 +12,14 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
-using LookupEngine.Abstractions.Decomposition;
+using LookupEngine.Abstractions.Configuration;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class InternalOriginDescriptor(InternalOrigin internalOrigin) : ElementDescriptor(internalOrigin)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(InternalOrigin.Get) => () => Variants.Value(InternalOrigin.Get(internalOrigin.Document)),
-            _ => null
-        };
+        configuration.Member(nameof(InternalOrigin.Get)).Resolve(() => InternalOrigin.Get(internalOrigin.Document));
     }
 }

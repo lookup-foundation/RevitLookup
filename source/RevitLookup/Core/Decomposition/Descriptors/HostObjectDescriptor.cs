@@ -12,7 +12,6 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
@@ -20,22 +19,21 @@ namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class HostObjectDescriptor(HostObject hostObject) : ElementDescriptor(hostObject)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(HostObject.FindInserts) => () => Variants.Value(hostObject.FindInserts(true, true, true, true)),
-            _ => null
-        };
-    }
+        configuration.Member(nameof(HostObject.FindInserts)).Resolve(() => hostObject.FindInserts(true, true, true, true));
 
-    public override void RegisterExtensions(IExtensionManager manager)
-    {
-        manager.Define(nameof(HostObjectUtils.GetBottomFaces)).Register(() => Variants.Value(HostObjectUtils.GetBottomFaces(hostObject)));
-        manager.Define(nameof(HostObjectUtils.GetTopFaces)).Register(() => Variants.Value(HostObjectUtils.GetTopFaces(hostObject)));
-        manager.Define(nameof(HostObjectUtils.GetSideFaces)).Register(() => Variants.Values<IList<Reference>>(2)
-            .Add(HostObjectUtils.GetSideFaces(hostObject, ShellLayerType.Interior), "Interior")
-            .Add(HostObjectUtils.GetSideFaces(hostObject, ShellLayerType.Exterior), "Exterior")
-            .Consume());
+        configuration.Extension(nameof(HostObjectUtils.GetBottomFaces)).Register(() => HostObjectUtils.GetBottomFaces(hostObject));
+        configuration.Extension(nameof(HostObjectUtils.GetTopFaces)).Register(() => HostObjectUtils.GetTopFaces(hostObject));
+        configuration.Extension(nameof(HostObjectUtils.GetSideFaces)).Register(RegisterGetSideFaces);
+        return;
+
+        IVariant RegisterGetSideFaces()
+        {
+            return Variants.Values<IList<Reference>>(2)
+                .Add(HostObjectUtils.GetSideFaces(hostObject, ShellLayerType.Interior), "Interior")
+                .Add(HostObjectUtils.GetSideFaces(hostObject, ShellLayerType.Exterior), "Exterior")
+                .Consume();
+        }
     }
 }

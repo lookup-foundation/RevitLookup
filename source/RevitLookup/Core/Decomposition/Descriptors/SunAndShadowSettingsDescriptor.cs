@@ -12,24 +12,19 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
-using LookupEngine.Abstractions.Decomposition;
+using LookupEngine.Abstractions.Configuration;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class SunAndShadowSettingsDescriptor(SunAndShadowSettings settings) : ElementDescriptor(settings)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(SunAndShadowSettings.GetActiveSunAndShadowSettings) => () => Variants.Value(SunAndShadowSettings.GetActiveSunAndShadowSettings(settings.Document)),
-            nameof(SunAndShadowSettings.GetSunrise) => () => Variants.Value(settings.GetSunrise(DateTime.Today)),
-            nameof(SunAndShadowSettings.GetSunset) => () => Variants.Value(settings.GetSunset(DateTime.Today)),
-            nameof(SunAndShadowSettings.IsTimeIntervalValid) => () => VariantsResolver.ResolveEnum<SunStudyTimeInterval, bool>(settings.IsTimeIntervalValid),
-            nameof(SunAndShadowSettings.IsAfterStartDateAndTime) => () => Variants.Value(settings.IsAfterStartDateAndTime(DateTime.Today)),
-            nameof(SunAndShadowSettings.IsBeforeEndDateAndTime) => () => Variants.Value(settings.IsBeforeEndDateAndTime(DateTime.Today)),
-            _ => null
-        };
+        configuration.Member(nameof(SunAndShadowSettings.GetActiveSunAndShadowSettings)).Resolve(() => SunAndShadowSettings.GetActiveSunAndShadowSettings(settings.Document));
+        configuration.Member(nameof(SunAndShadowSettings.GetSunrise)).Resolve(() => settings.GetSunrise(DateTime.Today));
+        configuration.Member(nameof(SunAndShadowSettings.GetSunset)).Resolve(() => settings.GetSunset(DateTime.Today));
+        configuration.Member(nameof(SunAndShadowSettings.IsTimeIntervalValid)).Resolve(() => ResolveEnum<SunStudyTimeInterval, bool>(settings.IsTimeIntervalValid));
+        configuration.Member(nameof(SunAndShadowSettings.IsAfterStartDateAndTime)).Resolve(() => settings.IsAfterStartDateAndTime(DateTime.Today));
+        configuration.Member(nameof(SunAndShadowSettings.IsBeforeEndDateAndTime)).Resolve(() => settings.IsBeforeEndDateAndTime(DateTime.Today));
     }
 }

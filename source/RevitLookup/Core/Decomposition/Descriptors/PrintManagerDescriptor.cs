@@ -12,25 +12,20 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class PrintManagerDescriptor : Descriptor, IDescriptorResolver
+public sealed class PrintManagerDescriptor : Descriptor, IDescriptorConfigurator
 {
     public PrintManagerDescriptor(PrintManager printManager)
     {
         Name = printManager.PrinterName;
     }
 
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(PrintManager.SubmitPrint) when parameters.Length == 0 => Variants.Disabled,
-            _ => null
-        };
+        configuration.Member(nameof(PrintManager.SubmitPrint)).When(parameters => parameters.Length == 0).Defer();
     }
 }

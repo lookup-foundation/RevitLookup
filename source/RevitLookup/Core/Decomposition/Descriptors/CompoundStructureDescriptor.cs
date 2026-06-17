@@ -12,44 +12,38 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
-using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class CompoundStructureDescriptor(CompoundStructure compoundStructure) : Descriptor, IDescriptorResolver
+public sealed class CompoundStructureDescriptor(CompoundStructure compoundStructure) : ResolvingDescriptor, IDescriptorConfigurator
 {
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(CompoundStructure.CanLayerBeStructuralMaterial) => () => VariantsResolver.ResolveIndex(compoundStructure.LayerCount, compoundStructure.CanLayerBeStructuralMaterial),
-            nameof(CompoundStructure.CanLayerBeVariable) => () => VariantsResolver.ResolveIndex(compoundStructure.LayerCount, compoundStructure.CanLayerBeVariable),
-            nameof(CompoundStructure.CanLayerWidthBeNonZero) => () => VariantsResolver.ResolveIndex(compoundStructure.LayerCount, compoundStructure.CanLayerWidthBeNonZero),
-            nameof(CompoundStructure.GetAdjacentRegions) => () => VariantsResolver.ResolveIndex(compoundStructure.GetRegionIds().Count, compoundStructure.GetAdjacentRegions),
-            nameof(CompoundStructure.GetCoreBoundaryLayerIndex) => () => VariantsResolver.ResolveEnum<ShellLayerType, int>(compoundStructure.GetCoreBoundaryLayerIndex),
-            nameof(CompoundStructure.GetDeckEmbeddingType) => () => VariantsResolver.ResolveIndex(compoundStructure.LayerCount, compoundStructure.GetDeckEmbeddingType),
-            nameof(CompoundStructure.GetDeckProfileId) => () => VariantsResolver.ResolveIndex(compoundStructure.LayerCount, compoundStructure.GetDeckProfileId),
-            nameof(CompoundStructure.GetLayerAssociatedToRegion) => () => VariantsResolver.ResolveIndex(compoundStructure.GetRegionIds().Count, compoundStructure.GetLayerAssociatedToRegion),
-            nameof(CompoundStructure.GetLayerFunction) => () => VariantsResolver.ResolveIndex(compoundStructure.LayerCount, compoundStructure.GetLayerFunction),
-            nameof(CompoundStructure.GetLayerWidth) => () => VariantsResolver.ResolveIndex(compoundStructure.LayerCount, compoundStructure.GetLayerWidth),
-            nameof(CompoundStructure.GetMaterialId) => () => VariantsResolver.ResolveIndex(compoundStructure.LayerCount, compoundStructure.GetMaterialId),
-            nameof(CompoundStructure.GetNumberOfShellLayers) => () => VariantsResolver.ResolveEnum<ShellLayerType, int>(compoundStructure.GetNumberOfShellLayers),
-            nameof(CompoundStructure.GetOffsetForLocationLine) => () => VariantsResolver.ResolveEnum<WallLocationLine, double>(compoundStructure.GetOffsetForLocationLine),
-            nameof(CompoundStructure.GetPreviousNonZeroLayerIndex) => () => VariantsResolver.ResolveIndex(compoundStructure.LayerCount, compoundStructure.GetPreviousNonZeroLayerIndex),
-            nameof(CompoundStructure.GetRegionEnvelope) => () => VariantsResolver.ResolveIndex(compoundStructure.GetRegionIds().Count, compoundStructure.GetRegionEnvelope),
-            nameof(CompoundStructure.GetRegionsAssociatedToLayer) => () => VariantsResolver.ResolveIndex(compoundStructure.LayerCount, compoundStructure.GetRegionsAssociatedToLayer),
-            nameof(CompoundStructure.GetSegmentCoordinate) => () => VariantsResolver.ResolveIndex(compoundStructure.GetSegmentIds().Count, compoundStructure.GetSegmentCoordinate),
-            nameof(CompoundStructure.GetSegmentOrientation) => () => VariantsResolver.ResolveIndex(compoundStructure.GetSegmentIds().Count, compoundStructure.GetSegmentOrientation),
-            nameof(CompoundStructure.GetWallSweepsInfo) => () => VariantsResolver.ResolveEnum<WallSweepType, IList<WallSweepInfo>>(compoundStructure.GetWallSweepsInfo),
-            nameof(CompoundStructure.GetWidth) when parameters.Length == 1 => () => VariantsResolver.ResolveIndex(compoundStructure.GetRegionIds().Count, compoundStructure.GetWidth),
-            nameof(CompoundStructure.IsCoreLayer) => () => VariantsResolver.ResolveIndex(compoundStructure.LayerCount, compoundStructure.IsCoreLayer),
-            nameof(CompoundStructure.IsRectangularRegion) => () => VariantsResolver.ResolveIndex(compoundStructure.GetRegionIds().Count, compoundStructure.IsRectangularRegion),
-            nameof(CompoundStructure.IsSimpleRegion) => () => VariantsResolver.ResolveIndex(compoundStructure.GetRegionIds().Count, compoundStructure.IsSimpleRegion),
-            nameof(CompoundStructure.IsStructuralDeck) => () => VariantsResolver.ResolveIndex(compoundStructure.LayerCount, compoundStructure.IsStructuralDeck),
-            nameof(CompoundStructure.ParticipatesInWrapping) => () => VariantsResolver.ResolveIndex(compoundStructure.LayerCount, compoundStructure.ParticipatesInWrapping),
-            _ => null
-        };
+        configuration.Member(nameof(CompoundStructure.CanLayerBeStructuralMaterial)).Resolve(() => ResolveRange(compoundStructure.LayerCount, compoundStructure.CanLayerBeStructuralMaterial));
+        configuration.Member(nameof(CompoundStructure.CanLayerBeVariable)).Resolve(() => ResolveRange(compoundStructure.LayerCount, compoundStructure.CanLayerBeVariable));
+        configuration.Member(nameof(CompoundStructure.CanLayerWidthBeNonZero)).Resolve(() => ResolveRange(compoundStructure.LayerCount, compoundStructure.CanLayerWidthBeNonZero));
+        configuration.Member(nameof(CompoundStructure.GetAdjacentRegions)).Resolve(() => ResolveRange(compoundStructure.GetRegionIds().Count, compoundStructure.GetAdjacentRegions));
+        configuration.Member(nameof(CompoundStructure.GetCoreBoundaryLayerIndex)).Resolve(() => ResolveEnum<ShellLayerType, int>(compoundStructure.GetCoreBoundaryLayerIndex));
+        configuration.Member(nameof(CompoundStructure.GetDeckEmbeddingType)).Resolve(() => ResolveRange(compoundStructure.LayerCount, compoundStructure.GetDeckEmbeddingType));
+        configuration.Member(nameof(CompoundStructure.GetDeckProfileId)).Resolve(() => ResolveRange(compoundStructure.LayerCount, compoundStructure.GetDeckProfileId));
+        configuration.Member(nameof(CompoundStructure.GetLayerAssociatedToRegion)).Resolve(() => ResolveRange(compoundStructure.GetRegionIds().Count, compoundStructure.GetLayerAssociatedToRegion));
+        configuration.Member(nameof(CompoundStructure.GetLayerFunction)).Resolve(() => ResolveRange(compoundStructure.LayerCount, compoundStructure.GetLayerFunction));
+        configuration.Member(nameof(CompoundStructure.GetLayerWidth)).Resolve(() => ResolveRange(compoundStructure.LayerCount, compoundStructure.GetLayerWidth));
+        configuration.Member(nameof(CompoundStructure.GetMaterialId)).Resolve(() => ResolveRange(compoundStructure.LayerCount, compoundStructure.GetMaterialId));
+        configuration.Member(nameof(CompoundStructure.GetNumberOfShellLayers)).Resolve(() => ResolveEnum<ShellLayerType, int>(compoundStructure.GetNumberOfShellLayers));
+        configuration.Member(nameof(CompoundStructure.GetOffsetForLocationLine)).Resolve(() => ResolveEnum<WallLocationLine, double>(compoundStructure.GetOffsetForLocationLine));
+        configuration.Member(nameof(CompoundStructure.GetPreviousNonZeroLayerIndex)).Resolve(() => ResolveRange(compoundStructure.LayerCount, compoundStructure.GetPreviousNonZeroLayerIndex));
+        configuration.Member(nameof(CompoundStructure.GetRegionEnvelope)).Resolve(() => ResolveRange(compoundStructure.GetRegionIds().Count, compoundStructure.GetRegionEnvelope));
+        configuration.Member(nameof(CompoundStructure.GetRegionsAssociatedToLayer)).Resolve(() => ResolveRange(compoundStructure.LayerCount, compoundStructure.GetRegionsAssociatedToLayer));
+        configuration.Member(nameof(CompoundStructure.GetSegmentCoordinate)).Resolve(() => ResolveRange(compoundStructure.GetSegmentIds().Count, compoundStructure.GetSegmentCoordinate));
+        configuration.Member(nameof(CompoundStructure.GetSegmentOrientation)).Resolve(() => ResolveRange(compoundStructure.GetSegmentIds().Count, compoundStructure.GetSegmentOrientation));
+        configuration.Member(nameof(CompoundStructure.GetWallSweepsInfo)).Resolve(() => ResolveEnum<WallSweepType, IList<WallSweepInfo>>(compoundStructure.GetWallSweepsInfo));
+        configuration.Member(nameof(CompoundStructure.GetWidth)).When(parameters => parameters.Length == 1).Resolve(() => ResolveRange(compoundStructure.GetRegionIds().Count, compoundStructure.GetWidth));
+        configuration.Member(nameof(CompoundStructure.IsCoreLayer)).Resolve(() => ResolveRange(compoundStructure.LayerCount, compoundStructure.IsCoreLayer));
+        configuration.Member(nameof(CompoundStructure.IsRectangularRegion)).Resolve(() => ResolveRange(compoundStructure.GetRegionIds().Count, compoundStructure.IsRectangularRegion));
+        configuration.Member(nameof(CompoundStructure.IsSimpleRegion)).Resolve(() => ResolveRange(compoundStructure.GetRegionIds().Count, compoundStructure.IsSimpleRegion));
+        configuration.Member(nameof(CompoundStructure.IsStructuralDeck)).Resolve(() => ResolveRange(compoundStructure.LayerCount, compoundStructure.IsStructuralDeck));
+        configuration.Member(nameof(CompoundStructure.ParticipatesInWrapping)).Resolve(() => ResolveRange(compoundStructure.LayerCount, compoundStructure.ParticipatesInWrapping));
     }
 }

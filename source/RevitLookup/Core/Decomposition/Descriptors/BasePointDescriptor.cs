@@ -12,20 +12,15 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
-using LookupEngine.Abstractions.Decomposition;
+using LookupEngine.Abstractions.Configuration;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class BasePointDescriptor(BasePoint basePoint) : ElementDescriptor(basePoint)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(BasePoint.GetSurveyPoint) => () => Variants.Value(BasePoint.GetSurveyPoint(basePoint.Document)),
-            nameof(BasePoint.GetProjectBasePoint) => () => Variants.Value(BasePoint.GetProjectBasePoint(basePoint.Document)),
-            _ => null
-        };
+        configuration.Member(nameof(BasePoint.GetSurveyPoint)).Resolve(() => BasePoint.GetSurveyPoint(basePoint.Document));
+        configuration.Member(nameof(BasePoint.GetProjectBasePoint)).Resolve(() => BasePoint.GetProjectBasePoint(basePoint.Document));
     }
 }

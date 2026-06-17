@@ -12,20 +12,15 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using Autodesk.Revit.DB.Structure;
-using LookupEngine.Abstractions.Decomposition;
+using LookupEngine.Abstractions.Configuration;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class AnalyticalLinkTypeDescriptor(AnalyticalLinkType analyticalLinkType) : ElementDescriptor(analyticalLinkType)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(AnalyticalLinkType.IsValidAnalyticalFixityState) => () => VariantsResolver.ResolveEnum<AnalyticalFixityState, bool>(AnalyticalLinkType.IsValidAnalyticalFixityState),
-            _ => null
-        };
+        configuration.Member(nameof(AnalyticalLinkType.IsValidAnalyticalFixityState)).Resolve(() => ResolveEnum<AnalyticalFixityState, bool>(AnalyticalLinkType.IsValidAnalyticalFixityState));
     }
 }

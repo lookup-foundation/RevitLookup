@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Reflection;
 using System.Windows.Input;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
@@ -17,7 +16,7 @@ using Nice3point.Revit.Toolkit.External;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed partial class CurveLoopDescriptor : Descriptor, IDescriptorResolver, IDescriptorExtension, IDescriptorExtension<Document>, IContextMenuConnector
+public sealed partial class CurveLoopDescriptor : Descriptor, IDescriptorConfigurator, IDescriptorConfigurator<Document>, IContextMenuConnector
 {
     private readonly CurveLoop _curveLoop;
 
@@ -27,31 +26,24 @@ public sealed partial class CurveLoopDescriptor : Descriptor, IDescriptorResolve
         Name = $"{curveLoop.GetExactLength().ToString(CultureInfo.InvariantCulture)} ft";
     }
 
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(CurveLoop.IsOpen) => () => Variants.Value(_curveLoop.IsOpen()),
-            nameof(CurveLoop.GetPlane) => () => Variants.Value(_curveLoop.GetPlane()),
-            nameof(CurveLoop.NumberOfCurves) => () => Variants.Value(_curveLoop.NumberOfCurves()),
-            _ => null
-        };
-    }
+        configuration.Member(nameof(CurveLoop.IsOpen)).Resolve(() => _curveLoop.IsOpen());
+        configuration.Member(nameof(CurveLoop.GetPlane)).Resolve(() => _curveLoop.GetPlane());
+        configuration.Member(nameof(CurveLoop.NumberOfCurves)).Resolve(() => _curveLoop.NumberOfCurves());
 
-    public void RegisterExtensions(IExtensionManager manager)
-    {
 #if REVIT2022_OR_GREATER
-        manager.Define("IsValidHorizontalBoundary").Register(() => Variants.Value(BoundaryValidation.IsValidHorizontalBoundary([_curveLoop])));
+        configuration.Extension("IsValidHorizontalBoundary").Register(() => BoundaryValidation.IsValidHorizontalBoundary([_curveLoop]));
 #endif
 #if REVIT2023_OR_GREATER
-        manager.Define("IsValidBoundaryOnSketchPlane").Map(nameof(BoundaryValidation.IsValidBoundaryOnSketchPlane)).AsNotSupported();
+        configuration.Extension("IsValidBoundaryOnSketchPlane").Map(nameof(BoundaryValidation.IsValidBoundaryOnSketchPlane)).NotSupported();
 #endif
     }
 
-    public void RegisterExtensions(IExtensionManager<Document> manager)
+    void IDescriptorConfigurator<Document>.Configure(IMemberConfigurator<Document> configuration)
     {
 #if REVIT2023_OR_GREATER
-        manager.Define(nameof(BoundaryValidation.IsValidBoundaryOnView)).Register(context => Variants.Value(BoundaryValidation.IsValidBoundaryOnView(context, context.ActiveView.Id, [_curveLoop])));
+        configuration.Extension(nameof(BoundaryValidation.IsValidBoundaryOnView)).Register(context => BoundaryValidation.IsValidBoundaryOnView(context, context.ActiveView.Id, [_curveLoop]));
 #endif
     }
 

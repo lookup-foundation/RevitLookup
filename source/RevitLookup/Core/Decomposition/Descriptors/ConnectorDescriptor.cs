@@ -20,23 +20,22 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class ConnectorDescriptor : Descriptor, IDescriptorExtension
+public sealed class ConnectorDescriptor : Descriptor, IDescriptorConfigurator
 {
     public ConnectorDescriptor(Connector connector)
     {
         Name = connector.Id.ToString();
     }
 
-    public void RegisterExtensions(IExtensionManager manager)
+    public void Configure(IMemberConfigurator configuration)
     {
-        manager.Define(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtElbow)).AsNotSupported();
-        manager.Define(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtTee)).AsNotSupported();
-        manager.Define(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtCross)).AsNotSupported();
-        manager.Define(nameof(PlumbingUtils.ConnectPipePlaceholdersAtElbow)).AsNotSupported();
-        manager.Define(nameof(PlumbingUtils.ConnectPipePlaceholdersAtTee)).AsNotSupported();
-        manager.Define(nameof(PlumbingUtils.ConnectPipePlaceholdersAtCross)).AsNotSupported();
-        manager.Define("ValidateFabricationConnectivity").Map(nameof(FabricationUtils.ValidateConnectivity)).AsNotSupported();
-        manager.Define("CreateFabricationPartRouteEnd").Map(nameof(FabricationPartRouteEnd.CreateFromConnector)).AsNotSupported();
+        configuration.Extension(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtElbow)).NotSupported();
+        configuration.Extension(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtTee)).NotSupported();
+        configuration.Extension(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtCross)).NotSupported();
+        configuration.Extension(nameof(PlumbingUtils.ConnectPipePlaceholdersAtElbow)).NotSupported();
+        configuration.Extension(nameof(PlumbingUtils.ConnectPipePlaceholdersAtTee)).NotSupported();
+        configuration.Extension(nameof(PlumbingUtils.ConnectPipePlaceholdersAtCross)).NotSupported();
+        configuration.Extension("ValidateFabricationConnectivity").Map(nameof(FabricationUtils.ValidateConnectivity)).NotSupported();
+        configuration.Extension("CreateFabricationPartRouteEnd").Map(nameof(FabricationPartRouteEnd.CreateFromConnector)).NotSupported();
     }
-
 }

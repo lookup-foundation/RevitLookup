@@ -12,13 +12,12 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class SchedulableFieldDescriptor : Descriptor, IDescriptorResolver<Document>
+public sealed class SchedulableFieldDescriptor : Descriptor, IDescriptorConfigurator<Document>
 {
     private readonly SchedulableField _field;
 
@@ -28,12 +27,8 @@ public sealed class SchedulableFieldDescriptor : Descriptor, IDescriptorResolver
         Name = field.GetName(RevitContext.ActiveDocument);
     }
 
-    public Func<Document, IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator<Document> configuration)
     {
-        return target switch
-        {
-            nameof(SchedulableField.GetName) => context => Variants.Value(_field.GetName(context)),
-            _ => null
-        };
+        configuration.Member(nameof(SchedulableField.GetName)).Resolve(context => _field.GetName(context));
     }
 }

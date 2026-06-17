@@ -20,19 +20,17 @@ using RevitLookup.Utils;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class EntityDescriptor(Entity entity) : Descriptor, IDescriptorResolver
+public sealed class EntityDescriptor(Entity entity) : Descriptor, IDescriptorConfigurator
 {
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(Entity.Get) when parameters.Length == 1 &&
-                                    parameters[0].ParameterType == typeof(string) => ResolveGetByField,
-            nameof(Entity.Get) when parameters.Length == 2 &&
-                                    parameters[0].ParameterType == typeof(string) &&
-                                    parameters[1].ParameterType == typeof(ForgeTypeId) => ResolveGetByFieldForge,
-            _ => null
-        };
+        configuration.Member(nameof(Entity.Get))
+            .When(parameters => parameters.Length == 1 && parameters[0].ParameterType == typeof(string))
+            .Resolve(ResolveGetByField);
+        configuration.Member(nameof(Entity.Get))
+            .When(parameters => parameters.Length == 2 && parameters[0].ParameterType == typeof(string) && parameters[1].ParameterType == typeof(ForgeTypeId))
+            .Resolve(ResolveGetByFieldForge);
+        return;
 
         IVariant ResolveGetByField()
         {

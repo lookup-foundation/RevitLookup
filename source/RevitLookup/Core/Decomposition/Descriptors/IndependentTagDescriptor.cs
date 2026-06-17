@@ -12,35 +12,32 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
+using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class IndependentTagDescriptor(IndependentTag tag) : ElementDescriptor(tag)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(IndependentTag.CanLeaderEndConditionBeAssigned) => ResolveLeaderEndCondition,
+        configuration.Member(nameof(IndependentTag.CanLeaderEndConditionBeAssigned)).Resolve(ResolveLeaderEndCondition);
 #if REVIT2022_OR_GREATER
-            nameof(IndependentTag.GetLeaderElbow) => ResolveLeaderElbow,
-            nameof(IndependentTag.GetLeaderEnd) => ResolveLeaderEnd,
-            nameof(IndependentTag.HasLeaderElbow) => ResolveHasLeaderElbow,
+        configuration.Member(nameof(IndependentTag.GetLeaderElbow)).Resolve(ResolveLeaderElbow);
+        configuration.Member(nameof(IndependentTag.GetLeaderEnd)).Resolve(ResolveLeaderEnd);
+        configuration.Member(nameof(IndependentTag.HasLeaderElbow)).Resolve(ResolveHasLeaderElbow);
 #endif
 #if REVIT2023_OR_GREATER
-            nameof(IndependentTag.IsLeaderVisible) => ResolveIsLeaderVisible,
+        configuration.Member(nameof(IndependentTag.IsLeaderVisible)).Resolve(ResolveIsLeaderVisible);
 #endif
-            _ => null
-        };
+        return;
 
         IVariant ResolveLeaderEndCondition()
         {
-            var conditions = Enum.GetValues(typeof(LeaderEndCondition));
+            var conditions = Enum.GetValues<LeaderEndCondition>();
             var variants = Variants.Values<bool>(conditions.Length);
 
-            foreach (LeaderEndCondition condition in conditions)
+            foreach (var condition in conditions)
             {
                 var result = tag.CanLeaderEndConditionBeAssigned(condition);
                 variants.Add(result, $"{condition}: {result}");

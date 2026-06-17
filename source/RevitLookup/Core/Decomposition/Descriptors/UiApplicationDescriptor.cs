@@ -14,19 +14,18 @@
 
 using Autodesk.Revit.UI;
 using LookupEngine.Abstractions.Configuration;
-using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class UiApplicationDescriptor : Descriptor, IDescriptorExtension
+public sealed class UiApplicationDescriptor : ResolvingDescriptor, IDescriptorConfigurator
 {
-    public void RegisterExtensions(IExtensionManager manager)
+    public void Configure(IMemberConfigurator configuration)
     {
-        manager.Define(nameof(UIThemeManager.CurrentTheme)).Register(() => Variants.Value(UIThemeManager.CurrentTheme));
+        configuration.Extension(nameof(UIThemeManager.CurrentTheme)).Register(() => UIThemeManager.CurrentTheme);
 #if REVIT2024_OR_GREATER
-        manager.Define(nameof(UIThemeManager.CurrentCanvasTheme)).Register(() => Variants.Value(UIThemeManager.CurrentCanvasTheme));
-        manager.Define(nameof(UIThemeManager.FollowSystemColorTheme)).Register(() => Variants.Value(UIThemeManager.FollowSystemColorTheme));
-        manager.Define(nameof(UIThemeManager.GetThemeName)).Register(() => VariantsResolver.ResolveEnum<UITheme, string>(UIThemeManager.GetThemeName));
+        configuration.Extension(nameof(UIThemeManager.CurrentCanvasTheme)).Register(() => UIThemeManager.CurrentCanvasTheme);
+        configuration.Extension(nameof(UIThemeManager.FollowSystemColorTheme)).Register(() => UIThemeManager.FollowSystemColorTheme);
+        configuration.Extension(nameof(UIThemeManager.GetThemeName)).Register(() => ResolveEnum<UITheme, string>(UIThemeManager.GetThemeName));
 #endif
     }
 }

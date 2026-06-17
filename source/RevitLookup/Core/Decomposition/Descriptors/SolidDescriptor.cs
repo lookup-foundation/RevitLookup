@@ -30,7 +30,7 @@ using Nice3point.Revit.Toolkit.External;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed partial class SolidDescriptor : Descriptor, IDescriptorExtension, IContextMenuConnector
+public sealed partial class SolidDescriptor : Descriptor, IDescriptorConfigurator, IContextMenuConnector
 {
     private readonly Solid _solid;
 
@@ -40,27 +40,27 @@ public sealed partial class SolidDescriptor : Descriptor, IDescriptorExtension, 
         Name = $"{solid.Volume.ToString(CultureInfo.InvariantCulture)} ft?";
     }
 
-    public void RegisterExtensions(IExtensionManager manager)
+    public void Configure(IMemberConfigurator configuration)
     {
-        manager.Define(nameof(SolidUtils.SplitVolumes)).Register(() => Variants.Value(SolidUtils.SplitVolumes(_solid)));
-        manager.Define(nameof(SolidUtils.IsValidForTessellation)).Register(() => Variants.Value(SolidUtils.IsValidForTessellation(_solid)));
-        manager.Define(nameof(SolidUtils.TessellateSolidOrShell)).Register(ResolveTessellateSolidOrShell);
-        manager.Define(nameof(SolidUtils.Clone)).AsNotSupported();
-        manager.Define(nameof(SolidUtils.CreateTransformed)).AsNotSupported();
-        manager.Define(nameof(GeometryCreationUtilities.CreateBlendGeometry)).AsStatic().AsNotSupported();
-        manager.Define(nameof(GeometryCreationUtilities.CreateExtrusionGeometry)).AsStatic().AsNotSupported();
-        manager.Define(nameof(GeometryCreationUtilities.CreateFixedReferenceSweptGeometry)).AsStatic().AsNotSupported();
-        manager.Define(nameof(GeometryCreationUtilities.CreateLoftGeometry)).AsStatic().AsNotSupported();
-        manager.Define(nameof(GeometryCreationUtilities.CreateRevolvedGeometry)).AsStatic().AsNotSupported();
-        manager.Define(nameof(GeometryCreationUtilities.CreateSweptBlendGeometry)).AsStatic().AsNotSupported();
-        manager.Define(nameof(GeometryCreationUtilities.CreateSweptGeometry)).AsStatic().AsNotSupported();
-        manager.Define("CutWithHalfSpace").Map(nameof(BooleanOperationsUtils.CutWithHalfSpace)).AsNotSupported();
-        manager.Define("CutWithHalfSpaceModifyingOriginalSolid").Map(nameof(BooleanOperationsUtils.CutWithHalfSpaceModifyingOriginalSolid)).AsNotSupported();
-        manager.Define("ExecuteBooleanOperation").Map(nameof(BooleanOperationsUtils.ExecuteBooleanOperation)).AsNotSupported();
-        manager.Define("ExecuteBooleanOperationModifyingOriginalSolid").Map(nameof(BooleanOperationsUtils.ExecuteBooleanOperationModifyingOriginalSolid)).AsNotSupported();
+        configuration.Extension(nameof(SolidUtils.SplitVolumes)).Register(() => SolidUtils.SplitVolumes(_solid));
+        configuration.Extension(nameof(SolidUtils.IsValidForTessellation)).Register(() => SolidUtils.IsValidForTessellation(_solid));
+        configuration.Extension(nameof(SolidUtils.TessellateSolidOrShell)).Register(ResolveTessellateSolidOrShell);
+        configuration.Extension(nameof(SolidUtils.Clone)).Defer(() => _solid.Clone());
+        configuration.Extension(nameof(SolidUtils.CreateTransformed)).NotSupported();
+        configuration.Extension(nameof(GeometryCreationUtilities.CreateBlendGeometry)).AsStatic().NotSupported();
+        configuration.Extension(nameof(GeometryCreationUtilities.CreateExtrusionGeometry)).AsStatic().NotSupported();
+        configuration.Extension(nameof(GeometryCreationUtilities.CreateFixedReferenceSweptGeometry)).AsStatic().NotSupported();
+        configuration.Extension(nameof(GeometryCreationUtilities.CreateLoftGeometry)).AsStatic().NotSupported();
+        configuration.Extension(nameof(GeometryCreationUtilities.CreateRevolvedGeometry)).AsStatic().NotSupported();
+        configuration.Extension(nameof(GeometryCreationUtilities.CreateSweptBlendGeometry)).AsStatic().NotSupported();
+        configuration.Extension(nameof(GeometryCreationUtilities.CreateSweptGeometry)).AsStatic().NotSupported();
+        configuration.Extension("CutWithHalfSpace").Map(nameof(BooleanOperationsUtils.CutWithHalfSpace)).NotSupported();
+        configuration.Extension("CutWithHalfSpaceModifyingOriginalSolid").Map(nameof(BooleanOperationsUtils.CutWithHalfSpaceModifyingOriginalSolid)).NotSupported();
+        configuration.Extension("ExecuteBooleanOperation").Map(nameof(BooleanOperationsUtils.ExecuteBooleanOperation)).NotSupported();
+        configuration.Extension("ExecuteBooleanOperationModifyingOriginalSolid").Map(nameof(BooleanOperationsUtils.ExecuteBooleanOperationModifyingOriginalSolid)).NotSupported();
 #if REVIT2026_OR_GREATER
-        manager.Define(nameof(SolidUtils.ComputeIsGeometricallyClosed)).Register(() => Variants.Value(SolidUtils.ComputeIsGeometricallyClosed(_solid)));
-        manager.Define(nameof(SolidUtils.ComputeIsTopologicallyClosed)).Register(() => Variants.Value(SolidUtils.ComputeIsTopologicallyClosed(_solid)));
+        configuration.Extension(nameof(SolidUtils.ComputeIsGeometricallyClosed)).Register(() => SolidUtils.ComputeIsGeometricallyClosed(_solid));
+        configuration.Extension(nameof(SolidUtils.ComputeIsTopologicallyClosed)).Register(() => SolidUtils.ComputeIsTopologicallyClosed(_solid));
 #endif
         return;
 

@@ -13,7 +13,6 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using Autodesk.Revit.UI;
-using Nice3point.Revit.Extensions.UI;
 using Nice3point.Revit.Toolkit.External;
 using RevitLookup.Abstractions.Services.Settings;
 using RevitLookup.Commands;

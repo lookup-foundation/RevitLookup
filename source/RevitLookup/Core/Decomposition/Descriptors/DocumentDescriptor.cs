@@ -15,7 +15,7 @@
 #if !REVIT2025_OR_GREATER
 using Autodesk.Revit.DB.Macros;
 #endif
-using System.Reflection;
+using System.Windows.Documents;
 using Autodesk.Revit.DB.Fabrication;
 using Autodesk.Revit.DB.Lighting;
 using Autodesk.Revit.DB.Structure;
@@ -27,7 +27,7 @@ using Autodesk.Revit.DB.ExternalData;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class DocumentDescriptor : Descriptor, IDescriptorResolver, IDescriptorExtension
+public sealed class DocumentDescriptor : Descriptor, IDescriptorConfigurator
 {
     private readonly Document _document;
 
@@ -37,20 +37,50 @@ public sealed class DocumentDescriptor : Descriptor, IDescriptorResolver, IDescr
         Name = document.Title;
     }
 
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(Document.Close) => Variants.Disabled,
-            nameof(Document.PlanTopologies) => ResolvePlanTopologies,
-            nameof(Document.GetDefaultElementTypeId) => ResolveDefaultElementTypeId,
-            nameof(Document.GetDocumentVersion) => () => Variants.Value(Document.GetDocumentVersion(_document)),
+        configuration.Member(nameof(Document.Close)).Defer();
+        configuration.Member(nameof(Document.PlanTopologies)).Defer(ResolvePlanTopologies);
+        configuration.Member(nameof(Document.GetDefaultElementTypeId)).Resolve(ResolveDefaultElementTypeId);
+        configuration.Member(nameof(Document.GetDocumentVersion)).Resolve(() => Document.GetDocumentVersion(_document));
 #if REVIT2024_OR_GREATER
-            nameof(Document.GetUnusedElements) => () => Variants.Value(_document.GetUnusedElements(new HashSet<ElementId>())),
-            nameof(Document.GetAllUnusedElements) => () => Variants.Value(_document.GetAllUnusedElements(new HashSet<ElementId>())),
+        configuration.Member(nameof(Document.GetUnusedElements)).Resolve(() => _document.GetUnusedElements(new HashSet<ElementId>()));
+        configuration.Member(nameof(Document.GetAllUnusedElements)).Resolve(() => _document.GetAllUnusedElements(new HashSet<ElementId>()));
 #endif
-            _ => null
-        };
+
+        configuration.Extension(nameof(AssemblyCodeTable.GetAssemblyCodeTable)).Register(() => AssemblyCodeTable.GetAssemblyCodeTable(_document));
+        configuration.Extension(nameof(ExternalFileUtils.GetAllExternalFileReferences)).Register(() => ExternalFileUtils.GetAllExternalFileReferences(_document));
+        configuration.Extension(nameof(ExternalResourceUtils.GetAllExternalResourceReferences)).Register(() => ExternalResourceUtils.GetAllExternalResourceReferences(_document));
+        configuration.Extension(nameof(GlobalParametersManager.GetAllGlobalParameters)).Register(() => GlobalParametersManager.GetAllGlobalParameters(_document));
+        configuration.Extension(nameof(GlobalParametersManager.AreGlobalParametersAllowed)).Register(() => GlobalParametersManager.AreGlobalParametersAllowed(_document));
+        configuration.Extension(nameof(GlobalParametersManager.GetGlobalParametersOrdered)).Register(() => GlobalParametersManager.GetGlobalParametersOrdered(_document));
+        configuration.Extension(nameof(KeynoteTable.GetKeynoteTable)).Register(() => KeynoteTable.GetKeynoteTable(_document));
+        configuration.Extension(nameof(LightGroupManager.GetLightGroupManager)).Register(() => LightGroupManager.GetLightGroupManager(_document));
+        configuration.Extension(nameof(UpdaterRegistry.GetRegisteredUpdaterInfos)).Register(() => UpdaterRegistry.GetRegisteredUpdaterInfos(_document));
+        configuration.Extension(nameof(LightFamily.GetLightFamily)).Register(() => LightFamily.GetLightFamily(_document));
+        configuration.Extension(nameof(FamilySizeTableManager.CreateFamilySizeTableManager)).Register(() => FamilySizeTableManager.GetFamilySizeTableManager(_document, new ElementId(BuiltInParameter.RBS_LOOKUP_TABLE_NAME)));
+        configuration.Extension("GbXmlId").Map(nameof(ExportUtils.GetGBXMLDocumentId)).Register(() => ExportUtils.GetGBXMLDocumentId(_document));
+        configuration.Extension(nameof(LoadedFamilyIntegrityCheck.CheckAllFamilies)).Defer(RegisterCorruptFamilyIds);
+        configuration.Extension(nameof(LoadedFamilyIntegrityCheck.CheckAllFamiliesSlow)).Defer(RegisterGetUserWorksetInfo);
+        configuration.Extension(nameof(WorksharingUtils.GetUserWorksetInfo)).Defer(() => WorksharingUtils.GetUserWorksetInfo(_document.GetWorksharingCentralModelPath()));
+        configuration.Extension(nameof(WorksharingUtils.RelinquishOwnership)).NotSupported();
+        configuration.Extension(nameof(FabricationUtils.ExportToPCF)).NotSupported();
+#if !REVIT2025_OR_GREATER
+        configuration.Extension(nameof(MacroManager.GetMacroManager)).Register(() => MacroManager.GetMacroManager(_document));
+#endif
+#if REVIT2022_OR_GREATER
+        configuration.Extension(nameof(TemporaryGraphicsManager.GetTemporaryGraphicsManager)).Register(() => TemporaryGraphicsManager.GetTemporaryGraphicsManager(_document));
+#endif
+#if REVIT2023_OR_GREATER
+        configuration.Extension(nameof(AnalyticalToPhysicalAssociationManager.GetAnalyticalToPhysicalAssociationManager)).Register(() => AnalyticalToPhysicalAssociationManager.GetAnalyticalToPhysicalAssociationManager(_document));
+#endif
+#if REVIT2026_OR_GREATER
+        configuration.Extension(nameof(CoordinationModelLinkUtils.GetAllCoordinationModelInstanceIds)).Register(() => CoordinationModelLinkUtils.GetAllCoordinationModelInstanceIds(_document));
+        configuration.Extension(nameof(CoordinationModelLinkUtils.GetAllCoordinationModelTypeIds)).Register(() => CoordinationModelLinkUtils.GetAllCoordinationModelTypeIds(_document));
+        configuration.Extension(nameof(CoordinationModelLinkUtils.Link3DViewFromAutodeskDocs)).NotSupported();
+        configuration.Extension(nameof(CoordinationModelLinkUtils.LinkCoordinationModelFromLocalPath)).NotSupported();
+#endif
+        return;
 
         IVariant ResolvePlanTopologies()
         {
@@ -66,10 +96,10 @@ public sealed class DocumentDescriptor : Descriptor, IDescriptorResolver, IDescr
 
         IVariant ResolveDefaultElementTypeId()
         {
-            var values = Enum.GetValues(typeof(ElementTypeGroup));
+            var values = Enum.GetValues<ElementTypeGroup>();
             var variants = Variants.Values<ElementId>(values.Length);
 
-            foreach (ElementTypeGroup value in values)
+            foreach (var value in values)
             {
                 var result = _document.GetDefaultElementTypeId(value);
                 if (result is not null && result != ElementId.InvalidElementId)
@@ -87,41 +117,24 @@ public sealed class DocumentDescriptor : Descriptor, IDescriptorResolver, IDescr
 
             return variants.Consume();
         }
-    }
+        
+        object? RegisterCorruptFamilyIds()
+        {
+            var corruptFamilyIds = new HashSet<ElementId>();
+            LoadedFamilyIntegrityCheck.CheckAllFamilies(_document, corruptFamilyIds);
+            return corruptFamilyIds;
+        }
 
-    public void RegisterExtensions(IExtensionManager manager)
-    {
-        manager.Define(nameof(AssemblyCodeTable.GetAssemblyCodeTable)).Register(() => Variants.Value(AssemblyCodeTable.GetAssemblyCodeTable(_document)));
-        manager.Define(nameof(ExternalFileUtils.GetAllExternalFileReferences)).Register(() => Variants.Value(ExternalFileUtils.GetAllExternalFileReferences(_document)));
-        manager.Define(nameof(ExternalResourceUtils.GetAllExternalResourceReferences)).Register(() => Variants.Value(ExternalResourceUtils.GetAllExternalResourceReferences(_document)));
-        manager.Define(nameof(GlobalParametersManager.GetAllGlobalParameters)).Register(() => Variants.Value(GlobalParametersManager.GetAllGlobalParameters(_document)));
-        manager.Define(nameof(GlobalParametersManager.AreGlobalParametersAllowed)).Register(() => Variants.Value(GlobalParametersManager.AreGlobalParametersAllowed(_document)));
-        manager.Define(nameof(GlobalParametersManager.GetGlobalParametersOrdered)).Register(() => Variants.Value(GlobalParametersManager.GetGlobalParametersOrdered(_document)));
-        manager.Define(nameof(KeynoteTable.GetKeynoteTable)).Register(() => Variants.Value(KeynoteTable.GetKeynoteTable(_document)));
-        manager.Define(nameof(LightGroupManager.GetLightGroupManager)).Register(() => Variants.Value(LightGroupManager.GetLightGroupManager(_document)));
-        manager.Define(nameof(UpdaterRegistry.GetRegisteredUpdaterInfos)).Register(() => Variants.Value(UpdaterRegistry.GetRegisteredUpdaterInfos(_document)));
-        manager.Define(nameof(LightFamily.GetLightFamily)).Register(() => Variants.Value(LightFamily.GetLightFamily(_document)));
-        manager.Define(nameof(FamilySizeTableManager.CreateFamilySizeTableManager)).Register(() => Variants.Value(FamilySizeTableManager.GetFamilySizeTableManager(_document, new ElementId(BuiltInParameter.RBS_LOOKUP_TABLE_NAME))));
-        manager.Define("GbXmlId").Map(nameof(ExportUtils.GetGBXMLDocumentId)).Register(() => Variants.Value(ExportUtils.GetGBXMLDocumentId(_document)));
-        manager.Define(nameof(LoadedFamilyIntegrityCheck.CheckAllFamilies)).AsNotSupported(); //TODO add impl after Lazy invocation feature
-        manager.Define(nameof(LoadedFamilyIntegrityCheck.CheckAllFamiliesSlow)).AsNotSupported(); //TODO add impl after Lazy invocation feature
-        manager.Define(nameof(WorksharingUtils.GetUserWorksetInfo)).AsNotSupported(); //TODO slow performance
-        manager.Define(nameof(WorksharingUtils.RelinquishOwnership)).AsNotSupported();
-        manager.Define(nameof(FabricationUtils.ExportToPCF)).AsNotSupported();
-#if !REVIT2025_OR_GREATER
-        manager.Define(nameof(MacroManager.GetMacroManager)).Register(() => Variants.Value(MacroManager.GetMacroManager(_document)));
-#endif
-#if REVIT2022_OR_GREATER
-        manager.Define(nameof(TemporaryGraphicsManager.GetTemporaryGraphicsManager)).Register(() => Variants.Value(TemporaryGraphicsManager.GetTemporaryGraphicsManager(_document)));
-#endif
-#if REVIT2023_OR_GREATER
-        manager.Define(nameof(AnalyticalToPhysicalAssociationManager.GetAnalyticalToPhysicalAssociationManager)).Register(() => Variants.Value(AnalyticalToPhysicalAssociationManager.GetAnalyticalToPhysicalAssociationManager(_document)));
-#endif
-#if REVIT2026_OR_GREATER
-        manager.Define(nameof(CoordinationModelLinkUtils.GetAllCoordinationModelInstanceIds)).Register(() => Variants.Value(CoordinationModelLinkUtils.GetAllCoordinationModelInstanceIds(_document)));
-        manager.Define(nameof(CoordinationModelLinkUtils.GetAllCoordinationModelTypeIds)).Register(() => Variants.Value(CoordinationModelLinkUtils.GetAllCoordinationModelTypeIds(_document)));
-        manager.Define(nameof(CoordinationModelLinkUtils.Link3DViewFromAutodeskDocs)).AsNotSupported();
-        manager.Define(nameof(CoordinationModelLinkUtils.LinkCoordinationModelFromLocalPath)).AsNotSupported();
-#endif
+        object? RegisterCheckAllFamiliesSlow()
+        {
+            var corruptFamilyIds = new HashSet<ElementId>();
+            LoadedFamilyIntegrityCheck.CheckAllFamiliesSlow(_document, corruptFamilyIds);
+            return corruptFamilyIds;
+        }
+
+        object? RegisterGetUserWorksetInfo()
+        {
+            return WorksharingUtils.GetUserWorksetInfo(_document.GetWorksharingCentralModelPath());
+        }
     }
 }

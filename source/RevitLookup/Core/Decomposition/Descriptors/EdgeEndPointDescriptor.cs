@@ -17,10 +17,10 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class EdgeEndPointDescriptor(EdgeEndPoint edgeEndPoint) : Descriptor, IDescriptorExtension
+public sealed class EdgeEndPointDescriptor(EdgeEndPoint edgeEndPoint) : Descriptor, IDescriptorConfigurator
 {
-    public void RegisterExtensions(IExtensionManager manager)
+    public void Configure(IMemberConfigurator configuration)
     {
-        manager.Define(nameof(SolidUtils.FindAllEdgeEndPointsAtVertex)).Register(() => Variants.Value(SolidUtils.FindAllEdgeEndPointsAtVertex(edgeEndPoint)));
+        configuration.Extension(nameof(SolidUtils.FindAllEdgeEndPointsAtVertex)).Register(() => SolidUtils.FindAllEdgeEndPointsAtVertex(edgeEndPoint));
     }
 }

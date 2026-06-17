@@ -12,7 +12,6 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
@@ -20,22 +19,15 @@ namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class WallDescriptor(Wall wall) : ElementDescriptor(wall)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
 #if REVIT2022_OR_GREATER
-            nameof(Wall.IsWallCrossSectionValid) => () => VariantsResolver.ResolveEnum<WallCrossSection, bool>(wall.IsWallCrossSectionValid),
+        configuration.Member(nameof(Wall.IsWallCrossSectionValid)).Resolve(() => ResolveEnum<WallCrossSection, bool>(wall.IsWallCrossSectionValid));
 #endif
-            _ => null
-        };
-    }
 
-    public override void RegisterExtensions(IExtensionManager manager)
-    {
-        manager.Define("IsJoinAllowedAtEnd").Map(nameof(WallUtils.IsWallJoinAllowedAtEnd)).Register(ResolveIsWallJoinAllowedAtEnd);
-        manager.Define("AllowJoinAtEnd").Map(nameof(WallUtils.AllowWallJoinAtEnd)).AsNotSupported();
-        manager.Define("DisallowJoinAtEnd").Map(nameof(WallUtils.DisallowWallJoinAtEnd)).AsNotSupported();
+        configuration.Extension("IsJoinAllowedAtEnd").Map(nameof(WallUtils.IsWallJoinAllowedAtEnd)).Register(ResolveIsWallJoinAllowedAtEnd);
+        configuration.Extension("AllowJoinAtEnd").Map(nameof(WallUtils.AllowWallJoinAtEnd)).Defer(RegisterAllowJoinAtEnd);
+        configuration.Extension("DisallowJoinAtEnd").Map(nameof(WallUtils.DisallowWallJoinAtEnd)).Defer(RegisterDisallowJoinAtEnd);
         return;
 
         IVariant ResolveIsWallJoinAllowedAtEnd()
@@ -48,6 +40,17 @@ public sealed class WallDescriptor(Wall wall) : ElementDescriptor(wall)
                 .Add(isJoinAllowedAtEnd1, $"End: {isJoinAllowedAtEnd1}")
                 .Consume();
         }
-    }
 
+        void RegisterAllowJoinAtEnd()
+        {
+            wall.AllowJoinAtEnd(0);
+            wall.AllowJoinAtEnd(1);
+        }
+
+        void RegisterDisallowJoinAtEnd()
+        {
+            wall.DisallowJoinAtEnd(0);
+            wall.DisallowJoinAtEnd(1);
+        }
+    }
 }

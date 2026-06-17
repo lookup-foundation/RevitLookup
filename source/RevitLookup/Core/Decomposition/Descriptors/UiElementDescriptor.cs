@@ -12,24 +12,16 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using System.Windows;
+using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class UiElementDescriptor(UIElement uiElement) : DependencyObjectDescriptor(uiElement)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(UIElement.GetLocalValueEnumerator) => Variants.Empty<LocalValueEnumerator>,
-            nameof(UIElement.CaptureMouse) => Variants.Disabled,
-            nameof(UIElement.CaptureStylus) => Variants.Disabled,
-            nameof(UIElement.Focus) => Variants.Disabled,
-            "Enter" => Variants.Disabled,
-            _ => null
-        };
+        configuration.Member(nameof(UIElement.GetLocalValueEnumerator)).Resolve(Variants.Empty<LocalValueEnumerator>);
     }
 }

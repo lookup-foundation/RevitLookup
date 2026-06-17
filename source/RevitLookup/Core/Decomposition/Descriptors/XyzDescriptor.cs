@@ -40,6 +40,7 @@ public sealed class XyzDescriptor : Descriptor, IContextMenuConnector
             .SetAvailability(!_point.IsUnitLength())
             .SetCommand(_point, VisualizeXyz)
             .SetShortcut(Key.F8);
+        return;
 
         async Task VisualizeXyz(XYZ point)
         {

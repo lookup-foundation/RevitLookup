@@ -12,22 +12,18 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class LocationCurveDescriptor(LocationCurve locationCurve) : Descriptor, IDescriptorResolver
+public sealed class LocationCurveDescriptor(LocationCurve locationCurve) : Descriptor, IDescriptorConfigurator
 {
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            "ElementsAtJoin" => ResolveElementsAtJoin,
-            "JoinType" => ResolveJoinType,
-            _ => null
-        };
+        configuration.Member("ElementsAtJoin").Resolve(ResolveElementsAtJoin);
+        configuration.Member("JoinType").Resolve(ResolveJoinType);
+        return;
 
         IVariant ResolveElementsAtJoin()
         {

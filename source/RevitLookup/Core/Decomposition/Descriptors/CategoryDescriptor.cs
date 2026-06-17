@@ -12,14 +12,13 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using Autodesk.Revit.DB.DirectContext3D;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class CategoryDescriptor : Descriptor, IDescriptorResolver, IDescriptorExtension, IDescriptorExtension<Document>
+public sealed class CategoryDescriptor : Descriptor, IDescriptorConfigurator, IDescriptorConfigurator<Document>
 {
     private readonly Category _category;
 
@@ -29,17 +28,23 @@ public sealed class CategoryDescriptor : Descriptor, IDescriptorResolver, IDescr
         Name = category.Name;
     }
 
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            "AllowsVisibilityControl" => () => Variants.Value(_category.get_AllowsVisibilityControl(RevitContext.ActiveView), "Active view"),
-            "Visible" => () => Variants.Value(_category.get_Visible(RevitContext.ActiveView), "Active view"),
-            nameof(Category.GetGraphicsStyle) => ResolveGetGraphicsStyle,
-            nameof(Category.GetLinePatternId) => ResolveGetLinePatternId,
-            nameof(Category.GetLineWeight) => ResolveGetLineWeight,
-            _ => null
-        };
+        configuration.Member("AllowsVisibilityControl").Resolve(() => Variants.Value(_category.get_AllowsVisibilityControl(RevitContext.ActiveView), "Active view"));
+        configuration.Member("Visible").Resolve(() => Variants.Value(_category.get_Visible(RevitContext.ActiveView), "Active view"));
+        configuration.Member(nameof(Category.GetGraphicsStyle)).Resolve(ResolveGetGraphicsStyle);
+        configuration.Member(nameof(Category.GetLinePatternId)).Resolve(ResolveGetLinePatternId);
+        configuration.Member(nameof(Category.GetLineWeight)).Resolve(ResolveGetLineWeight);
+
+        configuration.Extension(nameof(DirectContext3DDocumentUtils.IsADirectContext3DHandleCategory)).Register(() => DirectContext3DDocumentUtils.IsADirectContext3DHandleCategory(_category.Id));
+        configuration.Extension(nameof(ParameterFilterUtilities.GetAllFilterableCategories)).AsStatic().Register(ParameterFilterUtilities.GetAllFilterableCategories);
+#if !REVIT2023_OR_GREATER
+        configuration.Extension("BuiltInCategory").Register(() => (BuiltInCategory) _category.Id.IntegerValue);
+#endif
+#if REVIT2024_OR_GREATER
+        configuration.Extension("SetSSEPointVisibility").Map(nameof(SSEPointVisibilitySettings.SetVisibility)).NotSupported();
+#endif
+        return;
 
         IVariant ResolveGetLineWeight()
         {
@@ -66,38 +71,26 @@ public sealed class CategoryDescriptor : Descriptor, IDescriptorResolver, IDescr
         }
     }
 
-    public void RegisterExtensions(IExtensionManager manager)
+    void IDescriptorConfigurator<Document>.Configure(IMemberConfigurator<Document> configuration)
     {
-        manager.Define(nameof(DirectContext3DDocumentUtils.IsADirectContext3DHandleCategory)).Register(() => Variants.Value(DirectContext3DDocumentUtils.IsADirectContext3DHandleCategory(_category.Id)));
-        manager.Define(nameof(ParameterFilterUtilities.GetAllFilterableCategories)).AsStatic().Register(() => Variants.Value(ParameterFilterUtilities.GetAllFilterableCategories()));
-#if !REVIT2023_OR_GREATER
-        manager.Define("BuiltInCategory").Register(() => Variants.Value((BuiltInCategory) _category.Id.IntegerValue));
-#endif
-#if REVIT2024_OR_GREATER
-        manager.Define("SetSSEPointVisibility").Map(nameof(SSEPointVisibilitySettings.SetVisibility)).AsNotSupported();
-#endif
-    }
-
-    public void RegisterExtensions(IExtensionManager<Document> manager)
-    {
-        manager.Define(nameof(ParameterFilterUtilities.GetFilterableParametersInCommon)).Register(context => Variants.Value(ParameterFilterUtilities.GetFilterableParametersInCommon(context, [_category.Id])));
-        manager.Define("GetElements").Register(context => Variants.Value(context.CollectElements()
+        configuration.Extension(nameof(ParameterFilterUtilities.GetFilterableParametersInCommon)).Register(context => ParameterFilterUtilities.GetFilterableParametersInCommon(context, [_category.Id]));
+        configuration.Extension("GetElements").Register(context => context.CollectElements()
             .Instances()
 #if REVIT2023_OR_GREATER
             .OfCategory(_category.BuiltInCategory)
 #else
             .OfCategory((BuiltInCategory) _category.Id.IntegerValue)
 #endif
-            .ToElements()));
-        
+            .ToElements());
+
         if (DirectContext3DDocumentUtils.IsADirectContext3DHandleCategory(_category.Id))
         {
-            manager.Define(nameof(DirectContext3DDocumentUtils.GetDirectContext3DHandleInstances)).Register(context => Variants.Value(DirectContext3DDocumentUtils.GetDirectContext3DHandleInstances(context, _category.Id)));
-            manager.Define(nameof(DirectContext3DDocumentUtils.GetDirectContext3DHandleTypes)).Register(context => Variants.Value(DirectContext3DDocumentUtils.GetDirectContext3DHandleTypes(context, _category.Id)));
+            configuration.Extension(nameof(DirectContext3DDocumentUtils.GetDirectContext3DHandleInstances)).Register(context => DirectContext3DDocumentUtils.GetDirectContext3DHandleInstances(context, _category.Id));
+            configuration.Extension(nameof(DirectContext3DDocumentUtils.GetDirectContext3DHandleTypes)).Register(context => DirectContext3DDocumentUtils.GetDirectContext3DHandleTypes(context, _category.Id));
         }
-        
+
 #if REVIT2024_OR_GREATER
-        manager.Define("GetSSEPointVisibility").Register(context => Variants.Value(SSEPointVisibilitySettings.GetVisibility(context, _category.Id)));
+        configuration.Extension("GetSSEPointVisibility").Register(context => SSEPointVisibilitySettings.GetVisibility(context, _category.Id));
 #endif
     }
 }

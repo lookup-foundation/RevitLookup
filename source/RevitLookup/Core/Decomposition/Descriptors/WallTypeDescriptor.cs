@@ -12,19 +12,14 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
-using LookupEngine.Abstractions.Decomposition;
+using LookupEngine.Abstractions.Configuration;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class WallTypeDescriptor(WallType wallType) : ElementDescriptor(wallType)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(FaceWall.IsWallTypeValidForFaceWall) => () => Variants.Value(FaceWall.IsWallTypeValidForFaceWall(wallType.Document, wallType.Id)),
-            _ => null
-        };
+        configuration.Member(nameof(FaceWall.IsWallTypeValidForFaceWall)).Resolve(() => FaceWall.IsWallTypeValidForFaceWall(wallType.Document, wallType.Id));
     }
 }

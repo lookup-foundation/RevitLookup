@@ -12,22 +12,19 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using Autodesk.Revit.DB.Mechanical;
+using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class MepSystemDescriptor(MEPSystem mepSystem) : ElementDescriptor(mepSystem)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(MEPSystem.GetSectionByIndex) => () => VariantsResolver.ResolveIndex(mepSystem.SectionsCount, mepSystem.GetSectionByIndex),
-            nameof(MEPSystem.GetSectionByNumber) => ResolveSectionByNumber,
-            _ => null
-        };
+        configuration.Member(nameof(MEPSystem.GetSectionByIndex)).Resolve(() => ResolveRange(mepSystem.SectionsCount, mepSystem.GetSectionByIndex));
+        configuration.Member(nameof(MEPSystem.GetSectionByNumber)).Resolve(ResolveSectionByNumber);
+        return;
 
         IVariant ResolveSectionByNumber()
         {

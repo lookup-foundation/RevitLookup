@@ -17,10 +17,10 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class ExternalResourceTypeDescriptor(ExternalResourceType externalResourceType) : Descriptor, IDescriptorExtension
+public sealed class ExternalResourceTypeDescriptor(ExternalResourceType externalResourceType) : Descriptor, IDescriptorConfigurator
 {
-    public void RegisterExtensions(IExtensionManager manager)
+    public void Configure(IMemberConfigurator configuration)
     {
-        manager.Define("GetServers").Register(() => Variants.Value(ExternalResourceServiceUtils.GetServersByType(externalResourceType)));
+        configuration.Extension("GetServers").Register(() => ExternalResourceServiceUtils.GetServersByType(externalResourceType));
     }
 }

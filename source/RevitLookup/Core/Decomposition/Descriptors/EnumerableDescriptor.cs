@@ -13,7 +13,6 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using System.Collections;
-using System.Reflection;
 using Autodesk.Revit.DB.Electrical;
 using Autodesk.Revit.DB.Macros;
 using Autodesk.Revit.DB.Mechanical;
@@ -23,14 +22,14 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class EnumerableDescriptor : Descriptor, IDescriptorEnumerator, IDescriptorResolver
+public sealed class EnumerableDescriptor : Descriptor, IDescriptorEnumerator, IDescriptorConfigurator
 {
     public EnumerableDescriptor(IEnumerable value)
     {
         // ReSharper disable once GenericEnumeratorNotDisposed
         Enumerator = value.GetEnumerator();
 
-        //Checking types to reduce memory allocation when creating an iterator and increase performance
+        //Checking types to reduce memory allocation when creating an iterator and increase performance. I love this fucking Autodesk API
         IsEmpty = value switch
         {
             string => true,
@@ -144,13 +143,10 @@ public sealed class EnumerableDescriptor : Descriptor, IDescriptorEnumerator, ID
     public IEnumerator Enumerator { get; }
     public bool IsEmpty { get; }
 
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(IEnumerable.GetEnumerator) => ResolveGetEnumerator,
-            _ => null
-        };
+        configuration.Member(nameof(IEnumerable.GetEnumerator)).Resolve(ResolveGetEnumerator);
+        return;
 
         IVariant ResolveGetEnumerator()
         {

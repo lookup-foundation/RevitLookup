@@ -19,12 +19,11 @@ using LookupEngine.Abstractions.Decomposition;
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 #pragma warning disable CS9113 // Parameter is unread.
-public sealed class PointCloudFilterDescriptor(PointCloudFilter pointCloudFilter) : Descriptor, IDescriptorExtension
+public sealed class PointCloudFilterDescriptor(PointCloudFilter pointCloudFilter) : Descriptor, IDescriptorConfigurator
 #pragma warning restore CS9113 // Parameter is unread.
 {
-    public void RegisterExtensions(IExtensionManager manager)
+    public void Configure(IMemberConfigurator configuration)
     {
-        manager.Define("GetFilteredOutline").Map(nameof(PointCloudFilterUtils.GetFilteredOutline)).AsNotSupported();
+        configuration.Extension("GetFilteredOutline").Map(nameof(PointCloudFilterUtils.GetFilteredOutline)).NotSupported();
     }
-
 }

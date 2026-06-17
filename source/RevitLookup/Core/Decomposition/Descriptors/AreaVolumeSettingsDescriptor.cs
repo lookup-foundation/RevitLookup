@@ -12,20 +12,15 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
-using LookupEngine.Abstractions.Decomposition;
+using LookupEngine.Abstractions.Configuration;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class AreaVolumeSettingsDescriptor(AreaVolumeSettings settings) : ElementDescriptor(settings)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(AreaVolumeSettings.GetAreaVolumeSettings) => () => Variants.Value(AreaVolumeSettings.GetAreaVolumeSettings(settings.Document)),
-            nameof(AreaVolumeSettings.GetSpatialElementBoundaryLocation) => () => VariantsResolver.ResolveEnum<SpatialElementType, SpatialElementBoundaryLocation>(settings.GetSpatialElementBoundaryLocation),
-            _ => null
-        };
+        configuration.Member(nameof(AreaVolumeSettings.GetAreaVolumeSettings)).Resolve(() => AreaVolumeSettings.GetAreaVolumeSettings(settings.Document));
+        configuration.Member(nameof(AreaVolumeSettings.GetSpatialElementBoundaryLocation)).Resolve(() => ResolveEnum<SpatialElementType, SpatialElementBoundaryLocation>(settings.GetSpatialElementBoundaryLocation));
     }
 }

@@ -17,7 +17,6 @@ using Autodesk.Revit.DB.ExtensibleStorage;
 using Autodesk.Revit.DB.ExternalService;
 using Autodesk.Revit.UI.Selection;
 using Autodesk.Windows;
-using Nice3point.Revit.Extensions.UI;
 using RevitLookup.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition;

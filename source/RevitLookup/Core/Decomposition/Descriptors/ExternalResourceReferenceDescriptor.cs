@@ -17,14 +17,14 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class ExternalResourceReferenceDescriptor(ExternalResourceReference externalResourceReference) : Descriptor, IDescriptorExtension
+public sealed class ExternalResourceReferenceDescriptor(ExternalResourceReference externalResourceReference) : Descriptor, IDescriptorConfigurator
 {
-    public void RegisterExtensions(IExtensionManager manager)
+    public void Configure(IMemberConfigurator configuration)
     {
-        manager.Define(nameof(ExternalResourceServerUtils.ServerSupportsAssemblyCodeData)).Register(() => Variants.Value(ExternalResourceServerUtils.ServerSupportsAssemblyCodeData(externalResourceReference)));
-        manager.Define(nameof(ExternalResourceServerUtils.ServerSupportsCADLinks)).Register(() => Variants.Value(ExternalResourceServerUtils.ServerSupportsCADLinks(externalResourceReference)));
-        manager.Define(nameof(ExternalResourceServerUtils.ServerSupportsIFCLinks)).Register(() => Variants.Value(ExternalResourceServerUtils.ServerSupportsIFCLinks(externalResourceReference)));
-        manager.Define(nameof(ExternalResourceServerUtils.ServerSupportsKeynotes)).Register(() => Variants.Value(ExternalResourceServerUtils.ServerSupportsKeynotes(externalResourceReference)));
-        manager.Define(nameof(ExternalResourceServerUtils.ServerSupportsRevitLinks)).Register(() => Variants.Value(ExternalResourceServerUtils.ServerSupportsRevitLinks(externalResourceReference)));
+        configuration.Extension(nameof(ExternalResourceServerUtils.ServerSupportsAssemblyCodeData)).Register(() => ExternalResourceServerUtils.ServerSupportsAssemblyCodeData(externalResourceReference));
+        configuration.Extension(nameof(ExternalResourceServerUtils.ServerSupportsCADLinks)).Register(() => ExternalResourceServerUtils.ServerSupportsCADLinks(externalResourceReference));
+        configuration.Extension(nameof(ExternalResourceServerUtils.ServerSupportsIFCLinks)).Register(() => ExternalResourceServerUtils.ServerSupportsIFCLinks(externalResourceReference));
+        configuration.Extension(nameof(ExternalResourceServerUtils.ServerSupportsKeynotes)).Register(() => ExternalResourceServerUtils.ServerSupportsKeynotes(externalResourceReference));
+        configuration.Extension(nameof(ExternalResourceServerUtils.ServerSupportsRevitLinks)).Register(() => ExternalResourceServerUtils.ServerSupportsRevitLinks(externalResourceReference));
     }
 }

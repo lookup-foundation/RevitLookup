@@ -29,6 +29,7 @@ public sealed class DefinitionDescriptor : Descriptor, IDescriptorCollector
         return definition switch
         {
             InternalDefinition internalDefinition when internalDefinition.BuiltInParameter != BuiltInParameter.INVALID => internalDefinition.BuiltInParameter.ToString(),
+            ExternalDefinition externalDefinition => externalDefinition.Name,
             _ => definition.Name
         };
     }

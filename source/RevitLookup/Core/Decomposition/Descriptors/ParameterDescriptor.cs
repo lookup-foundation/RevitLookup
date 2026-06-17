@@ -12,7 +12,6 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using System.Windows.Input;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
@@ -31,7 +30,7 @@ using ParameterExtensions = Nice3point.Revit.Extensions.ParameterExtensions;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed partial class ParameterDescriptor : Descriptor, IDescriptorResolver, IDescriptorExtension, IContextMenuConnector
+public sealed partial class ParameterDescriptor : Descriptor, IDescriptorConfigurator, IContextMenuConnector
 {
     private readonly Parameter _parameter;
 
@@ -41,22 +40,15 @@ public sealed partial class ParameterDescriptor : Descriptor, IDescriptorResolve
         Name = parameter.Definition.Name;
     }
 
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(Parameter.ClearValue) => Variants.Disabled,
-            nameof(Parameter.HasValue) => () => _parameter.Element is null ? Variants.Disabled() : Variants.Value(_parameter.HasValue),
-            nameof(Parameter.AsString) => () => _parameter.Element is null ? Variants.Disabled() : Variants.Value(_parameter.AsString()),
-            _ => null
-        };
-    }
+        configuration.Member(nameof(Parameter.ClearValue)).Defer();
+        configuration.Member(nameof(Parameter.HasValue)).Resolve(() => _parameter.Element is null ? new NullReferenceException("Invalid element reference") : _parameter.HasValue);
+        configuration.Member(nameof(Parameter.AsString)).Resolve(() => _parameter.Element is null ? new NullReferenceException("Invalid element reference") : _parameter.AsString());
 
-    public void RegisterExtensions(IExtensionManager manager)
-    {
-        manager.Define(nameof(ParameterExtensions.AsBool)).Register(() => Variants.Value(_parameter.AsBool()));
-        manager.Define(nameof(ParameterExtensions.AsColor)).Register(() => Variants.Value(_parameter.AsColor()));
-        manager.Define(nameof(FamilyManager.GetAssociatedFamilyParameter)).Register(() => Variants.Value(_parameter.Element?.Document.FamilyManager.GetAssociatedFamilyParameter(_parameter)));
+        configuration.Extension(nameof(ParameterExtensions.AsBool)).Register(() => _parameter.AsBool());
+        configuration.Extension(nameof(ParameterExtensions.AsColor)).Register(() => _parameter.AsColor());
+        configuration.Extension(nameof(FamilyManager.GetAssociatedFamilyParameter)).Register(() => _parameter.Element?.Document.FamilyManager.GetAssociatedFamilyParameter(_parameter));
     }
 
     public void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)

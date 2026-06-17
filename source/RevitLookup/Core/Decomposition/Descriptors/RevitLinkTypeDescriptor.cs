@@ -12,21 +12,16 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
-using LookupEngine.Abstractions.Decomposition;
+using LookupEngine.Abstractions.Configuration;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class RevitLinkTypeDescriptor(RevitLinkType element) : ElementDescriptor(element)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(RevitLinkType.Load) => Variants.Disabled,
-            nameof(RevitLinkType.Reload) => Variants.Disabled,
-            nameof(RevitLinkType.IsLoaded) => () => Variants.Value(RevitLinkType.IsLoaded(element.Document, element.Id)),
-            _ => null
-        };
+        configuration.Member(nameof(RevitLinkType.Load)).Defer();
+        configuration.Member(nameof(RevitLinkType.Reload)).Defer();
+        configuration.Member(nameof(RevitLinkType.IsLoaded)).Resolve(() => RevitLinkType.IsLoaded(element.Document, element.Id));
     }
 }

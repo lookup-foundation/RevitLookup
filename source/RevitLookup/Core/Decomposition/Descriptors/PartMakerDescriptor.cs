@@ -12,21 +12,14 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
-using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class PartMakerDescriptor(PartMaker partMaker) : ElementDescriptor(partMaker)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return null;
-    }
-
-    public override void RegisterExtensions(IExtensionManager manager)
-    {
-        manager.Define(nameof(PartUtils.GetPartMakerMethodToDivideVolumeFW)).Register(() => Variants.Value(PartUtils.GetPartMakerMethodToDivideVolumeFW(partMaker)));
+        configuration.Extension(nameof(PartUtils.GetPartMakerMethodToDivideVolumeFW)).Register(() => PartUtils.GetPartMakerMethodToDivideVolumeFW(partMaker));
     }
 }

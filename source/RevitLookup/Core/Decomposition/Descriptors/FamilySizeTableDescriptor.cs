@@ -12,22 +12,18 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class FamilySizeTableDescriptor(FamilySizeTable table) : Descriptor, IDescriptorResolver
+public sealed class FamilySizeTableDescriptor(FamilySizeTable table) : Descriptor, IDescriptorConfigurator
 {
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(FamilySizeTable.GetColumnHeader) => ResolveColumnHeader,
-            nameof(FamilySizeTable.IsValidColumnIndex) => ResolveIsValidColumnIndex,
-            _ => null
-        };
+        configuration.Member(nameof(FamilySizeTable.GetColumnHeader)).Resolve(ResolveColumnHeader);
+        configuration.Member(nameof(FamilySizeTable.IsValidColumnIndex)).Resolve(ResolveIsValidColumnIndex);
+        return;
 
         IVariant ResolveColumnHeader()
         {

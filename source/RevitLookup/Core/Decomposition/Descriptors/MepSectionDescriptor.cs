@@ -12,25 +12,32 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using Autodesk.Revit.DB.Mechanical;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class MepSectionDescriptor(MEPSection mepSection) : Descriptor, IDescriptorResolver
+public sealed class MepSectionDescriptor(MEPSection mepSection) : Descriptor, IDescriptorConfigurator
 {
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
+        configuration.Member(nameof(MEPSection.GetElementIds)).Resolve(() => ResolveElementIds(mepSection.GetElementIds(), id => id));
+        configuration.Member(nameof(MEPSection.GetCoefficient)).Resolve(() => ResolveElementIds(mepSection.GetElementIds(), mepSection.GetCoefficient));
+        configuration.Member(nameof(MEPSection.GetPressureDrop)).Resolve(() => ResolveElementIds(mepSection.GetElementIds(), mepSection.GetPressureDrop));
+        configuration.Member(nameof(MEPSection.GetSegmentLength)).Resolve(() => ResolveElementIds(mepSection.GetElementIds(), mepSection.GetSegmentLength));
+        configuration.Member(nameof(MEPSection.IsMain)).Resolve(() => ResolveElementIds(mepSection.GetElementIds(), mepSection.IsMain));
+    }
+    
+    private static IVariant ResolveElementIds<TResult>(ICollection<ElementId> ids, Func<ElementId, TResult> selector)
+    {
+        var variants = Variants.Values<TResult>(ids.Count);
+        foreach (var id in ids)
         {
-            nameof(MEPSection.GetElementIds) => () => VariantsResolver.ResolveElementIds(mepSection.GetElementIds(), id => id),
-            nameof(MEPSection.GetCoefficient) => () => VariantsResolver.ResolveElementIds(mepSection.GetElementIds(), mepSection.GetCoefficient),
-            nameof(MEPSection.GetPressureDrop) => () => VariantsResolver.ResolveElementIds(mepSection.GetElementIds(), mepSection.GetPressureDrop),
-            nameof(MEPSection.GetSegmentLength) => () => VariantsResolver.ResolveElementIds(mepSection.GetElementIds(), mepSection.GetSegmentLength),
-            nameof(MEPSection.IsMain) => () => VariantsResolver.ResolveElementIds(mepSection.GetElementIds(), mepSection.IsMain),
-            _ => null
-        };
+            var result = selector(id);
+            variants.Add(result, $"ID{id}");
+        }
+
+        return variants.Consume();
     }
 }

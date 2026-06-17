@@ -18,17 +18,17 @@ using LookupEngine.Abstractions.Decomposition;
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 #pragma warning disable CS9113 // Parameter is unread.
-public sealed class GeometryObjectDescriptor(GeometryObject geometryObject) : Descriptor, IDescriptorExtension
+public sealed class GeometryObjectDescriptor(GeometryObject geometryObject) : Descriptor, IDescriptorConfigurator
 #pragma warning restore CS9113 // Parameter is unread.
 {
-    public void RegisterExtensions(IExtensionManager manager)
+    public void Configure(IMemberConfigurator configuration)
     {
 #if REVIT2022_OR_GREATER
-        manager.Define(nameof(ExternallyTaggedGeometryValidation.IsNonSolid)).Register(() => Variants.Value(ExternallyTaggedGeometryValidation.IsNonSolid(geometryObject)));
-        manager.Define(nameof(ExternallyTaggedGeometryValidation.IsSolid)).Register(() => Variants.Value(ExternallyTaggedGeometryValidation.IsSolid(geometryObject)));
+        configuration.Extension(nameof(ExternallyTaggedGeometryValidation.IsNonSolid)).Register(() => ExternallyTaggedGeometryValidation.IsNonSolid(geometryObject));
+        configuration.Extension(nameof(ExternallyTaggedGeometryValidation.IsSolid)).Register(() => ExternallyTaggedGeometryValidation.IsSolid(geometryObject));
 #endif
 #if REVIT2024_OR_GREATER
-        manager.Define(nameof(ExternallyTaggedGeometryValidation.LacksSubnodes)).Register(() => Variants.Value(ExternallyTaggedGeometryValidation.LacksSubnodes(geometryObject)));
+        configuration.Extension(nameof(ExternallyTaggedGeometryValidation.LacksSubnodes)).Register(() => ExternallyTaggedGeometryValidation.LacksSubnodes(geometryObject));
 #endif
     }
 }

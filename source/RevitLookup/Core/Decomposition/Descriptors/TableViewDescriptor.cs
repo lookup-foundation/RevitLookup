@@ -12,25 +12,22 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using Autodesk.Revit.DB.Electrical;
+using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class TableViewDescriptor(TableView tableView) : ElementDescriptor(tableView)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(TableView.GetAvailableParameters) => ResolveAvailableParameters,
-            nameof(TableView.GetCalculatedValueName) => () => ResolveTableViewCells(tableView.GetCalculatedValueName),
-            nameof(TableView.GetCalculatedValueText) => () => ResolveTableViewCells(tableView.GetCalculatedValueText),
-            nameof(TableView.IsValidSectionType) => () => VariantsResolver.ResolveEnum<SectionType, bool>(tableView.IsValidSectionType),
-            nameof(TableView.GetCellText) => () => ResolveTableViewCells(tableView.GetCellText),
-            _ => null
-        };
+        configuration.Member(nameof(TableView.GetAvailableParameters)).Resolve(ResolveAvailableParameters);
+        configuration.Member(nameof(TableView.GetCalculatedValueName)).Resolve(() => ResolveTableViewCells(tableView.GetCalculatedValueName));
+        configuration.Member(nameof(TableView.GetCalculatedValueText)).Resolve(() => ResolveTableViewCells(tableView.GetCalculatedValueText));
+        configuration.Member(nameof(TableView.IsValidSectionType)).Resolve(() => ResolveEnum<SectionType, bool>(tableView.IsValidSectionType));
+        configuration.Member(nameof(TableView.GetCellText)).Resolve(() => ResolveTableViewCells(tableView.GetCellText));
+        return;
 
         IVariant ResolveAvailableParameters()
         {

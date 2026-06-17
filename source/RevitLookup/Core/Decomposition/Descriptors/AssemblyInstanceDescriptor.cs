@@ -18,15 +18,14 @@ namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class AssemblyInstanceDescriptor(AssemblyInstance assemblyInstance) : ElementDescriptor(assemblyInstance)
 {
-    public override void RegisterExtensions(IExtensionManager manager)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        manager.Define("AcquireViews").Map(nameof(AssemblyViewUtils.AcquireAssemblyViews)).AsNotSupported();
-        manager.Define(nameof(AssemblyViewUtils.Create3DOrthographic)).AsNotSupported();
-        manager.Define(nameof(AssemblyViewUtils.CreateDetailSection)).AsNotSupported();
-        manager.Define(nameof(AssemblyViewUtils.CreateMaterialTakeoff)).AsNotSupported();
-        manager.Define(nameof(AssemblyViewUtils.CreatePartList)).AsNotSupported();
-        manager.Define(nameof(AssemblyViewUtils.CreateSheet)).AsNotSupported();
-        manager.Define(nameof(AssemblyViewUtils.CreateSingleCategorySchedule)).AsNotSupported();
+        configuration.Extension("AcquireViews").Map(nameof(AssemblyViewUtils.AcquireAssemblyViews)).NotSupported();
+        configuration.Extension(nameof(AssemblyViewUtils.Create3DOrthographic)).NotSupported();
+        configuration.Extension(nameof(AssemblyViewUtils.CreateDetailSection)).NotSupported();
+        configuration.Extension(nameof(AssemblyViewUtils.CreateMaterialTakeoff)).NotSupported();
+        configuration.Extension(nameof(AssemblyViewUtils.CreatePartList)).NotSupported();
+        configuration.Extension(nameof(AssemblyViewUtils.CreateSheet)).NotSupported();
+        configuration.Extension(nameof(AssemblyViewUtils.CreateSingleCategorySchedule)).NotSupported();
     }
-
 }

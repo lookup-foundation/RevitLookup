@@ -12,22 +12,16 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using Autodesk.Revit.DB.Lighting;
 using LookupEngine.Abstractions.Configuration;
-using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class LightFamilyDescriptor(LightFamily lightFamily) : Descriptor, IDescriptorResolver
+public sealed class LightFamilyDescriptor(LightFamily lightFamily) : ResolvingDescriptor, IDescriptorConfigurator
 {
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(LightFamily.GetLightTypeName) => () => VariantsResolver.ResolveIndex(lightFamily.GetNumberOfLightTypes(), lightFamily.GetLightTypeName),
-            nameof(LightFamily.GetLightType) => () => VariantsResolver.ResolveIndex(lightFamily.GetNumberOfLightTypes(), lightFamily.GetLightType),
-            _ => null
-        };
+        configuration.Member(nameof(LightFamily.GetLightTypeName)).Resolve(() => ResolveRange(lightFamily.GetNumberOfLightTypes(), lightFamily.GetLightTypeName));
+        configuration.Member(nameof(LightFamily.GetLightType)).Resolve(() => ResolveRange(lightFamily.GetNumberOfLightTypes(), lightFamily.GetLightType));
     }
 }

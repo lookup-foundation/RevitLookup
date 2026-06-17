@@ -12,7 +12,6 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
@@ -20,17 +19,22 @@ namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class CurveElementDescriptor(CurveElement element) : ElementDescriptor(element)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(CurveElement.GetAdjoinedCurveElements) => ResolveAdjoinedCurveElements,
-            nameof(CurveElement.HasTangentLocks) => ResolveHasTangentLocks,
-            nameof(CurveElement.GetTangentLock) => ResolveTangentLock,
-            nameof(CurveElement.HasTangentJoin) => ResolveTangentJoin,
-            nameof(CurveElement.IsAdjoinedCurveElement) => ResolveIsAdjoinedCurveElement,
-            _ => null
-        };
+        configuration.Member(nameof(CurveElement.GetAdjoinedCurveElements)).Resolve(ResolveAdjoinedCurveElements);
+        configuration.Member(nameof(CurveElement.HasTangentLocks)).Resolve(ResolveHasTangentLocks);
+        configuration.Member(nameof(CurveElement.GetTangentLock)).Resolve(ResolveTangentLock);
+        configuration.Member(nameof(CurveElement.HasTangentJoin)).Resolve(ResolveTangentJoin);
+        configuration.Member(nameof(CurveElement.IsAdjoinedCurveElement)).Resolve(ResolveIsAdjoinedCurveElement);
+
+        configuration.Extension(nameof(CurveByPointsUtils.GetHostFace)).Register(() => CurveByPointsUtils.GetHostFace(element));
+        configuration.Extension(nameof(CurveByPointsUtils.GetProjectionType)).Register(() => CurveByPointsUtils.GetProjectionType(element));
+        configuration.Extension(nameof(CurveByPointsUtils.GetSketchOnSurface)).Register(() => CurveByPointsUtils.GetSketchOnSurface(element));
+        configuration.Extension(nameof(CurveByPointsUtils.SetProjectionType)).NotSupported();
+        configuration.Extension(nameof(CurveByPointsUtils.SetSketchOnSurface)).NotSupported();
+        configuration.Extension(nameof(CurveByPointsUtils.CreateArcThroughPoints)).NotSupported();
+        configuration.Extension(nameof(CurveByPointsUtils.CreateRectangle)).NotSupported();
+        return;
 
         IVariant ResolveAdjoinedCurveElements()
         {
@@ -121,16 +125,4 @@ public sealed class CurveElementDescriptor(CurveElement element) : ElementDescri
             return variants.Consume();
         }
     }
-
-    public override void RegisterExtensions(IExtensionManager manager)
-    {
-        manager.Define(nameof(CurveByPointsUtils.GetHostFace)).Register(() => Variants.Value(CurveByPointsUtils.GetHostFace(element)));
-        manager.Define(nameof(CurveByPointsUtils.GetProjectionType)).Register(() => Variants.Value(CurveByPointsUtils.GetProjectionType(element)));
-        manager.Define(nameof(CurveByPointsUtils.GetSketchOnSurface)).Register(() => Variants.Value(CurveByPointsUtils.GetSketchOnSurface(element)));
-        manager.Define(nameof(CurveByPointsUtils.SetProjectionType)).AsNotSupported();
-        manager.Define(nameof(CurveByPointsUtils.SetSketchOnSurface)).AsNotSupported();
-        manager.Define(nameof(CurveByPointsUtils.CreateArcThroughPoints)).AsNotSupported();
-        manager.Define(nameof(CurveByPointsUtils.CreateRectangle)).AsNotSupported();
-    }
-
 }

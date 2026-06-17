@@ -17,10 +17,10 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class SurfaceDescriptor(Surface surface) : Descriptor, IDescriptorExtension
+public sealed class SurfaceDescriptor(Surface surface) : Descriptor, IDescriptorConfigurator
 {
-    public void RegisterExtensions(IExtensionManager manager)
+    public void Configure(IMemberConfigurator configuration)
     {
-        manager.Define(nameof(ExportUtils.GetNurbsSurfaceDataForSurface)).Register(() => Variants.Value(ExportUtils.GetNurbsSurfaceDataForSurface(surface)));
+        configuration.Extension(nameof(ExportUtils.GetNurbsSurfaceDataForSurface)).Register(() => ExportUtils.GetNurbsSurfaceDataForSurface(surface));
     }
 }

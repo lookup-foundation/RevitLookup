@@ -12,39 +12,36 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
+using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class ViewScheduleDescriptor(ViewSchedule viewSchedule) : ElementDescriptor(viewSchedule)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(ViewSchedule.GetStripedRowsColor) => () => VariantsResolver.ResolveEnum<StripedRowPattern, Color>(viewSchedule.GetStripedRowsColor),
-            nameof(ViewSchedule.IsValidTextTypeId) => ResolveValidTextTypeId,
-            nameof(ViewSchedule.GetDefaultNameForKeySchedule) => ResolveDefaultNameForKeySchedule,
-            nameof(ViewSchedule.GetDefaultNameForMaterialTakeoff) => ResolveDefaultNameForMaterialTakeoff,
-            nameof(ViewSchedule.GetDefaultNameForSchedule) => ResolveDefaultNameForSchedule,
-            nameof(ViewSchedule.GetDefaultParameterNameForKeySchedule) => ResolveDefaultParameterNameForKeySchedule,
-            nameof(ViewSchedule.IsValidCategoryForKeySchedule) => () => VariantsResolver.ResolveCategories(viewSchedule.Document.Settings.Categories, ViewSchedule.IsValidCategoryForKeySchedule),
-            nameof(ViewSchedule.IsValidCategoryForMaterialTakeoff) => () => VariantsResolver.ResolveCategories(viewSchedule.Document.Settings.Categories, ViewSchedule.IsValidCategoryForMaterialTakeoff),
-            nameof(ViewSchedule.IsValidCategoryForSchedule) => () => VariantsResolver.ResolveCategories(viewSchedule.Document.Settings.Categories, ViewSchedule.IsValidCategoryForSchedule),
-            nameof(ViewSchedule.GetDefaultNameForKeynoteLegend) => () => Variants.Value(ViewSchedule.GetDefaultNameForKeynoteLegend(viewSchedule.Document)),
-            nameof(ViewSchedule.GetDefaultNameForNoteBlock) => () => Variants.Value(ViewSchedule.GetDefaultNameForNoteBlock(viewSchedule.Document)),
-            nameof(ViewSchedule.GetDefaultNameForRevisionSchedule) => () => Variants.Value(ViewSchedule.GetDefaultNameForRevisionSchedule(viewSchedule.Document)),
-            nameof(ViewSchedule.GetDefaultNameForSheetList) => () => Variants.Value(ViewSchedule.GetDefaultNameForSheetList(viewSchedule.Document)),
-            nameof(ViewSchedule.GetDefaultNameForViewList) => () => Variants.Value(ViewSchedule.GetDefaultNameForViewList(viewSchedule.Document)),
-            nameof(ViewSchedule.GetValidFamiliesForNoteBlock) => () => Variants.Value(ViewSchedule.GetValidFamiliesForNoteBlock(viewSchedule.Document)),
-            nameof(ViewSchedule.RefreshData) => Variants.Disabled,
+        configuration.Member(nameof(ViewSchedule.GetStripedRowsColor)).Resolve(() => ResolveEnum<StripedRowPattern, Color>(viewSchedule.GetStripedRowsColor));
+        configuration.Member(nameof(ViewSchedule.IsValidTextTypeId)).Resolve(ResolveValidTextTypeId);
+        configuration.Member(nameof(ViewSchedule.GetDefaultNameForKeySchedule)).Resolve(ResolveDefaultNameForKeySchedule);
+        configuration.Member(nameof(ViewSchedule.GetDefaultNameForMaterialTakeoff)).Resolve(ResolveDefaultNameForMaterialTakeoff);
+        configuration.Member(nameof(ViewSchedule.GetDefaultNameForSchedule)).Resolve(ResolveDefaultNameForSchedule);
+        configuration.Member(nameof(ViewSchedule.GetDefaultParameterNameForKeySchedule)).Resolve(ResolveDefaultParameterNameForKeySchedule);
+        configuration.Member(nameof(ViewSchedule.IsValidCategoryForKeySchedule)).Resolve(() => ResolveCategories(viewSchedule.Document.Settings.Categories, ViewSchedule.IsValidCategoryForKeySchedule));
+        configuration.Member(nameof(ViewSchedule.IsValidCategoryForMaterialTakeoff)).Resolve(() => ResolveCategories(viewSchedule.Document.Settings.Categories, ViewSchedule.IsValidCategoryForMaterialTakeoff));
+        configuration.Member(nameof(ViewSchedule.IsValidCategoryForSchedule)).Resolve(() => ResolveCategories(viewSchedule.Document.Settings.Categories, ViewSchedule.IsValidCategoryForSchedule));
+        configuration.Member(nameof(ViewSchedule.GetDefaultNameForKeynoteLegend)).Resolve(() => ViewSchedule.GetDefaultNameForKeynoteLegend(viewSchedule.Document));
+        configuration.Member(nameof(ViewSchedule.GetDefaultNameForNoteBlock)).Resolve(() => ViewSchedule.GetDefaultNameForNoteBlock(viewSchedule.Document));
+        configuration.Member(nameof(ViewSchedule.GetDefaultNameForRevisionSchedule)).Resolve(() => ViewSchedule.GetDefaultNameForRevisionSchedule(viewSchedule.Document));
+        configuration.Member(nameof(ViewSchedule.GetDefaultNameForSheetList)).Resolve(() => ViewSchedule.GetDefaultNameForSheetList(viewSchedule.Document));
+        configuration.Member(nameof(ViewSchedule.GetDefaultNameForViewList)).Resolve(() => ViewSchedule.GetDefaultNameForViewList(viewSchedule.Document));
+        configuration.Member(nameof(ViewSchedule.GetValidFamiliesForNoteBlock)).Resolve(() => ViewSchedule.GetValidFamiliesForNoteBlock(viewSchedule.Document));
+        configuration.Member(nameof(ViewSchedule.RefreshData)).Disable();
 #if REVIT2022_OR_GREATER
-            nameof(ViewSchedule.GetScheduleInstances) => ResolveScheduleInstances,
-            nameof(ViewSchedule.GetSegmentHeight) => () => VariantsResolver.ResolveIndex(viewSchedule.GetSegmentCount(), viewSchedule.GetSegmentHeight),
+        configuration.Member(nameof(ViewSchedule.GetScheduleInstances)).Resolve(ResolveScheduleInstances);
+        configuration.Member(nameof(ViewSchedule.GetSegmentHeight)).Resolve(() => ResolveRange(viewSchedule.GetSegmentCount(), viewSchedule.GetSegmentHeight));
 #endif
-            _ => null
-        };
+        return;
 
         IVariant ResolveValidTextTypeId()
         {

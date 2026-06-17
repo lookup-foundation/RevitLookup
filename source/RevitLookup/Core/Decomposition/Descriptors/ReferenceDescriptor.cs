@@ -12,7 +12,6 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 using RevitLookup.Abstractions.Decomposition;
@@ -26,7 +25,7 @@ using RevitLookup.UI.Framework.Extensions;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed partial class ReferenceDescriptor : Descriptor, IDescriptorResolver<Document>, IDescriptorExtension<Document>, IContextMenuConnector
+public sealed partial class ReferenceDescriptor : Descriptor, IDescriptorConfigurator<Document>, IContextMenuConnector
 {
     private readonly Reference _reference;
 
@@ -36,18 +35,11 @@ public sealed partial class ReferenceDescriptor : Descriptor, IDescriptorResolve
         Name = reference.ElementReferenceType.ToString();
     }
 
-    public Func<Document, IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator<Document> configuration)
     {
-        return target switch
-        {
-            nameof(Reference.ConvertToStableRepresentation) => context => Variants.Value(_reference.ConvertToStableRepresentation(context)),
-            _ => null
-        };
-    }
-
-    public void RegisterExtensions(IExtensionManager<Document> manager)
-    {
-        manager.Define(nameof(CurveByPointsUtils.GetFaceRegions)).Register(context => Variants.Value(CurveByPointsUtils.GetFaceRegions(context, _reference)));
+        configuration.Member(nameof(Reference.ConvertToStableRepresentation)).Resolve(context => _reference.ConvertToStableRepresentation(context));
+        
+        configuration.Extension(nameof(CurveByPointsUtils.GetFaceRegions)).Register(context => CurveByPointsUtils.GetFaceRegions(context, _reference));
     }
 
     public void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)

@@ -12,22 +12,18 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class CurtainGridDescriptor(CurtainGrid curtainGrid) : Descriptor, IDescriptorResolver
+public sealed class CurtainGridDescriptor(CurtainGrid curtainGrid) : Descriptor, IDescriptorConfigurator
 {
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(CurtainGrid.GetCell) => ResolveCells,
-            nameof(CurtainGrid.GetPanel) => ResolvePanels,
-            _ => null
-        };
+        configuration.Member(nameof(CurtainGrid.GetCell)).Resolve(ResolveCells);
+        configuration.Member(nameof(CurtainGrid.GetPanel)).Resolve(ResolvePanels);
+        return;
 
         IVariant ResolveCells()
         {

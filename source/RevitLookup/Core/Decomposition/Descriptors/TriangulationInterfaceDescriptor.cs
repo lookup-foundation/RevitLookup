@@ -17,10 +17,10 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class TriangulationInterfaceDescriptor(TriangulationInterface triangulation) : Descriptor, IDescriptorExtension
+public sealed class TriangulationInterfaceDescriptor(TriangulationInterface triangulation) : Descriptor, IDescriptorConfigurator
 {
-    public void RegisterExtensions(IExtensionManager manager)
+    public void Configure(IMemberConfigurator configuration)
     {
-        manager.Define(nameof(FacetingUtils.ConvertTrianglesToQuads)).Register(() => Variants.Value(FacetingUtils.ConvertTrianglesToQuads(triangulation)));
+        configuration.Extension(nameof(FacetingUtils.ConvertTrianglesToQuads)).Register(() => FacetingUtils.ConvertTrianglesToQuads(triangulation));
     }
 }

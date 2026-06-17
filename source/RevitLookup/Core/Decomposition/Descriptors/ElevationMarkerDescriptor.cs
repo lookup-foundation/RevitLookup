@@ -12,21 +12,18 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
+using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class ElevationMarkerDescriptor(ElevationMarker elevationMarker) : ElementDescriptor(elevationMarker)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(ElevationMarker.IsAvailableIndex) => () => VariantsResolver.ResolveIndex(elevationMarker.MaximumViewCount, elevationMarker.IsAvailableIndex),
-            nameof(ElevationMarker.GetViewId) => ResolveViewId,
-            _ => null
-        };
+        configuration.Member(nameof(ElevationMarker.IsAvailableIndex)).Resolve(() => ResolveRange(elevationMarker.MaximumViewCount, elevationMarker.IsAvailableIndex));
+        configuration.Member(nameof(ElevationMarker.GetViewId)).Resolve(ResolveViewId);
+        return;
 
         IVariant ResolveViewId()
         {

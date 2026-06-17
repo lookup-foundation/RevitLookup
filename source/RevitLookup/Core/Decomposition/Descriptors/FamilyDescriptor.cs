@@ -12,7 +12,6 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
@@ -20,34 +19,32 @@ namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class FamilyDescriptor(Family family) : ElementDescriptor(family)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return null;
-    }
+        configuration.Extension(nameof(FamilySizeTableManager.GetFamilySizeTableManager)).Register(() => FamilySizeTableManager.GetFamilySizeTableManager(family.Document, family.Id));
+        configuration.Extension(nameof(FamilyUtils.GetProfileSymbols)).Register(RegisterProfileSymbols);
+        configuration.Extension(nameof(LoadedFamilyIntegrityCheck.CheckFamily)).Register(() => LoadedFamilyIntegrityCheck.CheckFamily(family.Document, family.Id));
+        configuration.Extension("CanBeConvertedToFaceHostBased").Register(() => FamilyUtils.FamilyCanConvertToFaceHostBased(family.Document, family.Id));
+        configuration.Extension("ConvertToFaceHostBased").Map(nameof(FamilyUtils.ConvertFamilyToFaceHostBased)).NotSupported();
 
-    public override void RegisterExtensions(IExtensionManager manager)
-    {
-        manager.Define(nameof(FamilySizeTableManager.GetFamilySizeTableManager)).Register(() => Variants.Value(FamilySizeTableManager.GetFamilySizeTableManager(family.Document, family.Id)));
-        manager.Define(nameof(FamilyUtils.GetProfileSymbols)).Register(RegisterProfileSymbols);
-        manager.Define(nameof(LoadedFamilyIntegrityCheck.CheckFamily)).Register(() => Variants.Value(LoadedFamilyIntegrityCheck.CheckFamily(family.Document, family.Id)));
-        manager.Define("CanBeConvertedToFaceHostBased").Register(() => Variants.Value(FamilyUtils.FamilyCanConvertToFaceHostBased(family.Document, family.Id)));
-        manager.Define("ConvertToFaceHostBased").Map(nameof(FamilyUtils.ConvertFamilyToFaceHostBased)).AsNotSupported();
-        
-        if (manager.Define(nameof(AdaptiveComponentFamilyUtils.IsAdaptiveComponentFamily)).TryRegister(() => Variants.Value(AdaptiveComponentFamilyUtils.IsAdaptiveComponentFamily(family))))
+        var isAdaptiveComponentFamily = SafeEvaluate(() => AdaptiveComponentFamilyUtils.IsAdaptiveComponentFamily(family));
+        configuration.Extension(nameof(AdaptiveComponentFamilyUtils.IsAdaptiveComponentFamily)).Register(() => isAdaptiveComponentFamily);
+
+        if (isAdaptiveComponentFamily)
         {
-            manager.Define(nameof(AdaptiveComponentFamilyUtils.GetNumberOfAdaptivePoints)).Register(() => Variants.Value(AdaptiveComponentFamilyUtils.GetNumberOfAdaptivePoints(family)));
-            manager.Define(nameof(AdaptiveComponentFamilyUtils.GetNumberOfPlacementPoints)).Register(() => Variants.Value(AdaptiveComponentFamilyUtils.GetNumberOfPlacementPoints(family)));
-            manager.Define(nameof(AdaptiveComponentFamilyUtils.GetNumberOfShapeHandlePoints)).Register(() => Variants.Value(AdaptiveComponentFamilyUtils.GetNumberOfShapeHandlePoints(family)));
+            configuration.Extension(nameof(AdaptiveComponentFamilyUtils.GetNumberOfAdaptivePoints)).Register(() => AdaptiveComponentFamilyUtils.GetNumberOfAdaptivePoints(family));
+            configuration.Extension(nameof(AdaptiveComponentFamilyUtils.GetNumberOfPlacementPoints)).Register(() => AdaptiveComponentFamilyUtils.GetNumberOfPlacementPoints(family));
+            configuration.Extension(nameof(AdaptiveComponentFamilyUtils.GetNumberOfShapeHandlePoints)).Register(() => AdaptiveComponentFamilyUtils.GetNumberOfShapeHandlePoints(family));
         }
 
         return;
-        
+
         IVariant RegisterProfileSymbols()
         {
-            var values = Enum.GetValues(typeof(ProfileFamilyUsage));
+            var values = Enum.GetValues<ProfileFamilyUsage>();
             var capacity = values.Length * 2;
             var variants = Variants.Values<ICollection<ElementId>>(capacity);
-            foreach (ProfileFamilyUsage value in values)
+            foreach (var value in values)
             {
                 variants.Add(FamilyUtils.GetProfileSymbols(family.Document, value, false), $"{value}, with multiple curve loops");
                 variants.Add(FamilyUtils.GetProfileSymbols(family.Document, value, true), $"{value}, with single curve loop");
@@ -56,5 +53,4 @@ public sealed class FamilyDescriptor(Family family) : ElementDescriptor(family)
             return variants.Consume();
         }
     }
-
 }

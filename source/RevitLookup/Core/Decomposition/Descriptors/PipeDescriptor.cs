@@ -12,25 +12,17 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using Autodesk.Revit.DB.Plumbing;
 using LookupEngine.Abstractions.Configuration;
-using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class PipeDescriptor(Pipe pipe) : ElementDescriptor(pipe)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return null;
+        configuration.Extension(nameof(PlumbingUtils.HasOpenConnector)).Register(() => PlumbingUtils.HasOpenConnector(pipe.Document, pipe.Id));
+        configuration.Extension(nameof(PlumbingUtils.PlaceCapOnOpenEnds)).NotSupported();
+        configuration.Extension(nameof(PlumbingUtils.BreakCurve)).NotSupported();
     }
-
-    public override void RegisterExtensions(IExtensionManager manager)
-    {
-        manager.Define(nameof(PlumbingUtils.HasOpenConnector)).Register(() => Variants.Value(PlumbingUtils.HasOpenConnector(pipe.Document, pipe.Id)));
-        manager.Define(nameof(PlumbingUtils.PlaceCapOnOpenEnds)).AsNotSupported();
-        manager.Define(nameof(PlumbingUtils.BreakCurve)).AsNotSupported();
-    }
-
 }

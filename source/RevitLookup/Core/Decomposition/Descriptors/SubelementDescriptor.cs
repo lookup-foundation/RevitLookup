@@ -17,10 +17,10 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class SubelementDescriptor(Subelement subelement) : Descriptor, IDescriptorExtension
+public sealed class SubelementDescriptor(Subelement subElement) : Descriptor, IDescriptorConfigurator
 {
-    public void RegisterExtensions(IExtensionManager manager)
+    public void Configure(IMemberConfigurator configuration)
     {
-        manager.Define("ExportId").Register(() => Variants.Value(ExportUtils.GetExportId(subelement)));
+        configuration.Extension("ExportId").Register(() => ExportUtils.GetExportId(subElement));
     }
 }

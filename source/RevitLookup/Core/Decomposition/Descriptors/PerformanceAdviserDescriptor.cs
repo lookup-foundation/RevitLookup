@@ -12,41 +12,48 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class PerformanceAdviserDescriptor(PerformanceAdviser adviser) : Descriptor, IDescriptorResolver, IDescriptorResolver<Document>
+public sealed class PerformanceAdviserDescriptor(PerformanceAdviser adviser) : Descriptor, IDescriptorConfigurator, IDescriptorConfigurator<Document>
 {
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(PerformanceAdviser.GetRuleDescription)
-                when parameters.Length == 1 && parameters[0].ParameterType == typeof(int) => () => VariantsResolver.ResolveIndexedPairs(adviser.GetNumberOfRules(), adviser.GetRuleDescription),
-            nameof(PerformanceAdviser.GetRuleId)
-                when parameters.Length == 1 && parameters[0].ParameterType == typeof(int) => () => VariantsResolver.ResolveIndexedPairs(adviser.GetNumberOfRules(), adviser.GetRuleId),
-            nameof(PerformanceAdviser.GetRuleName)
-                when parameters.Length == 1 && parameters[0].ParameterType == typeof(int) => () => VariantsResolver.ResolveIndexedPairs(adviser.GetNumberOfRules(), adviser.GetRuleName),
-            nameof(PerformanceAdviser.IsRuleEnabled)
-                when parameters.Length == 1 && parameters[0].ParameterType == typeof(int) => () => VariantsResolver.ResolveIndexedPairs(adviser.GetNumberOfRules(), adviser.IsRuleEnabled),
-            nameof(PerformanceAdviser.WillRuleCheckElements)
-                when parameters.Length == 1 && parameters[0].ParameterType == typeof(int) => () => VariantsResolver.ResolveIndexedPairs(adviser.GetNumberOfRules(), adviser.WillRuleCheckElements),
-            _ => null
-        };
+        configuration.Member(nameof(PerformanceAdviser.GetRuleDescription))
+            .When(parameters => parameters.Length == 1 && parameters[0].ParameterType == typeof(int))
+            .Resolve(() => ResolveIndexedPairs(adviser.GetNumberOfRules(), adviser.GetRuleDescription));
+        configuration.Member(nameof(PerformanceAdviser.GetRuleId))
+            .When(parameters => parameters.Length == 1 && parameters[0].ParameterType == typeof(int))
+            .Resolve(() => ResolveIndexedPairs(adviser.GetNumberOfRules(), adviser.GetRuleId));
+        configuration.Member(nameof(PerformanceAdviser.GetRuleName))
+            .When(parameters => parameters.Length == 1 && parameters[0].ParameterType == typeof(int))
+            .Resolve(() => ResolveIndexedPairs(adviser.GetNumberOfRules(), adviser.GetRuleName));
+        configuration.Member(nameof(PerformanceAdviser.IsRuleEnabled))
+            .When(parameters => parameters.Length == 1 && parameters[0].ParameterType == typeof(int))
+            .Resolve(() => ResolveIndexedPairs(adviser.GetNumberOfRules(), adviser.IsRuleEnabled));
+        configuration.Member(nameof(PerformanceAdviser.WillRuleCheckElements))
+            .When(parameters => parameters.Length == 1 && parameters[0].ParameterType == typeof(int))
+            .Resolve(() => ResolveIndexedPairs(adviser.GetNumberOfRules(), adviser.WillRuleCheckElements));
     }
 
-    Func<Document, IVariant>? IDescriptorResolver<Document>.Resolve(string target, ParameterInfo[] parameters)
+    void IDescriptorConfigurator<Document>.Configure(IMemberConfigurator<Document> configuration)
     {
-        return target switch
+        configuration.Member(nameof(PerformanceAdviser.GetElementFilterFromRule))
+            .When(parameters => parameters.Length == 2 && parameters[0].ParameterType == typeof(int))
+            .Resolve(context => ResolveIndexedPairs(adviser.GetNumberOfRules(), i => adviser.GetElementFilterFromRule(i, context)));
+        configuration.Member(nameof(PerformanceAdviser.ExecuteAllRules)).Defer(adviser.ExecuteAllRules);
+    }
+    
+    private static IVariant ResolveIndexedPairs<TResult>(int capacity, Func<int, TResult> selector)
+    {
+        var variants = Variants.Values<KeyValuePair<int, TResult>>(capacity);
+        for (var i = 0; i < capacity; i++)
         {
-            nameof(PerformanceAdviser.GetElementFilterFromRule)
-                when parameters.Length == 2 && parameters[0].ParameterType == typeof(int) => context => VariantsResolver.ResolveIndexedPairs(adviser.GetNumberOfRules(), i => adviser.GetElementFilterFromRule(i, context)),
-            nameof(PerformanceAdviser.ExecuteAllRules)
-                when parameters.Length == 1 && parameters[0].ParameterType == typeof(Document) => context => Variants.Value(adviser.ExecuteAllRules(context)),
-            _ => null
-        };
+            variants.Add(new KeyValuePair<int, TResult>(i, selector(i)));
+        }
+
+        return variants.Consume();
     }
 }

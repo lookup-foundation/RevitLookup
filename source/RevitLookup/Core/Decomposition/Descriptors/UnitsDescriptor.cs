@@ -18,15 +18,15 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class UnitsDescriptor(Autodesk.Revit.DB.Units units) : Descriptor, IDescriptorResolver, IDescriptorExtension
+public sealed class UnitsDescriptor(Autodesk.Revit.DB.Units units) : Descriptor, IDescriptorConfigurator
 {
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(Autodesk.Revit.DB.Units.GetFormatOptions) => ResolveGetFormatOptions,
-            _ => null
-        };
+        configuration.Member(nameof(Autodesk.Revit.DB.Units.GetFormatOptions)).Resolve(ResolveGetFormatOptions);
+
+        configuration.Extension(nameof(UnitFormatUtils.Format)).NotSupported();
+        configuration.Extension(nameof(UnitFormatUtils.TryParse)).NotSupported();
+        return;
 
         IVariant ResolveGetFormatOptions()
         {
@@ -42,11 +42,5 @@ public sealed class UnitsDescriptor(Autodesk.Revit.DB.Units units) : Descriptor,
 
             return values.Consume();
         }
-    }
-
-    public void RegisterExtensions(IExtensionManager manager)
-    {
-        manager.Define(nameof(UnitFormatUtils.Format)).AsNotSupported();
-        manager.Define(nameof(UnitFormatUtils.TryParse)).AsNotSupported();
     }
 }

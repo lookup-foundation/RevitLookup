@@ -13,7 +13,6 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using System.Globalization;
-using System.Reflection;
 using System.Windows.Input;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
@@ -32,7 +31,7 @@ using Nice3point.Revit.Toolkit.External;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed partial class CurveDescriptor : Descriptor, IDescriptorResolver, IContextMenuConnector
+public sealed partial class CurveDescriptor : Descriptor, IDescriptorConfigurator, IContextMenuConnector
 {
     private readonly Curve _curve;
 
@@ -42,16 +41,13 @@ public sealed partial class CurveDescriptor : Descriptor, IDescriptorResolver, I
         if (curve.IsBound || curve.IsCyclic) Name = $"{curve.Length.ToString(CultureInfo.InvariantCulture)} ft";
     }
 
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(Curve.GetEndPoint) => ResolveGetEndPoint,
-            nameof(Curve.GetEndParameter) => ResolveGetEndParameter,
-            nameof(Curve.GetEndPointReference) => ResolveGetEndPointReference,
-            nameof(Curve.Evaluate) => ResolveEvaluate,
-            _ => null
-        };
+        configuration.Member(nameof(Curve.GetEndPoint)).Resolve(ResolveGetEndPoint);
+        configuration.Member(nameof(Curve.GetEndParameter)).Resolve(ResolveGetEndParameter);
+        configuration.Member(nameof(Curve.GetEndPointReference)).Resolve(ResolveGetEndPointReference);
+        configuration.Member(nameof(Curve.Evaluate)).Resolve(ResolveEvaluate);
+        return;
 
         IVariant ResolveEvaluate()
         {

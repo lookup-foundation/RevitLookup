@@ -12,7 +12,6 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using System.Windows.Controls;
 using System.Windows.Input;
 using LookupEngine.Abstractions.Configuration;
@@ -26,18 +25,20 @@ using RevitLookup.UI.Framework.Views.Visualization;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class BoundingBoxXyzDescriptor(BoundingBoxXYZ box) : Descriptor, IDescriptorResolver, IDescriptorExtension, IContextMenuConnector
+public sealed class BoundingBoxXyzDescriptor(BoundingBoxXYZ box) : Descriptor, IDescriptorConfigurator, IContextMenuConnector
 {
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            "Bounds" => ResolveBounds,
-            "MinEnabled" => ResolveMinEnabled,
-            "MaxEnabled" => ResolveMaxEnabled,
-            "BoundEnabled" => ResolveBoundEnabled,
-            _ => null
-        };
+        configuration.Member("Bounds").Resolve(ResolveBounds);
+        configuration.Member("MinEnabled").Resolve(ResolveMinEnabled);
+        configuration.Member("MaxEnabled").Resolve(ResolveMaxEnabled);
+        configuration.Member("BoundEnabled").Resolve(ResolveBoundEnabled);
+
+        configuration.Extension("Centroid").Register(() => (box.Min + box.Max) / 2);
+        configuration.Extension("Vertices").Register(RegisterVertices);
+        configuration.Extension("Volume").Register(RegisterVolume);
+        configuration.Extension("SurfaceArea").Register(RegisterSurfaceArea);
+        return;
 
         IVariant ResolveBounds()
         {
@@ -91,32 +92,31 @@ public sealed class BoundingBoxXyzDescriptor(BoundingBoxXYZ box) : Descriptor, I
                 .Add(boundEnabled12, $"Bound 1, dimension 2: {boundEnabled12}")
                 .Consume();
         }
-    }
 
-    public void RegisterExtensions(IExtensionManager manager)
-    {
-        manager.Define("Centroid").Register(() => Variants.Value((box.Min + box.Max) / 2));
-        manager.Define("Vertices").Register(() => Variants.Values<XYZ>(8)
-            .Add(new XYZ(box.Min.X, box.Min.Y, box.Min.Z))
-            .Add(new XYZ(box.Min.X, box.Min.Y, box.Max.Z))
-            .Add(new XYZ(box.Min.X, box.Max.Y, box.Min.Z))
-            .Add(new XYZ(box.Min.X, box.Max.Y, box.Max.Z))
-            .Add(new XYZ(box.Max.X, box.Min.Y, box.Min.Z))
-            .Add(new XYZ(box.Max.X, box.Min.Y, box.Max.Z))
-            .Add(new XYZ(box.Max.X, box.Max.Y, box.Min.Z))
-            .Add(new XYZ(box.Max.X, box.Max.Y, box.Max.Z))
-            .Consume());
+        IVariant RegisterVertices()
+        {
+            return Variants.Values<XYZ>(8)
+                .Add(new XYZ(box.Min.X, box.Min.Y, box.Min.Z))
+                .Add(new XYZ(box.Min.X, box.Min.Y, box.Max.Z))
+                .Add(new XYZ(box.Min.X, box.Max.Y, box.Min.Z))
+                .Add(new XYZ(box.Min.X, box.Max.Y, box.Max.Z))
+                .Add(new XYZ(box.Max.X, box.Min.Y, box.Min.Z))
+                .Add(new XYZ(box.Max.X, box.Min.Y, box.Max.Z))
+                .Add(new XYZ(box.Max.X, box.Max.Y, box.Min.Z))
+                .Add(new XYZ(box.Max.X, box.Max.Y, box.Max.Z))
+                .Consume();
+        }
 
-        manager.Define("Volume").Register(() =>
+        object? RegisterVolume()
         {
             var length = box.Max.X - box.Min.X;
             var width = box.Max.Y - box.Min.Y;
             var height = box.Max.Z - box.Min.Z;
 
-            return Variants.Value(length * width * height);
-        });
+            return length * width * height;
+        }
 
-        manager.Define("SurfaceArea").Register(() =>
+        object? RegisterSurfaceArea()
         {
             var length = box.Max.X - box.Min.X;
             var width = box.Max.Y - box.Min.Y;
@@ -126,8 +126,8 @@ public sealed class BoundingBoxXyzDescriptor(BoundingBoxXYZ box) : Descriptor, I
             var area2 = length * height;
             var area3 = width * height;
 
-            return Variants.Value(2 * (area1 + area2 + area3));
-        });
+            return 2 * (area1 + area2 + area3);
+        }
     }
 
     public void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)
@@ -136,7 +136,7 @@ public sealed class BoundingBoxXyzDescriptor(BoundingBoxXYZ box) : Descriptor, I
             .SetCommand(box, xyz => VisualizeFace(xyz, serviceProvider))
             .SetShortcut(Key.F8);
     }
-    
+
     private static async Task VisualizeFace(BoundingBoxXYZ boundingBox, IServiceProvider serviceProvider)
     {
         if (RevitContext.ActiveUiDocument is null) return;

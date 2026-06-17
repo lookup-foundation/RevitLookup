@@ -19,14 +19,13 @@ using Document = Autodesk.Revit.Creation.Document;
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 #pragma warning disable CS9113 // Parameter is unread.
-public sealed class DocumentCreationDescriptor(Document document) : Descriptor, IDescriptorExtension
+public sealed class DocumentCreationDescriptor(Document document) : Descriptor, IDescriptorConfigurator
 #pragma warning restore CS9113 // Parameter is unread.
 {
-    public void RegisterExtensions(IExtensionManager manager)
+    public void Configure(IMemberConfigurator configuration)
     {
 #if REVIT2024_OR_GREATER
-
-        manager.Define("NewDuctworkStiffener").Map(nameof(MEPSupportUtils.CreateDuctworkStiffener)).AsNotSupported();
+        configuration.Extension("NewDuctworkStiffener").Map(nameof(MEPSupportUtils.CreateDuctworkStiffener)).NotSupported();
 #endif
     }
 }

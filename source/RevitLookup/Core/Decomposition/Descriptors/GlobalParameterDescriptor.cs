@@ -13,17 +13,15 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using LookupEngine.Abstractions.Configuration;
-using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class GlobalParameterDescriptor(GlobalParameter globalParameter) : ElementDescriptor(globalParameter)
 {
-    public override void RegisterExtensions(IExtensionManager manager)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        manager.Define(nameof(GlobalParametersManager.IsValidGlobalParameter)).Register(() => Variants.Value(GlobalParametersManager.IsValidGlobalParameter(globalParameter.Document, globalParameter.Id)));
-        manager.Define(nameof(GlobalParametersManager.MoveParameterDownOrder)).AsNotSupported();
-        manager.Define(nameof(GlobalParametersManager.MoveParameterUpOrder)).AsNotSupported();
+        configuration.Extension(nameof(GlobalParametersManager.IsValidGlobalParameter)).Register(() => GlobalParametersManager.IsValidGlobalParameter(globalParameter.Document, globalParameter.Id));
+        configuration.Extension(nameof(GlobalParametersManager.MoveParameterDownOrder)).NotSupported();
+        configuration.Extension(nameof(GlobalParametersManager.MoveParameterUpOrder)).NotSupported();
     }
-    
 }

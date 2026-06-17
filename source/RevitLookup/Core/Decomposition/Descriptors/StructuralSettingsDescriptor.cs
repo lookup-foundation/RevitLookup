@@ -12,20 +12,15 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using Autodesk.Revit.DB.Structure;
-using LookupEngine.Abstractions.Decomposition;
+using LookupEngine.Abstractions.Configuration;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class StructuralSettingsDescriptor(StructuralSettings structuralSettings) : ElementDescriptor(structuralSettings)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(StructuralSettings.GetStructuralSettings) => () => Variants.Value(StructuralSettings.GetStructuralSettings(structuralSettings.Document)),
-            _ => null
-        };
+        configuration.Member(nameof(StructuralSettings.GetStructuralSettings)).Resolve(() => StructuralSettings.GetStructuralSettings(structuralSettings.Document));
     }
 }

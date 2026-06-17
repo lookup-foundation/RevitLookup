@@ -12,22 +12,18 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class PlanViewRangeDescriptor(PlanViewRange viewRange) : Descriptor, IDescriptorResolver
+public sealed class PlanViewRangeDescriptor(PlanViewRange viewRange) : Descriptor, IDescriptorConfigurator
 {
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(PlanViewRange.GetOffset) => ResolveGetOffset,
-            nameof(PlanViewRange.GetLevelId) => ResolveGetLevelId,
-            _ => null
-        };
+        configuration.Member(nameof(PlanViewRange.GetOffset)).Resolve(ResolveGetOffset);
+        configuration.Member(nameof(PlanViewRange.GetLevelId)).Resolve(ResolveGetLevelId);
+        return;
 
         IVariant ResolveGetOffset()
         {

@@ -12,20 +12,14 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
-using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class ConnectorManagerDescriptor(ConnectorManager connectorManager) : Descriptor, IDescriptorResolver
+public sealed class ConnectorManagerDescriptor(ConnectorManager connectorManager) : ResolvingDescriptor, IDescriptorConfigurator
 {
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(ConnectorManager.Lookup) => () => VariantsResolver.ResolveIndex(connectorManager.Connectors.Size, connectorManager.Lookup),
-            _ => null
-        };
+        configuration.Member(nameof(ConnectorManager.Lookup)).Resolve(() => ResolveRange(connectorManager.Connectors.Size, connectorManager.Lookup));
     }
 }

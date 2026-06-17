@@ -13,20 +13,17 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
+using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class RevisionNumberingSequenceDescriptor(RevisionNumberingSequence sequence) : ElementDescriptor(sequence)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(RevisionNumberingSequence.GetAllRevisionNumberingSequences) => ResolveRevisionNumberingSequences,
-            _ => null
-        };
+        configuration.Member(nameof(RevisionNumberingSequence.GetAllRevisionNumberingSequences)).Resolve(ResolveRevisionNumberingSequences);
+        return;
 
         IVariant ResolveRevisionNumberingSequences()
         {

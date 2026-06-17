@@ -15,12 +15,12 @@
 using Autodesk.Revit.DB.Macros;
 using Autodesk.Revit.DB.PointClouds;
 using Autodesk.Revit.DB.Structure.StructuralSections;
+using Autodesk.Revit.DB.Visual;
 using LookupEngine.Abstractions.Configuration;
-using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class ApplicationDescriptor : Descriptor, IDescriptorExtension
+public sealed class ApplicationDescriptor : ResolvingDescriptor, IDescriptorConfigurator
 {
     private readonly Autodesk.Revit.ApplicationServices.Application _application;
 
@@ -30,51 +30,43 @@ public sealed class ApplicationDescriptor : Descriptor, IDescriptorExtension
         Name = application.VersionName;
     }
 
-    // public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
-    // {
-    //     return target switch
-    //     {
-    //        TODO slow, ~8s
-    //         nameof(Autodesk.Revit.ApplicationServices.Application.GetAssets) => ResolveGetAssets,
-    //         _ => null
-    //     };
-    // }
-
-    public void RegisterExtensions(IExtensionManager manager)
+    public void Configure(IMemberConfigurator configuration)
     {
-        manager.Define("GetFormulaFunctions").AsStatic().Register(() => Variants.Value(FormulaManager.GetFunctions()));
-        manager.Define("GetFormulaOperators").AsStatic().Register(() => Variants.Value(FormulaManager.GetOperators()));
-        manager.Define("GetSupportedPointCloudEngines").AsStatic().Register(() => Variants.Value(PointCloudEngineRegistry.GetSupportedEngines()));
-        manager.Define(nameof(LabelUtils.GetStructuralSectionShapeName)).Register(() => VariantsResolver.ResolveEnum<StructuralSectionShape, string>(LabelUtils.GetStructuralSectionShapeName));
-        manager.Define(nameof(MacroManager.GetMacroManager)).Register(() => Variants.Value(MacroManager.GetMacroManager(_application)));
-        manager.Define(nameof(OptionalFunctionalityUtils.IsDGNExportAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsDGNExportAvailable()));
-        manager.Define(nameof(OptionalFunctionalityUtils.IsDGNImportLinkAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsDGNImportLinkAvailable()));
-        manager.Define(nameof(OptionalFunctionalityUtils.IsDWFExportAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsDWFExportAvailable()));
-        manager.Define(nameof(OptionalFunctionalityUtils.IsDWGExportAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsDWGExportAvailable()));
-        manager.Define(nameof(OptionalFunctionalityUtils.IsDWGImportLinkAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsDWGImportLinkAvailable()));
-        manager.Define(nameof(OptionalFunctionalityUtils.IsDXFExportAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsDXFExportAvailable()));
-        manager.Define(nameof(OptionalFunctionalityUtils.IsFBXExportAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsFBXExportAvailable()));
-        manager.Define(nameof(OptionalFunctionalityUtils.IsGraphicsAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsGraphicsAvailable()));
-        manager.Define(nameof(OptionalFunctionalityUtils.IsIFCAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsIFCAvailable()));
-        manager.Define(nameof(OptionalFunctionalityUtils.IsNavisworksExporterAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsNavisworksExporterAvailable()));
-        manager.Define(nameof(OptionalFunctionalityUtils.IsSATImportLinkAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsSATImportLinkAvailable()));
-        manager.Define(nameof(OptionalFunctionalityUtils.IsShapeImporterAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsShapeImporterAvailable()));
-        manager.Define(nameof(OptionalFunctionalityUtils.IsSKPImportLinkAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsSKPImportLinkAvailable()));
+        configuration.Member(nameof(Autodesk.Revit.ApplicationServices.Application.GetAssets)).Defer(() => ResolveEnum<AssetType, IList<Asset>>(_application.GetAssets));
+
+        configuration.Extension("GetFormulaFunctions").AsStatic().Register(FormulaManager.GetFunctions);
+        configuration.Extension("GetFormulaOperators").AsStatic().Register(FormulaManager.GetOperators);
+        configuration.Extension("GetSupportedPointCloudEngines").AsStatic().Register(PointCloudEngineRegistry.GetSupportedEngines);
+        configuration.Extension(nameof(LabelUtils.GetStructuralSectionShapeName)).Register(() => ResolveEnum<StructuralSectionShape, string>(LabelUtils.GetStructuralSectionShapeName));
+        configuration.Extension(nameof(MacroManager.GetMacroManager)).Register(() => MacroManager.GetMacroManager(_application));
+        configuration.Extension(nameof(OptionalFunctionalityUtils.IsDGNExportAvailable)).Register(() => OptionalFunctionalityUtils.IsDGNExportAvailable());
+        configuration.Extension(nameof(OptionalFunctionalityUtils.IsDGNImportLinkAvailable)).Register(() => OptionalFunctionalityUtils.IsDGNImportLinkAvailable());
+        configuration.Extension(nameof(OptionalFunctionalityUtils.IsDWFExportAvailable)).Register(() => OptionalFunctionalityUtils.IsDWFExportAvailable());
+        configuration.Extension(nameof(OptionalFunctionalityUtils.IsDWGExportAvailable)).Register(() => OptionalFunctionalityUtils.IsDWGExportAvailable());
+        configuration.Extension(nameof(OptionalFunctionalityUtils.IsDWGImportLinkAvailable)).Register(() => OptionalFunctionalityUtils.IsDWGImportLinkAvailable());
+        configuration.Extension(nameof(OptionalFunctionalityUtils.IsDXFExportAvailable)).Register(() => OptionalFunctionalityUtils.IsDXFExportAvailable());
+        configuration.Extension(nameof(OptionalFunctionalityUtils.IsFBXExportAvailable)).Register(() => OptionalFunctionalityUtils.IsFBXExportAvailable());
+        configuration.Extension(nameof(OptionalFunctionalityUtils.IsGraphicsAvailable)).Register(() => OptionalFunctionalityUtils.IsGraphicsAvailable());
+        configuration.Extension(nameof(OptionalFunctionalityUtils.IsIFCAvailable)).Register(() => OptionalFunctionalityUtils.IsIFCAvailable());
+        configuration.Extension(nameof(OptionalFunctionalityUtils.IsNavisworksExporterAvailable)).Register(() => OptionalFunctionalityUtils.IsNavisworksExporterAvailable());
+        configuration.Extension(nameof(OptionalFunctionalityUtils.IsSATImportLinkAvailable)).Register(() => OptionalFunctionalityUtils.IsSATImportLinkAvailable());
+        configuration.Extension(nameof(OptionalFunctionalityUtils.IsShapeImporterAvailable)).Register(() => OptionalFunctionalityUtils.IsShapeImporterAvailable());
+        configuration.Extension(nameof(OptionalFunctionalityUtils.IsSKPImportLinkAvailable)).Register(() => OptionalFunctionalityUtils.IsSKPImportLinkAvailable());
 #if REVIT2022_OR_GREATER
-        manager.Define(nameof(OptionalFunctionalityUtils.Is3DMImportLinkAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.Is3DMImportLinkAvailable()));
-        manager.Define(nameof(OptionalFunctionalityUtils.IsOBJImportLinkAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsOBJImportLinkAvailable()));
-        manager.Define(nameof(OptionalFunctionalityUtils.IsSTLImportLinkAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsSTLImportLinkAvailable()));
+        configuration.Extension(nameof(OptionalFunctionalityUtils.Is3DMImportLinkAvailable)).Register(() => OptionalFunctionalityUtils.Is3DMImportLinkAvailable());
+        configuration.Extension(nameof(OptionalFunctionalityUtils.IsOBJImportLinkAvailable)).Register(() => OptionalFunctionalityUtils.IsOBJImportLinkAvailable());
+        configuration.Extension(nameof(OptionalFunctionalityUtils.IsSTLImportLinkAvailable)).Register(() => OptionalFunctionalityUtils.IsSTLImportLinkAvailable());
 #if !REVIT2027_OR_GREATER
-        manager.Define(nameof(OptionalFunctionalityUtils.IsAXMImportLinkAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsAXMImportLinkAvailable()));
+        configuration.Extension(nameof(OptionalFunctionalityUtils.IsAXMImportLinkAvailable)).Register(() => OptionalFunctionalityUtils.IsAXMImportLinkAvailable());
 #endif
 #endif
 #if REVIT2024_OR_GREATER
-        manager.Define(nameof(OptionalFunctionalityUtils.IsSTEPImportLinkAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsSTEPImportLinkAvailable()));
+        configuration.Extension(nameof(OptionalFunctionalityUtils.IsSTEPImportLinkAvailable)).Register(() => OptionalFunctionalityUtils.IsSTEPImportLinkAvailable());
 #endif
 #if REVIT2026_OR_GREATER
-        manager.Define(nameof(OptionalFunctionalityUtils.IsMaterialLibraryAvailable)).Register(() => Variants.Value(OptionalFunctionalityUtils.IsMaterialLibraryAvailable()));
-        manager.Define(nameof(ModelPathUtils.GetAllCloudRegions)).Register(() => Variants.Value(ModelPathUtils.GetAllCloudRegions()));
-        manager.Define(nameof(LabelUtils.GetFailureSeverityName)).Register(() => VariantsResolver.ResolveEnum<FailureSeverity, string>(LabelUtils.GetFailureSeverityName));
+        configuration.Extension(nameof(OptionalFunctionalityUtils.IsMaterialLibraryAvailable)).Register(() => OptionalFunctionalityUtils.IsMaterialLibraryAvailable());
+        configuration.Extension(nameof(ModelPathUtils.GetAllCloudRegions)).Register(ModelPathUtils.GetAllCloudRegions);
+        configuration.Extension(nameof(LabelUtils.GetFailureSeverityName)).Register(() => ResolveEnum<FailureSeverity, string>(LabelUtils.GetFailureSeverityName));
 #endif
     }
 }

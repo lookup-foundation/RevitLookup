@@ -12,23 +12,19 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class FamilySizeTableManagerDescriptor(FamilySizeTableManager manager) : Descriptor, IDescriptorResolver
+public sealed class FamilySizeTableManagerDescriptor(FamilySizeTableManager manager) : Descriptor, IDescriptorConfigurator
 {
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(FamilySizeTableManager.GetSizeTable) => ResolveSizeTable,
-            nameof(FamilySizeTableManager.HasSizeTable) => ResolveHasSizeTable,
-            nameof(FamilySizeTableManager.GetFamilySizeTableManager) => () => Variants.Value(manager),
-            _ => null
-        };
+        configuration.Member(nameof(FamilySizeTableManager.GetSizeTable)).Resolve(ResolveSizeTable);
+        configuration.Member(nameof(FamilySizeTableManager.HasSizeTable)).Resolve(ResolveHasSizeTable);
+        configuration.Member(nameof(FamilySizeTableManager.GetFamilySizeTableManager)).Resolve(() => manager);
+        return;
 
         IVariant ResolveSizeTable()
         {

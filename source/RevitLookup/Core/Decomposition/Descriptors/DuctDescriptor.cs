@@ -19,13 +19,12 @@ namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class DuctDescriptor(Duct duct) : ElementDescriptor(duct)
 {
-    public override void RegisterExtensions(IExtensionManager manager)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        manager.Define(nameof(MechanicalUtils.BreakCurve)).AsNotSupported();
-        manager.Define(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtElbow)).AsNotSupported();
-        manager.Define(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtTee)).AsNotSupported();
-        manager.Define(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtCross)).AsNotSupported();
-        manager.Define("ConnectAirTerminal").Map(nameof(MechanicalUtils.ConnectAirTerminalOnDuct)).AsNotSupported();
+        configuration.Extension(nameof(MechanicalUtils.BreakCurve)).NotSupported();
+        configuration.Extension(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtElbow)).NotSupported();
+        configuration.Extension(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtTee)).NotSupported();
+        configuration.Extension(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtCross)).NotSupported();
+        configuration.Extension("ConnectAirTerminal").Map(nameof(MechanicalUtils.ConnectAirTerminalOnDuct)).NotSupported();
     }
-
 }

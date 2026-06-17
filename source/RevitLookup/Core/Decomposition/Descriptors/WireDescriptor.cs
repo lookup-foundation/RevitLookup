@@ -12,21 +12,18 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using Autodesk.Revit.DB.Electrical;
+using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class WireDescriptor(Wire wire) : ElementDescriptor(wire)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(Wire.GetVertex) => ResolveVertex,
-            _ => null
-        };
+        configuration.Member(nameof(Wire.GetVertex)).Resolve(ResolveVertex);
+        return;
 
         IVariant ResolveVertex()
         {

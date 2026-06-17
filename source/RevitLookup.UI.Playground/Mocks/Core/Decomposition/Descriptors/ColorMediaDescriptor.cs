@@ -28,7 +28,7 @@ using Color = System.Windows.Media.Color;
 
 namespace RevitLookup.UI.Playground.Mocks.Core.Decomposition.Descriptors;
 
-public sealed class ColorMediaDescriptor : Descriptor, IDescriptorExtension, IContextMenuConnector
+public sealed class ColorMediaDescriptor : Descriptor, IDescriptorConfigurator, IContextMenuConnector
 {
     private readonly Color _color;
 
@@ -38,23 +38,23 @@ public sealed class ColorMediaDescriptor : Descriptor, IDescriptorExtension, ICo
         Name = $"RGB: {color.R} {color.G} {color.B}";
     }
 
-    public void RegisterExtensions(IExtensionManager manager)
+    public void Configure(IMemberConfigurator configuration)
     {
-        manager.Define("HEX").Register(() => Variants.Value(ColorRepresentationUtils.ColorToHex(_color.GetDrawingColor())));
-        manager.Define("HEX int").Register(() => Variants.Value(ColorRepresentationUtils.ColorToHexInteger(_color.GetDrawingColor())));
-        manager.Define("RGB").Register(() => Variants.Value(ColorRepresentationUtils.ColorToRgb(_color.GetDrawingColor())));
-        manager.Define("HSL").Register(() => Variants.Value(ColorRepresentationUtils.ColorToHsl(_color.GetDrawingColor())));
-        manager.Define("HSV").Register(() => Variants.Value(ColorRepresentationUtils.ColorToHsv(_color.GetDrawingColor())));
-        manager.Define("CMYK").Register(() => Variants.Value(ColorRepresentationUtils.ColorToCmyk(_color.GetDrawingColor())));
-        manager.Define("HSB").Register(() => Variants.Value(ColorRepresentationUtils.ColorToHsb(_color.GetDrawingColor())));
-        manager.Define("HSI").Register(() => Variants.Value(ColorRepresentationUtils.ColorToHsi(_color.GetDrawingColor())));
-        manager.Define("HWB").Register(() => Variants.Value(ColorRepresentationUtils.ColorToHwb(_color.GetDrawingColor())));
-        manager.Define("NCol").Register(() => Variants.Value(ColorRepresentationUtils.ColorToNCol(_color.GetDrawingColor())));
-        manager.Define("CIELAB").Register(() => Variants.Value(ColorRepresentationUtils.ColorToCielab(_color.GetDrawingColor())));
-        manager.Define("CIEXYZ").Register(() => Variants.Value(ColorRepresentationUtils.ColorToCieXyz(_color.GetDrawingColor())));
-        manager.Define("VEC4").Register(() => Variants.Value(ColorRepresentationUtils.ColorToFloat(_color.GetDrawingColor())));
-        manager.Define("Decimal").Register(() => Variants.Value(ColorRepresentationUtils.ColorToDecimal(_color.GetDrawingColor())));
-        manager.Define("Name").Register(() => Variants.Value(ColorRepresentationUtils.GetColorName(_color.GetDrawingColor())));
+        configuration.Extension("HEX").Register(() => ColorRepresentationUtils.ColorToHex(_color.GetDrawingColor()));
+        configuration.Extension("HEX int").Register(() => ColorRepresentationUtils.ColorToHexInteger(_color.GetDrawingColor()));
+        configuration.Extension("RGB").Register(() => ColorRepresentationUtils.ColorToRgb(_color.GetDrawingColor()));
+        configuration.Extension("HSL").Register(() => ColorRepresentationUtils.ColorToHsl(_color.GetDrawingColor()));
+        configuration.Extension("HSV").Register(() => ColorRepresentationUtils.ColorToHsv(_color.GetDrawingColor()));
+        configuration.Extension("CMYK").Register(() => ColorRepresentationUtils.ColorToCmyk(_color.GetDrawingColor()));
+        configuration.Extension("HSB").Register(() => ColorRepresentationUtils.ColorToHsb(_color.GetDrawingColor()));
+        configuration.Extension("HSI").Register(() => ColorRepresentationUtils.ColorToHsi(_color.GetDrawingColor()));
+        configuration.Extension("HWB").Register(() => ColorRepresentationUtils.ColorToHwb(_color.GetDrawingColor()));
+        configuration.Extension("NCol").Register(() => ColorRepresentationUtils.ColorToNCol(_color.GetDrawingColor()));
+        configuration.Extension("CIELAB").Register(() => ColorRepresentationUtils.ColorToCielab(_color.GetDrawingColor()));
+        configuration.Extension("CIEXYZ").Register(() => ColorRepresentationUtils.ColorToCieXyz(_color.GetDrawingColor()));
+        configuration.Extension("VEC4").Register(() => ColorRepresentationUtils.ColorToFloat(_color.GetDrawingColor()));
+        configuration.Extension("Decimal").Register(() => ColorRepresentationUtils.ColorToDecimal(_color.GetDrawingColor()));
+        configuration.Extension("Name").Register(() => ColorRepresentationUtils.GetColorName(_color.GetDrawingColor()));
     }
 
     public void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)
@@ -62,6 +62,7 @@ public sealed class ColorMediaDescriptor : Descriptor, IDescriptorExtension, ICo
         contextMenu.AddMenuItem("DeleteMenuItem")
             .SetCommand(_color, DeleteElement)
             .SetShortcut(Key.Delete);
+        return;
 
         void DeleteElement(Color element)
         {

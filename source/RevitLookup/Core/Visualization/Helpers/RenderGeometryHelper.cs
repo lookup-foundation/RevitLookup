@@ -12,9 +12,6 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Diagnostics.CodeAnalysis;
-using InvalidOperationException = Autodesk.Revit.Exceptions.InvalidOperationException;
-
 namespace RevitLookup.Core.Visualization.Helpers;
 
 public static class RenderGeometryHelper

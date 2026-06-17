@@ -12,31 +12,23 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class FamilyManagerDescriptor(FamilyManager familyManager) : Descriptor, IDescriptorResolver, IDescriptorResolver<Document>
+public sealed class FamilyManagerDescriptor(FamilyManager familyManager) : Descriptor, IDescriptorConfigurator, IDescriptorConfigurator<Document>
 {
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(FamilyManager.IsParameterLockable) => () => VariantsResolver.ResolveFamilyParameters(familyManager.Parameters, familyManager.IsParameterLockable),
-            nameof(FamilyManager.IsParameterLocked) => () => VariantsResolver.ResolveFamilyParameters(familyManager.Parameters, familyManager.IsParameterLocked),
-            _ => null
-        };
+        configuration.Member(nameof(FamilyManager.IsParameterLockable)).Resolve(() => ResolveFamilyParameters(familyManager.Parameters, familyManager.IsParameterLockable));
+        configuration.Member(nameof(FamilyManager.IsParameterLocked)).Resolve(() => ResolveFamilyParameters(familyManager.Parameters, familyManager.IsParameterLocked));
     }
 
-    Func<Document, IVariant>? IDescriptorResolver<Document>.Resolve(string target, ParameterInfo[] parameters)
+    void IDescriptorConfigurator<Document>.Configure(IMemberConfigurator<Document> configuration)
     {
-        return target switch
-        {
-            nameof(FamilyManager.GetAssociatedFamilyParameter) => ResolveGetAssociatedFamilyParameter,
-            _ => null
-        };
+        configuration.Member(nameof(FamilyManager.GetAssociatedFamilyParameter)).Resolve(ResolveGetAssociatedFamilyParameter);
+        return;
 
         IVariant ResolveGetAssociatedFamilyParameter(Document context)
         {
@@ -59,5 +51,17 @@ public sealed class FamilyManagerDescriptor(FamilyManager familyManager) : Descr
 
             return variants.Consume();
         }
+    }
+    
+    private static IVariant ResolveFamilyParameters<TResult>(FamilyParameterSet parameters, Func<FamilyParameter, TResult> selector)
+    {
+        var variants = Variants.Values<TResult>(parameters.Size);
+        foreach (FamilyParameter parameter in parameters)
+        {
+            var result = selector(parameter);
+            variants.Add(result, $"{parameter.Definition.Name}: {result}");
+        }
+
+        return variants.Consume();
     }
 }

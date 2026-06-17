@@ -1,12 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.UI.Playground.Mocks.Core.Decomposition.Descriptors;
 
-public sealed class Vector3Descriptor : Descriptor, IDescriptorResolver
+public sealed class Vector3Descriptor : Descriptor, IDescriptorConfigurator
 {
     private readonly Vector3 _vector3;
 
@@ -16,20 +15,21 @@ public sealed class Vector3Descriptor : Descriptor, IDescriptorResolver
         Name = $"{vector3.X} {vector3.Y} {vector3.Z}";
     }
 
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(Vector3.Equals) when parameters[0].ParameterType == typeof(Vector3) => () => Variants.Value(_vector3.Equals(Vector3.Zero), $"Vector-vector comparison"),
-            nameof(Vector3.Equals) when parameters.Length == 1 => ResolveObjectEquals,
-            _ => null
-        };
+        configuration.Member(nameof(Vector3.Equals))
+            .When(parameters => parameters[0].ParameterType == typeof(Vector3))
+            .Resolve(() => Variants.Value(_vector3.Equals(Vector3.Zero), "Vector-vector comparison"));
+        configuration.Member(nameof(Vector3.Equals))
+            .When(parameters => parameters[0].ParameterType == typeof(object))
+            .Resolve(ResolveObjectEquals);
+        return;
 
         [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
         IVariant ResolveObjectEquals()
         {
             return Variants.Values<bool>(3)
-                .Add(_vector3.Equals(Vector3.Zero), $"Vector-vector comparison")
+                .Add(_vector3.Equals(Vector3.Zero), "Vector-vector comparison")
                 .Add(_vector3.Equals(true), "Vector-Boolean comparison")
                 .Add(_vector3.Equals(1), "Vector-Integer comparison")
                 .Consume();

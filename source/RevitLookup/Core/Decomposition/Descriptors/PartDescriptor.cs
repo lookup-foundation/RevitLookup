@@ -12,35 +12,28 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
-using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class PartDescriptor(Part part) : ElementDescriptor(part), IDescriptorExtension<Document>
+public sealed class PartDescriptor(Part part) : ElementDescriptor(part), IDescriptorConfigurator<Document>
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return null;
+        configuration.Extension(nameof(PartUtils.IsMergedPart)).Register(() => PartUtils.IsMergedPart(part));
+        configuration.Extension(nameof(PartUtils.IsPartDerivedFromLink)).Register(() => PartUtils.IsPartDerivedFromLink(part));
+        configuration.Extension(nameof(PartUtils.GetChainLengthToOriginal)).Register(() => PartUtils.GetChainLengthToOriginal(part));
+        configuration.Extension(nameof(PartUtils.GetMergedParts)).Register(() => PartUtils.GetMergedParts(part));
     }
 
-    public override void RegisterExtensions(IExtensionManager manager)
+    void IDescriptorConfigurator<Document>.Configure(IMemberConfigurator<Document> configuration)
     {
-        manager.Define(nameof(PartUtils.IsMergedPart)).Register(() => Variants.Value(PartUtils.IsMergedPart(part)));
-        manager.Define(nameof(PartUtils.IsPartDerivedFromLink)).Register(() => Variants.Value(PartUtils.IsPartDerivedFromLink(part)));
-        manager.Define(nameof(PartUtils.GetChainLengthToOriginal)).Register(() => Variants.Value(PartUtils.GetChainLengthToOriginal(part)));
-        manager.Define(nameof(PartUtils.GetMergedParts)).Register(() => Variants.Value(PartUtils.GetMergedParts(part)));
-    }
-
-    public void RegisterExtensions(IExtensionManager<Document> manager)
-    {
-        manager.Define(nameof(PartUtils.ArePartsValidForDivide)).Register(context => Variants.Value(PartUtils.ArePartsValidForDivide(context, [part.Id])));
-        manager.Define(nameof(PartUtils.FindMergeableClusters)).Register(context => Variants.Value(PartUtils.FindMergeableClusters(context, [part.Id])));
-        manager.Define(nameof(PartUtils.ArePartsValidForMerge)).Register(context => Variants.Value(PartUtils.ArePartsValidForMerge(context, [part.Id])));
-        manager.Define(nameof(PartUtils.GetAssociatedPartMaker)).Register(context => Variants.Value(PartUtils.GetAssociatedPartMaker(context, part.Id)));
-        manager.Define(nameof(PartUtils.GetSplittingCurves)).Register(context => Variants.Value(PartUtils.GetSplittingCurves(context, part.Id)));
-        manager.Define(nameof(PartUtils.GetSplittingElements)).Register(context => Variants.Value(PartUtils.GetSplittingElements(context, part.Id)));
-        manager.Define(nameof(PartUtils.HasAssociatedParts)).Register(context => Variants.Value(PartUtils.HasAssociatedParts(context, part.Id)));
+        configuration.Extension(nameof(PartUtils.ArePartsValidForDivide)).Register(context => PartUtils.ArePartsValidForDivide(context, [part.Id]));
+        configuration.Extension(nameof(PartUtils.FindMergeableClusters)).Register(context => PartUtils.FindMergeableClusters(context, [part.Id]));
+        configuration.Extension(nameof(PartUtils.ArePartsValidForMerge)).Register(context => PartUtils.ArePartsValidForMerge(context, [part.Id]));
+        configuration.Extension(nameof(PartUtils.GetAssociatedPartMaker)).Register(context => PartUtils.GetAssociatedPartMaker(context, part.Id));
+        configuration.Extension(nameof(PartUtils.GetSplittingCurves)).Register(context => PartUtils.GetSplittingCurves(context, part.Id));
+        configuration.Extension(nameof(PartUtils.GetSplittingElements)).Register(context => PartUtils.GetSplittingElements(context, part.Id));
+        configuration.Extension(nameof(PartUtils.HasAssociatedParts)).Register(context => PartUtils.HasAssociatedParts(context, part.Id));
     }
 }

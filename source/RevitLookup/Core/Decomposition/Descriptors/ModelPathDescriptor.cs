@@ -17,7 +17,7 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class ModelPathDescriptor : Descriptor, IDescriptorExtension
+public sealed class ModelPathDescriptor : Descriptor, IDescriptorConfigurator
 {
     private readonly ModelPath _modelPath;
 
@@ -27,17 +27,16 @@ public sealed class ModelPathDescriptor : Descriptor, IDescriptorExtension
         Name = ModelPathUtils.ConvertModelPathToUserVisiblePath(modelPath);
     }
 
-    public void RegisterExtensions(IExtensionManager manager)
+    public void Configure(IMemberConfigurator configuration)
     {
-        manager.Define(nameof(ModelPathUtils.ConvertModelPathToUserVisiblePath)).Register(() => Variants.Value(ModelPathUtils.ConvertModelPathToUserVisiblePath(_modelPath)));
-        manager.Define(nameof(TransmissionData.IsDocumentTransmitted)).Register(() => Variants.Value(TransmissionData.IsDocumentTransmitted(_modelPath)));
-        manager.Define(nameof(TransmissionData.DocumentIsNotTransmitted)).Register(() => Variants.Value(TransmissionData.DocumentIsNotTransmitted(_modelPath)));
-        manager.Define(nameof(TransmissionData.ReadTransmissionData)).Register(() => Variants.Value(TransmissionData.ReadTransmissionData(_modelPath)));
-        manager.Define(nameof(WorksharingUtils.GetUserWorksetInfo)).Register(() => Variants.Value(WorksharingUtils.GetUserWorksetInfo(_modelPath)));
-        manager.Define(nameof(ModelPathUtils.ConvertUserVisiblePathToModelPath)).AsNotSupported();
-        manager.Define(nameof(ModelPathUtils.IsValidUserVisibleFullServerPath)).AsNotSupported();
-        manager.Define(nameof(ModelPathUtils.ConvertCloudGUIDsToCloudPath)).AsNotSupported();
-        manager.Define("CreateNewLocal").Map(nameof(WorksharingUtils.CreateNewLocal)).AsNotSupported();
+        configuration.Extension(nameof(ModelPathUtils.ConvertModelPathToUserVisiblePath)).Register(() => ModelPathUtils.ConvertModelPathToUserVisiblePath(_modelPath));
+        configuration.Extension(nameof(TransmissionData.IsDocumentTransmitted)).Register(() => TransmissionData.IsDocumentTransmitted(_modelPath));
+        configuration.Extension(nameof(TransmissionData.DocumentIsNotTransmitted)).Register(() => TransmissionData.DocumentIsNotTransmitted(_modelPath));
+        configuration.Extension(nameof(TransmissionData.ReadTransmissionData)).Register(() => TransmissionData.ReadTransmissionData(_modelPath));
+        configuration.Extension(nameof(WorksharingUtils.GetUserWorksetInfo)).Register(() => WorksharingUtils.GetUserWorksetInfo(_modelPath));
+        configuration.Extension(nameof(ModelPathUtils.ConvertUserVisiblePathToModelPath)).NotSupported();
+        configuration.Extension(nameof(ModelPathUtils.IsValidUserVisibleFullServerPath)).NotSupported();
+        configuration.Extension(nameof(ModelPathUtils.ConvertCloudGUIDsToCloudPath)).NotSupported();
+        configuration.Extension("CreateNewLocal").Map(nameof(WorksharingUtils.CreateNewLocal)).NotSupported();
     }
-    
 }

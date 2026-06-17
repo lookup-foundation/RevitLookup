@@ -18,15 +18,15 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class DefinitionFileDescriptor : Descriptor, IDescriptorExtension
+public sealed class DefinitionFileDescriptor : Descriptor, IDescriptorConfigurator
 {
     public DefinitionFileDescriptor(DefinitionFile definitionFile)
     {
         Name = definitionFile.Filename;
     }
 
-    public void RegisterExtensions(IExtensionManager manager)
+    public void Configure(IMemberConfigurator configuration)
     {
-        manager.Define("SearchExternalDefinition").Map(nameof(RebarShapeParameters.GetExternalDefinitionForElementId)).AsNotSupported();
+        configuration.Extension("SearchExternalDefinition").Map(nameof(RebarShapeParameters.GetExternalDefinitionForElementId)).NotSupported();
     }
 }

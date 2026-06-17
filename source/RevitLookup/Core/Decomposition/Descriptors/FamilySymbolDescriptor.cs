@@ -14,18 +14,21 @@
 
 using Autodesk.Revit.DB.Structure.StructuralSections;
 using LookupEngine.Abstractions.Configuration;
-using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class FamilySymbolDescriptor(FamilySymbol familySymbol) : ElementDescriptor(familySymbol)
 {
-    public override void RegisterExtensions(IExtensionManager manager)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        manager.Define("SetStructuralSection").Map(nameof(StructuralSectionUtils.SetStructuralSection)).AsNotSupported();
-        if (manager.Define(nameof(AdaptiveComponentInstanceUtils.IsAdaptiveFamilySymbol)).TryRegister(() => Variants.Value(AdaptiveComponentInstanceUtils.IsAdaptiveFamilySymbol(familySymbol))))
+        configuration.Extension("SetStructuralSection").Map(nameof(StructuralSectionUtils.SetStructuralSection)).NotSupported();
+
+        var isAdaptiveFamilySymbol = SafeEvaluate(() => AdaptiveComponentInstanceUtils.IsAdaptiveFamilySymbol(familySymbol));
+        configuration.Extension(nameof(AdaptiveComponentInstanceUtils.IsAdaptiveFamilySymbol)).Register(() => isAdaptiveFamilySymbol);
+        
+        if (isAdaptiveFamilySymbol)
         {
-            manager.Define("CreateAdaptiveComponentInstance").Map(nameof(AdaptiveComponentInstanceUtils.CreateAdaptiveComponentInstance)).AsNotSupported();
+            configuration.Extension("CreateAdaptiveComponentInstance").Map(nameof(AdaptiveComponentInstanceUtils.CreateAdaptiveComponentInstance)).NotSupported();
         }
     }
 }

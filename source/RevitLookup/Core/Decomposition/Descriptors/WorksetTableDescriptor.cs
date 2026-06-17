@@ -12,21 +12,17 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class WorksetTableDescriptor : Descriptor, IDescriptorResolver
+public sealed class WorksetTableDescriptor : Descriptor, IDescriptorConfigurator
 {
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(WorksetTable.GetWorkset) when parameters?.Length == 1 && parameters[0].ParameterType == typeof(WorksetId) => ResolveGetWorkset,
-            _ => null
-        };
+        configuration.Member(nameof(WorksetTable.GetWorkset)).When(parameters => parameters?.Length == 1 && parameters[0].ParameterType == typeof(WorksetId)).Resolve(ResolveGetWorkset);
+        return;
 
         IVariant ResolveGetWorkset()
         {

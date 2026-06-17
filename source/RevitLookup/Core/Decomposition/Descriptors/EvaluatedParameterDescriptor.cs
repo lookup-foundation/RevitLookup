@@ -13,13 +13,12 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 #if REVIT2024_OR_GREATER
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class EvaluatedParameterDescriptor : Descriptor, IDescriptorResolver<Document>
+public sealed class EvaluatedParameterDescriptor : Descriptor, IDescriptorConfigurator<Document>
 {
     private readonly EvaluatedParameter _parameter;
 
@@ -29,14 +28,10 @@ public sealed class EvaluatedParameterDescriptor : Descriptor, IDescriptorResolv
         Name = parameter.Definition.Name;
     }
 
-    public Func<Document, IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator<Document> configuration)
     {
-        return target switch
-        {
-            nameof(EvaluatedParameter.AsValueString) when parameters.Length == 1 => context => Variants.Value(_parameter.AsValueString(context)),
-            nameof(EvaluatedParameter.AsValueString) when parameters.Length == 2 => context => Variants.Value(_parameter.AsValueString(context, new FormatOptions())),
-            _ => null
-        };
+        configuration.Member(nameof(EvaluatedParameter.AsValueString)).When(parameters => parameters.Length == 1).Resolve(context => _parameter.AsValueString(context));
+        configuration.Member(nameof(EvaluatedParameter.AsValueString)).When(parameters => parameters.Length == 2).Resolve(context => _parameter.AsValueString(context, new FormatOptions()));
     }
 }
 #endif

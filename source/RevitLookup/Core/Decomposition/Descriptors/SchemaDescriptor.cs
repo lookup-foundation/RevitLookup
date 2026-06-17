@@ -12,7 +12,6 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using Autodesk.Revit.DB.ExtensibleStorage;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
@@ -20,7 +19,7 @@ using RevitLookup.Utils;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class SchemaDescriptor : Descriptor, IDescriptorResolver, IDescriptorExtension<Document>
+public sealed class SchemaDescriptor : Descriptor, IDescriptorConfigurator, IDescriptorConfigurator<Document>
 {
     private readonly Schema _schema;
 
@@ -30,13 +29,10 @@ public sealed class SchemaDescriptor : Descriptor, IDescriptorResolver, IDescrip
         Name = schema.SchemaName;
     }
 
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(Schema.ListFields) => ResolveListFields,
-            _ => null
-        };
+        configuration.Member(nameof(Schema.ListFields)).Resolve(ResolveListFields);
+        return;
 
         IVariant ResolveListFields()
         {
@@ -47,10 +43,10 @@ public sealed class SchemaDescriptor : Descriptor, IDescriptorResolver, IDescrip
         }
     }
 
-    public void RegisterExtensions(IExtensionManager<Document> manager)
+    void IDescriptorConfigurator<Document>.Configure(IMemberConfigurator<Document> configuration)
     {
-        manager.Define("GetElements").Register(context => Variants.Value(context.CollectElements()
+        configuration.Extension("GetElements").Register(context => context.CollectElements()
             .WithExtensibleStorage(_schema.GUID)
-            .ToElements()));
+            .ToElements());
     }
 }

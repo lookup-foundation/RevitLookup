@@ -7,7 +7,6 @@ using System.Windows.Threading;
 using Autodesk.Revit.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Nice3point.Revit.Extensions.UI;
 using RevitLookup.Abstractions.Decomposition;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Application;

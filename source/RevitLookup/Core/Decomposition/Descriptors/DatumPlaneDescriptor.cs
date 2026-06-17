@@ -12,26 +12,23 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
+using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class DatumPlaneDescriptor(DatumPlane datumPlane) : ElementDescriptor(datumPlane)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(DatumPlane.CanBeVisibleInView) => ResolveCanBeVisibleInView,
-            nameof(DatumPlane.GetPropagationViews) => ResolvePropagationViews,
-            nameof(DatumPlane.GetDatumExtentTypeInView) => ResolveDatumExtentTypeInView,
-            nameof(DatumPlane.HasBubbleInView) => ResolveHasBubbleInView,
-            nameof(DatumPlane.IsBubbleVisibleInView) => ResolveBubbleVisibleInView,
-            nameof(DatumPlane.GetCurvesInView) => ResolveGetCurvesInView,
-            nameof(DatumPlane.GetLeader) => ResolveGetLeader,
-            _ => null
-        };
+        configuration.Member(nameof(DatumPlane.CanBeVisibleInView)).Resolve(ResolveCanBeVisibleInView);
+        configuration.Member(nameof(DatumPlane.GetPropagationViews)).Resolve(ResolvePropagationViews);
+        configuration.Member(nameof(DatumPlane.GetDatumExtentTypeInView)).Resolve(ResolveDatumExtentTypeInView);
+        configuration.Member(nameof(DatumPlane.HasBubbleInView)).Resolve(ResolveHasBubbleInView);
+        configuration.Member(nameof(DatumPlane.IsBubbleVisibleInView)).Resolve(ResolveBubbleVisibleInView);
+        configuration.Member(nameof(DatumPlane.GetCurvesInView)).Resolve(ResolveGetCurvesInView);
+        configuration.Member(nameof(DatumPlane.GetLeader)).Resolve(ResolveGetLeader);
+        return;
 
         IVariant ResolveCanBeVisibleInView()
         {

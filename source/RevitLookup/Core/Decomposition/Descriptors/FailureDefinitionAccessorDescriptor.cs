@@ -12,13 +12,11 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
-using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class FailureDefinitionAccessorDescriptor : Descriptor, IDescriptorResolver
+public sealed class FailureDefinitionAccessorDescriptor : ResolvingDescriptor, IDescriptorConfigurator
 {
     private readonly FailureDefinitionAccessor _definitionAccessor;
 
@@ -37,12 +35,8 @@ public sealed class FailureDefinitionAccessorDescriptor : Descriptor, IDescripto
         }
     }
 
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(FailureDefinitionAccessor.IsResolutionApplicable) => () => VariantsResolver.ResolveEnum<FailureResolutionType, bool>(_definitionAccessor.IsResolutionApplicable),
-            _ => null
-        };
+        configuration.Member(nameof(FailureDefinitionAccessor.IsResolutionApplicable)).Resolve(() => ResolveEnum<FailureResolutionType, bool>(_definitionAccessor.IsResolutionApplicable));
     }
 }

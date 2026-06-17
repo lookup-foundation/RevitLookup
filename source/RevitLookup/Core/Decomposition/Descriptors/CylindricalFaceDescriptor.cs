@@ -12,21 +12,17 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class CylindricalFaceDescriptor(CylindricalFace face) : FaceDescriptor(face), IDescriptorResolver
+public sealed class CylindricalFaceDescriptor(CylindricalFace face) : FaceDescriptor(face), IDescriptorConfigurator
 {
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            "Radius" => ResolveRadius,
-            _ => null
-        };
+        configuration.Member("Radius").Resolve(ResolveRadius);
+        return;
 
         IVariant ResolveRadius()
         {

@@ -12,25 +12,23 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class TableDataDescriptor(TableData tableData) : Descriptor, IDescriptorResolver
+public sealed class TableDataDescriptor(TableData tableData) : ResolvingDescriptor, IDescriptorConfigurator
 {
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(TableData.GetSectionData)
-                when parameters.Length == 1 && parameters[0].ParameterType == typeof(SectionType) => () => VariantsResolver.ResolveEnum<SectionType, TableSectionData>(tableData.GetSectionData),
-            nameof(TableData.GetSectionData)
-                when parameters.Length == 1 && parameters[0].ParameterType == typeof(int) => ResolveSectionDataByIndex,
-            nameof(TableData.IsValidZoomLevel) => ResolveZoomLevel,
-            _ => null
-        };
+        configuration.Member(nameof(TableData.GetSectionData))
+            .When(parameters => parameters.Length == 1 && parameters[0].ParameterType == typeof(SectionType))
+            .Resolve(() => ResolveEnum<SectionType, TableSectionData>(tableData.GetSectionData));
+        configuration.Member(nameof(TableData.GetSectionData))
+            .When(parameters => parameters.Length == 1 && parameters[0].ParameterType == typeof(int))
+            .Resolve(ResolveSectionDataByIndex);
+        configuration.Member(nameof(TableData.IsValidZoomLevel)).Resolve(ResolveZoomLevel);
+        return;
 
         IVariant ResolveSectionDataByIndex()
         {

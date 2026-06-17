@@ -12,33 +12,24 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using System.Reflection;
 using Autodesk.Revit.DB.Structure;
 using LookupEngine.Abstractions.Configuration;
-using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class RebarDescriptor(Rebar rebar) : ElementDescriptor(rebar)
 {
-    public override Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public override void Configure(IMemberConfigurator configuration)
     {
-        return target switch
-        {
-            nameof(Rebar.GetFullGeometryForView) => () => Variants.Value(rebar.GetFullGeometryForView(RevitContext.ActiveView)),
-            _ => null
-        };
-    }
+        configuration.Member(nameof(Rebar.GetFullGeometryForView)).Resolve(() => rebar.GetFullGeometryForView(RevitContext.ActiveView));
 
-    public override void RegisterExtensions(IExtensionManager manager)
-    {
 #if REVIT2025_OR_GREATER
-        manager.Define("CanBeSpliced").Map(nameof(RebarSpliceUtils.CanRebarBeSpliced)).AsNotSupported();
-        manager.Define("Splice").Map(nameof(RebarSpliceUtils.SpliceRebar)).AsNotSupported();
-        manager.Define(nameof(RebarSpliceUtils.GetSpliceChain)).Register(() => Variants.Value(RebarSpliceUtils.GetSpliceChain(rebar)));
-        manager.Define(nameof(RebarSpliceUtils.GetLapDirectionForSpliceGeometryAndPosition)).AsNotSupported();
-        manager.Define(nameof(RebarSpliceUtils.UnifyRebarsIntoOne)).AsNotSupported();
-        manager.Define(nameof(RebarSpliceUtils.GetSpliceGeometries)).AsNotSupported();
+        configuration.Extension("CanBeSpliced").Map(nameof(RebarSpliceUtils.CanRebarBeSpliced)).NotSupported();
+        configuration.Extension("Splice").Map(nameof(RebarSpliceUtils.SpliceRebar)).NotSupported();
+        configuration.Extension(nameof(RebarSpliceUtils.GetSpliceChain)).Register(() => RebarSpliceUtils.GetSpliceChain(rebar));
+        configuration.Extension(nameof(RebarSpliceUtils.GetLapDirectionForSpliceGeometryAndPosition)).NotSupported();
+        configuration.Extension(nameof(RebarSpliceUtils.UnifyRebarsIntoOne)).NotSupported();
+        configuration.Extension(nameof(RebarSpliceUtils.GetSpliceGeometries)).NotSupported();
 #endif
     }
 }
