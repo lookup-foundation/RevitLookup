@@ -1,6 +1,7 @@
 # WinGet Publishing
 
-CI publishes updates to existing WinGet packages automatically via `PublishWinGetModule`. The **first** release of a new Revit-year package is a one-time manual step and is described below.
+CI publishes updates to existing WinGet packages automatically through `PublishWinGetModule`.
+The first release of a new Revit-year package is a one-time manual step, described below.
 
 ## When this applies
 
@@ -58,4 +59,5 @@ komac new LookupFoundation.RevitLookup.2025 `
 
 2. Ensure the Revit year is present in `build/appsettings.json` under `Build.Versions` (it usually already is).
 
-From the next CI release onward, `PublishWinGetModule` will update this package automatically — no further manual `komac new` is required for that year.
+From the next CI release onward, `PublishWinGetModule` updates this package automatically.
+No further manual `komac new` is required for that year.

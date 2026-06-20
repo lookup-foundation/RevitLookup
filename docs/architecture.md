@@ -1,41 +1,48 @@
-# Architecture & Environments
+# Architecture
 
-The project runs in two distinct environments. Code must be written to be compatible with both where possible (UI/Logic), or isolated where specific (Revit API).
+RevitLookup inspects the Revit object database and presents every member of any object through a shared UI.
+The same UI and logic run in two environments, drive their services through dependency injection, and decompose objects through the LookupEngine framework.
 
-## 1. Revit Environment (Production)
+## The Two Environments
 
-* **Context:** Runs inside the `Revit.exe` process.
-* **Entry Point:** `RevitLookup`.
-* **Constraints:** Single-threaded, specialized API access.
+The application targets two hosts from one shared codebase.
 
-## 2. Playground Environment (Prototyping)
+* The **production** host loads inside `Revit.exe` as a Revit add-in. It supplies the real Revit-backed service and ViewModel implementations and owns every Revit API call.
+* The **Playground** host runs as a standalone WPF application. It supplies mock implementations of the shared contracts so UI work needs no running Revit.
 
-* **Context:** Runs as a standalone WPF application.
-* **Entry Point:** `RevitLookup.UI.Playground`.
-* **Purpose:** Rapid UI development, testing, and mocking without the overhead of restarting Revit.
+Both hosts display the same shared views.
+A shared contract lives in the abstractions project, the production host implements it against the Revit API, and the Playground implements it with mock data.
+Code that must reach the Revit API stays in the production host alone.
+See [Revit Best Practices](./revit-best-practices.md) for the environment boundary and [Project Structure](./project-structure.md) for where each piece lives.
 
-## 3. LookupEngine Architecture
+## Dependency Injection
 
-RevitLookup is built on the [LookupEngine](https://github.com/lookup-foundation/LookupEngine) framework, which provides a system for analyzing object structures at runtime.
+Each host builds a `Microsoft.Extensions.Hosting` host and registers its services in a `Host` class.
+The shared contracts resolve to the host-specific implementation, so the same view binds to a Revit-backed ViewModel in production and a mock ViewModel in the Playground.
+
+* Views and ViewModels register automatically through Scrutor assembly scanning, so a new view or ViewModel needs no manual registration.
+* Services register explicitly with the lifetime they need.
+* Serilog provides structured logging through the host. See [Code Style](./code-style.md).
+
+## LookupEngine
+
+RevitLookup builds on [LookupEngine](https://github.com/LookupEngine/LookupEngine), the framework that decomposes a runtime object into its members through reflection and evaluates each value.
+The engine records the time and memory each evaluation costs and never crashes on a reflection failure.
+RevitLookup consumes the engine and teaches it about Revit types through descriptors.
 
 ### Descriptors
 
-Descriptors are specialized classes that define how objects should be handled by the LookupEngine. Each descriptor is responsible for a specific type or family of types in Revit.
+A descriptor defines how the engine handles one Revit type or family of types.
+It implements the engine's configuration interfaces to control evaluation, add synthetic members, redirect to related objects, or connect to the RevitLookup UI.
+Add support for a new Revit type with a new descriptor, never with a special case elsewhere.
+In RevitLookup the active `Document` serves as the resolution context.
 
-To add a descriptor for a new class:
+### Resolve a Value
 
-1. Create a new descriptor class in the appropriate folder under `source/RevitLookup/Core/Decomposition/Descriptors/`
-2. Register the descriptor in the descriptor map located at `source/RevitLookup/Core/Decomposition/DescriptorsMap.cs`
-
-### IDescriptorResolver
-
-This interface allows descriptors to control how methods and properties with parameters are evaluated.
-In RevitLookup, `Document` serves as the context for resolution.
-
-**Single Value Resolution:**
+`IDescriptorResolver` and `IDescriptorResolver<TContext>` let a descriptor control how a member that takes parameters is evaluated.
+The resolver returns the value to display, optionally labeled, or marks the member as disabled.
 
 ```csharp
-// source/RevitLookup/Core/Decomposition/Descriptors/ElementDescriptor.cs
 public class ElementDescriptor(Element element) : Descriptor, IDescriptorResolver<Document>
 {
     public virtual Func<Document, IVariant>? Resolve(string target, ParameterInfo[] parameters)
@@ -49,120 +56,34 @@ public class ElementDescriptor(Element element) : Descriptor, IDescriptorResolve
 }
 ```
 
-**Multiple Value Resolution:**
+A resolver returns several labeled values through `Variants.Values`, targets one overload by inspecting `parameters`, and marks a member unsafe to evaluate with `Variants.Disabled`.
+
+### Add Synthetic Members
+
+`IDescriptorExtension` and `IDescriptorExtension<TContext>` add members that do not exist on the original type.
+The context-aware form receives the `Document` during registration for document-dependent members.
 
 ```csharp
-// source/RevitLookup/Core/Decomposition/Descriptors/ElementDescriptor.cs
-public class ElementDescriptor(Element element) : Descriptor, IDescriptorResolver<Document>
-{
-    public virtual Func<Document, IVariant>? Resolve(string target, ParameterInfo[] parameters)
-    {
-        return target switch
-        {
-            "BoundingBox" => ResolveBoundingBox,
-            _ => null
-        };
-
-        IVariant ResolveBoundingBox(Document context)
-        {
-            return Variants.Values<BoundingBoxXYZ>(2)
-                .Add(element.get_BoundingBox(null), "Model")
-                .Add(element.get_BoundingBox(context.ActiveView), "Active view")
-                .Consume();
-        }
-    }
-}
-```
-
-**Disabling Methods:**
-
-```csharp
-// source/RevitLookup/Core/Decomposition/Descriptors/DocumentDescriptor.cs
-public class DocumentDescriptor(Document document) : Descriptor, IDescriptorResolver
-{
-    public virtual Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
-    {
-        return target switch
-        {
-            nameof(Document.Close) => Variants.Disabled,
-            _ => null
-        };
-    }
-}
-```
-
-**Targeting Specific Overloads:**
-
-```csharp
-// source/RevitLookup/Core/Decomposition/Descriptors/EntityDescriptor.cs
-public sealed class EntityDescriptor(Entity entity) : Descriptor, IDescriptorResolver
-{
-    public Func<IVariant>? Resolve(string target, ParameterInfo[] parameters)
-    {
-        return target switch
-        {
-            nameof(Entity.Get) when parameters.Length == 1 &&
-                                    parameters[0].ParameterType == typeof(string) => ResolveGetByField,
-            _ => null
-        };
-
-        IVariant ResolveGetByField()
-        {
-            return Variants.Value(entity.Get("Parameter Name"));
-        }
-    }
-}
-```
-
-### IDescriptorExtension
-
-This interface allows adding custom methods and properties to objects that don't exist in the original type.
-In RevitLookup, extensions can use the `Document` as a context during registration for document-dependent elements.
-
-```csharp
-// source/RevitLookup/Core/Decomposition/Descriptors/ColorDescriptor.cs
 public sealed class ColorDescriptor(Color color) : Descriptor, IDescriptorExtension
 {
     public void RegisterExtensions(IExtensionManager manager)
     {
         manager.Define("HEX").Register(() => Variants.Value(ColorRepresentationUtils.ColorToHex(color)));
         manager.Define("RGB").Register(() => Variants.Value(ColorRepresentationUtils.ColorToRgb(color)));
-        manager.Define("HSL").Register(() => Variants.Value(ColorRepresentationUtils.ColorToHsl(color)));
     }
 }
 ```
 
-With context:
+### Redirect to Another Object
+
+`IDescriptorRedirector<TContext>` redirects from one object to a related one, such as from an `ElementId` to the `Element` it identifies, so the user inspects the resolved object.
 
 ```csharp
-// source/RevitLookup/Core/Decomposition/Descriptors/SchemaDescriptor.cs
-public sealed class SchemaDescriptor(Schema schema) : Descriptor, IDescriptorExtension<Document>
-{
-    public void RegisterExtensions(IExtensionManager<Document> manager)
-    {
-        manager.Define("GetElements").Register(context => Variants.Value(context.CollectElements()
-            .WithExtensibleStorage(schema.GUID)
-            .ToElements()));
-    }
-}
-```
-
-### IDescriptorRedirector
-
-This interface lets a descriptor redirect to another object. For example, converting from an ID to the actual element.
-
-```csharp
-// source/RevitLookup/Core/Decomposition/Descriptors/ElementIdDescriptor.cs
 public sealed class ElementIdDescriptor(ElementId elementId) : Descriptor, IDescriptorRedirector<Document>
 {
     public bool TryRedirect(string target, Document context, out object result)
     {
         result = elementId;
-        if (elementId == ElementId.InvalidElementId)
-        {
-            return false;
-        }
-
         var element = elementId.ToElement(context);
         if (element is null) return false;
 
@@ -172,34 +93,22 @@ public sealed class ElementIdDescriptor(ElementId elementId) : Descriptor, IDesc
 }
 ```
 
-### IDescriptorCollector
+### Mark a Type Decomposable
 
-This interface serves as a marker indicating that the descriptor can decompose the object's members. It's essential for allowing users to inspect an object's internal structure.
+`IDescriptorCollector` marks a descriptor whose object exposes members worth decomposing, so the user can drill into its internal structure.
 
-```csharp
-// source/RevitLookup/Core/Decomposition/Descriptors/WorksetDescriptor.cs
-public sealed class WorksetDescriptor : Descriptor, IDescriptorCollector
-{
-    public WorksetDescriptor(Workset workset)
-    {
-        Name = workset.Name;
-    }
-}
-```
+### Connect to the UI
 
-### IContextMenuConnector
-
-This interface enables integration with the RevitLookup UI, allowing descriptors to add custom context menu options and commands.
+`IContextMenuConnector` lets a descriptor add context-menu commands to the RevitLookup UI.
+Commands that touch the Revit API run through an external event. See [Revit Best Practices](./revit-best-practices.md).
 
 ```csharp
-// source/RevitLookup/Core/Decomposition/Descriptors/ElementDescriptor.cs
 public sealed class ElementDescriptor : Descriptor, IContextMenuConnector
 {
     public void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)
     {
         contextMenu.AddMenuItem("ShowMenuItem")
             .SetCommand(_element, element => ShowElementEvent.Raise(element))
-            .SetAvailability(_element is not ElementType)
             .SetShortcut(Key.F7);
     }
 }

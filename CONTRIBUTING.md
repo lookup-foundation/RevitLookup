@@ -1,12 +1,16 @@
+# Contributing to RevitLookup
+
+Thanks for taking the time to contribute. This guide covers issues and pull requests. For the architecture, conventions, and release process, see the project guidelines in [AGENTS.md](AGENTS.md) and the [docs](docs/) folder.
+
 ## Maintainers
 
-| Maintainer                                                                                                                 | Period         |
-|----------------------------------------------------------------------------------------------------------------------------|----------------|
-| <img src="https://github.com/Nice3point.png" width="20"/> [Nice3point](https://github.com/Nice3point)                      | 2022 - present |
-| <img src="https://github.com/jeremytammik.png" width="20"/> [Jeremy Tammik](https://github.com/jeremytammik)               | 2008 - 2022    |
-| <img src="https://github.com/identicons/jimawe.png" width="20"/> [Jim Awe](https://www.linkedin.com/in/james-awe-4630a94/) | 2005 - 2008    |
+| Maintainer | Period |
+|---|---|
+| <img src="https://github.com/Nice3point.png" width="20"/> [Nice3point](https://github.com/Nice3point) | 2022 - present |
+| <img src="https://github.com/jeremytammik.png" width="20"/> [Jeremy Tammik](https://github.com/jeremytammik) | 2008 - 2022 |
+| <img src="https://github.com/identicons/jimawe.png" width="20"/> [Jim Awe](https://www.linkedin.com/in/james-awe-4630a94/) | 2005 - 2008 |
 
-Planning significant changes? Check in with the current maintainer before opening a PR.
+Planning a significant change? Check in with the current maintainer before you open a pull request.
 
 ## Table of contents
 

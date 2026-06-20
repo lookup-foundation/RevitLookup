@@ -1,67 +1,64 @@
-# Strict C# Production Style
+# Code Style
 
-All code must adhere to enterprise-grade standards. "It works" is not enough; it must be clean, readable, and robust.
+Production C# only. This is a public application, so its code stays clean, readable, and robust.
 
-## 1. General Principles
+## General Principles
 
-* **SOLID:** strictly follow Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion.
-* **DRY (Don't Repeat Yourself):** Extract common logic to `RevitLookup.Common` or `RevitLookup.Abstractions`.
-* **Explicit over Implicit:** Code should be self-explanatory. Avoid "magic" behavior.
-* **Modern C#:** Always use the latest language features.
-* **Use Span:** Utilize `Span<T>` and `ReadOnlySpan<T>` for memory-efficient data processing where applicable outside of business logic.
-* **JetBrains Annotations:** Use JetBrains Annotations where applicable to improve code analysis.
+* **SOLID and DRY.** One responsibility per type. Extract shared logic into the common or abstractions project rather than duplicate it.
+* **Explicit over implicit.** Code is self-explanatory. Avoid hidden behavior and unclear defaults.
+* **Nullable safety.** Nullable reference types are enabled solution-wide. Treat every nullability warning as a defect.
+* **Span for memory-sensitive work.** Use `Span<T>` and `ReadOnlySpan<T>` for data processing outside business logic where they avoid allocations.
+* **StyleCop style.** Follow StyleCop conventions for layout, member ordering, and spacing.
 
-## 2. Naming Conventions
+## Modern C#
 
-* **Clarity is King:** Names must be descriptive.
-* **No Abbreviations:**
-    * ❌ `repo`, `config`, `ctx`, `svc`
-    * ✅ `repository`, `configuration`, `context`, `service`
-* **No Single-Letter Variables:**
-    * ❌ `p`, `i`, `e` (except in very short lambdas or for loops).
-    * ✅ `property`, `element`, `exception`.
-* **Async Suffix:** Methods returning `Task` or `Task<T>` must end with `Async`.
-    * ✅ `GetDataAsync()`
+`LangVersion` is `latest`. Reach for the newest feature that expresses the intent directly, and do not hand-roll what the language already provides.
 
-## 3. Formatting & Layout
+* Primary constructors when a type captures state or injected dependencies.
+* Collection expressions for literals and spans.
+* Pattern matching and switch expressions over branching chains.
+* Null-coalescing assignment (`??=`) for lazy initialization.
+* Expression-bodied members for simple accessors.
+* File-scoped namespaces.
 
-* **File-Scoped Namespaces:** Always use file-scoped namespaces matching the project/folder namespace (for example, `namespace RevitLookup.Core.Decomposition;`).
-* **Nullable Reference Types:** Enabled project-wide. Treat warnings as errors.
-* **Organization:**
-    1. Private Fields (if strictly necessary)
-    2. Primary Constructor
-    3. Public Properties
-    4. Public Methods
-    5. Private Methods
+## Comments
 
-## 4. Async/Await
+Public types and members carry XML doc comments, see [Documentation](./documentation.md). Inside the code, comments are the exception.
 
-* **Task:** Use `Task` everywhere. Avoid `async void` (except for top-level event handlers).
-* **Context:** Be mindful of the SynchronizationContext. In UI/Revit, `await` returns to the main thread by default. Use `ConfigureAwait(false)` in pure library code (Core/Common) if it doesn't touch UI/Revit API.
+* Names and structure carry the meaning. Default to no comment.
+* Add one only when the reason cannot be read from the code and a reader could break the code without it, such as a non-obvious invariant or a threading constraint.
+* A comment explains why, never what. Do not restate the code.
 
-## 5. Error Handling
+## Attributes
 
-* **Centralized Handling:** Do not clutter business logic with `try-catch` blocks. Let exceptions propagate to a global handler or boundary.
-* **Custom Exceptions:** Define semantic exceptions (e.g., `ConfigurationMissingException`) rather than throwing generic `Exception`.
-* **Validation:** Validate inputs at the boundary (public methods).
+Decorate members with every JetBrains and .NET attribute that carries meaning, so analyzers, the debugger, and callers read the full contract.
 
-## 6. Data Objects
+* `[UsedImplicitly]` on a type the container resolves by convention, so analysis does not flag it as unused.
+* `[ObservableProperty]` and `[RelayCommand]` on the ViewModel members the CommunityToolkit source generator expands.
+* `[ExternalEvent]` on a method that the Toolkit source generator wraps for the Revit thread. See [Revit Best Practices](./revit-best-practices.md).
 
-* **Immutability:** Use `record` for DTOs, messages, and configuration objects.
-* **Properties:** Use `{ get; init; }` for immutable properties in classes.
+## Naming
 
-## 7. Dependency Injection
+* **Clarity first.** Names are descriptive and never abbreviated: `element` not `elem`, `document` not `doc`, `repository` not `repo`, `configuration` not `config`, `context` not `ctx`.
+* Follow the Revit API naming conventions for Revit-facing code.
+* Methods that return `Task` or `Task<T>` end with `Async`.
+* No single-letter variables except in a short loop or lambda.
 
-Use constructor injection for dependencies.
+## File and Class Structure
 
-* **Primary Constructors Preferred:** Use C# primary constructors for dependency injection when practical.
-* **No Manual DI Fields:** Do not declare `private readonly` fields only to mirror injected services. Regular fields are fine for instance state and constructor-derived values.
-* **Registration:**
-    * Revit: `source/RevitLookup/Host.cs`
-    * Playground: `source/RevitLookup.UI.Playground/Host.cs`.
+* **File-scoped namespaces** that match the project and folder, for example `namespace RevitLookup.Core.Decomposition;`.
+* **Member order:** private fields, constructors, public properties, public methods, private methods.
+
+## Dependency Injection
+
+Both hosts register their services through `Microsoft.Extensions.Hosting`, and Scrutor scans the assemblies to register views and ViewModels by convention.
+See [Architecture](./architecture.md).
+
+* Inject dependencies through the constructor, with a primary constructor where practical.
+* Do not declare a `private readonly` field only to mirror an injected service. Regular fields stay for instance state and constructor-derived values.
+* Register a service against its abstraction so the production host and the Playground bind the same view to different implementations.
 
 ```csharp
-// ✅ Correct
 public class ContentService(
     IContentRepository repository,
     ILogger<ContentService> logger) : IContentService
@@ -74,15 +71,16 @@ public class ContentService(
 }
 ```
 
-## 8. MVVM Pattern (CommunityToolkit)
+## MVVM
 
-* **Framework:** `CommunityToolkit.Mvvm`.
-* **Source Generators:** extensively use `[ObservableProperty]` and `[RelayCommand]`.
-* **State:** Keep ViewModel state private, expose via generated properties.
-* **Messaging:** Use `IMessenger` for loose coupling between ViewModels.
+The UI follows MVVM with `CommunityToolkit.Mvvm`.
+
+* Generate observable state with `[ObservableProperty]` and commands with `[RelayCommand]`.
+* A ViewModel implements a shared contract so the production host and the Playground each supply their own.
+* Use `IMessenger` for loose coupling between ViewModels.
 
 ```csharp
-public partial class SearchViewModel(ISearchService searchService) : ObservableObject
+public partial class SearchViewModel(ISearchService searchService) : ObservableObject, ISearchViewModel
 {
     [ObservableProperty]
     public partial string Query { get; set; }
@@ -95,10 +93,24 @@ public partial class SearchViewModel(ISearchService searchService) : ObservableO
 }
 ```
 
-## 9. Logging & Telemetry
+## Logging
 
-* **Serilog:** The standard logging backend.
-* **OpenTelemetry:** Configured for tracing.
-* **Structured Logging:** **MANDATORY**. Never use string interpolation in log messages.
-    * ❌ `LogInformation($"User {id} logged in")`
-    * ✅ `LogInformation("User {UserId} logged in", id)`
+Serilog is the logging backend, configured through the host.
+
+* **Structured logging is mandatory.** Pass values as message-template properties, never through string interpolation.
+
+```csharp
+logger.LogInformation("User {UserId} logged in", id);   // correct
+logger.LogInformation($"User {id} logged in");          // wrong
+```
+
+## Error Handling
+
+* **Validate inputs at the boundary.** Guard public methods, not internal call sites Revit already validates.
+* **Let unexpected exceptions reach the boundary.** Do not scatter `try-catch` through business logic. A handler at the boundary reports the failure.
+* **Define semantic exceptions** for expected failures rather than throw a bare `Exception`.
+
+## Data Objects
+
+* Use `record` for data-transfer objects, messages, and configuration objects.
+* Use `{ get; init; }` for immutable properties on a class.

@@ -1,27 +1,27 @@
-# UI Development & Styling
+# UI Development
 
-The application UI is data-template based, with templates customizable for different data types. Templates are located in `source/RevitLookup/Styles/ComponentStyles/` directory.
+The application UI is built on WPF and shared between the two environments.
+Views live in the UI framework project and display in both the production add-in and the Playground.
+The display of each data type is driven by data templates that the app selects at runtime, so a new type gains a tailored presentation without a change to the view.
 
-## UI Architecture
+## The ViewModel Pattern
 
-RevitLookup uses a shared UI approach where Views are defined in `RevitLookup.UI.Framework` and used in both Revit and Playground environments.
+A view binds to a contract, and each environment supplies its own implementation, so the production host shows real Revit data and the Playground shows mock data.
 
-When adding a new window or page:
+To add a window or page:
 
-1. Define a ViewModel interface in `RevitLookup.Abstractions`.
-2. Implement the interface twice:
-    * **Revit implementation:** in `RevitLookup.ViewModels`, providing real data from the Revit API.
-    * **Playground implementation:** in `RevitLookup.UI.Playground.Mocks.ViewModels`, providing mock or sample data.
-3. Registration in the DI container is not required; views and ViewModels are automatically registered via Scrutor.
+1. Define the ViewModel contract in the abstractions project.
+2. Implement the contract twice. The production implementation reads real data from the Revit API in the add-in project. The Playground implementation returns mock data.
+3. Skip manual registration. Views and ViewModels register automatically through Scrutor assembly scanning. See [Architecture](./architecture.md).
 
-## Customizing Type Display
+## Customize a Type's Display
 
-To customize the display of a specific type:
+The object tree picks a data template per item through a `DataTemplateSelector`.
+To present a specific type its own way, define a template and add a rule that selects it.
 
-1. Create a DataTemplate in a XAML file within the ComponentStyles directory:
+1. Define a `DataTemplate` in a XAML resource for the type:
 
 ```xml
-// source/RevitLookup/Styles/ComponentStyles/ObjectsTree/TreeGroupTemplates.xaml
 <DataTemplate
     x:Key="DefaultSummaryTreeItemTemplate"
     DataType="{x:Type decomposition:ObservableDecomposedObject}">
@@ -33,15 +33,11 @@ To customize the display of a specific type:
 </DataTemplate>
 ```
 
-2. Add a selector rule in the `TemplateSelector` class:
+2. Add a rule to the template selector that maps the value to the template:
 
 ```csharp
-// source/RevitLookup/Styles/ComponentStyles/ObjectsTree/TreeViewItemTemplateSelector.cs
 public sealed class TreeViewItemTemplateSelector : DataTemplateSelector
 {
-    /// <summary>
-    ///     Tree view row style selector
-    /// </summary>
     public override DataTemplate? SelectTemplate(object? item, DependencyObject container)
     {
         if (item is null) return null;
@@ -59,4 +55,10 @@ public sealed class TreeViewItemTemplateSelector : DataTemplateSelector
 }
 ```
 
-For custom visualization of specific data types, create specialized templates following the pattern above and register them in the appropriate style selectors.
+For custom visualization of further types, follow the same pattern and register the template with the matching selector.
+
+## The Playground
+
+The Playground hosts the shared UI as a standalone WPF application with mock ViewModels, so UI work needs no running Revit.
+Use it to develop and check layouts, themes, templates, and interactions, then verify the production behavior under Revit when the change touches the Revit API.
+See [Testing](./testing.md) for the Playground as a UI test environment.
