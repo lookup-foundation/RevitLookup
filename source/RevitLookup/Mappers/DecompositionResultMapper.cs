@@ -20,4 +20,7 @@ public static partial class DecompositionResultMapper
 
     [MapperIgnoreSource(nameof(DecomposedMember.Evaluator))]
     private static partial ObservableDecomposedMember MapMember(DecomposedMember decomposedMember);
+
+    [MapperIgnoreSource(nameof(DecomposedMember.Evaluator))]
+    public static partial void Update(DecomposedMember source, ObservableDecomposedMember target);
 }

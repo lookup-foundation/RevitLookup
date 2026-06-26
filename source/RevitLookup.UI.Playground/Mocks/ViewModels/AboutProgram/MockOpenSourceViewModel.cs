@@ -28,7 +28,7 @@ public sealed class MockOpenSourceViewModel : ObservableObject, IOpenSourceViewM
             SoftwareName = "CommunityToolkit.Mvvm",
             SoftwareUri = "https://github.com/CommunityToolkit/dotnet",
             LicenseName = "MIT License",
-            LicenseUri = "https://github.com/CommunityToolkit/dotnet/blob/main/License.md"
+            LicenseUri = "https://github.com/CommunityToolkit/dotnet/blob/main/LICENSE.md"
         },
         new()
         {
@@ -49,21 +49,21 @@ public sealed class MockOpenSourceViewModel : ObservableObject, IOpenSourceViewM
             SoftwareName = "Nice3point.Revit.Api",
             SoftwareUri = "https://github.com/Nice3point/RevitApi",
             LicenseName = "MIT License",
-            LicenseUri = "https://github.com/Nice3point/RevitApi/blob/main/License.md"
+            LicenseUri = "https://github.com/Nice3point/RevitApi/blob/main/LICENSE.md"
         },
         new()
         {
             SoftwareName = "Nice3point.Revit.Extensions",
             SoftwareUri = "https://github.com/Nice3point/RevitExtensions",
             LicenseName = "MIT License",
-            LicenseUri = "https://github.com/Nice3point/RevitExtensions/blob/main/License.md"
+            LicenseUri = "https://github.com/Nice3point/RevitExtensions/blob/main/LICENSE.md"
         },
         new()
         {
             SoftwareName = "Nice3point.Revit.Toolkit",
             SoftwareUri = "https://github.com/Nice3point/RevitToolkit",
             LicenseName = "MIT License",
-            LicenseUri = "https://github.com/Nice3point/RevitToolkit/blob/main/License.md"
+            LicenseUri = "https://github.com/Nice3point/RevitToolkit/blob/main/LICENSE.md"
         },
         new()
         {

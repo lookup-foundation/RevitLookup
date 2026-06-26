@@ -97,10 +97,7 @@ public sealed partial class DecompositionService(ISettingsService settingsServic
         if (decomposedMember.Member is null) return;
 
         decomposedMember.Member.Evaluate();
-        decomposedMember.Value = DecompositionResultMapper.Convert(decomposedMember.Member.Value);
-        decomposedMember.ComputationTime = decomposedMember.Member.ComputationTime;
-        decomposedMember.AllocatedBytes = decomposedMember.Member.AllocatedBytes;
-        decomposedMember.EvaluationPolicy = decomposedMember.Member.EvaluationPolicy;
+        DecompositionResultMapper.Update(decomposedMember.Member, decomposedMember);
     }
 
     private bool TryFindRevitContext(object? obj, [MaybeNullWhen(false)] out Document context)

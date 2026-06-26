@@ -65,10 +65,7 @@ public sealed class MockDecompositionService(ISettingsService settingsService) :
 
         await Task.Run(() => decomposedMember.Member.Evaluate());
 
-        decomposedMember.Value = DecompositionResultMapper.Convert(decomposedMember.Member.Value);
-        decomposedMember.ComputationTime = decomposedMember.Member.ComputationTime;
-        decomposedMember.AllocatedBytes = decomposedMember.Member.AllocatedBytes;
-        decomposedMember.EvaluationPolicy = decomposedMember.Member.EvaluationPolicy;
+        DecompositionResultMapper.Update(decomposedMember.Member, decomposedMember);
     }
 
     private static DecomposeOptions CreateDecomposeOptions()
@@ -92,7 +89,17 @@ public sealed class MockDecompositionService(ISettingsService settingsService) :
             IncludeStaticMembers = settingsService.DecompositionSettings.IncludeStatic,
             EnableExtensions = settingsService.DecompositionSettings.IncludeExtensions,
             EnableRedirection = true,
-            TypeResolver = DescriptorsMap.FindDescriptor
+            TypeResolver = DescriptorsMap.FindDescriptor,
+            EvaluationPolicy = new MethodEvaluationPolicy
+            {
+                EvaluatedFilter = (method, type) =>
+                {
+                    if (method.ReturnType == typeof(void)) return false;
+                    if (type.Name.StartsWith("System")) return true;
+                    
+                    return false;
+                }
+            }
         };
     }
 }
