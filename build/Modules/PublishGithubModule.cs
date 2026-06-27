@@ -23,7 +23,7 @@ namespace Build.Modules;
 [DependsOn<CreateBundleModule>(Optional = true)]
 [DependsOn<CreateInstallerModule>(Optional = true)]
 [DependsOn<SignInstallerModule>(Optional = true)]
-public sealed class PublishGithubModule(IOptions<BuildOptions> buildOptions) : Module
+public sealed partial class PublishGithubModule(IOptions<BuildOptions> buildOptions) : Module
 {
     protected override async Task ExecuteModuleAsync(IModuleContext context, CancellationToken cancellationToken)
     {
@@ -57,7 +57,7 @@ public sealed class PublishGithubModule(IOptions<BuildOptions> buildOptions) : M
                     RawData = file.GetStream()
                 };
 
-                context.Logger.LogInformation("Uploading asset: {Asset}", asset.FileName);
+                LogUploadingAsset(context.Logger, asset.FileName);
 
                 await context.GitHub().Client.Repository.Release.UploadAsset(release, asset, cancellationToken);
             }, cancellationToken)
@@ -77,4 +77,7 @@ public sealed class PublishGithubModule(IOptions<BuildOptions> buildOptions) : M
             Arguments = ["origin", versioning.Version]
         }, token: cancellationToken);
     }
+
+    [LoggerMessage(LogLevel.Information, "Uploading asset: {Asset}")]
+    private static partial void LogUploadingAsset(ILogger logger, string asset);
 }

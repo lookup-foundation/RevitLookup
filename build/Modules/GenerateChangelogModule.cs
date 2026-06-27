@@ -17,7 +17,7 @@ namespace Build.Modules;
 ///     Generate the changelog for publishing the add-in.
 /// </summary>
 [DependsOn<ResolveVersioningModule>]
-public sealed class GenerateChangelogModule(IOptions<PublishOptions> publishOptions) : Module<string>
+public sealed partial class GenerateChangelogModule(IOptions<PublishOptions> publishOptions) : Module<string>
 {
     protected override async Task<string?> ExecuteAsync(IModuleContext context, CancellationToken cancellationToken)
     {
@@ -26,14 +26,14 @@ public sealed class GenerateChangelogModule(IOptions<PublishOptions> publishOpti
 
         if (string.IsNullOrEmpty(publishOptions.Value.ChangelogFile))
         {
-            context.Logger.LogInformation("Changelog file not specified");
+            LogChangelogNotSpecified(context.Logger);
             return await GenerateReleaseNotesAsync(context, versioning);
         }
 
         var changelogFile = context.Git().RootDirectory.GetFile(publishOptions.Value.ChangelogFile);
         if (!changelogFile.Exists)
         {
-            context.Logger.LogWarning("Changelog specified but not found");
+            LogChangelogNotFound(context.Logger);
             return await GenerateReleaseNotesAsync(context, versioning);
         }
 
@@ -42,7 +42,7 @@ public sealed class GenerateChangelogModule(IOptions<PublishOptions> publishOpti
         {
             versioning.IsPrerelease.ShouldBeTrue($"No version entry exists in the changelog: {versioning.Version}");
             
-            context.Logger.LogWarning("No version entry exists in the changelog: {Version}", versioning.Version);
+            LogNoVersionEntry(context.Logger, versioning.Version);
             return await GenerateReleaseNotesAsync(context, versioning);
         }
 
@@ -121,4 +121,13 @@ public sealed class GenerateChangelogModule(IOptions<PublishOptions> publishOpti
 
         return releaseNotes.Body;
     }
+
+    [LoggerMessage(LogLevel.Information, "Changelog file not specified")]
+    private static partial void LogChangelogNotSpecified(ILogger logger);
+
+    [LoggerMessage(LogLevel.Warning, "Changelog specified but not found")]
+    private static partial void LogChangelogNotFound(ILogger logger);
+
+    [LoggerMessage(LogLevel.Warning, "No version entry exists in the changelog: {Version}")]
+    private static partial void LogNoVersionEntry(ILogger logger, string version);
 }

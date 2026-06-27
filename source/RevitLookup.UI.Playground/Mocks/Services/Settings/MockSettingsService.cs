@@ -12,7 +12,7 @@ using Wpf.Ui.Controls;
 
 namespace RevitLookup.UI.Playground.Mocks.Services.Settings;
 
-public sealed class MockSettingsService(
+public sealed partial class MockSettingsService(
     IOptions<ResourceLocationsOptions> foldersOptions,
     IOptions<JsonSerializerOptions> jsonOptions,
     ILogger<MockSettingsService> logger)
@@ -83,7 +83,7 @@ public sealed class MockSettingsService(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Application settings loading error");
+            LogApplicationSettingsLoadingError(logger, exception);
         }
 
         if (_applicationSettings is null)
@@ -108,7 +108,7 @@ public sealed class MockSettingsService(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Decomposition settings loading error");
+            LogDecompositionSettingsLoadingError(logger, exception);
         }
 
         if (_decompositionSettings is null)
@@ -133,7 +133,7 @@ public sealed class MockSettingsService(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Application settings loading error");
+            LogApplicationSettingsLoadingError(logger, exception);
         }
 
         if (_visualizationSettings is null)
@@ -249,4 +249,10 @@ public sealed class MockSettingsService(
             }
         };
     }
+
+    [LoggerMessage(LogLevel.Error, "Application settings loading error")]
+    private static partial void LogApplicationSettingsLoadingError(ILogger<MockSettingsService> logger, Exception exception);
+
+    [LoggerMessage(LogLevel.Error, "Decomposition settings loading error")]
+    private static partial void LogDecompositionSettingsLoadingError(ILogger<MockSettingsService> logger, Exception exception);
 }

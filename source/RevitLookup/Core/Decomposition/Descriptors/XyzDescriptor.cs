@@ -24,7 +24,7 @@ using RevitLookup.UI.Framework.Views.Visualization;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class XyzDescriptor : Descriptor, IContextMenuConnector
+public sealed partial class XyzDescriptor : Descriptor, IContextMenuConnector
 {
     private readonly XYZ _point;
 
@@ -56,9 +56,12 @@ public sealed class XyzDescriptor : Descriptor, IContextMenuConnector
                 var logger = serviceProvider.GetRequiredService<ILogger<XyzDescriptor>>();
                 var notificationService = serviceProvider.GetRequiredService<INotificationService>();
 
-                logger.LogError(exception, "Visualize XYZ error");
+                LogVisualizeXyzError(logger, exception);
                 notificationService.ShowError("Visualization error", exception);
             }
         }
     }
+
+    [LoggerMessage(LogLevel.Error, "Visualize XYZ error")]
+    private static partial void LogVisualizeXyzError(ILogger<XyzDescriptor> logger, Exception exception);
 }

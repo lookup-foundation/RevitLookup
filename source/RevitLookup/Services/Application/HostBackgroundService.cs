@@ -25,7 +25,7 @@ namespace RevitLookup.Services.Application;
 /// <summary>
 ///     Provides life cycle processes for the application
 /// </summary>
-public sealed class HostBackgroundService(
+public sealed partial class HostBackgroundService(
     ISettingsService settingsService,
     ISoftwareUpdateService updateService,
     IUiOrchestratorService orchestratorService,
@@ -57,11 +57,11 @@ public sealed class HostBackgroundService(
             var hasUpdates = await updateService.CheckUpdatesAsync();
             if (!hasUpdates) return;
 
-            logger.LogInformation("RevitLookup {Version} is available to download", updateService.NewVersion);
+            LogUpdateAvailable(logger, updateService.NewVersion);
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Update service error");
+            LogUpdateServiceError(logger, exception);
         }
     }
 
@@ -69,7 +69,7 @@ public sealed class HostBackgroundService(
     {
         if (!File.Exists(updateService.LocalFilePath)) return;
 
-        logger.LogInformation("Installing RevitLookup {Version} version", updateService.NewVersion);
+        LogInstallingVersion(logger, updateService.NewVersion);
         ProcessTasks.StartShell(updateService.LocalFilePath!);
     }
 
@@ -88,7 +88,7 @@ public sealed class HostBackgroundService(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Theme initialization error");
+            LogThemeInitializationError(logger, exception);
         }
     }
 
@@ -103,7 +103,7 @@ public sealed class HostBackgroundService(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Creating ribbon error");
+            LogCreatingRibbonError(logger, exception);
         }
     }
 
@@ -112,7 +112,7 @@ public sealed class HostBackgroundService(
     /// </summary>
     private void SaveSettings()
     {
-        logger.LogInformation("Saving settings");
+        LogSavingSettings(logger);
         settingsService.SaveSettings();
     }
 
@@ -121,7 +121,28 @@ public sealed class HostBackgroundService(
     /// </summary>
     private void LoadSettings()
     {
-        logger.LogInformation("Loading settings");
+        LogLoadingSettings(logger);
         settingsService.LoadSettings();
     }
+
+    [LoggerMessage(LogLevel.Information, "RevitLookup {Version} is available to download")]
+    private static partial void LogUpdateAvailable(ILogger<HostBackgroundService> logger, string? version);
+
+    [LoggerMessage(LogLevel.Error, "Update service error")]
+    private static partial void LogUpdateServiceError(ILogger<HostBackgroundService> logger, Exception exception);
+
+    [LoggerMessage(LogLevel.Information, "Installing RevitLookup {Version} version")]
+    private static partial void LogInstallingVersion(ILogger<HostBackgroundService> logger, string? version);
+
+    [LoggerMessage(LogLevel.Error, "Theme initialization error")]
+    private static partial void LogThemeInitializationError(ILogger<HostBackgroundService> logger, Exception exception);
+
+    [LoggerMessage(LogLevel.Error, "Creating ribbon error")]
+    private static partial void LogCreatingRibbonError(ILogger<HostBackgroundService> logger, Exception exception);
+
+    [LoggerMessage(LogLevel.Information, "Saving settings")]
+    private static partial void LogSavingSettings(ILogger<HostBackgroundService> logger);
+
+    [LoggerMessage(LogLevel.Information, "Loading settings")]
+    private static partial void LogLoadingSettings(ILogger<HostBackgroundService> logger);
 }

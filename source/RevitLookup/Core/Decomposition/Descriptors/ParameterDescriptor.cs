@@ -81,7 +81,7 @@ public sealed partial class ParameterDescriptor : Descriptor, IDescriptorConfigu
             var logger = serviceProvider.GetRequiredService<ILogger<ParameterDescriptor>>();
             var notificationService = serviceProvider.GetRequiredService<INotificationService>();
 
-            logger.LogError(exception, "Update value error");
+            LogUpdateValueError(logger, exception);
             notificationService.ShowError("Updating parameter value error", exception);
         }
     }
@@ -100,4 +100,7 @@ public sealed partial class ParameterDescriptor : Descriptor, IDescriptorConfigu
 
         transaction.Commit();
     }
+
+    [LoggerMessage(LogLevel.Error, "Update value error")]
+    private static partial void LogUpdateValueError(ILogger<ParameterDescriptor> logger, Exception exception);
 }

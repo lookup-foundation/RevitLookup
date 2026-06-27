@@ -77,7 +77,7 @@ public sealed partial class MockDecompositionSummaryViewModel(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Members decomposing failed");
+            LogMembersDecomposingFailed(logger, exception);
             notificationService.ShowError("Lookup engine error", exception);
         }
     }
@@ -91,7 +91,7 @@ public sealed partial class MockDecompositionSummaryViewModel(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Member evaluation failed");
+            LogMemberEvaluationFailed(logger, exception);
             notificationService.ShowError("Lookup engine error", exception);
         }
     }
@@ -154,7 +154,7 @@ public sealed partial class MockDecompositionSummaryViewModel(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Members decomposing failed");
+            LogMembersDecomposingFailed(logger, exception);
             notificationService.ShowError("Lookup engine error", exception);
         }
     }
@@ -179,7 +179,7 @@ public sealed partial class MockDecompositionSummaryViewModel(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Search error");
+            LogSearchError(logger, exception);
             notificationService.ShowError("Search error", exception);
         }
     }
@@ -204,4 +204,13 @@ public sealed partial class MockDecompositionSummaryViewModel(
             })
             .ToObservableCollection();
     }
+
+    [LoggerMessage(LogLevel.Error, "Members decomposing failed")]
+    private static partial void LogMembersDecomposingFailed(ILogger<MockDecompositionSummaryViewModel> logger, Exception exception);
+
+    [LoggerMessage(LogLevel.Error, "Member evaluation failed")]
+    private static partial void LogMemberEvaluationFailed(ILogger<MockDecompositionSummaryViewModel> logger, Exception exception);
+
+    [LoggerMessage(LogLevel.Error, "Search error")]
+    private static partial void LogSearchError(ILogger<MockDecompositionSummaryViewModel> logger, Exception exception);
 }

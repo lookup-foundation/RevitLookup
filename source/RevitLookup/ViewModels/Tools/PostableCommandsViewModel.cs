@@ -58,7 +58,7 @@ public sealed partial class PostableCommandsViewModel(ILogger<PostableCommandsVi
         {
             const string message = "Unavailable execute postable command";
 
-            logger.LogError(exception, message);
+            LogExecutePostableCommandFailed(logger, exception);
             notificationService.ShowError(message, exception);
         }
     }
@@ -98,4 +98,7 @@ public sealed partial class PostableCommandsViewModel(ILogger<PostableCommandsVi
     {
         FilteredCommands = value;
     }
+
+    [LoggerMessage(LogLevel.Error, "Unavailable execute postable command")]
+    private static partial void LogExecutePostableCommandFailed(ILogger<PostableCommandsViewModel> logger, Exception exception);
 }

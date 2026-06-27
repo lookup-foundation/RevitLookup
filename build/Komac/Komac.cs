@@ -9,7 +9,7 @@ using File = ModularPipelines.FileSystem.File;
 
 namespace Build.Komac;
 
-public sealed class Komac(IGitHub gitHub, ICommand command, ILogger<Komac> logger)
+public sealed partial class Komac(IGitHub gitHub, ICommand command, ILogger<Komac> logger)
 {
     private const string KomacOwner = "russellbanks";
     private const string KomacRepository = "Komac";
@@ -63,7 +63,7 @@ public sealed class Komac(IGitHub gitHub, ICommand command, ILogger<Komac> logge
                 await stream.CopyToAsync(fileStream, cancellationToken);
             }
 
-            logger.LogInformation("Downloaded Komac {Version} from {Url}", release.TagName, asset.BrowserDownloadUrl);
+            LogDownloaded(logger, release.TagName, asset.BrowserDownloadUrl);
 
             _komacFile = komacFile;
             return komacFile;
@@ -73,4 +73,7 @@ public sealed class Komac(IGitHub gitHub, ICommand command, ILogger<Komac> logge
             SemaphoreSlim.Release();
         }
     }
+
+    [LoggerMessage(LogLevel.Information, "Downloaded Komac {Version} from {Url}")]
+    private static partial void LogDownloaded(ILogger<Komac> logger, string version, string url);
 }

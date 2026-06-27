@@ -25,7 +25,7 @@ using RevitLookup.UI.Framework.Views.Visualization;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class MeshDescriptor(Mesh mesh) : Descriptor, IDescriptorCollector, IContextMenuConnector
+public sealed partial class MeshDescriptor(Mesh mesh) : Descriptor, IDescriptorCollector, IContextMenuConnector
 {
     public void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)
     {
@@ -49,8 +49,11 @@ public sealed class MeshDescriptor(Mesh mesh) : Descriptor, IDescriptorCollector
             var logger = serviceProvider.GetRequiredService<ILogger<MeshDescriptor>>();
             var notificationService = serviceProvider.GetRequiredService<INotificationService>();
 
-            logger.LogError(exception, "Visualize Mesh error");
+            LogVisualizeMeshError(logger, exception);
             notificationService.ShowError("Visualization error", exception);
         }
     }
+
+    [LoggerMessage(LogLevel.Error, "Visualize Mesh error")]
+    private static partial void LogVisualizeMeshError(ILogger<MeshDescriptor> logger, Exception exception);
 }

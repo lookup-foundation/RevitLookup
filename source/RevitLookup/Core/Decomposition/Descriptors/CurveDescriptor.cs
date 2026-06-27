@@ -119,7 +119,7 @@ public sealed partial class CurveDescriptor : Descriptor, IDescriptorConfigurato
             var logger = serviceProvider.GetRequiredService<ILogger<CurveDescriptor>>();
             var notificationService = serviceProvider.GetRequiredService<INotificationService>();
 
-            logger.LogError(exception, "Visualize curve error");
+            LogVisualizeCurveError(logger, exception);
             notificationService.ShowError("Visualization error", exception);
         }
     }
@@ -147,4 +147,7 @@ public sealed partial class CurveDescriptor : Descriptor, IDescriptorConfigurato
         uiDocument.Selection.SetReferences([curve.Reference]);
     }
 #endif
+
+    [LoggerMessage(LogLevel.Error, "Visualize curve error")]
+    private static partial void LogVisualizeCurveError(ILogger<CurveDescriptor> logger, Exception exception);
 }

@@ -77,7 +77,7 @@ public sealed partial class XyzVisualizationViewModel(
 
     private void HandleRenderFailure(object? sender, RenderFailedEventArgs args)
     {
-        logger.LogError(args.ExceptionObject, "Render error");
+        LogRenderError(logger, args.ExceptionObject);
         notificationService.ShowError("Render error", args.ExceptionObject);
     }
 
@@ -179,4 +179,7 @@ public sealed partial class XyzVisualizationViewModel(
     {
         _server.UpdateZAxisVisibility(value);
     }
+
+    [LoggerMessage(LogLevel.Error, "Render error")]
+    private static partial void LogRenderError(ILogger<XyzVisualizationViewModel> logger, Exception exception);
 }

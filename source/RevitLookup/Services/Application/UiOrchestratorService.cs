@@ -17,7 +17,7 @@ using Wpf.Ui;
 
 namespace RevitLookup.Services.Application;
 
-public sealed class UiOrchestratorService(IServiceScopeFactory scopeFactory) : IUiOrchestratorService, IHistoryOrchestrator
+public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFactory) : IUiOrchestratorService, IHistoryOrchestrator
 {
     private static readonly Dispatcher Dispatcher;
     private UiSession? _session;
@@ -142,7 +142,7 @@ public sealed class UiOrchestratorService(IServiceScopeFactory scopeFactory) : I
         }
     }
 
-    private sealed class UiSession
+    private sealed partial class UiSession
     {
         private IServiceProvider? _parentProvider;
 
@@ -291,7 +291,7 @@ public sealed class UiOrchestratorService(IServiceScopeFactory scopeFactory) : I
             }
             catch (Exception exception)
             {
-                _logger.LogError(exception, "RevitLookup new instance startup error");
+                LogStartupError(_logger, exception);
             }
         }
 
@@ -360,7 +360,7 @@ public sealed class UiOrchestratorService(IServiceScopeFactory scopeFactory) : I
             }
             catch (Exception exception)
             {
-                _logger.LogError(exception, "Lookup engine error");
+                LogLookupEngineError(_logger, exception);
                 notificationService.ShowError("Lookup engine error", exception);
             }
         }
@@ -370,5 +370,11 @@ public sealed class UiOrchestratorService(IServiceScopeFactory scopeFactory) : I
             IsAlive = false;
             _scope.Dispose();
         }
+
+        [LoggerMessage(LogLevel.Error, "RevitLookup new instance startup error")]
+        private static partial void LogStartupError(ILogger<UiOrchestratorService> logger, Exception exception);
+
+        [LoggerMessage(LogLevel.Error, "Lookup engine error")]
+        private static partial void LogLookupEngineError(ILogger<UiOrchestratorService> logger, Exception exception);
     }
 }

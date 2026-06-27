@@ -21,7 +21,7 @@ namespace RevitLookup.UI.Playground.Services.Host;
 /// <summary>
 ///     Provides life cycle processes for the application
 /// </summary>
-public sealed class RevitApplicationService(ISettingsService settingsService, ILogger<RevitApplicationService> logger) : IHostedService
+public sealed partial class RevitApplicationService(ISettingsService settingsService, ILogger<RevitApplicationService> logger) : IHostedService
 {
     public Task StartAsync(CancellationToken cancellationToken)
     {
@@ -37,13 +37,19 @@ public sealed class RevitApplicationService(ISettingsService settingsService, IL
 
     private void SaveSettings()
     {
-        logger.LogInformation("Saving settings");
+        LogSavingSettings(logger);
         settingsService.SaveSettings();
     }
 
     private void LoadSettings()
     {
-        logger.LogInformation("Loading settings");
+        LogLoadingSettings(logger);
         settingsService.LoadSettings();
     }
+
+    [LoggerMessage(LogLevel.Information, "Saving settings")]
+    private static partial void LogSavingSettings(ILogger<RevitApplicationService> logger);
+
+    [LoggerMessage(LogLevel.Information, "Loading settings")]
+    private static partial void LogLoadingSettings(ILogger<RevitApplicationService> logger);
 }

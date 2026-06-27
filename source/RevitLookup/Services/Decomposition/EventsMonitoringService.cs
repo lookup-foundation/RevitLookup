@@ -72,7 +72,7 @@ public sealed partial class EventsMonitoringService(ILogger<EventsMonitoringServ
             var targets = FindValidTargets(eventInfo.ReflectedType);
             if (targets.Length == 0)
             {
-                logger.LogDebug("Missing target: {EventType}.{EventName}", eventInfo.ReflectedType, eventInfo.Name);
+                LogMissingTarget(logger, eventInfo.ReflectedType, eventInfo.Name);
                 break;
             }
 
@@ -85,7 +85,7 @@ public sealed partial class EventsMonitoringService(ILogger<EventsMonitoringServ
             }
 
             _handlersMap.Add(eventInfo, eventHandler);
-            logger.LogDebug("Observing: {EventType}.{EventName}", eventInfo.ReflectedType, eventInfo.Name);
+            LogObserving(logger, eventInfo.ReflectedType, eventInfo.Name);
         }
     }
 
@@ -123,4 +123,10 @@ public sealed partial class EventsMonitoringService(ILogger<EventsMonitoringServ
             service._eventInvoked?.Invoke(args, eventName);
         }
     }
+
+    [LoggerMessage(LogLevel.Debug, "Missing target: {EventType}.{EventName}")]
+    private static partial void LogMissingTarget(ILogger<EventsMonitoringService> logger, Type? eventType, string eventName);
+
+    [LoggerMessage(LogLevel.Debug, "Observing: {EventType}.{EventName}")]
+    private static partial void LogObserving(ILogger<EventsMonitoringService> logger, Type? eventType, string eventName);
 }

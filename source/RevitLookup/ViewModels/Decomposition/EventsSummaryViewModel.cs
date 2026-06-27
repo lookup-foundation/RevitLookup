@@ -69,7 +69,7 @@ public sealed partial class EventsSummaryViewModel(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Member evaluation failed");
+            LogMemberEvaluationFailed(logger, exception);
             notificationService.ShowError("Lookup engine error", exception);
         }
     }
@@ -90,7 +90,7 @@ public sealed partial class EventsSummaryViewModel(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Members decomposing failed");
+            LogMembersDecomposingFailed(logger, exception);
             notificationService.ShowError("Lookup engine error", exception);
         }
     }
@@ -132,7 +132,7 @@ public sealed partial class EventsSummaryViewModel(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Search error");
+            LogSearchError(logger, exception);
             notificationService.ShowError("Search error", exception);
         }
     }
@@ -157,7 +157,7 @@ public sealed partial class EventsSummaryViewModel(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Search error");
+            LogSearchError(logger, exception);
             notificationService.ShowError("Search error", exception);
         }
     }
@@ -180,7 +180,7 @@ public sealed partial class EventsSummaryViewModel(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Events data parsing error");
+            LogEventsDataParsingError(logger, exception);
             notificationService.ShowError("Events data parsing error", exception);
         }
     }
@@ -204,7 +204,7 @@ public sealed partial class EventsSummaryViewModel(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Events data parsing error");
+            LogEventsDataParsingError(logger, exception);
             notificationService.ShowError("Events data parsing error", exception);
         }
     }
@@ -216,4 +216,16 @@ public sealed partial class EventsSummaryViewModel(
 
         value.Members = await decompositionService.DecomposeMembersAsync(value);
     }
+
+    [LoggerMessage(LogLevel.Error, "Member evaluation failed")]
+    private static partial void LogMemberEvaluationFailed(ILogger<DecompositionSummaryViewModel> logger, Exception exception);
+
+    [LoggerMessage(LogLevel.Error, "Members decomposing failed")]
+    private static partial void LogMembersDecomposingFailed(ILogger<DecompositionSummaryViewModel> logger, Exception exception);
+
+    [LoggerMessage(LogLevel.Error, "Search error")]
+    private static partial void LogSearchError(ILogger<DecompositionSummaryViewModel> logger, Exception exception);
+
+    [LoggerMessage(LogLevel.Error, "Events data parsing error")]
+    private static partial void LogEventsDataParsingError(ILogger<DecompositionSummaryViewModel> logger, Exception exception);
 }

@@ -17,7 +17,7 @@ namespace Build.Modules;
 ///     Sing 
 /// </summary>
 [DependsOn<CompileProjectModule>]
-public sealed class SignAssembliesModule(IOptions<SigningOptions> signingOptions) : Module<CommandResult>
+public sealed partial class SignAssembliesModule(IOptions<SigningOptions> signingOptions) : Module<CommandResult>
 {
     protected override async Task<CommandResult?> ExecuteAsync(IModuleContext context, CancellationToken cancellationToken)
     {
@@ -41,7 +41,7 @@ public sealed class SignAssembliesModule(IOptions<SigningOptions> signingOptions
         var inputFile = File.GetNewTemporaryFilePath();
         await inputFile.WriteAsync(targetFiles, cancellationToken);
 
-        context.Logger.LogInformation("Signing {Count} files", targetFiles.Length);
+        LogSigningFiles(context.Logger, targetFiles.Length);
 
         return await context.Azure().Sign(new AzureSignToolOptions
         {
@@ -56,4 +56,7 @@ public sealed class SignAssembliesModule(IOptions<SigningOptions> signingOptions
             InputFileList = inputFile
         }, cancellationToken);
     }
+
+    [LoggerMessage(LogLevel.Information, "Signing {Count} files")]
+    private static partial void LogSigningFiles(ILogger logger, int count);
 }

@@ -97,12 +97,47 @@ public partial class SearchViewModel(ISearchService searchService) : ObservableO
 
 Serilog is the logging backend, configured through the host.
 
-* **Structured logging is mandatory.** Pass values as message-template properties, never through string interpolation.
+* **Always log through source-generated `LoggerMessage` partial methods.** Never call `logger.LogInformation`, `logger.LogError`, `logger.LogDebug`, or the other `ILogger` extension methods directly in production code. This applies everywhere: ViewModels, services, descriptors, and hosted services.
+* Mark the owning class `partial` and declare the log methods as `private static partial void` at the bottom of the class. Name each one with a `Log` prefix, take `ILogger<T>` as the first parameter, and pass the level positionally on the attribute.
 
 ```csharp
-logger.LogInformation("User {UserId} logged in", id);   // correct
-logger.LogInformation($"User {id} logged in");          // wrong
+public sealed partial class HostBackgroundService(
+    ISoftwareUpdateService updateService,
+    ILogger<HostBackgroundService> logger)
+    : IHostedService
+{
+    private async Task CheckUpdatesAsync()
+    {
+        try
+        {
+            if (!await updateService.CheckUpdatesAsync()) return;
+            LogUpdateAvailable(logger, updateService.NewVersion);
+        }
+        catch (Exception exception)
+        {
+            LogUpdateServiceError(logger, exception);
+        }
+    }
+
+    [LoggerMessage(LogLevel.Information, "RevitLookup {Version} is available to download")]
+    private static partial void LogUpdateAvailable(ILogger<HostBackgroundService> logger, string? version);
+
+    [LoggerMessage(LogLevel.Error, "Update service error")]
+    private static partial void LogUpdateServiceError(ILogger<HostBackgroundService> logger, Exception exception);
+}
 ```
+
+Call the generated method by passing the logger explicitly, with the exception first when present:
+
+```csharp
+LogUpdateAvailable(logger, updateService.NewVersion);
+LogUpdateServiceError(logger, exception);
+```
+
+* **Pass values as structured properties, never as a pre-formatted string.** Expose each value through a `{Property}` placeholder backed by a typed parameter, instead of building the message at the call site and logging it as a single string.
+    * Bad: a method with the template `"{Message}"` and a `string message` parameter, called as `LogUpdateAvailable(logger, $"RevitLookup {version} is available")` — the version is lost as a property.
+    * Good: template `"RevitLookup {Version} is available to download"` with a `string? version` parameter, called as `LogUpdateAvailable(logger, version)`.
+* Choose the level on the `[LoggerMessage]` attribute. Use `LogLevel.Debug` for detailed diagnostics and reserve `LogLevel.Information` for meaningful lifecycle events.
 
 ## Error Handling
 

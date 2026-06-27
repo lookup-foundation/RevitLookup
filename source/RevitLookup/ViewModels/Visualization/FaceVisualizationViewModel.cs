@@ -73,7 +73,7 @@ public sealed partial class FaceVisualizationViewModel(
 
     private void HandleRenderFailure(object? sender, RenderFailedEventArgs args)
     {
-        logger.LogError(args.ExceptionObject, "Render error");
+        LogRenderError(logger, args.ExceptionObject);
         notificationService.ShowError("Render error", args.ExceptionObject);
     }
 
@@ -164,4 +164,7 @@ public sealed partial class FaceVisualizationViewModel(
     {
         _server.UpdateNormalVectorVisibility(value);
     }
+
+    [LoggerMessage(LogLevel.Error, "Render error")]
+    private static partial void LogRenderError(ILogger<FaceVisualizationViewModel> logger, Exception exception);
 }

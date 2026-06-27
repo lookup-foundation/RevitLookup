@@ -95,13 +95,13 @@ public sealed partial class AboutViewModel : ObservableObject, IAboutViewModel
         catch (HttpRequestException exception)
         {
             State = SoftwareUpdateState.UpToDate;
-            _logger.LogError(exception, "Checking updates fail");
+            LogCheckingUpdatesFail(_logger, exception);
         }
         catch (Exception exception)
         {
             State = SoftwareUpdateState.Error;
             ErrorMessage = "An unknown error occurred while checking for updates";
-            _logger.LogError(exception, "Checking updates fail");
+            LogCheckingUpdatesFail(_logger, exception);
         }
         finally
         {
@@ -121,7 +121,7 @@ public sealed partial class AboutViewModel : ObservableObject, IAboutViewModel
         {
             State = SoftwareUpdateState.Error;
             ErrorMessage = "An error occurred while downloading the update";
-            _logger.LogError(exception, "Downloading updates fail");
+            LogDownloadingUpdatesFail(_logger, exception);
         }
     }
 
@@ -146,4 +146,10 @@ public sealed partial class AboutViewModel : ObservableObject, IAboutViewModel
         ReleaseNotesUrl = _updateService.ReleaseNotesUrl;
         State = SoftwareUpdateState.ReadyToDownload;
     }
+
+    [LoggerMessage(LogLevel.Error, "Checking updates fail")]
+    private static partial void LogCheckingUpdatesFail(ILogger<AboutViewModel> logger, Exception exception);
+
+    [LoggerMessage(LogLevel.Error, "Downloading updates fail")]
+    private static partial void LogDownloadingUpdatesFail(ILogger<AboutViewModel> logger, Exception exception);
 }

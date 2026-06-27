@@ -104,7 +104,7 @@ public sealed partial class SolidDescriptor : Descriptor, IDescriptorConfigurato
             var logger = serviceProvider.GetRequiredService<ILogger<SolidDescriptor>>();
             var notificationService = serviceProvider.GetRequiredService<INotificationService>();
 
-            logger.LogError(exception, "Visualize solid error");
+            LogVisualizeSolidError(logger, exception);
             notificationService.ShowError("Visualization error", exception);
         }
     }
@@ -144,4 +144,7 @@ public sealed partial class SolidDescriptor : Descriptor, IDescriptorConfigurato
         uiDocument.Selection.SetReferences(references);
     }
 #endif
+
+    [LoggerMessage(LogLevel.Error, "Visualize solid error")]
+    private static partial void LogVisualizeSolidError(ILogger<SolidDescriptor> logger, Exception exception);
 }

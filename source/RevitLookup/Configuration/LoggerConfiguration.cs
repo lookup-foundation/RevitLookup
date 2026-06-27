@@ -12,16 +12,19 @@ namespace RevitLookup.Configuration;
 /// </summary>
 /// <example>
 /// <code lang="csharp">
-/// public class Class(ILogger&lt;Class&gt; logger)
+/// public partial class Class(ILogger&lt;Class&gt; logger)
 /// {
 ///     private void Execute()
 ///     {
-///         logger.LogInformation("Message");
+///         LogMessage(logger);
 ///     }
+///
+///     [LoggerMessage(LogLevel.Information, "Message")]
+///     private static partial void LogMessage(ILogger&lt;Class&gt; logger);
 /// }
 /// </code>
 /// </example>
-public static class LoggerConfiguration
+public static partial class LoggerConfiguration
 {
     private const string LogTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {SourceContext}: {Message:lj}{NewLine}{Exception}";
 
@@ -48,7 +51,7 @@ public static class LoggerConfiguration
     {
         var exception = (Exception) args.ExceptionObject;
         var logger = Host.GetService<ILogger<AppDomain>>();
-        logger.LogCritical(exception, "Domain unhandled exception");
+        LogDomainUnhandledException(logger, exception);
     }
 
     extension(Serilog.LoggerConfiguration loggerConfiguration)
@@ -95,4 +98,7 @@ public static class LoggerConfiguration
             return loggerConfiguration.Enrich.FromLogContext();
         }
     }
+
+    [LoggerMessage(LogLevel.Critical, "Domain unhandled exception")]
+    private static partial void LogDomainUnhandledException(ILogger<AppDomain> logger, Exception exception);
 }

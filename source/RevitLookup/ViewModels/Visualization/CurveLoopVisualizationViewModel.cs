@@ -108,7 +108,7 @@ namespace RevitLookup.ViewModels.Visualization
 
         private void HandleRenderFailure(object? sender, RenderFailedEventArgs args)
         {
-            logger.LogError(args.ExceptionObject, "Render error");
+            LogRenderError(logger, args.ExceptionObject);
             notificationService.ShowError("Render error", args.ExceptionObject);
         }
 
@@ -199,5 +199,8 @@ namespace RevitLookup.ViewModels.Visualization
         {
             _server.UpdateDirectionVisibility(value);
         }
+
+        [LoggerMessage(LogLevel.Error, "Render error")]
+        private static partial void LogRenderError(ILogger<CurveLoopVisualizationViewModel> logger, Exception exception);
     }
 }

@@ -11,12 +11,15 @@ namespace RevitLookup.UI.Playground.Configuration;
 /// </summary>
 /// <example>
 /// <code lang="csharp">
-/// public class Class(ILogger&lt;Class&gt; logger)
+/// public partial class Class(ILogger&lt;Class&gt; logger)
 /// {
 ///     private void Execute()
 ///     {
-///         logger.LogInformation("Message");
+///         LogMessage(logger);
 ///     }
+///
+///     [LoggerMessage(LogLevel.Information, "Message")]
+///     private static partial void LogMessage(ILogger&lt;Class&gt; logger);
 /// }
 /// </code>
 /// </example>

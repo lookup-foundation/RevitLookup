@@ -25,7 +25,7 @@ using RevitLookup.UI.Framework.Views.Visualization;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class BoundingBoxXyzDescriptor(BoundingBoxXYZ box) : Descriptor, IDescriptorConfigurator, IContextMenuConnector
+public sealed partial class BoundingBoxXyzDescriptor(BoundingBoxXYZ box) : Descriptor, IDescriptorConfigurator, IContextMenuConnector
 {
     public void Configure(IMemberConfigurator configuration)
     {
@@ -151,8 +151,11 @@ public sealed class BoundingBoxXyzDescriptor(BoundingBoxXYZ box) : Descriptor, I
             var logger = serviceProvider.GetRequiredService<ILogger<BoundingBoxXyzDescriptor>>();
             var notificationService = serviceProvider.GetRequiredService<INotificationService>();
 
-            logger.LogError(exception, "Visualize BoundingBox error");
+            LogVisualizeBoundingBoxError(logger, exception);
             notificationService.ShowError("Visualization error", exception);
         }
     }
+
+    [LoggerMessage(LogLevel.Error, "Visualize BoundingBox error")]
+    private static partial void LogVisualizeBoundingBoxError(ILogger<BoundingBoxXyzDescriptor> logger, Exception exception);
 }

@@ -83,7 +83,7 @@ public sealed partial class PolylineVisualizationViewModel(
 
     private void HandleRenderFailure(object? sender, RenderFailedEventArgs args)
     {
-        logger.LogError(args.ExceptionObject, "Render error");
+        LogRenderError(logger, args.ExceptionObject);
         notificationService.ShowError("Render error", args.ExceptionObject);
     }
 
@@ -174,4 +174,7 @@ public sealed partial class PolylineVisualizationViewModel(
     {
         _server.UpdateDirectionVisibility(value);
     }
+
+    [LoggerMessage(LogLevel.Error, "Render error")]
+    private static partial void LogRenderError(ILogger<PolylineVisualizationViewModel> logger, Exception exception);
 }

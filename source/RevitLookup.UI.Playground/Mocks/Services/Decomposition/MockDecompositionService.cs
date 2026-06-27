@@ -95,7 +95,9 @@ public sealed class MockDecompositionService(ISettingsService settingsService) :
                 EvaluatedFilter = (method, type) =>
                 {
                     if (method.ReturnType == typeof(void)) return false;
-                    if (type.Name.StartsWith("System")) return true;
+                    if (type.Namespace is null) return true;
+                    if (type.Namespace.StartsWith("System.Windows")) return false;
+                    if (type.Namespace.StartsWith("System")) return true;
                     
                     return false;
                 }

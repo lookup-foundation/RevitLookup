@@ -14,7 +14,7 @@ using File = ModularPipelines.FileSystem.File;
 namespace Build.Modules;
 
 [DependsOn<CreateInstallerModule>]
-public sealed class SignInstallerModule(IOptions<SigningOptions> signingOptions, IOptions<BuildOptions> buildOptions) : Module<CommandResult>
+public sealed partial class SignInstallerModule(IOptions<SigningOptions> signingOptions, IOptions<BuildOptions> buildOptions) : Module<CommandResult>
 {
     protected override async Task<CommandResult?> ExecuteAsync(IModuleContext context, CancellationToken cancellationToken)
     {
@@ -28,7 +28,7 @@ public sealed class SignInstallerModule(IOptions<SigningOptions> signingOptions,
         var inputFile = File.GetNewTemporaryFilePath();
         await inputFile.WriteAsync(targetFiles, cancellationToken);
 
-        context.Logger.LogInformation("Signing {Count} files", targetFiles.Length);
+        LogSigningFiles(context.Logger, targetFiles.Length);
 
         return await context.Azure().Sign(new AzureSignToolOptions
         {
@@ -43,4 +43,7 @@ public sealed class SignInstallerModule(IOptions<SigningOptions> signingOptions,
             InputFileList = inputFile
         }, cancellationToken: cancellationToken);
     }
+
+    [LoggerMessage(LogLevel.Information, "Signing {Count} files")]
+    private static partial void LogSigningFiles(ILogger logger, int count);
 }

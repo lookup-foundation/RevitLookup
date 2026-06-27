@@ -63,7 +63,7 @@ public sealed partial class SolidVisualizationViewModel(
 
     private void HandleRenderFailure(object? sender, RenderFailedEventArgs args)
     {
-        logger.LogError(args.ExceptionObject, "Render error");
+        LogRenderError(logger, args.ExceptionObject);
         notificationService.ShowError("Render error", args.ExceptionObject);
     }
 
@@ -132,4 +132,7 @@ public sealed partial class SolidVisualizationViewModel(
     {
         _server.UpdateEdgeVisibility(value);
     }
+
+    [LoggerMessage(LogLevel.Error, "Render error")]
+    private static partial void LogRenderError(ILogger<SolidVisualizationViewModel> logger, Exception exception);
 }

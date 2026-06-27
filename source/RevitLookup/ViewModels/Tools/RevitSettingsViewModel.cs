@@ -66,7 +66,7 @@ public sealed partial class RevitSettingsViewModel(
         {
             const string message = "Unavailable to parse Revit configuration";
 
-            logger.LogError(exception, message);
+            LogParseConfigurationFailed(logger, exception);
             notificationService.ShowError(message, exception);
         }
     }
@@ -92,7 +92,7 @@ public sealed partial class RevitSettingsViewModel(
         {
             const string message = "Failed to create a new entry";
 
-            logger.LogError(exception, message);
+            LogCreateEntryFailed(logger, exception);
             notificationService.ShowError(message, exception);
         }
     }
@@ -189,7 +189,7 @@ public sealed partial class RevitSettingsViewModel(
         {
             const string message = "Unavailable to update Revit configuration";
 
-            logger.LogError(exception, message);
+            LogUpdateConfigurationFailed(logger, exception);
             notificationService.ShowError(message, exception);
         }
     }
@@ -270,8 +270,20 @@ public sealed partial class RevitSettingsViewModel(
         {
             const string message = "Failed to save configuration file";
 
-            logger.LogError(exception, message);
+            LogSaveConfigurationFailed(logger, exception);
             notificationService.ShowError(message, exception);
         }
     }
+
+    [LoggerMessage(LogLevel.Error, "Unavailable to parse Revit configuration")]
+    private static partial void LogParseConfigurationFailed(ILogger<RevitSettingsViewModel> logger, Exception exception);
+
+    [LoggerMessage(LogLevel.Error, "Failed to create a new entry")]
+    private static partial void LogCreateEntryFailed(ILogger<RevitSettingsViewModel> logger, Exception exception);
+
+    [LoggerMessage(LogLevel.Error, "Unavailable to update Revit configuration")]
+    private static partial void LogUpdateConfigurationFailed(ILogger<RevitSettingsViewModel> logger, Exception exception);
+
+    [LoggerMessage(LogLevel.Error, "Failed to save configuration file")]
+    private static partial void LogSaveConfigurationFailed(ILogger<RevitSettingsViewModel> logger, Exception exception);
 }

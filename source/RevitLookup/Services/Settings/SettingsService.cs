@@ -13,7 +13,7 @@ using Color = System.Windows.Media.Color;
 
 namespace RevitLookup.Services.Settings;
 
-public sealed class SettingsService(
+public sealed partial class SettingsService(
     IOptions<ResourceLocationsOptions> foldersOptions,
     IOptions<JsonSerializerOptions> jsonOptions,
     ILogger<SettingsService> logger)
@@ -84,7 +84,7 @@ public sealed class SettingsService(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Application settings loading error");
+            LogApplicationSettingsLoadingError(logger, exception);
         }
         
         if (_applicationSettings is null)
@@ -109,7 +109,7 @@ public sealed class SettingsService(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Decomposition settings loading error");
+            LogDecompositionSettingsLoadingError(logger, exception);
         }
 
         if (_decompositionSettings is null)
@@ -134,7 +134,7 @@ public sealed class SettingsService(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Application settings loading error");
+            LogVisualizationSettingsLoadingError(logger, exception);
         }
 
         if (_visualizationSettings is null)
@@ -254,4 +254,13 @@ public sealed class SettingsService(
             }
         };
     }
+
+    [LoggerMessage(LogLevel.Error, "Application settings loading error")]
+    private static partial void LogApplicationSettingsLoadingError(ILogger<SettingsService> logger, Exception exception);
+
+    [LoggerMessage(LogLevel.Error, "Decomposition settings loading error")]
+    private static partial void LogDecompositionSettingsLoadingError(ILogger<SettingsService> logger, Exception exception);
+
+    [LoggerMessage(LogLevel.Error, "Application settings loading error")]
+    private static partial void LogVisualizationSettingsLoadingError(ILogger<SettingsService> logger, Exception exception);
 }

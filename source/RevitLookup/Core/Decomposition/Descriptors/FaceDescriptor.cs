@@ -71,7 +71,7 @@ public partial class FaceDescriptor : Descriptor, IDescriptorCollector, IContext
             var logger = serviceProvider.GetRequiredService<ILogger<FaceDescriptor>>();
             var notificationService = serviceProvider.GetRequiredService<INotificationService>();
 
-            logger.LogError(exception, "Visualize Face error");
+            LogVisualizeFaceError(logger, exception);
             notificationService.ShowError("Visualization error", exception);
         }
     }
@@ -99,4 +99,7 @@ public partial class FaceDescriptor : Descriptor, IDescriptorCollector, IContext
         uiDocument.Selection.SetReferences([face.Reference]);
     }
 #endif
+
+    [LoggerMessage(LogLevel.Error, "Visualize Face error")]
+    private static partial void LogVisualizeFaceError(ILogger<FaceDescriptor> logger, Exception exception);
 }

@@ -70,7 +70,7 @@ public sealed partial class EdgeDescriptor : Descriptor, IDescriptorCollector, I
                 var logger = serviceProvider.GetRequiredService<ILogger<EdgeDescriptor>>();
                 var notificationService = serviceProvider.GetRequiredService<INotificationService>();
 
-                logger.LogError(exception, "Visualize Edge error");
+                LogVisualizeEdgeError(logger, exception);
                 notificationService.ShowError("Visualization error", exception);
             }
         }
@@ -99,4 +99,7 @@ public sealed partial class EdgeDescriptor : Descriptor, IDescriptorCollector, I
         uiDocument.Selection.SetReferences([edge.Reference]);
     }
 #endif
+
+    [LoggerMessage(LogLevel.Error, "Visualize Edge error")]
+    private static partial void LogVisualizeEdgeError(ILogger<EdgeDescriptor> logger, Exception exception);
 }

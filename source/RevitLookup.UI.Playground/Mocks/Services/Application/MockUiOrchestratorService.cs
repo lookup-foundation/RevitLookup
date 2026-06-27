@@ -13,7 +13,7 @@ using Wpf.Ui;
 
 namespace RevitLookup.UI.Playground.Mocks.Services.Application;
 
-public sealed class MockUiOrchestratorService : IUiOrchestratorService, IHistoryOrchestrator
+public sealed partial class MockUiOrchestratorService : IUiOrchestratorService, IHistoryOrchestrator
 {
     private IServiceProvider? _parentProvider;
     private readonly List<Task> _activeTasks = [];
@@ -208,7 +208,7 @@ public sealed class MockUiOrchestratorService : IUiOrchestratorService, IHistory
             }
             catch (Exception exception)
             {
-                _logger.LogError(exception, "RevitLookup new instance startup error");
+                LogStartupError(_logger, exception);
                 _notificationService.ShowError("Lookup engine error", exception);
             }
             finally
@@ -267,4 +267,7 @@ public sealed class MockUiOrchestratorService : IUiOrchestratorService, IHistory
             _host.Focus();
         }
     }
+
+    [LoggerMessage(LogLevel.Error, "RevitLookup new instance startup error")]
+    private static partial void LogStartupError(ILogger<MockUiOrchestratorService> logger, Exception exception);
 }

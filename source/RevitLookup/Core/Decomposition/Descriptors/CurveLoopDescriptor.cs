@@ -78,7 +78,7 @@ public sealed partial class CurveLoopDescriptor : Descriptor, IDescriptorConfigu
             var logger = serviceProvider.GetRequiredService<ILogger<CurveLoopDescriptor>>();
             var notificationService = serviceProvider.GetRequiredService<INotificationService>();
 
-            logger.LogError(exception, "Visualize curve loop error");
+            LogVisualizeCurveLoopError(logger, exception);
             notificationService.ShowError("Visualization error", exception);
         }
     }
@@ -121,4 +121,7 @@ public sealed partial class CurveLoopDescriptor : Descriptor, IDescriptorConfigu
         }
     }
 #endif
+
+    [LoggerMessage(LogLevel.Error, "Visualize curve loop error")]
+    private static partial void LogVisualizeCurveLoopError(ILogger<CurveLoopDescriptor> logger, Exception exception);
 }

@@ -74,7 +74,7 @@ public sealed partial class DecompositionSummaryViewModel(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Members decomposing failed");
+            LogMembersDecomposingFailed(logger, exception);
             notificationService.ShowError("Lookup engine error", exception);
         }
     }
@@ -88,7 +88,7 @@ public sealed partial class DecompositionSummaryViewModel(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Member evaluation failed");
+            LogMemberEvaluationFailed(logger, exception);
             notificationService.ShowError("Lookup engine error", exception);
         }
     }
@@ -167,7 +167,7 @@ public sealed partial class DecompositionSummaryViewModel(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Members decomposing failed");
+            LogMembersDecomposingFailed(logger, exception);
             notificationService.ShowError("Lookup engine error", exception);
         }
     }
@@ -193,7 +193,7 @@ public sealed partial class DecompositionSummaryViewModel(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "Search error");
+            LogSearchError(logger, exception);
             notificationService.ShowError("Search error", exception);
         }
     }
@@ -219,4 +219,13 @@ public sealed partial class DecompositionSummaryViewModel(
             })
             .ToObservableCollection();
     }
+
+    [LoggerMessage(LogLevel.Error, "Members decomposing failed")]
+    private static partial void LogMembersDecomposingFailed(ILogger<DecompositionSummaryViewModel> logger, Exception exception);
+
+    [LoggerMessage(LogLevel.Error, "Member evaluation failed")]
+    private static partial void LogMemberEvaluationFailed(ILogger<DecompositionSummaryViewModel> logger, Exception exception);
+
+    [LoggerMessage(LogLevel.Error, "Search error")]
+    private static partial void LogSearchError(ILogger<DecompositionSummaryViewModel> logger, Exception exception);
 }

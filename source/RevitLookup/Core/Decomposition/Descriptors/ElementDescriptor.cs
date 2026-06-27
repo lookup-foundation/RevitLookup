@@ -52,6 +52,7 @@ public partial class ElementDescriptor : ResolvingDescriptor, IDescriptorConfigu
 
     public virtual void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Element.Dispose)).Disable();
         configuration.Member(nameof(Element.CanBeHidden)).Resolve(() => Variants.Value(_element.CanBeHidden(RevitContext.ActiveView), "Active view"));
         configuration.Member(nameof(Element.IsHidden)).Resolve(() => Variants.Value(_element.IsHidden(RevitContext.ActiveView), "Active view"));
         configuration.Member(nameof(Element.GetDependentElements)).Resolve(() => _element.GetDependentElements(null));
@@ -402,7 +403,7 @@ public partial class ElementDescriptor : ResolvingDescriptor, IDescriptorConfigu
         {
             var logger = serviceProvider.GetRequiredService<ILogger<ElementDescriptor>>();
 
-            logger.LogError(exception, "Element deletion error");
+            LogElementDeletionError(logger, exception);
             notificationService.ShowError("Element deletion error", exception.Message);
         }
     }
@@ -431,4 +432,7 @@ public partial class ElementDescriptor : ResolvingDescriptor, IDescriptorConfigu
 
         return variants.Consume();
     }
+
+    [LoggerMessage(LogLevel.Error, "Element deletion error")]
+    private static partial void LogElementDeletionError(ILogger<ElementDescriptor> logger, Exception exception);
 }

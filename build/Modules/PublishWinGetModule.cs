@@ -24,7 +24,7 @@ namespace Build.Modules;
 [SkipIfNoGitHubToken]
 [DependsOn<ResolveVersioningModule>]
 [DependsOn<PublishGithubModule>]
-public sealed class PublishWinGetModule(IOptions<BuildOptions> buildOptions, IOptions<PublishOptions> publishOptions) : Module
+public sealed partial class PublishWinGetModule(IOptions<BuildOptions> buildOptions, IOptions<PublishOptions> publishOptions) : Module
 {
     private const string PackageIdPrefix = "LookupFoundation.RevitLookup";
     private const string CreatedWithLabel = "RevitLookup CI/CD";
@@ -35,7 +35,7 @@ public sealed class PublishWinGetModule(IOptions<BuildOptions> buildOptions, IOp
         var wingetToken = publishOptions.Value.WinGetToken;
         if (string.IsNullOrEmpty(wingetToken))
         {
-            context.Logger.LogInformation("Skipping WinGet publication: WinGetToken is not provided");
+            LogSkippingNoToken(context.Logger);
             return;
         }
 
@@ -44,7 +44,7 @@ public sealed class PublishWinGetModule(IOptions<BuildOptions> buildOptions, IOp
 
         if (versioning.IsPrerelease)
         {
-            context.Logger.LogInformation("Skipping WinGet publication for prerelease: {Version}", versioning.Version);
+            LogSkippingPrerelease(context.Logger, versioning.Version);
             return;
         }
 
@@ -74,7 +74,7 @@ public sealed class PublishWinGetModule(IOptions<BuildOptions> buildOptions, IOp
 
             if (versionsResult.ExitCode != 0)
             {
-                context.Logger.LogWarning("Package {PackageId} is not registered in WinGet, skipping (first release must be published manually)", packageId);
+                LogPackageNotRegistered(context.Logger, packageId);
                 continue;
             }
 
@@ -82,7 +82,7 @@ public sealed class PublishWinGetModule(IOptions<BuildOptions> buildOptions, IOp
                 .Select(file => $"https://github.com/{repositoryInfo.Owner}/{repositoryInfo.RepositoryName}/releases/download/{releaseTag}/{file.Name}")
                 .ToArray();
 
-            context.Logger.LogInformation("Submitting WinGet update: {PackageId} v{Version}", packageId, packageVersion);
+            LogSubmittingUpdate(context.Logger, packageId, packageVersion);
 
             await context.Komac().Update(new KomacUpdateOptions
             {
@@ -98,4 +98,16 @@ public sealed class PublishWinGetModule(IOptions<BuildOptions> buildOptions, IOp
             context.Summary.KeyValue("Deployment", "WinGet", packageVersion);
         }
     }
+
+    [LoggerMessage(LogLevel.Information, "Skipping WinGet publication: WinGetToken is not provided")]
+    private static partial void LogSkippingNoToken(ILogger logger);
+
+    [LoggerMessage(LogLevel.Information, "Skipping WinGet publication for prerelease: {Version}")]
+    private static partial void LogSkippingPrerelease(ILogger logger, string version);
+
+    [LoggerMessage(LogLevel.Warning, "Package {PackageId} is not registered in WinGet, skipping (first release must be published manually)")]
+    private static partial void LogPackageNotRegistered(ILogger logger, string packageId);
+
+    [LoggerMessage(LogLevel.Information, "Submitting WinGet update: {PackageId} v{Version}")]
+    private static partial void LogSubmittingUpdate(ILogger logger, string packageId, string version);
 }
