@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using LookupEngine;
+using LookupEngine.Abstractions;
 using LookupEngine.Options;
 using Nice3point.Revit.Toolkit.External;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
@@ -37,7 +38,10 @@ public sealed partial class DecompositionService(ISettingsService settingsServic
 
     public async Task EvaluateMemberAsync(ObservableDecomposedMember decomposedMember)
     {
-        await EvaluateMemberAsyncEvent.RaiseAsync(decomposedMember);
+        if (decomposedMember.Member is null) return;
+
+        var evaluatedMember = await EvaluateMemberAsyncEvent.RaiseAsync(decomposedMember);
+        DecompositionResultMapper.Update(evaluatedMember!, decomposedMember);
     }
 
     [ExternalEvent(AllowDirectInvocation = true)]
@@ -92,12 +96,12 @@ public sealed partial class DecompositionService(ISettingsService settingsServic
     }
 
     [ExternalEvent(AllowDirectInvocation = true)]
-    private static void EvaluateMember(ObservableDecomposedMember decomposedMember)
+    private static DecomposedMember? EvaluateMember(ObservableDecomposedMember decomposedMember)
     {
-        if (decomposedMember.Member is null) return;
+        if (decomposedMember.Member is null) return null;
 
         decomposedMember.Member.Evaluate();
-        DecompositionResultMapper.Update(decomposedMember.Member, decomposedMember);
+        return decomposedMember.Member;
     }
 
     private bool TryFindRevitContext(object? obj, [MaybeNullWhen(false)] out Document context)
@@ -153,10 +157,16 @@ public sealed partial class DecompositionService(ISettingsService settingsServic
             TypeResolver = DescriptorsMap.FindDescriptor,
             EvaluationPolicy = new MethodEvaluationPolicy
             {
-                EvaluatedNamespaces =
-                [
-                    "Autodesk.Revit.*"
-                ]
+                EvaluatedFilter = (method, type) =>
+                {
+                    if (method.ReturnType == typeof(void)) return false;
+                    if (type.Namespace is null) return true;
+                    if (type.Namespace.StartsWith("System.Windows")) return false;
+                    if (type.Namespace.StartsWith("System")) return true;
+                    if (type.Namespace.StartsWith("Autodesk.Revit")) return true;
+                    
+                    return false;
+                }
             }
         };
     }
