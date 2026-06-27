@@ -185,6 +185,7 @@ public sealed partial class EventsSummaryViewModel(
     {
         try
         {
+            // Invoked on the Revit thread, where DecomposeAsync resolves synchronously through its direct-invocation external event
             var decomposedObject = decompositionService.DecomposeAsync(value).Result;
             _synchronizationContext.Post(state =>
             {
