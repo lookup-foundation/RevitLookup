@@ -5,8 +5,6 @@ namespace RevitLookup.Common.Extensions;
 [PublicAPI]
 public static class EnumerableExtensions
 {
-    private static readonly Random RandomNumberGenerator = new();
-
     extension<T>(IEnumerable<T> collection)
     {
         public T Random()
@@ -16,7 +14,9 @@ public static class EnumerableExtensions
                 list = collection.ToArray();
             }
 
-            return list[RandomNumberGenerator.Next(list.Count)];
+            if (list.Count == 0) throw new InvalidOperationException("Collection contains no elements");
+
+            return list[System.Random.Shared.Next(list.Count)];
         }
 
         public List<T> Randomize()
@@ -30,7 +30,7 @@ public static class EnumerableExtensions
             while (count > 1)
             {
                 count--;
-                var k = RandomNumberGenerator.Next(count + 1);
+                var k = System.Random.Shared.Next(count + 1);
                 (list[k], list[count]) = (list[count], list[k]);
             }
 
