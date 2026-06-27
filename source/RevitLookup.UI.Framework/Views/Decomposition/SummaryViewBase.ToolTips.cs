@@ -84,9 +84,14 @@ public partial class SummaryViewBase
             .Append("Type: ")
             .AppendLine(member.Value.TypeName)
             .Append("Full type: ")
-            .AppendLine(member.Value.TypeFullName)
-            .Append("Value: ")
-            .Append(member.Value.Name);
+            .Append(member.Value.TypeFullName);
+
+        if (member.Value.RawValue is not null)
+        {
+            builder.AppendLine()
+                .Append("Value: ")
+                .Append(member.Value.Name);
+        }
 
         if (member.Value.Description is not null)
         {

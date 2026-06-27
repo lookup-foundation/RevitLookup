@@ -39,6 +39,7 @@ public partial class SummaryViewBase
         };
 
         row.ContextMenu = contextMenu;
+        row.InputBindings.Clear();
 
         contextMenu.AddMenuItem("CopyMenuItem")
             .SetCommand(decomposedObject, parameter => Clipboard.SetDataObject(parameter.Name))
@@ -72,12 +73,19 @@ public partial class SummaryViewBase
         };
 
         row.ContextMenu = contextMenu;
+        row.InputBindings.Clear();
 
         if (member.EvaluationPolicy == MemberEvaluationPolicy.Deferred)
         {
             contextMenu.AddMenuItem("EvaluateMenuItem")
-                .SetCommand(member, async parameter => await ViewModel.ForceEvaluateMemberCommand.ExecuteAsync(parameter));
-            
+                .SetCommand(member, async parameter => await ViewModel.ForceEvaluateMemberCommand.ExecuteAsync(parameter))
+                .SetShortcut(Key.F8);
+
+            contextMenu.AddMenuItem("EvaluateMenuItem")
+                .SetHeader("Evaluate with transaction")
+                .SetCommand(member, async parameter => await ViewModel.EvaluateMemberWithTransactionCommand.ExecuteAsync(parameter))
+                .SetShortcut(ModifierKeys.Alt, Key.F8);
+
             contextMenu.AddSeparator();
         }
 

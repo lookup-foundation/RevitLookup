@@ -57,4 +57,12 @@ public sealed class MixedSample
     public void Delete()
     {
     }
+
+    /// <summary>
+    ///     A void method left enabled to demonstrate deferred evaluation and the "No return value" result.
+    /// </summary>
+    public void Recalculate()
+    {
+        Revision++;
+    }
 }
