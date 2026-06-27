@@ -43,31 +43,50 @@ public static class RenderGeometryHelper
         return points;
     }
 
-    public static XYZ GetMeshVertexNormal(Mesh mesh, int index, DistributionOfNormals normalDistribution)
+    public static List<XYZ> GetMeshVertexNormals(Mesh mesh)
     {
-        switch (normalDistribution)
+        var vertexCount = mesh.Vertices.Count;
+        var normals = new List<XYZ>(vertexCount);
+
+        switch (mesh.DistributionOfNormals)
         {
             case DistributionOfNormals.AtEachPoint:
-                return mesh.GetNormal(index);
+                for (var i = 0; i < vertexCount; i++)
+                {
+                    normals.Add(mesh.GetNormal(i));
+                }
+
+                break;
             case DistributionOfNormals.OnEachFacet:
-                var vertex = mesh.Vertices[index];
+                var facetNormals = new XYZ[vertexCount];
                 for (var i = 0; i < mesh.NumTriangles; i++)
                 {
                     var triangle = mesh.get_Triangle(i);
-                    var triangleVertex = triangle.get_Vertex(0);
-                    if (triangleVertex.IsAlmostEqualTo(vertex)) return mesh.GetNormal(i);
-                    triangleVertex = triangle.get_Vertex(1);
-                    if (triangleVertex.IsAlmostEqualTo(vertex)) return mesh.GetNormal(i);
-                    triangleVertex = triangle.get_Vertex(2);
-                    if (triangleVertex.IsAlmostEqualTo(vertex)) return mesh.GetNormal(i);
+                    var normal = mesh.GetNormal(i);
+                    facetNormals[(int) triangle.get_Index(0)] ??= normal;
+                    facetNormals[(int) triangle.get_Index(1)] ??= normal;
+                    facetNormals[(int) triangle.get_Index(2)] ??= normal;
                 }
 
-                return XYZ.Zero;
+                for (var i = 0; i < vertexCount; i++)
+                {
+                    normals.Add(facetNormals[i] ?? XYZ.Zero);
+                }
+
+                break;
             case DistributionOfNormals.OnePerFace:
-                return mesh.GetNormal(0);
+                var faceNormal = mesh.GetNormal(0);
+                for (var i = 0; i < vertexCount; i++)
+                {
+                    normals.Add(faceNormal);
+                }
+
+                break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(normalDistribution), normalDistribution, null);
+                throw new ArgumentOutOfRangeException(nameof(mesh), mesh.DistributionOfNormals, null);
         }
+
+        return normals;
     }
 
     public static List<XYZ> TessellateCircle(XYZ center, XYZ normal, double radius)

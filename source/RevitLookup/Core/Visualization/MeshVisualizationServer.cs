@@ -153,11 +153,12 @@ public sealed class MeshVisualizationServer : DirectContext3DServer
         var offset = RenderGeometryHelper.InterpolateOffsetByArea(area);
         var normalLength = RenderGeometryHelper.InterpolateAxisLengthByArea(area);
 
+        var normals = RenderGeometryHelper.GetMeshVertexNormals(_mesh);
         for (var i = 0; i < _mesh.Vertices.Count; i++)
         {
             var vertex = _mesh.Vertices[i];
             var buffer = _normalBuffers[i];
-            var normal = RenderGeometryHelper.GetMeshVertexNormal(_mesh, i, _mesh.DistributionOfNormals);
+            var normal = normals[i];
 
             RenderHelper.MapNormalVectorBuffer(buffer, vertex + normal * (offset + _extrusion), normal, normalLength);
         }

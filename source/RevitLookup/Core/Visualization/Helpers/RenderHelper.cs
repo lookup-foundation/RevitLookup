@@ -34,13 +34,7 @@ public static class RenderHelper
         buffer.VertexBuffer.Map(vertexBufferSizeInFloats);
 
         var vertexStream = buffer.VertexBuffer.GetVertexStreamPosition();
-        var normals = new List<XYZ>(mesh.NumberOfNormals);
-
-        for (var i = 0; i < mesh.Vertices.Count; i++)
-        {
-            var normal = RenderGeometryHelper.GetMeshVertexNormal(mesh, i, mesh.DistributionOfNormals);
-            normals.Add(normal);
-        }
+        var normals = RenderGeometryHelper.GetMeshVertexNormals(mesh);
 
         for (var i = 0; i < mesh.Vertices.Count; i++)
         {
@@ -231,13 +225,7 @@ public static class RenderHelper
         buffer.VertexBuffer.Map(vertexBufferSizeInFloats);
 
         var vertexStream = buffer.VertexBuffer.GetVertexStreamPosition();
-        var normals = new List<XYZ>(mesh.NumberOfNormals);
-
-        for (var i = 0; i < mesh.Vertices.Count; i++)
-        {
-            var normal = RenderGeometryHelper.GetMeshVertexNormal(mesh, i, mesh.DistributionOfNormals);
-            normals.Add(normal);
-        }
+        var normals = RenderGeometryHelper.GetMeshVertexNormals(mesh);
 
         foreach (var vertex in mesh.Vertices)
         {
