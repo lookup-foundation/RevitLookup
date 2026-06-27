@@ -14,7 +14,7 @@
 
 namespace RevitLookup.Core.Visualization.Events;
 
-public sealed class RenderFailedEventArgs
+public sealed record RenderFailedEventArgs
 {
-    public required Exception ExceptionObject { get; set; }
+    public required Exception ExceptionObject { get; init; }
 }
