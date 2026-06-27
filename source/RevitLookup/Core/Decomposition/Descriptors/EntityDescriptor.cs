@@ -22,6 +22,9 @@ namespace RevitLookup.Core.Decomposition.Descriptors;
 
 public sealed class EntityDescriptor(Entity entity) : Descriptor, IDescriptorConfigurator
 {
+    private static readonly MethodInfo GetByFieldMethod = typeof(Entity).GetMethod(nameof(Entity.Get), [typeof(Field)])!;
+    private static readonly MethodInfo GetByFieldForgeMethod = typeof(Entity).GetMethod(nameof(Entity.Get), [typeof(Field), typeof(ForgeTypeId)])!;
+
     public void Configure(IMemberConfigurator configuration)
     {
         configuration.Member(nameof(Entity.Get))
@@ -43,8 +46,7 @@ public sealed class EntityDescriptor(Entity entity) : Descriptor, IDescriptorCon
                     //for double we always need UnitTypeId, so we can not see these fields when we use the overload with fieldName only
                     if (field.ValueType == typeof(double) || field.KeyType == typeof(double)) continue;
 
-                    var method = entity.GetType().GetMethod(nameof(Entity.Get), [typeof(Field)])!;
-                    var genericMethod = MakeGenericInvoker(field, method);
+                    var genericMethod = MakeGenericInvoker(field, GetByFieldMethod);
                     variants.Add(genericMethod.Invoke(entity, [field]), field.FieldName);
                 }
 
@@ -62,8 +64,7 @@ public sealed class EntityDescriptor(Entity entity) : Descriptor, IDescriptorCon
                 {
                     var forgeTypeId = field.GetSpecTypeId();
                     var unit = GetValidUnit(forgeTypeId);
-                    var method = entity.GetType().GetMethod(nameof(Entity.Get), [typeof(Field), typeof(ForgeTypeId)])!;
-                    var genericMethod = MakeGenericInvoker(field, method);
+                    var genericMethod = MakeGenericInvoker(field, GetByFieldForgeMethod);
                     variants.Add(genericMethod.Invoke(entity, [field, unit]), field.FieldName);
                 }
 
