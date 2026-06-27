@@ -26,7 +26,7 @@ public sealed class ColorMediaDescriptor : Descriptor, IDescriptorConfigurator
     public ColorMediaDescriptor(Color color)
     {
         _color = color;
-        Name = $"RGB: {color.R} {color.G} {color.B}";
+        Name = $"#{ColorRepresentationUtils.ColorToHex(color.GetDrawingColor()).ToUpperInvariant()}";
     }
 
     public void Configure(IMemberConfigurator configuration)

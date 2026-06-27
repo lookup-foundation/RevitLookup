@@ -28,14 +28,14 @@ using Color = System.Windows.Media.Color;
 
 namespace RevitLookup.UI.Playground.Mocks.Core.Decomposition.Descriptors;
 
-public sealed class ColorMediaDescriptor : Descriptor, IDescriptorConfigurator, IContextMenuConnector
+public sealed partial class ColorMediaDescriptor : Descriptor, IDescriptorConfigurator, IContextMenuConnector
 {
     private readonly Color _color;
 
     public ColorMediaDescriptor(Color color)
     {
         _color = color;
-        Name = $"RGB: {color.R} {color.G} {color.B}";
+        Name = $"#{ColorRepresentationUtils.ColorToHex(color.GetDrawingColor()).ToUpperInvariant()}";
     }
 
     public void Configure(IMemberConfigurator configuration)
@@ -83,9 +83,12 @@ public sealed class ColorMediaDescriptor : Descriptor, IDescriptorConfigurator, 
             {
                 var logger = serviceProvider.GetRequiredService<ILogger<ColorMediaDescriptor>>();
 
-                logger.LogError(exception, "Color deletion error");
+                LogColorDeletionError(logger, exception);
                 notificationService.ShowError("Color deletion error", exception.Message);
             }
         }
     }
+
+    [LoggerMessage(LogLevel.Error, "Color deletion error")]
+    private static partial void LogColorDeletionError(ILogger<ColorMediaDescriptor> logger, Exception exception);
 }

@@ -27,7 +27,7 @@ public sealed class ColorDescriptor : Descriptor, IDescriptorConfigurator
     public ColorDescriptor(Color color)
     {
         _color = color;
-        Name = color.IsValid ? $"RGB: {color.Red} {color.Green} {color.Blue}" : "The color represents uninitialized/invalid value";
+        Name = color.IsValid ? $"#{ColorRepresentationUtils.ColorToHex(color.GetDrawingColor()).ToUpperInvariant()}" : "The color represents uninitialized/invalid value";
     }
 
     public void Configure(IMemberConfigurator configuration)
