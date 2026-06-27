@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq.Expressions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nice3point.Revit.Extensions.Runtime;
@@ -215,7 +214,7 @@ public sealed partial class RevitSettingsViewModel(
 
     private void ApplyFilters()
     {
-        var expressions = new List<Expression<Func<ObservableIniEntry, bool>>>(4);
+        var expressions = new List<Func<ObservableIniEntry, bool>>(4);
 
         if (!string.IsNullOrWhiteSpace(CategoryFilter))
         {
@@ -247,7 +246,7 @@ public sealed partial class RevitSettingsViewModel(
             IEnumerable<ObservableIniEntry> filtered = Entries;
             foreach (var expression in expressions)
             {
-                filtered = filtered.Where(expression.Compile());
+                filtered = filtered.Where(expression);
             }
 
             FilteredEntries = new ObservableCollection<ObservableIniEntry>(filtered.ToList());
