@@ -11,7 +11,7 @@
         <DefineConstants>$(DefineConstants);ENVIRONMENT_$(Environment)</DefineConstants>
     </PropertyGroup>
 
-    <!-- Compability -->
+    <!-- Compatibility -->
     <PropertyGroup Condition="'$(RevitVersion)' &lt; '2027'">
         <IsRepackable>true</IsRepackable>
         <RepackBinariesExcludes>LookupEngine*.dll</RepackBinariesExcludes>
