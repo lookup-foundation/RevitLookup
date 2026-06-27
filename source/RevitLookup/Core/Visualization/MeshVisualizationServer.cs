@@ -147,6 +147,13 @@ public sealed class MeshVisualizationServer : DirectContext3DServer
         }
     }
 
+    protected override void DisposeBuffers()
+    {
+        _surfaceBuffer.Dispose();
+        _meshGridBuffer.Dispose();
+        foreach (var buffer in _normalBuffers) buffer.Dispose();
+    }
+
     private void MapNormalsBuffer()
     {
         var area = RenderGeometryHelper.ComputeMeshSurfaceArea(_mesh);

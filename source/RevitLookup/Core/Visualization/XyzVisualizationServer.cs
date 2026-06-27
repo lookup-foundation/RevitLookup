@@ -166,4 +166,10 @@ public sealed class XyzVisualizationServer : DirectContext3DServer
             if (_drawPlane) FlushTriangleBuffer(_planeBuffers[2], _transparency);
         }
     }
+
+    protected override void DisposeBuffers()
+    {
+        foreach (var buffer in _planeBuffers) buffer.Dispose();
+        foreach (var buffer in _axisBuffers) buffer.Dispose();
+    }
 }

@@ -152,4 +152,11 @@ public sealed class BoundingBoxVisualizationServer : DirectContext3DServer
                 maxPoint + unitVector * RevitApiContext.Application.ShortCurveTolerance, -normal, axisLength);
         }
     }
+
+    protected override void DisposeBuffers()
+    {
+        _surfaceBuffer.Dispose();
+        _edgeBuffer.Dispose();
+        foreach (var buffer in _axisBuffers) buffer.Dispose();
+    }
 }

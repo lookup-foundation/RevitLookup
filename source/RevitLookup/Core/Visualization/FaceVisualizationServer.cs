@@ -135,4 +135,11 @@ public sealed class FaceVisualizationServer : DirectContext3DServer
         if (_drawMeshGrid) FlushLineBuffer(_meshGridBuffer);
         if (_drawNormalVector) FlushLineBuffer(_normalBuffer);
     }
+
+    protected override void DisposeBuffers()
+    {
+        _surfaceBuffer.Dispose();
+        _meshGridBuffer.Dispose();
+        _normalBuffer.Dispose();
+    }
 }

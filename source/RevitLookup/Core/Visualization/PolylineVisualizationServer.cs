@@ -179,6 +179,13 @@ public sealed class PolylineVisualizationServer : DirectContext3DServer
         }
     }
 
+    protected override void DisposeBuffers()
+    {
+        _surfaceBuffer.Dispose();
+        _curveBuffer.Dispose();
+        foreach (var buffer in _normalsBuffers) buffer.Dispose();
+    }
+
     private RenderingBufferStorage GetOrCreateNormalBuffer(int index)
     {
         if (_normalsBuffers.Count > index) return _normalsBuffers[index];

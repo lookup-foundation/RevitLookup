@@ -150,6 +150,12 @@ public sealed class SolidVisualizationServer : DirectContext3DServer
         }
     }
 
+    protected override void DisposeBuffers()
+    {
+        foreach (var buffer in _faceBuffers) buffer.Dispose();
+        foreach (var buffer in _edgeBuffers) buffer.Dispose();
+    }
+
     private static RenderingBufferStorage GetOrCreateBuffer(List<RenderingBufferStorage> buffers, int index)
     {
         if (buffers.Count > index) return buffers[index];

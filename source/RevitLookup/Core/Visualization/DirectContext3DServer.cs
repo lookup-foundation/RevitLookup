@@ -118,6 +118,10 @@ public abstract partial class DirectContext3DServer : IDirectContext3DServer
     protected abstract void UpdateEffects();
     protected abstract void RenderBuffers();
 
+    protected virtual void DisposeBuffers()
+    {
+    }
+
     protected void UpdateViews(Action updateAction)
     {
         lock (_renderLock)
@@ -180,6 +184,7 @@ public abstract partial class DirectContext3DServer : IDirectContext3DServer
     {
         var directContextService = (MultiServerService) ExternalServiceRegistry.GetService(ExternalServices.BuiltInExternalServices.DirectContext3DService);
         directContextService.RemoveServer(GetServerId());
+        DisposeBuffers();
 
         _uiDocument?.UpdateAllOpenViews();
     }
