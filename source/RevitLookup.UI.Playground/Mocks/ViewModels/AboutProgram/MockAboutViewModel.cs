@@ -103,7 +103,7 @@ public sealed partial class MockAboutViewModel : ObservableObject, IAboutViewMod
     {
         try
         {
-            await _updateService.DownloadUpdate();
+            await _updateService.DownloadUpdateAsync();
             State = SoftwareUpdateState.ReadyToInstall;
         }
         catch

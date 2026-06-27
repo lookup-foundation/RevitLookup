@@ -58,7 +58,7 @@ public sealed class SoftwareUpdateService(
         return true;
     }
 
-    public async Task DownloadUpdate()
+    public async Task DownloadUpdateAsync()
     {
         Directory.CreateDirectory(_folderOptions.DownloadsFolder);
         var fileName = Path.Combine(_folderOptions.DownloadsFolder, Path.GetFileName(_downloadUrl)!);

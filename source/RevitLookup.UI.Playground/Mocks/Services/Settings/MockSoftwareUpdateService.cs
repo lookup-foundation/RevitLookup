@@ -27,7 +27,7 @@ public sealed class MockSoftwareUpdateService : ISoftwareUpdateService
         return true;
     }
 
-    public async Task DownloadUpdate()
+    public async Task DownloadUpdateAsync()
     {
         await Task.Delay(1000);
 

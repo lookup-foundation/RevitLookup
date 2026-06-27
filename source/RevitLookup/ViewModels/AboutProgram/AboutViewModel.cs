@@ -114,7 +114,7 @@ public sealed partial class AboutViewModel : ObservableObject, IAboutViewModel
     {
         try
         {
-            await _updateService.DownloadUpdate();
+            await _updateService.DownloadUpdateAsync();
             State = SoftwareUpdateState.ReadyToInstall;
         }
         catch (Exception exception)

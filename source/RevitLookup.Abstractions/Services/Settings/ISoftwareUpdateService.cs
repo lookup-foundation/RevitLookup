@@ -47,5 +47,5 @@ public interface ISoftwareUpdateService
     /// <summary>
     ///     Download the update from the server.
     /// </summary>
-    Task DownloadUpdate();
+    Task DownloadUpdateAsync();
 }
