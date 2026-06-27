@@ -55,7 +55,7 @@ public partial class SummaryViewBase
         }
         catch (Exception exception)
         {
-            _logger.LogError(exception, "Failed to register the context menu");
+            LogContextMenuRegistrationFailed(_logger, exception);
             _notificationService.ShowError("Failed to register the context menu", exception);
         }
     }
@@ -104,7 +104,7 @@ public partial class SummaryViewBase
         }
         catch (Exception exception)
         {
-            _logger.LogError(exception, "Failed to register the context menu");
+            LogContextMenuRegistrationFailed(_logger, exception);
             _notificationService.ShowError("Failed to register the context menu", exception);
         }
     }
@@ -216,4 +216,7 @@ public partial class SummaryViewBase
                 await ViewModel.RefreshMembersAsync();
             });
     }
+
+    [LoggerMessage(LogLevel.Error, "Failed to register the context menu")]
+    private static partial void LogContextMenuRegistrationFailed(ILogger<SummaryViewBase> logger, Exception exception);
 }

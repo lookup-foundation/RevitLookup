@@ -68,8 +68,11 @@ public sealed partial class SearchElementsDialog
         }
         catch (Exception exception)
         {
-            _logger.LogError(exception, "Error while searching elements");
+            LogSearchElementsFailed(_logger, exception);
             _notificationService.ShowError("Search error", exception.Message);
         }
     }
+
+    [LoggerMessage(LogLevel.Error, "Error while searching elements")]
+    private static partial void LogSearchElementsFailed(ILogger<SearchElementsDialog> logger, Exception exception);
 }

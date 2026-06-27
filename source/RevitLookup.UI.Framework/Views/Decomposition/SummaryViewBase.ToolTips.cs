@@ -72,11 +72,7 @@ public partial class SummaryViewBase
         if ((member.MemberAttributes & MemberAttributes.Event) != 0) builder.Append("Event: ");
         if ((member.MemberAttributes & MemberAttributes.Field) != 0) builder.Append("Field: ");
 
-        builder.AppendLine(member.Name)
-            .Append("Type: ")
-            .AppendLine(member.Value.TypeName)
-            .Append("Full type: ")
-            .Append(member.Value.TypeFullName);
+        builder.Append(member.Name);
 
         if (member.EvaluationPolicy != MemberEvaluationPolicy.Evaluated)
         {
@@ -85,6 +81,10 @@ public partial class SummaryViewBase
         }
 
         builder.AppendLine()
+            .Append("Type: ")
+            .AppendLine(member.Value.TypeName)
+            .Append("Full type: ")
+            .AppendLine(member.Value.TypeFullName)
             .Append("Value: ")
             .Append(member.Value.Name);
 

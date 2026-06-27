@@ -19,7 +19,7 @@ public sealed partial class App
         catch (Exception exception)
         {
             var logger = Host.GetService<ILogger<App>>();
-            logger.LogCritical(exception, "Application failed to start");
+            LogApplicationStartFailed(logger, exception);
             Shutdown();
         }
     }
@@ -28,4 +28,7 @@ public sealed partial class App
     {
         Host.Stop();
     }
+
+    [LoggerMessage(LogLevel.Critical, "Application failed to start")]
+    private static partial void LogApplicationStartFailed(ILogger<App> logger, Exception exception);
 }

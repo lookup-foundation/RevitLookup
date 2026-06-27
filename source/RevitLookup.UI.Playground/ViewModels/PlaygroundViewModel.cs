@@ -67,7 +67,6 @@ public sealed class PlaygroundViewModel : ObservableObject
                 Icon = new FontIcon { Glyph = "\uEF58", FontSize = 16 },
                 MenuItemsSource = new object[]
                 {
-                    new NavigationViewItem("Chips", typeof(ChipsPage)),
                     new NavigationViewItem("Empty states", typeof(EmptyStatesPage)),
                 },
             },
