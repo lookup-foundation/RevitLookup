@@ -6,9 +6,9 @@ using RevitLookup.Abstractions.ViewModels.Visualization;
 namespace RevitLookup.UI.Playground.Mocks.ViewModels.Visualization;
 
 [UsedImplicitly]
-public sealed partial class XyzVisualizationViewModel : ObservableObject, IXyzVisualizationViewModel
+public sealed partial class MockXyzVisualizationViewModel : ObservableObject, IXyzVisualizationViewModel
 {
-    public XyzVisualizationViewModel()
+    public MockXyzVisualizationViewModel()
     {
         var faker = new Faker();
 
