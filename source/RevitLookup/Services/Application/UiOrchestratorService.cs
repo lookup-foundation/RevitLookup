@@ -176,7 +176,7 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
             }
             finally
             {
-                _activeTasks.Add(_visualDecompositionService.VisualizeDecompositionAsync(decompositionObject));
+                AddActiveTask(_visualDecompositionService.VisualizeDecompositionAsync(decompositionObject));
             }
         }
 
@@ -192,7 +192,7 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
             }
             finally
             {
-                _activeTasks.Add(_visualDecompositionService.VisualizeDecompositionAsync(obj));
+                AddActiveTask(_visualDecompositionService.VisualizeDecompositionAsync(obj));
             }
         }
 
@@ -208,7 +208,7 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
             }
             finally
             {
-                _activeTasks.Add(_visualDecompositionService.VisualizeDecompositionAsync(objects));
+                AddActiveTask(_visualDecompositionService.VisualizeDecompositionAsync(objects));
             }
         }
 
@@ -224,7 +224,7 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
             }
             finally
             {
-                _activeTasks.Add(_visualDecompositionService.VisualizeDecompositionAsync(decomposedObject));
+                AddActiveTask(_visualDecompositionService.VisualizeDecompositionAsync(decomposedObject));
             }
         }
 
@@ -240,7 +240,7 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
             }
             finally
             {
-                _activeTasks.Add(_visualDecompositionService.VisualizeDecompositionAsync(decomposedObjects));
+                AddActiveTask(_visualDecompositionService.VisualizeDecompositionAsync(decomposedObjects));
             }
         }
 
@@ -310,6 +310,12 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
                 var service = _scope.ServiceProvider.GetRequiredService<T>();
                 handler.Invoke(service);
             }
+        }
+
+        private void AddActiveTask(Task task)
+        {
+            _activeTasks.RemoveAll(activeTask => activeTask.IsCompleted);
+            _activeTasks.Add(task);
         }
 
         private void ShowHost()
