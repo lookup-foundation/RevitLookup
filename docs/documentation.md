@@ -47,11 +47,3 @@ The wiki holds the user-facing usage guides: feature walkthroughs, the version a
 
 * Update the matching wiki page when a feature's behavior or usage changes.
 * Keep the usage detail in the wiki, and keep the README pointing to it.
-
-## Co-location
-
-Keep each kind of documentation where it belongs.
-Contract detail lives in the XML docs next to the code.
-The release narrative lives in the CHANGELOG.
-The usage guide lives in the wiki.
-The front-page summary and the install methods live in the README.

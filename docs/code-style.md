@@ -17,7 +17,6 @@ Production C# only. This is a public application, so its code stays clean, reada
 * Primary constructors when a type captures state or injected dependencies.
 * Collection expressions for literals and spans.
 * Pattern matching and switch expressions over branching chains.
-* Null-coalescing assignment (`??=`) for lazy initialization.
 * Expression-bodied members for simple accessors.
 * File-scoped namespaces.
 

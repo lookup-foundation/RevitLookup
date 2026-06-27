@@ -39,37 +39,35 @@ In RevitLookup the active `Document` serves as the resolution context.
 
 ### Resolve a Value
 
-`IDescriptorResolver` and `IDescriptorResolver<TContext>` let a descriptor control how a member that takes parameters is evaluated.
-The resolver returns the value to display, optionally labeled, or marks the member as disabled.
+`IDescriptorConfigurator` and `IDescriptorConfigurator<TContext>` let a descriptor control how an existing member is evaluated.
+`configuration.Member(name)` selects the member, and `Resolve` supplies the value to display, optionally labeled.
+The context-aware form receives the resolution context, the active `Document` in RevitLookup.
 
 ```csharp
-public class ElementDescriptor(Element element) : Descriptor, IDescriptorResolver<Document>
+public sealed class ElementDescriptor(Element element) : Descriptor, IDescriptorConfigurator<Document>
 {
-    public virtual Func<Document, IVariant>? Resolve(string target, ParameterInfo[] parameters)
+    public void Configure(IMemberConfigurator<Document> configuration)
     {
-        return target switch
-        {
-            nameof(Element.IsHidden) => context => Variants.Value(element.IsHidden(context.ActiveView), "Active view"),
-            _ => null
-        };
+        configuration.Member(nameof(Element.IsHidden)).Resolve(document => Variants.Value(element.IsHidden(document.ActiveView), "Active view"));
     }
 }
 ```
 
-A resolver returns several labeled values through `Variants.Values`, targets one overload by inspecting `parameters`, and marks a member unsafe to evaluate with `Variants.Disabled`.
+A resolver returns several labeled values through `Variants.Values`, filters overloads by their runtime parameters with `When`, and marks a member unsafe to evaluate with `Disable`.
 
 ### Add Synthetic Members
 
-`IDescriptorExtension` and `IDescriptorExtension<TContext>` add members that do not exist on the original type.
-The context-aware form receives the `Document` during registration for document-dependent members.
+`IDescriptorConfigurator` and `IDescriptorConfigurator<TContext>` also add members that do not exist on the original type.
+`configuration.Extension(name)` defines the synthetic member and `Register` supplies its value.
+The context-aware form receives the `Document` for document-dependent members.
 
 ```csharp
-public sealed class ColorDescriptor(Color color) : Descriptor, IDescriptorExtension
+public sealed class ColorDescriptor(Color color) : Descriptor, IDescriptorConfigurator
 {
-    public void RegisterExtensions(IExtensionManager manager)
+    public void Configure(IMemberConfigurator configuration)
     {
-        manager.Define("HEX").Register(() => Variants.Value(ColorRepresentationUtils.ColorToHex(color)));
-        manager.Define("RGB").Register(() => Variants.Value(ColorRepresentationUtils.ColorToRgb(color)));
+        configuration.Extension("HEX").Register(() => ColorRepresentationUtils.ColorToHex(color));
+        configuration.Extension("RGB").Register(() => ColorRepresentationUtils.ColorToRgb(color));
     }
 }
 ```
