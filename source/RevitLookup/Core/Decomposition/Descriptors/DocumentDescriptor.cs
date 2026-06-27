@@ -86,7 +86,7 @@ public sealed class DocumentDescriptor : Descriptor, IDescriptorConfigurator
         {
             if (_document.IsReadOnly) return Variants.Empty<PlanTopologySet>();
 
-            var transaction = new Transaction(_document);
+            using var transaction = new Transaction(_document);
             transaction.Start("Calculating plan topologies");
             var topologies = _document.PlanTopologies;
             transaction.Commit();
