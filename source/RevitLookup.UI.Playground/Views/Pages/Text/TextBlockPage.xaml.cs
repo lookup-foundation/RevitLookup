@@ -1,11 +1,10 @@
-namespace RevitLookup.UI.Playground.Views.Pages.Text
+namespace RevitLookup.UI.Playground.Views.Pages.Text;
+
+public partial class TextBlockPage
 {
-    public partial class TextBlockPage
+    public TextBlockPage()
     {
-        public TextBlockPage()
-        {
-            DataContext = this;
-            InitializeComponent();
-        }
+        DataContext = this;
+        InitializeComponent();
     }
 }

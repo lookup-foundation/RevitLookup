@@ -16,37 +16,36 @@ using RevitLookup.Abstractions.Services.Appearance;
 using RevitLookup.Abstractions.ViewModels.Visualization;
 using Wpf.Ui;
 
-namespace RevitLookup.UI.Framework.Views.Visualization
+namespace RevitLookup.UI.Framework.Views.Visualization;
+
+public sealed partial class CurveLoopVisualizationDialog
 {
-    public sealed partial class CurveLoopVisualizationDialog
+    private readonly ICurveLoopVisualizationViewModel _viewModel;
+
+    public CurveLoopVisualizationDialog(
+        IContentDialogService dialogService,
+        ICurveLoopVisualizationViewModel viewModel,
+        IThemeWatcherService themeWatcherService)
+        : base(dialogService.GetDialogHostEx())
     {
-        private readonly ICurveLoopVisualizationViewModel _viewModel;
+        _viewModel = viewModel;
 
-        public CurveLoopVisualizationDialog(
-            IContentDialogService dialogService,
-            ICurveLoopVisualizationViewModel viewModel,
-            IThemeWatcherService themeWatcherService)
-            : base(dialogService.GetDialogHostEx())
-        {
-            _viewModel = viewModel;
+        DataContext = _viewModel;
+        InitializeComponent();
 
-            DataContext = _viewModel;
-            InitializeComponent();
+        themeWatcherService.Watch(this);
+    }
 
-            themeWatcherService.Watch(this);
-        }
+    public async Task ShowDialogAsync(object curveLoop)
+    {
+        _viewModel.RegisterServer(curveLoop);
+        MonitorServerConnection();
 
-        public async Task ShowDialogAsync(object curveLoop)
-        {
-            _viewModel.RegisterServer(curveLoop);
-            MonitorServerConnection();
+        await ShowAsync();
+    }
 
-            await ShowAsync();
-        }
-
-        private void MonitorServerConnection()
-        {
-           Unloaded += (_, _) => _viewModel.UnregisterServer();
-        }
+    private void MonitorServerConnection()
+    {
+       Unloaded += (_, _) => _viewModel.UnregisterServer();
     }
 }
