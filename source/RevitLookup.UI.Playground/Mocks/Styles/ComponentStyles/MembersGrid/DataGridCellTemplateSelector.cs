@@ -16,14 +16,23 @@ public sealed class DataGridCellTemplateSelector : DataTemplateSelector
 
         var member = (ObservableDecomposedMember) item;
         var presenter = (FrameworkElement) container;
-        var templateName = member.Value.RawValue switch
+
+        string templateName;
+        if (member.Value.TypeFullName == "System.Void")
         {
-            null => "NullSummaryCellTemplate",
-            string {Length: 0} => "InvalidSummaryCellTemplate",
-            Color => "SummaryMediaColorCellTemplate",
-            Exception => "ExceptionSummaryCellTemplate",
-            _ => "DefaultSummaryCellTemplate"
-        };
+            templateName = "VoidSummaryCellTemplate";
+        }
+        else
+        {
+            templateName = member.Value.RawValue switch
+            {
+                null => "NullSummaryCellTemplate",
+                string {Length: 0} => "InvalidSummaryCellTemplate",
+                Color => "SummaryMediaColorCellTemplate",
+                Exception => "ExceptionSummaryCellTemplate",
+                _ => "DefaultSummaryCellTemplate"
+            };
+        }
 
         return (DataTemplate) presenter.FindResource(templateName);
     }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using LookupEngine;
+using LookupEngine.Abstractions.Enums;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Decomposition;
 using RevitLookup.Abstractions.Services.Settings;
@@ -62,6 +63,17 @@ public sealed class MockDecompositionService(ISettingsService settingsService) :
     public async Task EvaluateMemberAsync(ObservableDecomposedMember decomposedMember)
     {
         if (decomposedMember.Member is null) return;
+        if (decomposedMember.EvaluationPolicy != MemberEvaluationPolicy.Deferred) return;
+
+        await Task.Run(() => decomposedMember.Member.Evaluate());
+
+        DecompositionResultMapper.Update(decomposedMember.Member, decomposedMember);
+    }
+
+    public async Task EvaluateMemberWithTransactionAsync(ObservableDecomposedMember decomposedMember)
+    {
+        if (decomposedMember.Member is null) return;
+        if (decomposedMember.EvaluationPolicy != MemberEvaluationPolicy.Deferred) return;
 
         await Task.Run(() => decomposedMember.Member.Evaluate());
 

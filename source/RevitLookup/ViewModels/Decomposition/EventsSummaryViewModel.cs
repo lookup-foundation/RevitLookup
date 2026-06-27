@@ -74,6 +74,20 @@ public sealed partial class EventsSummaryViewModel(
         }
     }
 
+    [RelayCommand]
+    private async Task EvaluateMemberWithTransaction(ObservableDecomposedMember member)
+    {
+        try
+        {
+            await decompositionService.EvaluateMemberWithTransactionAsync(member);
+        }
+        catch (Exception exception)
+        {
+            LogMemberEvaluationFailed(logger, exception);
+            notificationService.ShowError("Lookup engine error", exception);
+        }
+    }
+
     public async Task RefreshMembersAsync()
     {
         foreach (var decomposedObject in DecomposedObjects)

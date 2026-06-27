@@ -32,4 +32,9 @@ public interface IDecompositionService
     ///     Force the evaluation of a deferred member, updating its observable model in place.
     /// </summary>
     Task EvaluateMemberAsync(ObservableDecomposedMember decomposedMember);
+
+    /// <summary>
+    ///     Force the evaluation of a deferred member inside a Revit transaction, updating its observable model in place.
+    /// </summary>
+    Task EvaluateMemberWithTransactionAsync(ObservableDecomposedMember decomposedMember);
 }

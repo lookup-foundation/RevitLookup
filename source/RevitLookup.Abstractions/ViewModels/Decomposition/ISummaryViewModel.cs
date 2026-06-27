@@ -29,6 +29,11 @@ public interface ISummaryViewModel
     IAsyncRelayCommand<ObservableDecomposedMember> ForceEvaluateMemberCommand { get; }
 
     /// <summary>
+    ///     Force the evaluation of a deferred member inside a Revit transaction.
+    /// </summary>
+    IAsyncRelayCommand<ObservableDecomposedMember> EvaluateMemberWithTransactionCommand { get; }
+
+    /// <summary>
     ///     Decompose members of the selected object avoiding cache.
     /// </summary>
     Task RefreshMembersAsync();

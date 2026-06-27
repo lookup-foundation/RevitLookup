@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using LookupEngine;
 using LookupEngine.Abstractions;
+using LookupEngine.Abstractions.Enums;
 using LookupEngine.Options;
 using Nice3point.Revit.Toolkit.External;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
@@ -39,8 +40,18 @@ public sealed partial class DecompositionService(ISettingsService settingsServic
     public async Task EvaluateMemberAsync(ObservableDecomposedMember decomposedMember)
     {
         if (decomposedMember.Member is null) return;
+        if (decomposedMember.EvaluationPolicy != MemberEvaluationPolicy.Deferred) return;
 
         var evaluatedMember = await EvaluateMemberAsyncEvent.RaiseAsync(decomposedMember);
+        DecompositionResultMapper.Update(evaluatedMember!, decomposedMember);
+    }
+
+    public async Task EvaluateMemberWithTransactionAsync(ObservableDecomposedMember decomposedMember)
+    {
+        if (decomposedMember.Member is null) return;
+        if (decomposedMember.EvaluationPolicy != MemberEvaluationPolicy.Deferred) return;
+
+        var evaluatedMember = await EvaluateMemberWithTransactionAsyncEvent.RaiseAsync(decomposedMember);
         DecompositionResultMapper.Update(evaluatedMember!, decomposedMember);
     }
 
@@ -101,6 +112,26 @@ public sealed partial class DecompositionService(ISettingsService settingsServic
         if (decomposedMember.Member is null) return null;
 
         decomposedMember.Member.Evaluate();
+        return decomposedMember.Member;
+    }
+
+    [ExternalEvent(AllowDirectInvocation = true)]
+    private static DecomposedMember? EvaluateMemberWithTransaction(ObservableDecomposedMember decomposedMember)
+    {
+        if (decomposedMember.Member is null) return null;
+
+        var document = RevitContext.ActiveDocument;
+        if (document is null)
+        {
+            decomposedMember.Member.Evaluate();
+            return decomposedMember.Member;
+        }
+
+        using var transaction = new Transaction(document);
+        transaction.Start("Evaluate member");
+        decomposedMember.Member.Evaluate();
+        transaction.Commit();
+
         return decomposedMember.Member;
     }
 

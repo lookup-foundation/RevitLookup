@@ -6,7 +6,6 @@
     xmlns:decomposition="clr-namespace:RevitLookup.Abstractions.ObservableModels.Decomposition;assembly=RevitLookup.Abstractions"
     xmlns:ui="http://lookupengine.com/xaml"
     xmlns:converters="clr-namespace:RevitLookup.UI.Framework.Converters;assembly=RevitLookup.UI.Framework"
-    xmlns:views="clr-namespace:RevitLookup.UI.Framework.Views.Decomposition;assembly=RevitLookup.UI.Framework"
     xmlns:mockConverters="clr-namespace:RevitLookup.UI.Playground.Mocks.Styles.Converters"
     mc:Ignorable="d">
 
@@ -64,6 +63,26 @@
     </DataTemplate>
 
     <DataTemplate
+        x:Key="VoidSummaryCellTemplate"
+        DataType="{x:Type decomposition:ObservableDecomposedMember}">
+        <StackPanel
+            Orientation="Horizontal"
+            ToolTip="The method returns void">
+            <ui:SymbolIcon
+                FontSize="16"
+                VerticalAlignment="Center"
+                Symbol="SubtractCircle16" />
+            <ui:TextBlock
+                Margin="4 0 0 0"
+                VerticalAlignment="Center"
+                FontTypography="Caption"
+                FontWeight="{Binding FontWeight,
+                    RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}}"
+                Text="No return value" />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate
         x:Key="SummaryMediaColorCellTemplate"
         DataType="{x:Type decomposition:ObservableDecomposedMember}">
         <StackPanel
@@ -104,64 +123,22 @@
     <DataTemplate
         x:Key="DeferredSummaryCellTemplate"
         DataType="{x:Type decomposition:ObservableDecomposedMember}">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <StackPanel
-                Grid.Column="0"
-                Orientation="Horizontal"
-                ToolTip="The member is not evaluated yet">
-                <ui:SymbolIcon
-                    FontSize="16"
-                    VerticalAlignment="Center"
-                    Symbol="Clock16"
-                    Foreground="{DynamicResource SystemFillColorAttentionBrush}" />
-                <ui:TextBlock
-                    Margin="4 0 0 0"
-                    VerticalAlignment="Center"
-                    FontTypography="Caption"
-                    FontWeight="{Binding FontWeight,
-                        RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}}"
-                    Text="Awaiting" />
-            </StackPanel>
-            <ui:Button
-                x:Name="EvaluateButton"
-                Grid.Column="1"
-                Margin="8 0 0 0"
-                Padding="6 2"
+        <StackPanel
+            Orientation="Horizontal"
+            ToolTip="The member is not evaluated yet. Use the context menu (F8) to evaluate">
+            <ui:SymbolIcon
+                FontSize="16"
                 VerticalAlignment="Center"
-                Cursor="Hand"
-                Appearance="Transparent"
-                Visibility="Collapsed"
-                Command="{Binding ViewModel.ForceEvaluateMemberCommand,
-                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type views:SummaryViewBase}}}"
-                CommandParameter="{Binding}">
-                <StackPanel
-                    Orientation="Horizontal">
-                    <ui:SymbolIcon
-                        FontSize="14"
-                        Symbol="Calculator16"
-                        VerticalAlignment="Center" />
-                    <ui:TextBlock
-                        Margin="4 0 0 0"
-                        VerticalAlignment="Center"
-                        FontTypography="Caption"
-                        Text="Evaluate" />
-                </StackPanel>
-            </ui:Button>
-        </Grid>
-        <DataTemplate.Triggers>
-            <DataTrigger
-                Binding="{Binding IsMouseOver, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}}"
-                Value="True">
-                <Setter
-                    TargetName="EvaluateButton"
-                    Property="Visibility"
-                    Value="Visible" />
-            </DataTrigger>
-        </DataTemplate.Triggers>
+                Symbol="Clock16"
+                Foreground="{DynamicResource SystemFillColorAttentionBrush}" />
+            <ui:TextBlock
+                Margin="4 0 0 0"
+                VerticalAlignment="Center"
+                FontTypography="Caption"
+                FontWeight="{Binding FontWeight,
+                    RelativeSource={RelativeSource FindAncestor, AncestorType=DataGridRow}}"
+                Text="Awaiting" />
+        </StackPanel>
     </DataTemplate>
 
     <DataTemplate
