@@ -16,4 +16,8 @@
         <PackageReference Include="TUnit"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\..\source\RevitLookup.Common\RevitLookup.Common.csproj"/>
+    </ItemGroup>
+
 </Project>
