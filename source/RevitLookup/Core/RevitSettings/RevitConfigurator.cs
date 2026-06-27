@@ -172,10 +172,15 @@ public sealed class RevitConfigurator
         List<ObservableIniEntry> userEntries,
         List<ObservableIniEntry> defaultEntries)
     {
+        var index = new Dictionary<(string Category, string Property), ObservableIniEntry>(journalEntries.Count);
+        foreach (var entry in journalEntries)
+        {
+            index.TryAdd((entry.Category, entry.Property), entry);
+        }
+
         foreach (var userEntry in userEntries)
         {
-            var existingEntry = journalEntries.FirstOrDefault(entry => entry.Category == userEntry.Category && entry.Property == userEntry.Property);
-            if (existingEntry is not null)
+            if (index.TryGetValue((userEntry.Category, userEntry.Property), out var existingEntry))
             {
                 existingEntry.Value = userEntry.Value;
                 existingEntry.IsActive = userEntry.IsActive;
@@ -184,19 +189,20 @@ public sealed class RevitConfigurator
             else
             {
                 journalEntries.Add(userEntry);
+                index[(userEntry.Category, userEntry.Property)] = userEntry;
             }
         }
 
         foreach (var defaultEntry in defaultEntries)
         {
-            var existingEntry = journalEntries.FirstOrDefault(e => e.Category == defaultEntry.Category && e.Property == defaultEntry.Property);
-            if (existingEntry is not null)
+            if (index.TryGetValue((defaultEntry.Category, defaultEntry.Property), out var existingEntry))
             {
                 existingEntry.DefaultValue = defaultEntry.DefaultValue;
             }
             else
             {
                 journalEntries.Add(defaultEntry);
+                index[(defaultEntry.Category, defaultEntry.Property)] = defaultEntry;
             }
         }
 
