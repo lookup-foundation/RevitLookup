@@ -2,7 +2,7 @@
 
 namespace RevitLookup.Core.Visualization.Buffers;
 
-public sealed class RenderingBufferStorage
+public sealed class RenderingBufferStorage : IDisposable
 {
     public VertexFormatBits FormatBits { get; set; }
     public int PrimitiveCount { get; set; }
@@ -21,5 +21,22 @@ public sealed class RenderingBufferStorage
         if (EffectInstance is null || !EffectInstance.IsValid()) return false;
 
         return true;
+    }
+
+    public void DisposeBuffers()
+    {
+        VertexBuffer?.Dispose();
+        VertexBuffer = null;
+        IndexBuffer?.Dispose();
+        IndexBuffer = null;
+        VertexFormat?.Dispose();
+        VertexFormat = null;
+    }
+
+    public void Dispose()
+    {
+        DisposeBuffers();
+        EffectInstance?.Dispose();
+        EffectInstance = null;
     }
 }

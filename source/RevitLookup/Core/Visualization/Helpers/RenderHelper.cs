@@ -30,6 +30,7 @@ public static class RenderHelper
 
         var vertexBufferSizeInFloats = VertexPosition.GetSizeInFloats() * buffer.VertexBufferCount;
         buffer.FormatBits = VertexFormatBits.Position;
+        buffer.DisposeBuffers();
         buffer.VertexBuffer = new VertexBuffer(vertexBufferSizeInFloats);
         buffer.VertexBuffer.Map(vertexBufferSizeInFloats);
 
@@ -74,6 +75,7 @@ public static class RenderHelper
 
         var vertexBufferSizeInFloats = VertexPosition.GetSizeInFloats() * buffer.VertexBufferCount;
         buffer.FormatBits = VertexFormatBits.Position;
+        buffer.DisposeBuffers();
         buffer.VertexBuffer = new VertexBuffer(vertexBufferSizeInFloats);
         buffer.VertexBuffer.Map(vertexBufferSizeInFloats);
 
@@ -112,6 +114,7 @@ public static class RenderHelper
 
         var vertexBufferSizeInFloats = VertexPosition.GetSizeInFloats() * buffer.VertexBufferCount;
         buffer.FormatBits = VertexFormatBits.Position;
+        buffer.DisposeBuffers();
         buffer.VertexBuffer = new VertexBuffer(vertexBufferSizeInFloats);
         buffer.VertexBuffer.Map(vertexBufferSizeInFloats);
 
@@ -168,6 +171,7 @@ public static class RenderHelper
 
         var vertexBufferSizeInFloats = VertexPosition.GetSizeInFloats() * buffer.VertexBufferCount;
         buffer.FormatBits = VertexFormatBits.Position;
+        buffer.DisposeBuffers();
         buffer.VertexBuffer = new VertexBuffer(vertexBufferSizeInFloats);
         buffer.VertexBuffer.Map(vertexBufferSizeInFloats);
 
@@ -221,6 +225,7 @@ public static class RenderHelper
 
         var vertexBufferSizeInFloats = VertexPosition.GetSizeInFloats() * buffer.VertexBufferCount;
         buffer.FormatBits = VertexFormatBits.Position;
+        buffer.DisposeBuffers();
         buffer.VertexBuffer = new VertexBuffer(vertexBufferSizeInFloats);
         buffer.VertexBuffer.Map(vertexBufferSizeInFloats);
 
@@ -319,6 +324,7 @@ public static class RenderHelper
 
         var vertexBufferSizeInFloats = VertexPosition.GetSizeInFloats() * buffer.VertexBufferCount;
         buffer.FormatBits = VertexFormatBits.Position;
+        buffer.DisposeBuffers();
         buffer.VertexBuffer = new VertexBuffer(vertexBufferSizeInFloats);
         buffer.VertexBuffer.Map(vertexBufferSizeInFloats);
 
@@ -373,6 +379,7 @@ public static class RenderHelper
 
         var vertexBufferSizeInFloats = VertexPosition.GetSizeInFloats() * buffer.VertexBufferCount;
         buffer.FormatBits = VertexFormatBits.Position;
+        buffer.DisposeBuffers();
         buffer.VertexBuffer = new VertexBuffer(vertexBufferSizeInFloats);
         buffer.VertexBuffer.Map(vertexBufferSizeInFloats);
 
@@ -430,6 +437,7 @@ public static class RenderHelper
 
         var vertexBufferSizeInFloats = VertexPosition.GetSizeInFloats() * buffer.VertexBufferCount;
         buffer.FormatBits = VertexFormatBits.Position;
+        buffer.DisposeBuffers();
         buffer.VertexBuffer = new VertexBuffer(vertexBufferSizeInFloats);
         buffer.VertexBuffer.Map(vertexBufferSizeInFloats);
 
@@ -472,6 +480,7 @@ public static class RenderHelper
 
         var vertexBufferSizeInFloats = 4 * VertexPosition.GetSizeInFloats();
         buffer.FormatBits = VertexFormatBits.Position;
+        buffer.DisposeBuffers();
         buffer.VertexBuffer = new VertexBuffer(vertexBufferSizeInFloats);
         buffer.VertexBuffer.Map(vertexBufferSizeInFloats);
 
