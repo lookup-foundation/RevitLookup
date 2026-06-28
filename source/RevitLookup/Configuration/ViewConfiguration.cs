@@ -21,7 +21,7 @@ public static class ViewConfiguration
             .AddClasses(filter =>
             {
                 filter.AssignableTo<Page>();
-                filter.Where(type => !typeof(INavigableView<object>).IsAssignableFrom(type));
+                filter.Where(static type => !typeof(INavigableView<object>).IsAssignableFrom(type));
             }).AsSelf().WithTransientLifetime());
     }
 }

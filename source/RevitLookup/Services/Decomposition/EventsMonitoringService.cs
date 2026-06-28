@@ -27,7 +27,7 @@ public sealed partial class EventsMonitoringService(ILogger<EventsMonitoringServ
 
     private readonly Assembly[] _assemblies = AppDomain.CurrentDomain
         .GetAssemblies()
-        .Where(assembly =>
+        .Where(static assembly =>
         {
             var name = assembly.GetName().Name;
             return name is "RevitAPI" or "RevitAPIUI";

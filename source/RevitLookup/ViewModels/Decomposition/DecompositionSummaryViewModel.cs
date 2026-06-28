@@ -226,7 +226,7 @@ public sealed partial class DecompositionSummaryViewModel(
             .OrderBy(static data => data.TypeName)
             .ThenBy(static data => data.Name)
             .GroupBy(static data => data.TypeName)
-            .Select(group => new ObservableDecomposedObjectsGroup
+            .Select(static group => new ObservableDecomposedObjectsGroup
             {
                 GroupName = group.Key,
                 GroupItems = group.ToObservableCollection()

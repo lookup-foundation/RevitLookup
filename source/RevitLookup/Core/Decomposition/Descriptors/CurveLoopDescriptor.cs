@@ -89,7 +89,7 @@ public sealed partial class CurveLoopDescriptor : Descriptor, IDescriptorConfigu
     {
         if (application.ActiveUIDocument is null) return;
 
-        var references = curveLoop.Where(curve => curve.Reference is not null).Select(curve => curve.Reference).ToArray();
+        var references = curveLoop.Where(static curve => curve.Reference is not null).Select(static curve => curve.Reference).ToArray();
         if (references.Length == 0) return;
 
         application.ActiveUIDocument.Selection.SetReferences(references);
@@ -101,12 +101,12 @@ public sealed partial class CurveLoopDescriptor : Descriptor, IDescriptorConfigu
         var uiDocument = application.ActiveUIDocument;
         if (uiDocument is null) return;
 
-        var curves = curveLoop.Where(curve => curve.Reference is not null).ToArray();
+        var curves = curveLoop.Where(static curve => curve.Reference is not null).ToArray();
         if (curves.Length == 0) return;
 
         var elements = curves.Select(curve => curve.Reference.ElementId.ToElement(uiDocument.Document))
-            .Where(element => element is not null)
-            .Select(element => element!.Id)
+            .Where(static element => element is not null)
+            .Select(static element => element!.Id)
             .ToArray();
 
         if (elements.Length > 0)
@@ -114,7 +114,7 @@ public sealed partial class CurveLoopDescriptor : Descriptor, IDescriptorConfigu
             uiDocument.ShowElements(elements);
         }
 
-        var references = curves.Select(curve => curve.Reference).ToArray();
+        var references = curves.Select(static curve => curve.Reference).ToArray();
         if (references.Length > 0)
         {
             uiDocument.Selection.SetReferences(references);

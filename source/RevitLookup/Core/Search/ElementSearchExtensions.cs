@@ -25,12 +25,12 @@ public static class ElementSearchExtensions
 #endif
                 if (element is not null) results.Add(element);
             }
-            else if (rawId.Length == 45 && rawId.Count(c => c == '-') == 5)
+            else if (rawId.Length == 45 && rawId.Count(static c => c == '-') == 5)
             {
                 var element = document.GetElement(rawId);
                 if (element is not null) results.Add(element);
             }
-            else if (rawId.Length == 22 && rawId.All(c => c != ' '))
+            else if (rawId.Length == 22 && rawId.All(static c => c != ' '))
             {
                 var elements = SearchByIfcGuid(document, rawId);
                 results.AddRange(elements);

@@ -89,7 +89,7 @@ public static class UnitsCollector
         dataTypes.AddRange(typeof(SpecTypeId).GetProperties(searchFlags));
         dataTypes.AddRange(typeof(SymbolTypeId).GetProperties(searchFlags));
 #endif
-        return dataTypes.Select(info =>
+        return dataTypes.Select(static info =>
             {
                 var typeId = (ForgeTypeId)info.GetValue(null)!;
                 return new UnitInfo
