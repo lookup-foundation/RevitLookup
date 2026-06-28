@@ -25,8 +25,8 @@ public sealed class ViewDescriptor(View view) : ElementDescriptor(view)
 {
     public override void Configure(IMemberConfigurator configuration)
     {
-        configuration.Member(nameof(View.CanCategoryBeHidden)).Resolve(() => ResolveCategories(view.Document.Settings.Categories, view.CanCategoryBeHidden));
-        configuration.Member(nameof(View.CanCategoryBeHiddenTemporary)).Resolve(() => ResolveCategories(view.Document.Settings.Categories, view.CanCategoryBeHiddenTemporary));
+        configuration.Member(nameof(View.CanCategoryBeHidden)).Defer(() => ResolveCategories(view.Document.Settings.Categories, view.CanCategoryBeHidden));
+        configuration.Member(nameof(View.CanCategoryBeHiddenTemporary)).Defer(() => ResolveCategories(view.Document.Settings.Categories, view.CanCategoryBeHiddenTemporary));
         configuration.Member(nameof(View.CanViewBeDuplicated)).Resolve(() => ResolveEnum<ViewDuplicateOption, bool>(view.CanViewBeDuplicated));
         configuration.Member(nameof(View.GetCategoryHidden)).Resolve(() => ResolveCategories(view.Document.Settings.Categories, view.GetCategoryHidden));
         configuration.Member(nameof(View.GetCategoryOverrides)).Resolve(() => ResolveCategories(view.Document.Settings.Categories, view.GetCategoryOverrides));
@@ -34,7 +34,7 @@ public sealed class ViewDescriptor(View view) : ElementDescriptor(view)
         configuration.Member(nameof(View.GetFilterOverrides)).Resolve(() => ResolveFilters(view.GetFilters(), view.Document, view.GetFilterOverrides));
         configuration.Member(nameof(View.GetFilterVisibility)).Resolve(() => ResolveFilters(view.GetFilters(), view.Document, view.GetFilterVisibility));
         configuration.Member(nameof(View.GetWorksetVisibility)).Resolve(() => ResolveWorksets(new FilteredWorksetCollector(view.Document).OfKind(WorksetKind.UserWorkset).ToWorksets(), view.GetWorksetVisibility));
-        configuration.Member(nameof(View.IsCategoryOverridable)).Resolve(() => ResolveCategories(view.Document.Settings.Categories, view.IsCategoryOverridable));
+        configuration.Member(nameof(View.IsCategoryOverridable)).Defer(() => ResolveCategories(view.Document.Settings.Categories, view.IsCategoryOverridable));
         configuration.Member(nameof(View.IsFilterApplied)).Resolve(() => ResolveFilters(view.GetFilters(), view.Document, view.IsFilterApplied));
         configuration.Member(nameof(View.IsInTemporaryViewMode)).Resolve(() => ResolveEnum<TemporaryViewMode, bool>(view.IsInTemporaryViewMode));
         configuration.Member(nameof(View.IsValidViewTemplate)).Resolve(ResolveIsValidViewTemplate);
