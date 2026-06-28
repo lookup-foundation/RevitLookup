@@ -1,5 +1,56 @@
 # Changelog
 
+# **2027.0.3**
+
+## On-demand member evaluation
+
+Earlier versions evaluated every member as soon as you opened an object.
+That was risky, because RevitLookup would call terminal methods and methods that modify the object without asking, and for large objects you had to wait while hundreds of slow calls ran. 
+Methods that return `void` could not be executed at all.
+You could see them in the list, but RevitLookup had no way to run them, so you could never invoke one or confirm it worked.
+
+Evaluation now happens on demand https://github.com/lookup-foundation/RevitLookup/issues/298. 
+When an object opens, RevitLookup evaluates only the members it considers safe to call, now it's members from `System` and `Autodesk.Revit` namespaces. 
+Everything else is **deferred** until you ask to evaluate. Opening even heavy objects stays fast, and you decide which expensive or model-changing members actually run https://github.com/lookup-foundation/RevitLookup/issues/239.
+
+Methods that return `void` are now runnable too, handled as deferred members like everything else, so you can finally invoke `Document.Print` or similar methods.
+
+To evaluate a deferred member, two new commands were added to the row context menu:
+
+- **Evaluate** (`F8`) runs the member.
+- **Evaluate with transaction** (`Alt + F8`) runs the member inside a Revit transaction, which some members require in order to execute. Any changes the member makes are committed to the document.
+
+If you hit a member that should be evaluated automatically, or one that should not, please report it in the **Discussions** for this release.
+
+![image](https://github.com/user-attachments/assets/2ac6d7b9-05ec-452b-9269-8d0cbd872f91)
+
+## Readable value states
+
+The values table used to render everything as plain text.
+A member that throws an Exception showed a red row spanning the whole width, which was easy to misread and looked broken for anyone running a red system accent color, while special states like "<null>" were just more text that blended in with real values. 
+Each state now has its own icon and label, so you can tell at a glance what a row actually is:
+
+- **Awaiting**. A deferred member that has not been evaluated yet.
+- **No return value**. A `void` method that has been successfully evaluated.
+- **Disabled**. A member whose evaluation is permanently disabled.
+- **Unsupported**. A member the engine cannot evaluate (the overload is not supported, for example).
+- **Exception**. A member that threw, marked with an error icon and the message instead of a full red row.
+
+![image](https://github.com/user-attachments/assets/c9b85953-f162-4ef5-a7ec-b55c4be0ee79)
+
+## Improvements
+
+- **Colors shown as HEX**. Color values are now displayed as `#FF7F00` instead of `RGB: 255 127 0`.
+- **Faster Views**. `View.CanCategoryBeHidden`, `View.CanCategoryBeHiddenTemporary`, and `View.IsCategoryOverridable` are now deferred, so opening a View no longer waits on these slow calls.
+- **Smoother geometry visualization**. Mesh vertex normals are now precomputed in a single pass and curve loop vertices are de-duplicated.
+- **Lower visualization memory use**. Rendering buffers are now released when a visualization is removed or remapped.
+- **Faster settings filtering**. The settings filter and configuration lookup were reworked to avoid recompiling expressions and linear scans.
+- **Updated LookupEngine** with the new on-demand evaluation pipeline and engine syntax.
+
+## Documentation
+
+- **Wiki sources moved into the repository**. [`Wiki`](https://github.com/lookup-foundation/RevitLookup/tree/develop/wiki) is available for public editing with your pull requests. [The public wiki](https://github.com/lookup-foundation/RevitLookup/wiki) is automatically synchronized with the repository.
+
 # **2027.0.2**
 
 - Added `Rebar.GetFullGeometryForView` support https://github.com/lookup-foundation/RevitLookup/issues/413.
