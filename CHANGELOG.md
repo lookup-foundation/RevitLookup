@@ -13,7 +13,7 @@ Evaluation now happens on demand https://github.com/lookup-foundation/RevitLooku
 When an object opens, RevitLookup evaluates only the members it considers safe to call, now it's members from `System` and `Autodesk.Revit` namespaces. 
 Everything else is **deferred** until you ask to evaluate. Opening even heavy objects stays fast, and you decide which expensive or model-changing members actually run https://github.com/lookup-foundation/RevitLookup/issues/239.
 
-Methods that return `void` are now runnable too, handled as deferred members like everything else, so you can finally invoke `Document.Print` or similar methods.
+Methods that return `void` are now runnable too, handled as deferred members like everything else, so you can finally invoke `View.Print` or similar methods.
 
 To evaluate a deferred member, two new commands were added to the row context menu:
 
@@ -36,7 +36,7 @@ Each state now has its own icon and label, so you can tell at a glance what a ro
 - **Unsupported**. A member the engine cannot evaluate (the overload is not supported, for example).
 - **Exception**. A member that threw, marked with an error icon and the message instead of a full red row.
 
-![image](https://github.com/user-attachments/assets/c9b85953-f162-4ef5-a7ec-b55c4be0ee79)
+![image](https://github.com/user-attachments/assets/10a8a69f-8a20-4847-846d-25fae14d9da1)
 
 ## Improvements
 
