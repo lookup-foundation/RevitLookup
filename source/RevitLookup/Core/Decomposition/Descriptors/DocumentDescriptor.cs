@@ -60,8 +60,8 @@ public sealed class DocumentDescriptor : Descriptor, IDescriptorConfigurator
         configuration.Extension(nameof(LightFamily.GetLightFamily)).Register(() => LightFamily.GetLightFamily(_document));
         configuration.Extension(nameof(FamilySizeTableManager.CreateFamilySizeTableManager)).Register(() => FamilySizeTableManager.GetFamilySizeTableManager(_document, new ElementId(BuiltInParameter.RBS_LOOKUP_TABLE_NAME)));
         configuration.Extension("GbXmlId").Map(nameof(ExportUtils.GetGBXMLDocumentId)).Register(() => ExportUtils.GetGBXMLDocumentId(_document));
-        configuration.Extension(nameof(LoadedFamilyIntegrityCheck.CheckAllFamilies)).Defer(RegisterCorruptFamilyIds);
-        configuration.Extension(nameof(LoadedFamilyIntegrityCheck.CheckAllFamiliesSlow)).Defer(RegisterGetUserWorksetInfo);
+        configuration.Extension(nameof(LoadedFamilyIntegrityCheck.CheckAllFamilies)).Defer(RegisterCheckAllFamilies);
+        configuration.Extension(nameof(LoadedFamilyIntegrityCheck.CheckAllFamiliesSlow)).Defer(RegisterCheckAllFamiliesSlow);
         configuration.Extension(nameof(WorksharingUtils.GetUserWorksetInfo)).Defer(() => WorksharingUtils.GetUserWorksetInfo(_document.GetWorksharingCentralModelPath()));
         configuration.Extension(nameof(WorksharingUtils.RelinquishOwnership)).NotSupported();
         configuration.Extension(nameof(FabricationUtils.ExportToPCF)).NotSupported();
@@ -118,7 +118,7 @@ public sealed class DocumentDescriptor : Descriptor, IDescriptorConfigurator
             return variants.Consume();
         }
         
-        object? RegisterCorruptFamilyIds()
+        object? RegisterCheckAllFamilies()
         {
             var corruptFamilyIds = new HashSet<ElementId>();
             LoadedFamilyIntegrityCheck.CheckAllFamilies(_document, corruptFamilyIds);
@@ -130,11 +130,6 @@ public sealed class DocumentDescriptor : Descriptor, IDescriptorConfigurator
             var corruptFamilyIds = new HashSet<ElementId>();
             LoadedFamilyIntegrityCheck.CheckAllFamiliesSlow(_document, corruptFamilyIds);
             return corruptFamilyIds;
-        }
-
-        object? RegisterGetUserWorksetInfo()
-        {
-            return WorksharingUtils.GetUserWorksetInfo(_document.GetWorksharingCentralModelPath());
         }
     }
 }
