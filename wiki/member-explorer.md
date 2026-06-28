@@ -22,8 +22,12 @@ For example, the `Id` row in the `Element` group corresponds to the `Id` propert
 ## Value Representation
 
 RevitLookup uses special notations for values representation:
-- `<null>` indicates a null reference
-- `<empty>` indicates an empty string
+- **Null reference** indicates a null reference
+- **Empty string** indicates an empty string
+- **Awaiting** indicates a deferred member that has not been evaluated yet
+- **No return value** indicates an evaluated method that returns `void`
+- **Disabled** indicates a member whose evaluation is permanently disabled
+- **Unsupported** indicates a member the engine cannot evaluate
 
 ## Visual Representation
 
@@ -37,6 +41,21 @@ Some methods require dynamic input parameters, and RevitLookup can evaluate them
 These cases are marked with the `Variants<T>` type and represent a list of possible values, which will strictly depend on what is passed to the method. This feature is particularly useful when exploring methods that can accept different parameter types or when analyzing method overloads. Consider this when using these methods in RevitAPI.
 
 ![image](https://github.com/user-attachments/assets/e90c01b3-6a00-40da-9e0d-adc44ea27ffd)
+
+## Deferred Members
+
+RevitLookup automatically evaluates only members it considers safe and fast — those from the `System` and `Autodesk.Revit` namespaces. Slow members, members with side effects on the model, and methods that return `void` are not run automatically when an object opens. They are marked as **Awaiting** in the value column, which keeps opening an object fast and avoids executing model-changing calls without your consent.
+
+![image](https://github.com/user-attachments/assets/REPLACE-WITH-AWAITING-MEMBER-SCREENSHOT)
+
+To evaluate a deferred member, use the row context menu or a keyboard shortcut:
+
+- **Evaluate** (`F8`) runs the member and fills in its value, computation time, and allocated memory.
+- **Evaluate with transaction** (`Alt + F8`) runs the member inside a Revit transaction, which some members require in order to run. Any changes the member makes are committed to the document.
+
+![image](https://github.com/user-attachments/assets/REPLACE-WITH-EVALUATE-CONTEXT-MENU-SCREENSHOT)
+
+Methods that return `void` can be invoked this way as well, and show **No return value** once they have been evaluated.
 
 ## Navigation
 
