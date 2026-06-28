@@ -14,9 +14,6 @@
 
 using System.Reflection;
 using System.Windows;
-#if NET8_0_OR_GREATER
-using System.Runtime.CompilerServices;
-#endif
 using RevitLookup.UI.Framework.Utils;
 using Wpf.Ui.Controls;
 using DataGrid = Wpf.Ui.Controls.DataGrid;
@@ -25,13 +22,7 @@ namespace RevitLookup.UI.Framework.Views.Decomposition;
 
 public partial class SummaryViewBase
 {
-#if NET8_0_OR_GREATER
-    [UnsafeAccessor(UnsafeAccessorKind.Field, Name = "_internalScrollHost")]
-    private static extern ref System.Windows.Controls.ScrollViewer InternalGridScrollHost(System.Windows.Controls.DataGrid dataGrid);
-
-    [UnsafeAccessor(UnsafeAccessorKind.Method, Name = "OnViewportSizeChanged")]
-    private static extern void OnViewportSizeChanged(System.Windows.Controls.DataGrid dataGrid, Size previousSize, Size newSize);
-#else
+#if !NET8_0_OR_GREATER
     private static readonly FieldInfo InternalGridScrollHostField =
         typeof(System.Windows.Controls.DataGrid).GetField("_internalScrollHost",
             BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)!;
@@ -67,7 +58,7 @@ public partial class SummaryViewBase
 
         var gridColumns = InternalGridColumnsProperty.GetValue(dataGrid);
 #if NET8_0_OR_GREATER
-        InternalGridScrollHost(dataGrid) = passiveScrollViewer;
+        UnsafeAccessors.DataGridInternalScrollHost(dataGrid) = passiveScrollViewer;
 #else
         InternalGridScrollHostField.SetValue(dataGrid, passiveScrollViewer);
 #endif
@@ -82,14 +73,14 @@ public partial class SummaryViewBase
     /// <remarks>
     ///     https://github.com/dotnet/wpf/blob/main/src/Microsoft.DotNet.Wpf/src/PresentationFramework/System/Windows/Controls/DataGrid.cs#L1961-L1968
     /// </remarks>
-    private static void FixCanContentScrollResizing(object sender, SizeChangedEventArgs e)
+    private static void FixCanContentScrollResizing(object sender, SizeChangedEventArgs args)
     {
         var scrollViewer = (PassiveScrollViewer) sender;
         var dataGrid = scrollViewer.FindVisualParent<System.Windows.Controls.DataGrid>(); //find parent to avoid closure allocations
 #if NET8_0_OR_GREATER
-        OnViewportSizeChanged(dataGrid!, e.PreviousSize, e.NewSize);
+        UnsafeAccessors.DataGridOnViewportSizeChanged(dataGrid!, args.PreviousSize, args.NewSize);
 #else
-        InternalGridOnViewportSizeChangedMethod.Invoke(dataGrid, [e.PreviousSize, e.NewSize]);
+        InternalGridOnViewportSizeChangedMethod.Invoke(dataGrid, [args.PreviousSize, args.NewSize]);
 #endif
     }
 }
