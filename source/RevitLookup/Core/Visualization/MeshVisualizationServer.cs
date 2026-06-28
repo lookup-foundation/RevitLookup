@@ -63,7 +63,7 @@ public sealed class MeshVisualizationServer : DirectContext3DServer
     {
         _mesh = mesh;
         _normalBuffers = Enumerable.Range(0, _mesh.Vertices.Count)
-            .Select(_ => new RenderingBufferStorage())
+            .Select(static _ => new RenderingBufferStorage())
             .ToArray();
 
         Register();

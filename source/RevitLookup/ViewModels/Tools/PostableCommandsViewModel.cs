@@ -42,7 +42,7 @@ public sealed partial class PostableCommandsViewModel(ILogger<PostableCommandsVi
                 Name = postableCommandNames[i],
                 Value = command
             })
-            .OrderBy(info => info.Name)
+            .OrderBy(static info => info.Name)
             .ToList();
     }
 

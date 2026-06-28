@@ -35,11 +35,11 @@ public sealed class XyzVisualizationServer : DirectContext3DServer
     private bool _drawZAxis;
 
     private readonly RenderingBufferStorage[] _planeBuffers = Enumerable.Range(0, 3)
-        .Select(_ => new RenderingBufferStorage())
+        .Select(static _ => new RenderingBufferStorage())
         .ToArray();
 
     private readonly RenderingBufferStorage[] _axisBuffers = Enumerable.Range(0, 3)
-        .Select(_ => new RenderingBufferStorage())
+        .Select(static _ => new RenderingBufferStorage())
         .ToArray();
 
     private readonly XYZ[] _normals =
@@ -107,8 +107,8 @@ public sealed class XyzVisualizationServer : DirectContext3DServer
 
     protected override bool AreBuffersValid()
     {
-        return Array.TrueForAll(_planeBuffers, buffer => buffer.IsValid())
-               && Array.TrueForAll(_axisBuffers, buffer => buffer.IsValid());
+        return Array.TrueForAll(_planeBuffers, static buffer => buffer.IsValid())
+               && Array.TrueForAll(_axisBuffers, static buffer => buffer.IsValid());
     }
 
     protected override void MapGeometryBuffer()

@@ -97,7 +97,7 @@ public sealed partial class UnitsDialog
 
         copyMenu.AddMenuItem()
             .SetHeader("Unit identifier")
-            .SetCommand(info, unitInfo => Clipboard.SetDataObject(unitInfo.Unit))
+            .SetCommand(info, static unitInfo => Clipboard.SetDataObject(unitInfo.Unit))
             .SetShortcut(ModifierKeys.Control, Key.C);
 
         copyMenu.AddMenuItem()

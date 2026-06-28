@@ -86,8 +86,8 @@ public sealed class SolidVisualizationServer : DirectContext3DServer
 
     protected override bool AreBuffersValid()
     {
-        return _faceBuffers.TrueForAll(buffer => buffer.IsValid())
-               && _edgeBuffers.TrueForAll(buffer => buffer.IsValid());
+        return _faceBuffers.TrueForAll(static buffer => buffer.IsValid())
+               && _edgeBuffers.TrueForAll(static buffer => buffer.IsValid());
     }
 
     protected override void MapGeometryBuffer()

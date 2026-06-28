@@ -35,9 +35,9 @@ public sealed class SoftwareUpdateService(
         if (releases.Count == 0) return false;
 
         var latestRelease = releases
-            .Where(response => !response.Draft)
-            .Where(response => !response.PreRelease)
-            .MaxBy(release => release.PublishedDate);
+            .Where(static response => !response.Draft)
+            .Where(static response => !response.PreRelease)
+            .MaxBy(static release => release.PublishedDate);
 
         if (latestRelease is null) return false;
         ReleaseNotesUrl = latestRelease.Url;

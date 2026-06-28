@@ -144,7 +144,7 @@ public sealed partial class ThemeWatcherService(ISettingsService settingsService
     private static void UpdateDictionary(FrameworkElement frameworkElement)
     {
         var themedResources = frameworkElement.Resources.MergedDictionaries
-            .Where(dictionary => dictionary.Source.OriginalString.Contains("LookupEngine.UI;", StringComparison.OrdinalIgnoreCase))
+            .Where(static dictionary => dictionary.Source.OriginalString.Contains("LookupEngine.UI;", StringComparison.OrdinalIgnoreCase))
             .ToArray();
 
         frameworkElement.Resources.MergedDictionaries.Insert(0, UiApplication.Current.Resources.MergedDictionaries[0]);

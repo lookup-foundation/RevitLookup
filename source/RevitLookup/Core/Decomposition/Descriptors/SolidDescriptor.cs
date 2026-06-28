@@ -116,8 +116,8 @@ public sealed partial class SolidDescriptor : Descriptor, IDescriptorConfigurato
         if (application.ActiveUIDocument is null) return;
 
         var references = solid.Faces.Cast<Face>()
-            .Select(face => face.Reference)
-            .Where(reference => reference is not null)
+            .Select(static face => face.Reference)
+            .Where(static reference => reference is not null)
             .ToList();
 
         if (references.Count == 0) return;
@@ -132,8 +132,8 @@ public sealed partial class SolidDescriptor : Descriptor, IDescriptorConfigurato
         if (uiDocument is null) return;
 
         var references = solid.Faces.Cast<Face>()
-            .Select(face => face.Reference)
-            .Where(reference => reference is not null)
+            .Select(static face => face.Reference)
+            .Where(static reference => reference is not null)
             .ToList();
 
         if (references.Count == 0) return;

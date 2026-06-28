@@ -36,7 +36,7 @@ public sealed class BoundingBoxVisualizationServer : DirectContext3DServer
     private readonly RenderingBufferStorage _edgeBuffer = new();
 
     private readonly RenderingBufferStorage[] _axisBuffers = Enumerable.Range(0, 6)
-        .Select(_ => new RenderingBufferStorage())
+        .Select(static _ => new RenderingBufferStorage())
         .ToArray();
 
     private readonly XYZ[] _normals =

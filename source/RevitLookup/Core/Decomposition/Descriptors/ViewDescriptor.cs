@@ -60,7 +60,7 @@ public sealed class ViewDescriptor(View view) : ElementDescriptor(view)
                 .Instances()
                 .OfClass<View>()
                 .Cast<View>()
-                .Where(element => element.IsTemplate)
+                .Where(static element => element.IsTemplate)
                 .ToArray();
 
             var variants = Variants.Values<bool>(templates.Length);

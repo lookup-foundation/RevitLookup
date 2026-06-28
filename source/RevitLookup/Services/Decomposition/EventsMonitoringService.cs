@@ -64,7 +64,7 @@ public sealed partial class EventsMonitoringService(ILogger<EventsMonitoringServ
         if (_handlersMap.Count > 0) return;
 
         foreach (var dll in _assemblies)
-        foreach (var type in dll.GetTypes().Where(type => type is {IsEnum: false, IsValueType: false, IsInterface: false}))
+        foreach (var type in dll.GetTypes().Where(static type => type is {IsEnum: false, IsValueType: false, IsInterface: false}))
         foreach (var eventInfo in type.GetEvents())
         {
             if (_denyList.Contains(eventInfo.Name)) continue;

@@ -84,7 +84,7 @@ public sealed class RevitConfigurator
                 var optionsPart = sessionOptions[startIndex..];
 
                 var parts = optionsPart.Split([RevitAttributeRecord], StringSplitOptions.RemoveEmptyEntries)
-                    .Select(line => line.Trim())
+                    .Select(static line => line.Trim())
                     .ToArray();
 
                 var entries = new List<ObservableIniEntry>();
@@ -215,10 +215,10 @@ public sealed class RevitConfigurator
         var lines = new List<string>();
 
         var sortedEntries = entries
-            .Where(entry => entry.UserDefined)
-            .OrderBy(entry => entry.Category)
-            .ThenBy(entry => entry.Property)
-            .GroupBy(entry => entry.Category)
+            .Where(static entry => entry.UserDefined)
+            .OrderBy(static entry => entry.Category)
+            .ThenBy(static entry => entry.Property)
+            .GroupBy(static entry => entry.Category)
             .ToArray();
 
         foreach (var entryGroup in sortedEntries)

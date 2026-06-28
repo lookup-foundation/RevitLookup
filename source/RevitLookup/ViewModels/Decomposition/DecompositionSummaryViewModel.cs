@@ -192,7 +192,7 @@ public sealed partial class DecompositionSummaryViewModel(
         {
             var results = await Task.Run(() => searchService.Search(value, SelectedDecomposedObject, DecomposedObjects));
 
-            if (FilteredDecomposedObjects.Sum(group => group.GroupItems.Count) != results.FilteredObjects.Count)
+            if (FilteredDecomposedObjects.Sum(static group => group.GroupItems.Count) != results.FilteredObjects.Count)
             {
                 FilteredDecomposedObjects = await Task.Run(() => ApplyGrouping(results.FilteredObjects));
             }
@@ -223,9 +223,9 @@ public sealed partial class DecompositionSummaryViewModel(
     private static ObservableCollection<ObservableDecomposedObjectsGroup> ApplyGrouping(List<ObservableDecomposedObject> objects)
     {
         return objects
-            .OrderBy(data => data.TypeName)
-            .ThenBy(data => data.Name)
-            .GroupBy(data => data.TypeName)
+            .OrderBy(static data => data.TypeName)
+            .ThenBy(static data => data.Name)
+            .GroupBy(static data => data.TypeName)
             .Select(group => new ObservableDecomposedObjectsGroup
             {
                 GroupName = group.Key,
