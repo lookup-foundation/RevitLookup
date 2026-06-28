@@ -76,7 +76,7 @@ public sealed partial class CurveLoopVisualizationViewModel(
             var curveVertices = curve.Tessellate().ToList();
             foreach (var vertex in curveVertices)
             {
-                if (vertices.Any(point => point.IsAlmostEqualTo(vertex))) continue;
+                if (ContainsVertex(vertices, vertex)) continue;
 
                 vertices.Add(vertex);
             }
@@ -84,6 +84,16 @@ public sealed partial class CurveLoopVisualizationViewModel(
 
         if (!loop.IsOpen()) vertices.Add(vertices[0]);
         return vertices;
+    }
+
+    private static bool ContainsVertex(List<XYZ> vertices, XYZ vertex)
+    {
+        foreach (var point in vertices)
+        {
+            if (point.IsAlmostEqualTo(vertex)) return true;
+        }
+
+        return false;
     }
 
     private void Initialize()
