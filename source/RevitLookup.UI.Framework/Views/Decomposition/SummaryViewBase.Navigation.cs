@@ -138,7 +138,7 @@ public partial class SummaryViewBase
     /// <summary>
     ///     Restore cursor
     /// </summary>
-    private static void OnPresenterCursorRestored(object sender, KeyEventArgs e)
+    private static void OnPresenterCursorRestored(object sender, KeyEventArgs args)
     {
         var presenter = (FrameworkElement) sender;
         presenter.PreviewKeyUp -= OnPresenterCursorRestored;

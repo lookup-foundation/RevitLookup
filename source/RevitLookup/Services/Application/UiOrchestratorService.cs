@@ -371,7 +371,7 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
             }
         }
 
-        private void OnHostClosed(object? sender, EventArgs e)
+        private void OnHostClosed(object? sender, EventArgs args)
         {
             IsAlive = false;
             _scope.Dispose();

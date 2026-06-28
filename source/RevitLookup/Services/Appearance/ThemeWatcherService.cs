@@ -123,7 +123,7 @@ public sealed partial class ThemeWatcherService(ISettingsService settingsService
         }
     }
 
-    private void OnWatchedElementLoaded(object sender, RoutedEventArgs e)
+    private void OnWatchedElementLoaded(object sender, RoutedEventArgs args)
     {
         var element = (FrameworkElement) sender;
         _observedElements.Add(element);
@@ -135,7 +135,7 @@ public sealed partial class ThemeWatcherService(ISettingsService settingsService
         }
     }
 
-    private void OnWatchedElementUnloaded(object sender, RoutedEventArgs e)
+    private void OnWatchedElementUnloaded(object sender, RoutedEventArgs args)
     {
         var element = (FrameworkElement) sender;
         _observedElements.Remove(element);

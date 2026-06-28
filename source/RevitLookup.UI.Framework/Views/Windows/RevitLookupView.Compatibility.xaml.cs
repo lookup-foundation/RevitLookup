@@ -33,7 +33,7 @@ public sealed partial class RevitLookupView
         contentPresenter.LoadCompleted += ContentPresenterOnContentRendered;
     }
 
-    private void ContentPresenterOnContentRendered(object? sender, EventArgs e)
+    private void ContentPresenterOnContentRendered(object? sender, EventArgs args)
     {
         var contentPresenter = (NavigationViewContentPresenter) sender!;
         if (!contentPresenter.IsDynamicScrollViewerEnabled) return;
