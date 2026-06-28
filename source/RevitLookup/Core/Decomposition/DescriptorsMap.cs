@@ -57,6 +57,7 @@ public static class DescriptorsMap
 
             //Root
             ElementId value when type is null || type == typeof(ElementId) => new ElementIdDescriptor(value),
+            ExternalResourceType value when type is null || type == typeof(ExternalResourceType) => new ExternalResourceTypeDescriptor(value),
             GuidEnum value when type is null || type == typeof(GuidEnum) => new GuidEnumDescriptor(value),
             ExternalDefinition value when type is null || type == typeof(ExternalDefinition) => new ExternalDefinitionDescriptor(value),
             Definition value when type is null || type == typeof(Definition) => new DefinitionDescriptor(value),
@@ -146,7 +147,6 @@ public static class DescriptorsMap
             UpdaterInfo value when type is null || type == typeof(UpdaterInfo) => new UpdaterInfoDescriptor(value),
             Subelement value when type is null || type == typeof(Subelement) => new SubelementDescriptor(value),
             ExternalResourceReference value when type is null || type == typeof(ExternalResourceReference) => new ExternalResourceReferenceDescriptor(value),
-            ExternalResourceType value when type is null || type == typeof(ExternalResourceType) => new ExternalResourceTypeDescriptor(value),
             ExternalService value when type is null || type == typeof(ExternalService) => new ExternalServiceDescriptor(value),
             LightFamily value when type is null || type == typeof(LightFamily) => new LightFamilyDescriptor(value),
             Autodesk.Revit.ApplicationServices.Application value when type is null || type == typeof(Autodesk.Revit.ApplicationServices.Application) => new ApplicationDescriptor(value),
