@@ -46,6 +46,6 @@ public sealed partial class CurveLoopVisualizationDialog
 
     private void MonitorServerConnection()
     {
-       Unloaded += (_, _) => _viewModel.UnregisterServer();
+        Unloaded += (_, _) => _viewModel.UnregisterServer();
     }
 }
