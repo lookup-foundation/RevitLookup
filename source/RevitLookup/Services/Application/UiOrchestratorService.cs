@@ -146,8 +146,8 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
     {
         private IServiceProvider? _parentProvider;
 
-        private readonly List<Task> _activeTasks = [];
         private readonly IServiceScope _scope;
+        private readonly List<Task> _pendingTasks = [];
         private readonly IVisualDecompositionService _visualDecompositionService;
         private readonly ILogger<UiOrchestratorService> _logger;
         private readonly Window _host;
@@ -168,7 +168,7 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
         {
             try
             {
-                await Task.WhenAll(_activeTasks);
+                await Task.WhenAll(_pendingTasks);
             }
             catch
             {
@@ -176,7 +176,7 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
             }
             finally
             {
-                AddActiveTask(_visualDecompositionService.VisualizeDecompositionAsync(decompositionObject));
+                AddPendingTask(_visualDecompositionService.VisualizeDecompositionAsync(decompositionObject));
             }
         }
 
@@ -184,7 +184,7 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
         {
             try
             {
-                await Task.WhenAll(_activeTasks);
+                await Task.WhenAll(_pendingTasks);
             }
             catch
             {
@@ -192,7 +192,7 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
             }
             finally
             {
-                AddActiveTask(_visualDecompositionService.VisualizeDecompositionAsync(obj));
+                AddPendingTask(_visualDecompositionService.VisualizeDecompositionAsync(obj));
             }
         }
 
@@ -200,7 +200,7 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
         {
             try
             {
-                await Task.WhenAll(_activeTasks);
+                await Task.WhenAll(_pendingTasks);
             }
             catch
             {
@@ -208,7 +208,7 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
             }
             finally
             {
-                AddActiveTask(_visualDecompositionService.VisualizeDecompositionAsync(objects));
+                AddPendingTask(_visualDecompositionService.VisualizeDecompositionAsync(objects));
             }
         }
 
@@ -216,7 +216,7 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
         {
             try
             {
-                await Task.WhenAll(_activeTasks);
+                await Task.WhenAll(_pendingTasks);
             }
             catch
             {
@@ -224,7 +224,7 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
             }
             finally
             {
-                AddActiveTask(_visualDecompositionService.VisualizeDecompositionAsync(decomposedObject));
+                AddPendingTask(_visualDecompositionService.VisualizeDecompositionAsync(decomposedObject));
             }
         }
 
@@ -232,7 +232,7 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
         {
             try
             {
-                await Task.WhenAll(_activeTasks);
+                await Task.WhenAll(_pendingTasks);
             }
             catch
             {
@@ -240,7 +240,7 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
             }
             finally
             {
-                AddActiveTask(_visualDecompositionService.VisualizeDecompositionAsync(decomposedObjects));
+                AddPendingTask(_visualDecompositionService.VisualizeDecompositionAsync(decomposedObjects));
             }
         }
 
@@ -248,7 +248,7 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
         {
             try
             {
-                await Task.WhenAll(_activeTasks);
+                await Task.WhenAll(_pendingTasks);
             }
             catch
             {
@@ -267,7 +267,7 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
         {
             try
             {
-                await Task.WhenAll(_activeTasks);
+                await Task.WhenAll(_pendingTasks);
             }
             catch
             {
@@ -299,7 +299,7 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
         {
             try
             {
-                await Task.WhenAll(_activeTasks);
+                await Task.WhenAll(_pendingTasks);
             }
             catch
             {
@@ -312,10 +312,10 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
             }
         }
 
-        private void AddActiveTask(Task task)
+        private void AddPendingTask(Task task)
         {
-            _activeTasks.RemoveAll(activeTask => activeTask.IsCompleted);
-            _activeTasks.Add(task);
+            _pendingTasks.RemoveAll(pendingTask => pendingTask.IsCompleted);
+            _pendingTasks.Add(task);
         }
 
         private void ShowHost()
@@ -346,7 +346,7 @@ public sealed partial class UiOrchestratorService(IServiceScopeFactory scopeFact
 
             try
             {
-                await Task.WhenAll(_activeTasks);
+                await Task.WhenAll(_pendingTasks);
             }
             catch (InvalidObjectException exception)
             {
