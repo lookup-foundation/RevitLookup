@@ -21,6 +21,7 @@ public sealed class ViewScheduleDescriptor(ViewSchedule viewSchedule) : ElementD
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(ViewSchedule.Dispose)).Disable();
         configuration.Member(nameof(ViewSchedule.GetStripedRowsColor)).Resolve(() => ResolveEnum<StripedRowPattern, Color>(viewSchedule.GetStripedRowsColor));
         configuration.Member(nameof(ViewSchedule.IsValidTextTypeId)).Resolve(ResolveValidTextTypeId);
         configuration.Member(nameof(ViewSchedule.GetDefaultNameForKeySchedule)).Resolve(ResolveDefaultNameForKeySchedule);

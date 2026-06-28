@@ -21,6 +21,7 @@ public sealed class CurveElementDescriptor(CurveElement element) : ElementDescri
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(CurveElement.Dispose)).Disable();
         configuration.Member(nameof(CurveElement.GetAdjoinedCurveElements)).Resolve(ResolveAdjoinedCurveElements);
         configuration.Member(nameof(CurveElement.HasTangentLocks)).Resolve(ResolveHasTangentLocks);
         configuration.Member(nameof(CurveElement.GetTangentLock)).Resolve(ResolveTangentLock);

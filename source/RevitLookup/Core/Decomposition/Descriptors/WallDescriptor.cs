@@ -21,6 +21,7 @@ public sealed class WallDescriptor(Wall wall) : ElementDescriptor(wall)
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Wall.Dispose)).Disable();
 #if REVIT2022_OR_GREATER
         configuration.Member(nameof(Wall.IsWallCrossSectionValid)).Resolve(() => ResolveEnum<WallCrossSection, bool>(wall.IsWallCrossSectionValid));
 #endif

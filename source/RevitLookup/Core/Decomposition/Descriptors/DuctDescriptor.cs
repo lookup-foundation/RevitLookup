@@ -21,6 +21,7 @@ public sealed class DuctDescriptor(Duct duct) : ElementDescriptor(duct)
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Duct.Dispose)).Disable();
         configuration.Extension(nameof(MechanicalUtils.BreakCurve)).NotSupported();
         configuration.Extension(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtElbow)).NotSupported();
         configuration.Extension(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtTee)).NotSupported();

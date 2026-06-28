@@ -17,10 +17,11 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class CylindricalFaceDescriptor(CylindricalFace face) : FaceDescriptor(face), IDescriptorConfigurator
+public sealed class CylindricalFaceDescriptor(CylindricalFace face) : FaceDescriptor(face)
 {
-    public void Configure(IMemberConfigurator configuration)
+    public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(CylindricalFace.Dispose)).Disable();
         configuration.Member("Radius").Resolve(ResolveRadius);
         return;
 

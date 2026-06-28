@@ -20,6 +20,7 @@ public sealed class ReferencePointDescriptor(ReferencePoint referencePoint) : El
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(ReferencePoint.Dispose)).Disable();
         configuration.Extension(nameof(AdaptiveComponentFamilyUtils.IsAdaptivePoint)).Register(() => AdaptiveComponentFamilyUtils.IsAdaptivePoint(referencePoint.Document, referencePoint.Id));
         configuration.Extension(nameof(AdaptiveComponentFamilyUtils.MakeAdaptivePoint)).NotSupported();
 

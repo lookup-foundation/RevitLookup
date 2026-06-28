@@ -37,6 +37,7 @@ public sealed class FailureDefinitionAccessorDescriptor : ResolvingDescriptor, I
 
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(FailureDefinitionAccessor.Dispose)).Disable();
         configuration.Member(nameof(FailureDefinitionAccessor.IsResolutionApplicable)).Resolve(() => ResolveEnum<FailureResolutionType, bool>(_definitionAccessor.IsResolutionApplicable));
     }
 }

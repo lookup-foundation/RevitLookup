@@ -21,6 +21,7 @@ public sealed class IndependentTagDescriptor(IndependentTag tag) : ElementDescri
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(IndependentTag.Dispose)).Disable();
         configuration.Member(nameof(IndependentTag.CanLeaderEndConditionBeAssigned)).Resolve(ResolveLeaderEndCondition);
 #if REVIT2022_OR_GREATER
         configuration.Member(nameof(IndependentTag.GetLeaderElbow)).Resolve(ResolveLeaderElbow);

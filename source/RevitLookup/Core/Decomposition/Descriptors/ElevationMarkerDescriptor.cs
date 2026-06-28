@@ -21,6 +21,7 @@ public sealed class ElevationMarkerDescriptor(ElevationMarker elevationMarker) :
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(ElevationMarker.Dispose)).Disable();
         configuration.Member(nameof(ElevationMarker.IsAvailableIndex)).Resolve(() => ResolveRange(elevationMarker.MaximumViewCount, elevationMarker.IsAvailableIndex));
         configuration.Member(nameof(ElevationMarker.GetViewId)).Resolve(ResolveViewId);
         return;

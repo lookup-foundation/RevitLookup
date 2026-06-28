@@ -21,6 +21,7 @@ public sealed class FamilySymbolDescriptor(FamilySymbol familySymbol) : ElementD
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(FamilySymbol.Dispose)).Disable();
         configuration.Extension("SetStructuralSection").Map(nameof(StructuralSectionUtils.SetStructuralSection)).NotSupported();
 
         var isAdaptiveFamilySymbol = SafeEvaluate(() => AdaptiveComponentInstanceUtils.IsAdaptiveFamilySymbol(familySymbol));

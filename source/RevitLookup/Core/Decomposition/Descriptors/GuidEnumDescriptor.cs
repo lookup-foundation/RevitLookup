@@ -12,12 +12,11 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class GuidEnumDescriptor : Descriptor, IDescriptorCollector
+public sealed class GuidEnumDescriptor : Descriptor
 {
     public GuidEnumDescriptor(GuidEnum guidEnum)
     {

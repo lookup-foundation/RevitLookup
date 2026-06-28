@@ -22,6 +22,7 @@ public sealed class TableViewDescriptor(TableView tableView) : ElementDescriptor
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(TableView.Dispose)).Disable();
         configuration.Member(nameof(TableView.GetAvailableParameters)).Resolve(ResolveAvailableParameters);
         configuration.Member(nameof(TableView.GetCalculatedValueName)).Resolve(() => ResolveTableViewCells(tableView.GetCalculatedValueName));
         configuration.Member(nameof(TableView.GetCalculatedValueText)).Resolve(() => ResolveTableViewCells(tableView.GetCalculatedValueText));

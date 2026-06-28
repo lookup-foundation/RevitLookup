@@ -17,10 +17,15 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class CityDescriptor : Descriptor, IDescriptorCollector
+public sealed class CityDescriptor : Descriptor, IDescriptorConfigurator
 {
     public CityDescriptor(City city)
     {
         Name = city.Name;
+    }
+
+    public void Configure(IMemberConfigurator configuration)
+    {
+        configuration.Member(nameof(City.Dispose)).Disable();
     }
 }

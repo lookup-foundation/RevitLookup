@@ -18,7 +18,7 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class BoundarySegmentDescriptor : Descriptor, IDescriptorCollector
+public sealed class BoundarySegmentDescriptor : Descriptor, IDescriptorConfigurator
 {
     public BoundarySegmentDescriptor(BoundarySegment boundarySegment)
     {
@@ -28,5 +28,10 @@ public sealed class BoundarySegmentDescriptor : Descriptor, IDescriptorCollector
             null => $"ID{boundarySegment.ElementId}",
             _ => $"ID{boundarySegment.ElementId}, {curve.Length.ToString(CultureInfo.InvariantCulture)} ft",
         };
+    }
+
+    public void Configure(IMemberConfigurator configuration)
+    {
+        configuration.Member(nameof(BoundarySegment.Dispose)).Disable();
     }
 }

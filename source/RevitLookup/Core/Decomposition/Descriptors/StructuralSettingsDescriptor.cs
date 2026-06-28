@@ -21,6 +21,7 @@ public sealed class StructuralSettingsDescriptor(StructuralSettings structuralSe
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(StructuralSettings.Dispose)).Disable();
         configuration.Member(nameof(StructuralSettings.GetStructuralSettings)).Resolve(() => StructuralSettings.GetStructuralSettings(structuralSettings.Document));
     }
 }

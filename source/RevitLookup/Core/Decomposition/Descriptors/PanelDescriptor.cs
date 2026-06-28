@@ -21,6 +21,7 @@ public sealed class PanelDescriptor(Panel panel) : ElementDescriptor(panel)
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Panel.Dispose)).Disable();
         configuration.Member(nameof(Panel.GetRefGridLines)).Resolve(ResolveGridLines);
         return;
 

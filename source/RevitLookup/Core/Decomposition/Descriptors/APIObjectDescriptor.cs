@@ -17,4 +17,10 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class ApiObjectDescriptor : Descriptor, IDescriptorCollector;
+public sealed class ApiObjectDescriptor : Descriptor, IDescriptorConfigurator
+{
+    public void Configure(IMemberConfigurator configuration)
+    {
+        configuration.Member(nameof(APIObject.Dispose)).Disable();
+    }
+}

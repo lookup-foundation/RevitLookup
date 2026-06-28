@@ -20,6 +20,7 @@ public sealed class BasePointDescriptor(BasePoint basePoint) : ElementDescriptor
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(BasePoint.Dispose)).Disable();
         configuration.Member(nameof(BasePoint.GetSurveyPoint)).Resolve(() => BasePoint.GetSurveyPoint(basePoint.Document));
         configuration.Member(nameof(BasePoint.GetProjectBasePoint)).Resolve(() => BasePoint.GetProjectBasePoint(basePoint.Document));
     }

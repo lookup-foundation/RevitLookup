@@ -23,6 +23,7 @@ public sealed class TableSectionDataDescriptor(TableSectionData tableSectionData
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(TableSectionData.Dispose)).Disable();
         configuration.Member(nameof(TableSectionData.AllowOverrideCellStyle)).Resolve(() => ResolveTableCells(tableSectionData.NumberOfRows, tableSectionData.NumberOfColumns, tableSectionData.AllowOverrideCellStyle));
         configuration.Member(nameof(TableSectionData.CanInsertColumn)).Resolve(() => ResolveRange(tableSectionData.NumberOfColumns, tableSectionData.CanInsertColumn));
         configuration.Member(nameof(TableSectionData.CanInsertRow)).Resolve(() => ResolveRange(tableSectionData.NumberOfRows, tableSectionData.CanInsertRow));

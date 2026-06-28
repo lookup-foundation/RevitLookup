@@ -20,6 +20,7 @@ public sealed class WallTypeDescriptor(WallType wallType) : ElementDescriptor(wa
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(WallType.Dispose)).Disable();
         configuration.Member(nameof(FaceWall.IsWallTypeValidForFaceWall)).Resolve(() => FaceWall.IsWallTypeValidForFaceWall(wallType.Document, wallType.Id));
     }
 }

@@ -21,6 +21,7 @@ public sealed class FamilySizeTableManagerDescriptor(FamilySizeTableManager mana
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(FamilySizeTableManager.Dispose)).Disable();
         configuration.Member(nameof(FamilySizeTableManager.GetSizeTable)).Resolve(ResolveSizeTable);
         configuration.Member(nameof(FamilySizeTableManager.HasSizeTable)).Resolve(ResolveHasSizeTable);
         configuration.Member(nameof(FamilySizeTableManager.GetFamilySizeTableManager)).Resolve(() => manager);

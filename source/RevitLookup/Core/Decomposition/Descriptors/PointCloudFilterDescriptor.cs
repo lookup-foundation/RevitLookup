@@ -24,6 +24,7 @@ public sealed class PointCloudFilterDescriptor(PointCloudFilter pointCloudFilter
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(PointCloudFilter.Dispose)).Disable();
         configuration.Extension("GetFilteredOutline").Map(nameof(PointCloudFilterUtils.GetFilteredOutline)).NotSupported();
     }
 }

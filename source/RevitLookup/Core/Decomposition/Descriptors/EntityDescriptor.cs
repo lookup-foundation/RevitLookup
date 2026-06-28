@@ -27,6 +27,7 @@ public sealed class EntityDescriptor(Entity entity) : Descriptor, IDescriptorCon
 
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Entity.Dispose)).Disable();
         configuration.Member(nameof(Entity.Get))
             .When(parameters => parameters.Length == 1 && parameters[0].ParameterType == typeof(string))
             .Resolve(ResolveGetByField);

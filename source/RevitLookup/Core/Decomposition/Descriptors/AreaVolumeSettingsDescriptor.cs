@@ -20,6 +20,7 @@ public sealed class AreaVolumeSettingsDescriptor(AreaVolumeSettings settings) : 
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(AreaVolumeSettings.Dispose)).Disable();
         configuration.Member(nameof(AreaVolumeSettings.GetAreaVolumeSettings)).Resolve(() => AreaVolumeSettings.GetAreaVolumeSettings(settings.Document));
         configuration.Member(nameof(AreaVolumeSettings.GetSpatialElementBoundaryLocation)).Resolve(() => ResolveEnum<SpatialElementType, SpatialElementBoundaryLocation>(settings.GetSpatialElementBoundaryLocation));
     }

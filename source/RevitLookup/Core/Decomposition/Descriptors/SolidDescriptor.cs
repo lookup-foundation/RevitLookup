@@ -42,6 +42,7 @@ public sealed partial class SolidDescriptor : Descriptor, IDescriptorConfigurato
 
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Solid.Dispose)).Disable();
         configuration.Extension(nameof(SolidUtils.SplitVolumes)).Register(() => SolidUtils.SplitVolumes(_solid));
         configuration.Extension(nameof(SolidUtils.IsValidForTessellation)).Register(() => SolidUtils.IsValidForTessellation(_solid));
         configuration.Extension(nameof(SolidUtils.TessellateSolidOrShell)).Register(ResolveTessellateSolidOrShell);

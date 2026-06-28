@@ -21,6 +21,7 @@ public sealed class ExternalResourceReferenceDescriptor(ExternalResourceReferenc
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(ExternalResourceReference.Dispose)).Disable();
         configuration.Extension(nameof(ExternalResourceServerUtils.ServerSupportsAssemblyCodeData)).Register(() => ExternalResourceServerUtils.ServerSupportsAssemblyCodeData(externalResourceReference));
         configuration.Extension(nameof(ExternalResourceServerUtils.ServerSupportsCADLinks)).Register(() => ExternalResourceServerUtils.ServerSupportsCADLinks(externalResourceReference));
         configuration.Extension(nameof(ExternalResourceServerUtils.ServerSupportsIFCLinks)).Register(() => ExternalResourceServerUtils.ServerSupportsIFCLinks(externalResourceReference));

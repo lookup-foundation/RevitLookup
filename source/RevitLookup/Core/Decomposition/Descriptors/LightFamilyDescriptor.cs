@@ -21,6 +21,7 @@ public sealed class LightFamilyDescriptor(LightFamily lightFamily) : ResolvingDe
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(LightFamily.Dispose)).Disable();
         configuration.Member(nameof(LightFamily.GetLightTypeName)).Resolve(() => ResolveRange(lightFamily.GetNumberOfLightTypes(), lightFamily.GetLightTypeName));
         configuration.Member(nameof(LightFamily.GetLightType)).Resolve(() => ResolveRange(lightFamily.GetNumberOfLightTypes(), lightFamily.GetLightType));
     }

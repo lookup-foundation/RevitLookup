@@ -21,6 +21,7 @@ public sealed class PlanViewRangeDescriptor(PlanViewRange viewRange) : Descripto
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(PlanViewRange.Dispose)).Disable();
         configuration.Member(nameof(PlanViewRange.GetOffset)).Resolve(ResolveGetOffset);
         configuration.Member(nameof(PlanViewRange.GetLevelId)).Resolve(ResolveGetLevelId);
         return;

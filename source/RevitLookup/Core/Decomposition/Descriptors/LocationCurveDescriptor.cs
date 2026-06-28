@@ -21,6 +21,7 @@ public sealed class LocationCurveDescriptor(LocationCurve locationCurve) : Descr
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(LocationCurve.Dispose)).Disable();
         configuration.Member("ElementsAtJoin").Resolve(ResolveElementsAtJoin);
         configuration.Member("JoinType").Resolve(ResolveJoinType);
         return;

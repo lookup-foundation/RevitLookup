@@ -21,6 +21,7 @@ public sealed class EdgeEndPointDescriptor(EdgeEndPoint edgeEndPoint) : Descript
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(EdgeEndPoint.Dispose)).Disable();
         configuration.Extension(nameof(SolidUtils.FindAllEdgeEndPointsAtVertex)).Register(() => SolidUtils.FindAllEdgeEndPointsAtVertex(edgeEndPoint));
     }
 }

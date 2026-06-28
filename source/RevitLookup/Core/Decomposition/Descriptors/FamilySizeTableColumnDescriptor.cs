@@ -12,14 +12,20 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
+using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class FamilySizeTableColumnDescriptor : Descriptor
+public sealed class FamilySizeTableColumnDescriptor : Descriptor, IDescriptorConfigurator
 {
     public FamilySizeTableColumnDescriptor(FamilySizeTableColumn column)
     {
         Name = column.Name;
+    }
+
+    public void Configure(IMemberConfigurator configuration)
+    {
+        configuration.Member(nameof(FamilySizeTableColumn.Dispose)).Disable();
     }
 }

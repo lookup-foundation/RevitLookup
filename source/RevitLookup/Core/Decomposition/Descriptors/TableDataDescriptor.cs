@@ -21,6 +21,7 @@ public sealed class TableDataDescriptor(TableData tableData) : ResolvingDescript
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(TableData.Dispose)).Disable();
         configuration.Member(nameof(TableData.GetSectionData))
             .When(parameters => parameters.Length == 1 && parameters[0].ParameterType == typeof(SectionType))
             .Resolve(() => ResolveEnum<SectionType, TableSectionData>(tableData.GetSectionData));

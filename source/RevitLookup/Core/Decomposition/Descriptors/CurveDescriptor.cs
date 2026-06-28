@@ -43,6 +43,7 @@ public sealed partial class CurveDescriptor : Descriptor, IDescriptorConfigurato
 
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Curve.Dispose)).Disable();
         configuration.Member(nameof(Curve.GetEndPoint)).Resolve(ResolveGetEndPoint);
         configuration.Member(nameof(Curve.GetEndParameter)).Resolve(ResolveGetEndParameter);
         configuration.Member(nameof(Curve.GetEndPointReference)).Resolve(ResolveGetEndPointReference);

@@ -21,6 +21,7 @@ public sealed class FamilyManagerDescriptor(FamilyManager familyManager) : Descr
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(FamilyManager.Dispose)).Disable();
         configuration.Member(nameof(FamilyManager.IsParameterLockable)).Resolve(() => ResolveFamilyParameters(familyManager.Parameters, familyManager.IsParameterLockable));
         configuration.Member(nameof(FamilyManager.IsParameterLocked)).Resolve(() => ResolveFamilyParameters(familyManager.Parameters, familyManager.IsParameterLocked));
     }

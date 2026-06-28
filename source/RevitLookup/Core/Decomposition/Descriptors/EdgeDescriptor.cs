@@ -30,7 +30,7 @@ using Nice3point.Revit.Toolkit.External;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed partial class EdgeDescriptor : Descriptor, IDescriptorCollector, IContextMenuConnector
+public sealed partial class EdgeDescriptor : Descriptor, IContextMenuConnector, IDescriptorConfigurator
 {
     private readonly Edge _edge;
 
@@ -38,6 +38,11 @@ public sealed partial class EdgeDescriptor : Descriptor, IDescriptorCollector, I
     {
         _edge = edge;
         Name = $"{edge.ApproximateLength.ToString(CultureInfo.InvariantCulture)} ft";
+    }
+
+    public void Configure(IMemberConfigurator configuration)
+    {
+        configuration.Member(nameof(Edge.Dispose)).Disable();
     }
 
     public void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)

@@ -20,6 +20,7 @@ public sealed class ConnectorManagerDescriptor(ConnectorManager connectorManager
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(ConnectorManager.Dispose)).Disable();
         configuration.Member(nameof(ConnectorManager.Lookup)).Resolve(() => ResolveRange(connectorManager.Connectors.Size, connectorManager.Lookup));
     }
 }

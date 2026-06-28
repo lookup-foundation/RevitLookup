@@ -31,6 +31,7 @@ public sealed class SchemaDescriptor : Descriptor, IDescriptorConfigurator, IDes
 
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Schema.Dispose)).Disable();
         configuration.Member(nameof(Schema.ListFields)).Resolve(ResolveListFields);
         return;
 

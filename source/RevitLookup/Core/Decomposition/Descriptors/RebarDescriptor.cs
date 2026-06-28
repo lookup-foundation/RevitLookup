@@ -21,6 +21,7 @@ public sealed class RebarDescriptor(Rebar rebar) : ElementDescriptor(rebar)
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Rebar.Dispose)).Disable();
         configuration.Member(nameof(Rebar.GetFullGeometryForView)).Resolve(() => rebar.GetFullGeometryForView(RevitContext.ActiveView));
 
 #if REVIT2025_OR_GREATER

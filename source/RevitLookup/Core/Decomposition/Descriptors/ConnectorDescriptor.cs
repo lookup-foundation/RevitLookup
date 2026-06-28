@@ -29,6 +29,7 @@ public sealed class ConnectorDescriptor : Descriptor, IDescriptorConfigurator
 
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Connector.Dispose)).Disable();
         configuration.Extension(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtElbow)).NotSupported();
         configuration.Extension(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtTee)).NotSupported();
         configuration.Extension(nameof(MechanicalUtils.ConnectDuctPlaceholdersAtCross)).NotSupported();

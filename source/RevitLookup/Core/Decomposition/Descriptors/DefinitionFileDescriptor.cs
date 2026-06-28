@@ -27,6 +27,7 @@ public sealed class DefinitionFileDescriptor : Descriptor, IDescriptorConfigurat
 
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(DefinitionFile.Dispose)).Disable();
         configuration.Extension("SearchExternalDefinition").Map(nameof(RebarShapeParameters.GetExternalDefinitionForElementId)).NotSupported();
     }
 }

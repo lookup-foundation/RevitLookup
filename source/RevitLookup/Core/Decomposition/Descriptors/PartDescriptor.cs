@@ -20,6 +20,7 @@ public sealed class PartDescriptor(Part part) : ElementDescriptor(part), IDescri
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Part.Dispose)).Disable();
         configuration.Extension(nameof(PartUtils.IsMergedPart)).Register(() => PartUtils.IsMergedPart(part));
         configuration.Extension(nameof(PartUtils.IsPartDerivedFromLink)).Register(() => PartUtils.IsPartDerivedFromLink(part));
         configuration.Extension(nameof(PartUtils.GetChainLengthToOriginal)).Register(() => PartUtils.GetChainLengthToOriginal(part));

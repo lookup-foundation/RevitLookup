@@ -21,6 +21,7 @@ public sealed class TriangulationInterfaceDescriptor(TriangulationInterface tria
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(TriangulationInterface.Dispose)).Disable();
         configuration.Extension(nameof(FacetingUtils.ConvertTrianglesToQuads)).Register(() => FacetingUtils.ConvertTrianglesToQuads(triangulation));
     }
 }

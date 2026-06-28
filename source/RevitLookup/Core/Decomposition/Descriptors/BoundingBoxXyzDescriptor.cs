@@ -29,6 +29,7 @@ public sealed partial class BoundingBoxXyzDescriptor(BoundingBoxXYZ box) : Descr
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(BoundingBoxXYZ.Dispose)).Disable();
         configuration.Member("Bounds").Resolve(ResolveBounds);
         configuration.Member("MinEnabled").Resolve(ResolveMinEnabled);
         configuration.Member("MaxEnabled").Resolve(ResolveMaxEnabled);

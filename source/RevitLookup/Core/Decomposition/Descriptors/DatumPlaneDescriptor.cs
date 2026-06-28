@@ -21,6 +21,7 @@ public sealed class DatumPlaneDescriptor(DatumPlane datumPlane) : ElementDescrip
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(DatumPlane.Dispose)).Disable();
         configuration.Member(nameof(DatumPlane.CanBeVisibleInView)).Resolve(ResolveCanBeVisibleInView);
         configuration.Member(nameof(DatumPlane.GetPropagationViews)).Resolve(ResolvePropagationViews);
         configuration.Member(nameof(DatumPlane.GetDatumExtentTypeInView)).Resolve(ResolveDatumExtentTypeInView);

@@ -20,6 +20,7 @@ public sealed class InternalOriginDescriptor(InternalOrigin internalOrigin) : El
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(InternalOrigin.Dispose)).Disable();
         configuration.Member(nameof(InternalOrigin.Get)).Resolve(() => InternalOrigin.Get(internalOrigin.Document));
     }
 }

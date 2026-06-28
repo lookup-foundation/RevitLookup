@@ -25,6 +25,7 @@ public sealed class ViewDescriptor(View view) : ElementDescriptor(view)
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(View.Dispose)).Disable();
         configuration.Member(nameof(View.CanCategoryBeHidden)).Defer(() => ResolveCategories(view.Document.Settings.Categories, view.CanCategoryBeHidden));
         configuration.Member(nameof(View.CanCategoryBeHiddenTemporary)).Defer(() => ResolveCategories(view.Document.Settings.Categories, view.CanCategoryBeHiddenTemporary));
         configuration.Member(nameof(View.CanViewBeDuplicated)).Resolve(() => ResolveEnum<ViewDuplicateOption, bool>(view.CanViewBeDuplicated));

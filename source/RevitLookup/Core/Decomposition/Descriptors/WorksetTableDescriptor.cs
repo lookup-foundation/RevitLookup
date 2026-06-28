@@ -21,6 +21,7 @@ public sealed class WorksetTableDescriptor : Descriptor, IDescriptorConfigurator
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(WorksetTable.Dispose)).Disable();
         configuration.Member(nameof(WorksetTable.GetWorkset)).When(parameters => parameters?.Length == 1 && parameters[0].ParameterType == typeof(WorksetId)).Resolve(ResolveGetWorkset);
         return;
 

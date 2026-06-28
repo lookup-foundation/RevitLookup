@@ -17,10 +17,15 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class FailureMessageDescriptor : Descriptor, IDescriptorCollector
+public sealed class FailureMessageDescriptor : Descriptor, IDescriptorConfigurator
 {
     public FailureMessageDescriptor(FailureMessage message)
     {
         Name = message.GetDescriptionText();
+    }
+
+    public void Configure(IMemberConfigurator configuration)
+    {
+        configuration.Member(nameof(FailureMessage.Dispose)).Disable();
     }
 }

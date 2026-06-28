@@ -20,6 +20,7 @@ public sealed class CompoundStructureDescriptor(CompoundStructure compoundStruct
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(CompoundStructure.Dispose)).Disable();
         configuration.Member(nameof(CompoundStructure.CanLayerBeStructuralMaterial)).Resolve(() => ResolveRange(compoundStructure.LayerCount, compoundStructure.CanLayerBeStructuralMaterial));
         configuration.Member(nameof(CompoundStructure.CanLayerBeVariable)).Resolve(() => ResolveRange(compoundStructure.LayerCount, compoundStructure.CanLayerBeVariable));
         configuration.Member(nameof(CompoundStructure.CanLayerWidthBeNonZero)).Resolve(() => ResolveRange(compoundStructure.LayerCount, compoundStructure.CanLayerWidthBeNonZero));

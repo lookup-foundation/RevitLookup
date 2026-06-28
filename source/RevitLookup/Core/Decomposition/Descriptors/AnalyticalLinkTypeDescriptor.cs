@@ -21,6 +21,7 @@ public sealed class AnalyticalLinkTypeDescriptor(AnalyticalLinkType analyticalLi
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(AnalyticalLinkType.Dispose)).Disable();
         configuration.Member(nameof(AnalyticalLinkType.IsValidAnalyticalFixityState)).Resolve(() => ResolveEnum<AnalyticalFixityState, bool>(AnalyticalLinkType.IsValidAnalyticalFixityState));
     }
 }

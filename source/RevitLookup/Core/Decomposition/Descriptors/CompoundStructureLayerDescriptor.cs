@@ -12,14 +12,20 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
+using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class CompoundStructureLayerDescriptor : Descriptor
+public sealed class CompoundStructureLayerDescriptor : Descriptor, IDescriptorConfigurator
 {
     public CompoundStructureLayerDescriptor(CompoundStructureLayer layer)
     {
         Name = layer.Function.ToString();
+    }
+
+    public void Configure(IMemberConfigurator configuration)
+    {
+        configuration.Member(nameof(CompoundStructureLayer.Dispose)).Disable();
     }
 }

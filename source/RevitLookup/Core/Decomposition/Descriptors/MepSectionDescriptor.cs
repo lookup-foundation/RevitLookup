@@ -22,6 +22,7 @@ public sealed class MepSectionDescriptor(MEPSection mepSection) : Descriptor, ID
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(MEPSection.Dispose)).Disable();
         configuration.Member(nameof(MEPSection.GetElementIds)).Resolve(() => ResolveElementIds(mepSection.GetElementIds(), id => id));
         configuration.Member(nameof(MEPSection.GetCoefficient)).Resolve(() => ResolveElementIds(mepSection.GetElementIds(), mepSection.GetCoefficient));
         configuration.Member(nameof(MEPSection.GetPressureDrop)).Resolve(() => ResolveElementIds(mepSection.GetElementIds(), mepSection.GetPressureDrop));

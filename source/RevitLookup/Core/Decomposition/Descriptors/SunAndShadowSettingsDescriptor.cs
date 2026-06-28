@@ -20,6 +20,7 @@ public sealed class SunAndShadowSettingsDescriptor(SunAndShadowSettings settings
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(SunAndShadowSettings.Dispose)).Disable();
         configuration.Member(nameof(SunAndShadowSettings.GetActiveSunAndShadowSettings)).Resolve(() => SunAndShadowSettings.GetActiveSunAndShadowSettings(settings.Document));
         configuration.Member(nameof(SunAndShadowSettings.GetSunrise)).Resolve(() => settings.GetSunrise(DateTime.Today));
         configuration.Member(nameof(SunAndShadowSettings.GetSunset)).Resolve(() => settings.GetSunset(DateTime.Today));

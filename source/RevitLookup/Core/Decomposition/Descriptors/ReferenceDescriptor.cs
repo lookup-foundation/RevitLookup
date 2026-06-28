@@ -25,7 +25,7 @@ using RevitLookup.UI.Framework.Extensions;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed partial class ReferenceDescriptor : Descriptor, IDescriptorConfigurator<Document>, IContextMenuConnector
+public sealed partial class ReferenceDescriptor : Descriptor, IDescriptorConfigurator, IDescriptorConfigurator<Document>, IContextMenuConnector
 {
     private readonly Reference _reference;
 
@@ -33,6 +33,11 @@ public sealed partial class ReferenceDescriptor : Descriptor, IDescriptorConfigu
     {
         _reference = reference;
         Name = reference.ElementReferenceType.ToString();
+    }
+
+    public void Configure(IMemberConfigurator configuration)
+    {
+        configuration.Member(nameof(Reference.Dispose)).Disable();
     }
 
     public void Configure(IMemberConfigurator<Document> configuration)

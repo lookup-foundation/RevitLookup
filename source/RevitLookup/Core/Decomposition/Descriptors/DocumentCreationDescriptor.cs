@@ -24,6 +24,7 @@ public sealed class DocumentCreationDescriptor(Document document) : Descriptor, 
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Document.Dispose)).Disable();
 #if REVIT2024_OR_GREATER
         configuration.Extension("NewDuctworkStiffener").Map(nameof(MEPSupportUtils.CreateDuctworkStiffener)).NotSupported();
 #endif

@@ -21,6 +21,7 @@ public sealed class UiApplicationDescriptor : ResolvingDescriptor, IDescriptorCo
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(UIApplication.Dispose)).Disable();
         configuration.Extension(nameof(UIThemeManager.CurrentTheme)).Register(() => UIThemeManager.CurrentTheme);
 #if REVIT2024_OR_GREATER
         configuration.Extension(nameof(UIThemeManager.CurrentCanvasTheme)).Register(() => UIThemeManager.CurrentCanvasTheme);

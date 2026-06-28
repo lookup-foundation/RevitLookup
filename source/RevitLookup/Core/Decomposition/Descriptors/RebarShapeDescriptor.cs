@@ -19,9 +19,14 @@ using LookupEngine.Abstractions.Decomposition;
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
 #pragma warning disable CS9113 // Parameter is unread.
-public sealed class RebarShapeDescriptor(RebarShape rebarShape) : Descriptor, IDescriptorConfigurator<Document>
+public sealed class RebarShapeDescriptor(RebarShape rebarShape) : Descriptor, IDescriptorConfigurator, IDescriptorConfigurator<Document>
 #pragma warning restore CS9113 // Parameter is unread.
 {
+    public void Configure(IMemberConfigurator configuration)
+    {
+        configuration.Member(nameof(RebarShape.Dispose)).Disable();
+    }
+
     public void Configure(IMemberConfigurator<Document> configuration)
     {
         configuration.Extension("GetAllParameters").Register(RebarShapeParameters.GetAllRebarShapeParameters);

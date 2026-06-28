@@ -29,6 +29,7 @@ public sealed class ModelPathDescriptor : Descriptor, IDescriptorConfigurator
 
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(ModelPath.Dispose)).Disable();
         configuration.Extension(nameof(ModelPathUtils.ConvertModelPathToUserVisiblePath)).Register(() => ModelPathUtils.ConvertModelPathToUserVisiblePath(_modelPath));
         configuration.Extension(nameof(TransmissionData.IsDocumentTransmitted)).Register(() => TransmissionData.IsDocumentTransmitted(_modelPath));
         configuration.Extension(nameof(TransmissionData.DocumentIsNotTransmitted)).Register(() => TransmissionData.DocumentIsNotTransmitted(_modelPath));

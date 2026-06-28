@@ -21,6 +21,7 @@ public sealed class PipeDescriptor(Pipe pipe) : ElementDescriptor(pipe)
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Pipe.Dispose)).Disable();
         configuration.Extension(nameof(PlumbingUtils.HasOpenConnector)).Register(() => PlumbingUtils.HasOpenConnector(pipe.Document, pipe.Id));
         configuration.Extension(nameof(PlumbingUtils.PlaceCapOnOpenEnds)).NotSupported();
         configuration.Extension(nameof(PlumbingUtils.BreakCurve)).NotSupported();

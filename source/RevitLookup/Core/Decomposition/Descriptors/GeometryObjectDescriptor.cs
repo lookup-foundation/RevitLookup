@@ -23,6 +23,7 @@ public sealed class GeometryObjectDescriptor(GeometryObject geometryObject) : De
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(GeometryObject.Dispose)).Disable();
 #if REVIT2022_OR_GREATER
         configuration.Extension(nameof(ExternallyTaggedGeometryValidation.IsNonSolid)).Register(() => ExternallyTaggedGeometryValidation.IsNonSolid(geometryObject));
         configuration.Extension(nameof(ExternallyTaggedGeometryValidation.IsSolid)).Register(() => ExternallyTaggedGeometryValidation.IsSolid(geometryObject));

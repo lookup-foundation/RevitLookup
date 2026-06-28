@@ -26,6 +26,7 @@ public sealed class ElementTypeDescriptor(ElementType elementType) : ElementDesc
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(ElementType.Dispose)).Disable();
 #if REVIT2025_OR_GREATER
         if (elementType.Category?.Id.IsCategory(BuiltInCategory.OST_RebarSpliceType) == true)
         {

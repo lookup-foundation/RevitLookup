@@ -21,6 +21,7 @@ public sealed class PerformanceAdviserDescriptor(PerformanceAdviser adviser) : D
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(PerformanceAdviser.Dispose)).Disable();
         configuration.Member(nameof(PerformanceAdviser.GetRuleDescription))
             .When(parameters => parameters.Length == 1 && parameters[0].ParameterType == typeof(int))
             .Resolve(() => ResolveIndexedPairs(adviser.GetNumberOfRules(), adviser.GetRuleDescription));

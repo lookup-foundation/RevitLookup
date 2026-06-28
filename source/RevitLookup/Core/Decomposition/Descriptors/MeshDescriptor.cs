@@ -25,8 +25,13 @@ using RevitLookup.UI.Framework.Views.Visualization;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed partial class MeshDescriptor(Mesh mesh) : Descriptor, IDescriptorCollector, IContextMenuConnector
+public sealed partial class MeshDescriptor(Mesh mesh) : Descriptor, IContextMenuConnector, IDescriptorConfigurator
 {
+    public void Configure(IMemberConfigurator configuration)
+    {
+        configuration.Member(nameof(Mesh.Dispose)).Disable();
+    }
+
     public void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)
     {
         contextMenu.AddMenuItem("VisualizeMenuItem")

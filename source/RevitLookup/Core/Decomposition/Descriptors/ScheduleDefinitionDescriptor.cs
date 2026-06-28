@@ -21,6 +21,7 @@ public sealed class ScheduleDefinitionDescriptor(ScheduleDefinition scheduleDefi
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(ScheduleDefinition.Dispose)).Disable();
         configuration.Member(nameof(ScheduleDefinition.CanFilterByGlobalParameters)).Resolve(() => ResolveScheduleFields(scheduleDefinition.GetFieldOrder(), scheduleDefinition.CanFilterByGlobalParameters, (field, result) => $"{scheduleDefinition.GetField(field).GetName()}: {result}"));
         configuration.Member(nameof(ScheduleDefinition.CanFilterByParameterExistence)).Resolve(() => ResolveScheduleFields(scheduleDefinition.GetFieldOrder(), scheduleDefinition.CanFilterByParameterExistence, (field, result) => $"{scheduleDefinition.GetField(field).GetName()}: {result}"));
         configuration.Member(nameof(ScheduleDefinition.CanFilterBySubstring)).Resolve(() => ResolveScheduleFields(scheduleDefinition.GetFieldOrder(), scheduleDefinition.CanFilterBySubstring, (field, result) => $"{scheduleDefinition.GetField(field).GetName()}: {result}"));

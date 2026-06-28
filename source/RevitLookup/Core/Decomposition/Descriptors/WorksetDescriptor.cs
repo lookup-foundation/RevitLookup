@@ -17,10 +17,15 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class WorksetDescriptor : Descriptor, IDescriptorCollector
+public sealed class WorksetDescriptor : Descriptor, IDescriptorConfigurator
 {
     public WorksetDescriptor(Workset workset)
     {
         Name = workset.Name;
+    }
+
+    public void Configure(IMemberConfigurator configuration)
+    {
+        configuration.Member(nameof(Workset.Dispose)).Disable();
     }
 }

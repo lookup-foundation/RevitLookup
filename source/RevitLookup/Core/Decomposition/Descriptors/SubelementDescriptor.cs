@@ -21,6 +21,7 @@ public sealed class SubelementDescriptor(Subelement subElement) : Descriptor, ID
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Subelement.Dispose)).Disable();
         configuration.Extension("ExportId").Register(() => ExportUtils.GetExportId(subElement));
     }
 }

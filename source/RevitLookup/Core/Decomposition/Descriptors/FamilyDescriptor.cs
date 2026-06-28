@@ -21,6 +21,7 @@ public sealed class FamilyDescriptor(Family family) : ElementDescriptor(family)
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Family.Dispose)).Disable();
         configuration.Extension(nameof(FamilySizeTableManager.GetFamilySizeTableManager)).Register(() => FamilySizeTableManager.GetFamilySizeTableManager(family.Document, family.Id));
         configuration.Extension(nameof(FamilyUtils.GetProfileSymbols)).Register(RegisterProfileSymbols);
         configuration.Extension(nameof(LoadedFamilyIntegrityCheck.CheckFamily)).Register(() => LoadedFamilyIntegrityCheck.CheckFamily(family.Document, family.Id));

@@ -21,6 +21,7 @@ public sealed class AssetPropertyDescriptor(AssetProperty assetProperty) : Resol
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(AssetProperty.Dispose)).Disable();
         configuration.Member(nameof(AssetProperty.GetTypeName)).Resolve(() => AssetProperty.GetTypeName(assetProperty.Type));
         configuration.Member(nameof(AssetProperty.GetConnectedProperty)).Resolve(() => ResolveRange(assetProperty.NumberOfConnectedProperties, assetProperty.GetConnectedProperty));
     }

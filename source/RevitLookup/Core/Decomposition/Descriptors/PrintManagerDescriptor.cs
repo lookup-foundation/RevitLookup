@@ -26,6 +26,7 @@ public sealed class PrintManagerDescriptor : Descriptor, IDescriptorConfigurator
 
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(PrintManager.Dispose)).Disable();
         configuration.Member(nameof(PrintManager.SubmitPrint)).When(parameters => parameters.Length == 0).Defer();
     }
 }

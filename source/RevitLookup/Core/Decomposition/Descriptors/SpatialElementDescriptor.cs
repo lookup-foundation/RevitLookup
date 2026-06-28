@@ -21,6 +21,7 @@ public sealed class SpatialElementDescriptor(SpatialElement spatialElement) : El
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(SpatialElement.Dispose)).Disable();
         configuration.Member(nameof(SpatialElement.GetBoundarySegments)).Resolve(ResolveGetBoundarySegments);
         return;
 

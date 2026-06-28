@@ -18,7 +18,7 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class EvaluatedParameterDescriptor : Descriptor, IDescriptorConfigurator<Document>
+public sealed class EvaluatedParameterDescriptor : Descriptor, IDescriptorConfigurator, IDescriptorConfigurator<Document>
 {
     private readonly EvaluatedParameter _parameter;
 
@@ -26,6 +26,11 @@ public sealed class EvaluatedParameterDescriptor : Descriptor, IDescriptorConfig
     {
         _parameter = parameter;
         Name = parameter.Definition.Name;
+    }
+
+    public void Configure(IMemberConfigurator configuration)
+    {
+        configuration.Member(nameof(EvaluatedParameter.Dispose)).Disable();
     }
 
     public void Configure(IMemberConfigurator<Document> configuration)

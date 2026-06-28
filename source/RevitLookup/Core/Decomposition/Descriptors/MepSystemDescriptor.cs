@@ -22,6 +22,7 @@ public sealed class MepSystemDescriptor(MEPSystem mepSystem) : ElementDescriptor
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(MEPSystem.Dispose)).Disable();
         configuration.Member(nameof(MEPSystem.GetSectionByIndex)).Resolve(() => ResolveRange(mepSystem.SectionsCount, mepSystem.GetSectionByIndex));
         configuration.Member(nameof(MEPSystem.GetSectionByNumber)).Resolve(ResolveSectionByNumber);
         return;

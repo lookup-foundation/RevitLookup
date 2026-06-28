@@ -30,7 +30,7 @@ using Nice3point.Revit.Toolkit.External;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public partial class FaceDescriptor : Descriptor, IDescriptorCollector, IContextMenuConnector
+public partial class FaceDescriptor : Descriptor, IContextMenuConnector, IDescriptorConfigurator
 {
     private readonly Face _face;
 
@@ -38,6 +38,11 @@ public partial class FaceDescriptor : Descriptor, IDescriptorCollector, IContext
     {
         _face = face;
         Name = $"{face.Area.ToString(CultureInfo.InvariantCulture)} ft²";
+    }
+
+    public virtual void Configure(IMemberConfigurator configuration)
+    {
+        configuration.Member(nameof(Face.Dispose)).Disable();
     }
 
     public virtual void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)

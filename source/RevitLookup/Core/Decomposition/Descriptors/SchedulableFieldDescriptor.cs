@@ -17,7 +17,7 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class SchedulableFieldDescriptor : Descriptor, IDescriptorConfigurator<Document>
+public sealed class SchedulableFieldDescriptor : Descriptor, IDescriptorConfigurator, IDescriptorConfigurator<Document>
 {
     private readonly SchedulableField _field;
 
@@ -25,6 +25,11 @@ public sealed class SchedulableFieldDescriptor : Descriptor, IDescriptorConfigur
     {
         _field = field;
         Name = field.GetName(RevitContext.ActiveDocument);
+    }
+
+    public void Configure(IMemberConfigurator configuration)
+    {
+        configuration.Member(nameof(SchedulableField.Dispose)).Disable();
     }
 
     public void Configure(IMemberConfigurator<Document> configuration)

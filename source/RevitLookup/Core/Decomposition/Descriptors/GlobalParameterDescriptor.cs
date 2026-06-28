@@ -20,6 +20,7 @@ public sealed class GlobalParameterDescriptor(GlobalParameter globalParameter) :
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(GlobalParameter.Dispose)).Disable();
         configuration.Extension(nameof(GlobalParametersManager.IsValidGlobalParameter)).Register(() => GlobalParametersManager.IsValidGlobalParameter(globalParameter.Document, globalParameter.Id));
         configuration.Extension(nameof(GlobalParametersManager.MoveParameterDownOrder)).NotSupported();
         configuration.Extension(nameof(GlobalParametersManager.MoveParameterUpOrder)).NotSupported();

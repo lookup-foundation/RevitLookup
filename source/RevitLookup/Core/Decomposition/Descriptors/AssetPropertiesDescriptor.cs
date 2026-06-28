@@ -21,6 +21,7 @@ public sealed class AssetPropertiesDescriptor(AssetProperties assetProperties) :
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(AssetProperties.Dispose)).Disable();
         configuration.Member(nameof(AssetProperties.Get)).Resolve(() => ResolveRange(assetProperties.Size, assetProperties.Get));
         configuration.Member(nameof(AssetProperties.FindByName)).Resolve(() => ResolveRange(assetProperties.Size, assetProperties.Get));
     }

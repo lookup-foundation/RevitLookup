@@ -32,6 +32,7 @@ public sealed class ApplicationDescriptor : ResolvingDescriptor, IDescriptorConf
 
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Autodesk.Revit.ApplicationServices.Application.Dispose)).Disable();
         configuration.Member(nameof(Autodesk.Revit.ApplicationServices.Application.GetAssets)).Defer(() => ResolveEnum<AssetType, IList<Asset>>(_application.GetAssets));
 
         configuration.Extension("GetFormulaFunctions").AsStatic().Register(FormulaManager.GetFunctions);

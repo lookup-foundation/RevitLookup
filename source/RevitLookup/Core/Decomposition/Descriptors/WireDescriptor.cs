@@ -22,6 +22,7 @@ public sealed class WireDescriptor(Wire wire) : ElementDescriptor(wire)
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Wire.Dispose)).Disable();
         configuration.Member(nameof(Wire.GetVertex)).Resolve(ResolveVertex);
         return;
 

@@ -25,6 +25,7 @@ public sealed class FamilyInstanceDescriptor(FamilyInstance familyInstance) : El
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(FamilyInstance.Dispose)).Disable();
         configuration.Member("Room").When(parameters => parameters.Length == 1).Resolve(ResolveGetRoom);
         configuration.Member("FromRoom").When(parameters => parameters.Length == 1).Resolve(ResolveFromRoom);
         configuration.Member("ToRoom").When(parameters => parameters.Length == 1).Resolve(ResolveToRoom);

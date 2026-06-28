@@ -17,10 +17,15 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class FamilyParameterDescriptor : Descriptor, IDescriptorCollector
+public sealed class FamilyParameterDescriptor : Descriptor, IDescriptorConfigurator
 {
     public FamilyParameterDescriptor(FamilyParameter familyParameter)
     {
         Name = familyParameter.Definition.Name;
+    }
+
+    public void Configure(IMemberConfigurator configuration)
+    {
+        configuration.Member(nameof(FamilyParameter.Dispose)).Disable();
     }
 }

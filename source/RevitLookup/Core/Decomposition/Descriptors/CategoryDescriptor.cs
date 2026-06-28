@@ -30,6 +30,7 @@ public sealed class CategoryDescriptor : Descriptor, IDescriptorConfigurator, ID
 
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Category.Dispose)).Disable();
         configuration.Member("AllowsVisibilityControl").Resolve(() => Variants.Value(_category.get_AllowsVisibilityControl(RevitContext.ActiveView), "Active view"));
         configuration.Member("Visible").Resolve(() => Variants.Value(_category.get_Visible(RevitContext.ActiveView), "Active view"));
         configuration.Member(nameof(Category.GetGraphicsStyle)).Resolve(ResolveGetGraphicsStyle);

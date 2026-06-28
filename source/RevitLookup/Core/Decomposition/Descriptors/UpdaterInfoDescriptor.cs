@@ -17,10 +17,15 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class UpdaterInfoDescriptor : Descriptor, IDescriptorCollector
+public sealed class UpdaterInfoDescriptor : Descriptor, IDescriptorConfigurator
 {
     public UpdaterInfoDescriptor(UpdaterInfo info)
     {
         Name = info.UpdaterName;
+    }
+
+    public void Configure(IMemberConfigurator configuration)
+    {
+        configuration.Member(nameof(UpdaterInfo.Dispose)).Disable();
     }
 }

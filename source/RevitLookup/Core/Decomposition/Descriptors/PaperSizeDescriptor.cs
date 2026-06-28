@@ -17,10 +17,15 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class PaperSizeDescriptor : Descriptor, IDescriptorCollector
+public sealed class PaperSizeDescriptor : Descriptor, IDescriptorConfigurator
 {
     public PaperSizeDescriptor(PaperSize paperSize)
     {
         Name = paperSize.Name;
+    }
+
+    public void Configure(IMemberConfigurator configuration)
+    {
+        configuration.Member(nameof(PaperSize.Dispose)).Disable();
     }
 }

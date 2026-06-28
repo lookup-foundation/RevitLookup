@@ -28,6 +28,7 @@ public sealed partial class CurveLoopDescriptor : Descriptor, IDescriptorConfigu
 
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(CurveLoop.Dispose)).Disable();
         configuration.Member(nameof(CurveLoop.IsOpen)).Resolve(() => _curveLoop.IsOpen());
         configuration.Member(nameof(CurveLoop.GetPlane)).Resolve(() => _curveLoop.GetPlane());
         configuration.Member(nameof(CurveLoop.NumberOfCurves)).Resolve(() => _curveLoop.NumberOfCurves());

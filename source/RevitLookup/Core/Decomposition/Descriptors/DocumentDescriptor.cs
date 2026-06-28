@@ -15,7 +15,6 @@
 #if !REVIT2025_OR_GREATER
 using Autodesk.Revit.DB.Macros;
 #endif
-using System.Windows.Documents;
 using Autodesk.Revit.DB.Fabrication;
 using Autodesk.Revit.DB.Lighting;
 using Autodesk.Revit.DB.Structure;
@@ -39,6 +38,7 @@ public sealed class DocumentDescriptor : Descriptor, IDescriptorConfigurator
 
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Document.Dispose)).Disable();
         configuration.Member(nameof(Document.Close)).Defer();
         configuration.Member(nameof(Document.PlanTopologies)).Defer(ResolvePlanTopologies);
         configuration.Member(nameof(Document.GetDefaultElementTypeId)).Resolve(ResolveDefaultElementTypeId);

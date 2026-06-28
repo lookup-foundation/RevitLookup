@@ -20,6 +20,7 @@ public sealed class PartMakerDescriptor(PartMaker partMaker) : ElementDescriptor
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(PartMaker.Dispose)).Disable();
         configuration.Extension(nameof(PartUtils.GetPartMakerMethodToDivideVolumeFW)).Register(() => PartUtils.GetPartMakerMethodToDivideVolumeFW(partMaker));
     }
 }

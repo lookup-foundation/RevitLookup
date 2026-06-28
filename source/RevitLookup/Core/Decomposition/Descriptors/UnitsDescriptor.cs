@@ -22,6 +22,7 @@ public sealed class UnitsDescriptor(Autodesk.Revit.DB.Units units) : Descriptor,
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Autodesk.Revit.DB.Units.Dispose)).Disable();
         configuration.Member(nameof(Autodesk.Revit.DB.Units.GetFormatOptions)).Resolve(ResolveGetFormatOptions);
 
         configuration.Extension(nameof(UnitFormatUtils.Format)).NotSupported();

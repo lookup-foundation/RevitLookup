@@ -33,6 +33,7 @@ public sealed class ForgeTypeIdDescriptor : Descriptor, IDescriptorConfigurator
 
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(ForgeTypeId.Dispose)).Disable();
         configuration.Member(nameof(ForgeTypeId.Clear)).When(parameters => parameters.Length == 0).Disable();
 
         configuration.Extension(nameof(LabelUtils.GetLabelForUnit)).Register(() => LabelUtils.GetLabelForUnit(_typeId));

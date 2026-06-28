@@ -21,6 +21,7 @@ public sealed class CurtainGridDescriptor(CurtainGrid curtainGrid) : Descriptor,
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(CurtainGrid.Dispose)).Disable();
         configuration.Member(nameof(CurtainGrid.GetCell)).Resolve(ResolveCells);
         configuration.Member(nameof(CurtainGrid.GetPanel)).Resolve(ResolvePanels);
         return;

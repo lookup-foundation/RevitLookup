@@ -32,6 +32,7 @@ public sealed class ColorDescriptor : Descriptor, IDescriptorConfigurator
 
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Color.Dispose)).Disable();
         configuration.Extension("HEX").Register(() => ColorRepresentationUtils.ColorToHex(_color.GetDrawingColor()));
         configuration.Extension("HEX int").Register(() => ColorRepresentationUtils.ColorToHexInteger(_color.GetDrawingColor()));
         configuration.Extension("RGB").Register(() => ColorRepresentationUtils.ColorToRgb(_color.GetDrawingColor()));

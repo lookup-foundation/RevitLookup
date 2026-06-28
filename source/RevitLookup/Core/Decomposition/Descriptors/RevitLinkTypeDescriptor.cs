@@ -20,6 +20,7 @@ public sealed class RevitLinkTypeDescriptor(RevitLinkType element) : ElementDesc
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(RevitLinkType.Dispose)).Disable();
         configuration.Member(nameof(RevitLinkType.Load)).Defer();
         configuration.Member(nameof(RevitLinkType.Reload)).Defer();
         configuration.Member(nameof(RevitLinkType.IsLoaded)).Resolve(() => RevitLinkType.IsLoaded(element.Document, element.Id));

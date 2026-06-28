@@ -20,6 +20,7 @@ public sealed class AssemblyInstanceDescriptor(AssemblyInstance assemblyInstance
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(AssemblyInstance.Dispose)).Disable();
         configuration.Extension("AcquireViews").Map(nameof(AssemblyViewUtils.AcquireAssemblyViews)).NotSupported();
         configuration.Extension(nameof(AssemblyViewUtils.Create3DOrthographic)).NotSupported();
         configuration.Extension(nameof(AssemblyViewUtils.CreateDetailSection)).NotSupported();

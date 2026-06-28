@@ -17,10 +17,15 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class DefinitionGroupDescriptor : Descriptor, IDescriptorCollector
+public sealed class DefinitionGroupDescriptor : Descriptor, IDescriptorConfigurator
 {
     public DefinitionGroupDescriptor(DefinitionGroup group)
     {
         Name = group.Name;
+    }
+
+    public void Configure(IMemberConfigurator configuration)
+    {
+        configuration.Member(nameof(DefinitionGroup.Dispose)).Disable();
     }
 }

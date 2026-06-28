@@ -42,6 +42,7 @@ public sealed partial class ParameterDescriptor : Descriptor, IDescriptorConfigu
 
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Parameter.Dispose)).Disable();
         configuration.Member(nameof(Parameter.ClearValue)).Defer();
         configuration.Member(nameof(Parameter.HasValue)).Resolve(() => _parameter.Element is null ? new NullReferenceException("Invalid element reference") : _parameter.HasValue);
         configuration.Member(nameof(Parameter.AsString)).Resolve(() => _parameter.Element is null ? new NullReferenceException("Invalid element reference") : _parameter.AsString());

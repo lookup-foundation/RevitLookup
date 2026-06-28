@@ -21,6 +21,7 @@ public sealed class HostObjectDescriptor(HostObject hostObject) : ElementDescrip
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(HostObject.Dispose)).Disable();
         configuration.Member(nameof(HostObject.FindInserts)).Resolve(() => hostObject.FindInserts(true, true, true, true));
 
         configuration.Extension(nameof(HostObjectUtils.GetBottomFaces)).Register(() => HostObjectUtils.GetBottomFaces(hostObject));

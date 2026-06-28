@@ -12,12 +12,11 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using LookupEngine.Abstractions.Configuration;
 using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class DefinitionDescriptor : Descriptor, IDescriptorCollector
+public sealed class DefinitionDescriptor : Descriptor
 {
     public DefinitionDescriptor(Definition definition)
     {

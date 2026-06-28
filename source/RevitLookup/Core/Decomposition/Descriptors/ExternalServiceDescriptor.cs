@@ -30,6 +30,7 @@ public sealed class ExternalServiceDescriptor : Descriptor, IDescriptorConfigura
 
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(ExternalService.Dispose)).Disable();
         configuration.Member(nameof(ExternalService.GetServer)).Resolve(ResolveGetServer);
         return;
 

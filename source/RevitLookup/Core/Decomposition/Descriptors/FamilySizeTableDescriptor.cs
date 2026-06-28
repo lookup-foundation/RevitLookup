@@ -21,6 +21,7 @@ public sealed class FamilySizeTableDescriptor(FamilySizeTable table) : Descripto
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(FamilySizeTable.Dispose)).Disable();
         configuration.Member(nameof(FamilySizeTable.GetColumnHeader)).Resolve(ResolveColumnHeader);
         configuration.Member(nameof(FamilySizeTable.IsValidColumnIndex)).Resolve(ResolveIsValidColumnIndex);
         return;

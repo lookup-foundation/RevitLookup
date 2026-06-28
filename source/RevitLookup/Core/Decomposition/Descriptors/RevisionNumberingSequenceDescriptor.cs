@@ -22,6 +22,7 @@ public sealed class RevisionNumberingSequenceDescriptor(RevisionNumberingSequenc
 {
     public override void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(RevisionNumberingSequence.Dispose)).Disable();
         configuration.Member(nameof(RevisionNumberingSequence.GetAllRevisionNumberingSequences)).Resolve(ResolveRevisionNumberingSequences);
         return;
 

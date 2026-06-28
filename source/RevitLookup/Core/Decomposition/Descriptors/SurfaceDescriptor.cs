@@ -21,6 +21,7 @@ public sealed class SurfaceDescriptor(Surface surface) : Descriptor, IDescriptor
 {
     public void Configure(IMemberConfigurator configuration)
     {
+        configuration.Member(nameof(Surface.Dispose)).Disable();
         configuration.Extension(nameof(ExportUtils.GetNurbsSurfaceDataForSurface)).Register(() => ExportUtils.GetNurbsSurfaceDataForSurface(surface));
     }
 }

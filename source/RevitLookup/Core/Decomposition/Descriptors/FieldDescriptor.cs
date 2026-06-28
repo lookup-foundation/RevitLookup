@@ -18,10 +18,15 @@ using LookupEngine.Abstractions.Decomposition;
 
 namespace RevitLookup.Core.Decomposition.Descriptors;
 
-public sealed class FieldDescriptor : Descriptor, IDescriptorCollector
+public sealed class FieldDescriptor : Descriptor, IDescriptorConfigurator
 {
     public FieldDescriptor(Field field)
     {
         Name = field.FieldName;
+    }
+
+    public void Configure(IMemberConfigurator configuration)
+    {
+        configuration.Member(nameof(Field.Dispose)).Disable();
     }
 }
