@@ -95,7 +95,7 @@ public sealed partial class MockSettingsViewModel : ObservableObject, ISettingsV
     public partial bool UseModifyTab { get; set; }
 
     [RelayCommand]
-    private async Task ResetSettings()
+    private async Task ResetSettingsAsync()
     {
         try
         {

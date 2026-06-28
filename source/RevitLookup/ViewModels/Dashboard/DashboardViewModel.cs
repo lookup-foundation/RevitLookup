@@ -289,7 +289,7 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
     public List<NavigationCardGroup> NavigationGroups { get; }
 
     [RelayCommand]
-    private async Task NavigatePage(string? parameter)
+    private async Task NavigatePageAsync(string? parameter)
     {
         try
         {
@@ -406,7 +406,7 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
     }
 
     [RelayCommand]
-    private async Task OpenDialog(string parameter)
+    private async Task OpenDialogAsync(string parameter)
     {
         try
         {

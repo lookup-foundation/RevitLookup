@@ -98,7 +98,7 @@ public sealed partial class SettingsViewModel : ObservableObject, ISettingsViewM
     ];
 
     [RelayCommand]
-    private async Task ResetSettings()
+    private async Task ResetSettingsAsync()
     {
         try
         {

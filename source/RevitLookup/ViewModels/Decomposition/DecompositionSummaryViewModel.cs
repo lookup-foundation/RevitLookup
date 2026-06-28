@@ -80,7 +80,7 @@ public sealed partial class DecompositionSummaryViewModel(
     }
 
     [RelayCommand]
-    private async Task ForceEvaluateMember(ObservableDecomposedMember member)
+    private async Task ForceEvaluateMemberAsync(ObservableDecomposedMember member)
     {
         try
         {
@@ -94,7 +94,7 @@ public sealed partial class DecompositionSummaryViewModel(
     }
 
     [RelayCommand]
-    private async Task EvaluateMemberWithTransaction(ObservableDecomposedMember member)
+    private async Task EvaluateMemberWithTransactionAsync(ObservableDecomposedMember member)
     {
         try
         {

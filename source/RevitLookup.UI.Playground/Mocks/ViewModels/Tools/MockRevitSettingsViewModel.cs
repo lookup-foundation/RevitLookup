@@ -70,7 +70,7 @@ public sealed partial class MockRevitSettingsViewModel(
     }
 
     [RelayCommand]
-    private async Task CreateEntry()
+    private async Task CreateEntryAsync()
     {
         var dialog = serviceProvider.GetRequiredService<EditSettingsEntryDialog>();
         var result = await dialog.ShowCreateDialogAsync(SelectedEntry);

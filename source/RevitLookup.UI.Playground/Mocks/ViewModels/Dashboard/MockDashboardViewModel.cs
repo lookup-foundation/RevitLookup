@@ -289,7 +289,7 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
     public List<NavigationCardGroup> NavigationGroups { get; }
 
     [RelayCommand]
-    private async Task NavigatePage(string? parameter)
+    private async Task NavigatePageAsync(string? parameter)
     {
         switch (parameter)
         {
@@ -377,7 +377,7 @@ public sealed partial class MockDashboardViewModel : IDashboardViewModel
     }
 
     [RelayCommand]
-    private async Task OpenDialog(string parameter)
+    private async Task OpenDialogAsync(string parameter)
     {
         try
         {

@@ -71,7 +71,7 @@ public sealed partial class RevitSettingsViewModel(
     }
 
     [RelayCommand]
-    private async Task CreateEntry()
+    private async Task CreateEntryAsync()
     {
         try
         {
