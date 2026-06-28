@@ -1,16 +1,16 @@
 # Changelog
 
-# **2027.0.3**
+# **2027.0.3-preview.1**
 
 ## On-demand member evaluation
 
-Earlier versions evaluated every member as soon as you opened an object.
+Earlier versions evaluated every member as soon as you opened the RevitLookup window.
 That was risky, because RevitLookup would call terminal methods and methods that modify the object without asking, and for large objects you had to wait while hundreds of slow calls ran. 
 Methods that return `void` could not be executed at all.
 You could see them in the list, but RevitLookup had no way to run them, so you could never invoke one or confirm it worked.
 
-Evaluation now happens on demand https://github.com/lookup-foundation/RevitLookup/issues/298. 
-When an object opens, RevitLookup evaluates only the members it considers safe to call, now it's members from `System` and `Autodesk.Revit` namespaces. 
+Evaluation now happens on demand https://github.com/lookup-foundation/RevitLookup/issues/298. </br>
+When an object opens, RevitLookup evaluates only the members it considers safe to call, now it's members from `System` and `Autodesk.Revit` namespaces. </br>
 Everything else is **deferred** until you ask to evaluate. Opening even heavy objects stays fast, and you decide which expensive or model-changing members actually run https://github.com/lookup-foundation/RevitLookup/issues/239.
 
 Methods that return `void` are now runnable too, handled as deferred members like everything else, so you can finally invoke `View.Print` or similar methods.
@@ -27,7 +27,7 @@ If you hit a member that should be evaluated automatically, or one that should n
 ## Readable value states
 
 The values table used to render everything as plain text.
-A member that throws an Exception showed a red row spanning the whole width, which was easy to misread and looked broken for anyone running a red system accent color, while special states like "<null>" were just more text that blended in with real values. 
+A member that throws an Exception showed a red row spanning the whole width, which was easy to misread and looked broken for anyone running a red system accent color, while special states like "\<null\>" were just more text that blended in with real values. 
 Each state now has its own icon and label, so you can tell at a glance what a row actually is:
 
 - **Awaiting**. A deferred member that has not been evaluated yet.
