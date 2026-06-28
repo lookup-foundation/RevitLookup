@@ -60,11 +60,11 @@ public sealed partial class CurveLoopDescriptor : Descriptor, IDescriptorConfigu
 #endif
         contextMenu.AddMenuItem("VisualizeMenuItem")
             .SetAvailability(_curveLoop.GetExactLength() > 1e-6)
-            .SetCommand(_curveLoop, loop => VisualizeCurve(loop, serviceProvider))
+            .SetCommand(_curveLoop, loop => VisualizeCurveAsync(loop, serviceProvider))
             .SetShortcut(Key.F8);
     }
 
-    private static async Task VisualizeCurve(CurveLoop curveLoop, IServiceProvider serviceProvider)
+    private static async Task VisualizeCurveAsync(CurveLoop curveLoop, IServiceProvider serviceProvider)
     {
         if (RevitContext.ActiveUiDocument is null) return;
 

@@ -133,11 +133,11 @@ public sealed partial class BoundingBoxXyzDescriptor(BoundingBoxXYZ box) : Descr
     public void RegisterMenu(ContextMenu contextMenu, IServiceProvider serviceProvider)
     {
         contextMenu.AddMenuItem("VisualizeMenuItem")
-            .SetCommand(box, xyz => VisualizeFace(xyz, serviceProvider))
+            .SetCommand(box, xyz => VisualizeBoundingBoxAsync(xyz, serviceProvider))
             .SetShortcut(Key.F8);
     }
 
-    private static async Task VisualizeFace(BoundingBoxXYZ boundingBox, IServiceProvider serviceProvider)
+    private static async Task VisualizeBoundingBoxAsync(BoundingBoxXYZ boundingBox, IServiceProvider serviceProvider)
     {
         if (RevitContext.ActiveUiDocument is null) return;
 

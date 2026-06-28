@@ -101,11 +101,11 @@ public sealed partial class CurveDescriptor : Descriptor, IDescriptorConfigurato
 #endif
         contextMenu.AddMenuItem("VisualizeMenuItem")
             .SetAvailability((_curve.IsBound || _curve.IsCyclic) && _curve.ApproximateLength > 1e-6)
-            .SetCommand(_curve, curve => VisualizeCurve(curve, serviceProvider))
+            .SetCommand(_curve, curve => VisualizeCurveAsync(curve, serviceProvider))
             .SetShortcut(Key.F8);
     }
 
-    private static async Task VisualizeCurve(Curve curve, IServiceProvider serviceProvider)
+    private static async Task VisualizeCurveAsync(Curve curve, IServiceProvider serviceProvider)
     {
         if (RevitContext.ActiveUiDocument is null) return;
 

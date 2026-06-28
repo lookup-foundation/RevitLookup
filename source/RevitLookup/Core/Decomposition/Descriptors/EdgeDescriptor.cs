@@ -53,10 +53,10 @@ public sealed partial class EdgeDescriptor : Descriptor, IDescriptorCollector, I
 #endif
         contextMenu.AddMenuItem("VisualizeMenuItem")
             .SetAvailability(_edge.ApproximateLength > 1e-6)
-            .SetCommand(_edge, VisualizeEdge)
+            .SetCommand(_edge, VisualizeEdgeAsync)
             .SetShortcut(Key.F8);
 
-        async Task VisualizeEdge(Edge edge)
+        async Task VisualizeEdgeAsync(Edge edge)
         {
             if (RevitContext.ActiveUiDocument is null) return;
 

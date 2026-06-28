@@ -53,11 +53,11 @@ public partial class FaceDescriptor : Descriptor, IDescriptorCollector, IContext
 #endif
         contextMenu.AddMenuItem("VisualizeMenuItem")
             .SetAvailability(_face.Area > 1e-6)
-            .SetCommand(_face, face => VisualizeFace(face, serviceProvider))
+            .SetCommand(_face, face => VisualizeFaceAsync(face, serviceProvider))
             .SetShortcut(Key.F8);
     }
 
-    private static async Task VisualizeFace(Face face, IServiceProvider serviceProvider)
+    private static async Task VisualizeFaceAsync(Face face, IServiceProvider serviceProvider)
     {
         if (RevitContext.ActiveUiDocument is null) return;
 

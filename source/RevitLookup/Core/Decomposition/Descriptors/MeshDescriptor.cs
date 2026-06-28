@@ -31,11 +31,11 @@ public sealed partial class MeshDescriptor(Mesh mesh) : Descriptor, IDescriptorC
     {
         contextMenu.AddMenuItem("VisualizeMenuItem")
             .SetAvailability(mesh.Vertices.Count > 0)
-            .SetCommand(mesh, parameter => VisualizeMesh(parameter, serviceProvider))
+            .SetCommand(mesh, parameter => VisualizeMeshAsync(parameter, serviceProvider))
             .SetShortcut(Key.F8);
     }
 
-    private static async Task VisualizeMesh(Mesh meshParameter, IServiceProvider serviceProvider)
+    private static async Task VisualizeMeshAsync(Mesh meshParameter, IServiceProvider serviceProvider)
     {
         if (RevitContext.ActiveUiDocument is null) return;
 

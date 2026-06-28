@@ -38,11 +38,11 @@ public sealed partial class XyzDescriptor : Descriptor, IContextMenuConnector
     {
         contextMenu.AddMenuItem("VisualizeMenuItem")
             .SetAvailability(!_point.IsUnitLength())
-            .SetCommand(_point, VisualizeXyz)
+            .SetCommand(_point, VisualizeXyzAsync)
             .SetShortcut(Key.F8);
         return;
 
-        async Task VisualizeXyz(XYZ point)
+        async Task VisualizeXyzAsync(XYZ point)
         {
             if (RevitContext.ActiveUiDocument is null) return;
 

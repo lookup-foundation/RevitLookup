@@ -86,11 +86,11 @@ public sealed partial class SolidDescriptor : Descriptor, IDescriptorConfigurato
 #endif
         contextMenu.AddMenuItem("VisualizeMenuItem")
             .SetAvailability(_solid.IsValidForTessellation)
-            .SetCommand(_solid, solid => VisualizeSolid(solid, serviceProvider))
+            .SetCommand(_solid, solid => VisualizeSolidAsync(solid, serviceProvider))
             .SetShortcut(Key.F8);
     }
 
-    private static async Task VisualizeSolid(Solid solid, IServiceProvider serviceProvider)
+    private static async Task VisualizeSolidAsync(Solid solid, IServiceProvider serviceProvider)
     {
         if (RevitContext.ActiveUiDocument is null) return;
 

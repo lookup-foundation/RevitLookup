@@ -56,11 +56,11 @@ public sealed partial class ParameterDescriptor : Descriptor, IDescriptorConfigu
         contextMenu.AddMenuItem("EditMenuItem")
             .SetHeader("Edit value")
             .SetAvailability(!_parameter.IsReadOnly && _parameter.StorageType != StorageType.None)
-            .SetCommand(_parameter, parameter => EditParameter(parameter, serviceProvider))
+            .SetCommand(_parameter, parameter => EditParameterAsync(parameter, serviceProvider))
             .SetShortcut(Key.F2);
     }
 
-    private static async Task EditParameter(Parameter parameter, IServiceProvider serviceProvider)
+    private static async Task EditParameterAsync(Parameter parameter, IServiceProvider serviceProvider)
     {
         try
         {
