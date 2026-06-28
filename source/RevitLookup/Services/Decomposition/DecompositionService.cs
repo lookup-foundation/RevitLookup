@@ -116,18 +116,22 @@ public sealed partial class DecompositionService(ISettingsService settingsServic
     }
 
     [ExternalEvent(AllowDirectInvocation = true)]
-    private static DecomposedMember? EvaluateMemberWithTransaction(ObservableDecomposedMember decomposedMember)
+    private DecomposedMember? EvaluateMemberWithTransaction(ObservableDecomposedMember decomposedMember)
     {
         if (decomposedMember.Member is null) return null;
 
-        var document = RevitContext.ActiveDocument;
-        if (document is null)
+        if (!TryFindRevitContext(null, out var context))
+        {
+            context = RevitContext.ActiveDocument;
+        }
+
+        if (context is null)
         {
             decomposedMember.Member.Evaluate();
             return decomposedMember.Member;
         }
 
-        using var transaction = new Transaction(document);
+        using var transaction = new Transaction(context);
         transaction.Start("Evaluate member");
         decomposedMember.Member.Evaluate();
         transaction.Commit();
