@@ -24,12 +24,12 @@ public interface ISummaryViewModel
     List<ObservableDecomposedObject> DecomposedObjects { get; set; }
     
     /// <summary>
-    ///     Force the evaluation of a deferred member.
+    ///     Evaluate a member on demand.
     /// </summary>
     IAsyncRelayCommand<ObservableDecomposedMember> ForceEvaluateMemberCommand { get; }
 
     /// <summary>
-    ///     Force the evaluation of a deferred member inside a Revit transaction.
+    ///     Evaluate a member on demand inside a Revit transaction.
     /// </summary>
     IAsyncRelayCommand<ObservableDecomposedMember> EvaluateMemberWithTransactionCommand { get; }
 

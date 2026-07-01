@@ -63,7 +63,7 @@ public sealed class MockDecompositionService(ISettingsService settingsService) :
     public async Task EvaluateMemberAsync(ObservableDecomposedMember decomposedMember)
     {
         if (decomposedMember.Member is null) return;
-        if (decomposedMember.EvaluationPolicy != MemberEvaluationPolicy.Deferred) return;
+        if (decomposedMember.EvaluationPolicy is MemberEvaluationPolicy.Disabled or MemberEvaluationPolicy.Unsupported) return;
 
         await Task.Run(() => decomposedMember.Member.Evaluate());
 
@@ -73,7 +73,7 @@ public sealed class MockDecompositionService(ISettingsService settingsService) :
     public async Task EvaluateMemberWithTransactionAsync(ObservableDecomposedMember decomposedMember)
     {
         if (decomposedMember.Member is null) return;
-        if (decomposedMember.EvaluationPolicy != MemberEvaluationPolicy.Deferred) return;
+        if (decomposedMember.EvaluationPolicy is MemberEvaluationPolicy.Disabled or MemberEvaluationPolicy.Unsupported) return;
 
         await Task.Run(() => decomposedMember.Member.Evaluate());
 

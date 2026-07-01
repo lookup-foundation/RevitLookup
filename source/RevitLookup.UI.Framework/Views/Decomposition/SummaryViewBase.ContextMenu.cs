@@ -75,7 +75,7 @@ public partial class SummaryViewBase
         row.ContextMenu = contextMenu;
         row.InputBindings.Clear();
 
-        if (member.EvaluationPolicy == MemberEvaluationPolicy.Deferred)
+        if (member.EvaluationPolicy is not (MemberEvaluationPolicy.Disabled or MemberEvaluationPolicy.Unsupported))
         {
             contextMenu.AddMenuItem("EvaluateMenuItem")
                 .SetCommand(member, async parameter => await ViewModel.ForceEvaluateMemberCommand.ExecuteAsync(parameter))

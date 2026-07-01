@@ -24,8 +24,7 @@ public partial class SummaryViewBase
     ///     Track a row member so its style can be refreshed after the member is force evaluated.
     /// </summary>
     /// <remarks>
-    ///     The row style is chosen once by the style selector. Re-subscribing is idempotent and
-    ///     safe across row recycling; members live as long as the view, so no unsubscribe is needed.
+    ///     The row style is chosen once by the style selector.
     /// </remarks>
     private void MonitorRowValueChanges(DataGridRow row)
     {
@@ -36,15 +35,33 @@ public partial class SummaryViewBase
     }
 
     /// <summary>
-    ///     Re-apply the row style after a member is force evaluated, so an evaluated exception turns the row red.
+    ///     Refresh the row after a member is (re-)evaluated: re-apply the row style (an exception turns the row red) and re-render the value cell.
     /// </summary>
     private void OnRowMemberEvaluated(object? sender, PropertyChangedEventArgs args)
     {
         if (sender is not ObservableDecomposedMember member) return;
-        if (!string.Equals(args.PropertyName, nameof(ObservableDecomposedMember.EvaluationPolicy), StringComparison.OrdinalIgnoreCase)) return;
-        if (DataGridControl.RowStyleSelector is not { } styleSelector) return;
+        if (args.PropertyName != nameof(ObservableDecomposedMember.Value) && args.PropertyName != nameof(ObservableDecomposedMember.EvaluationPolicy)) return;
         if (DataGridControl.ItemContainerGenerator.ContainerFromItem(member) is not DataGridRow row) return;
 
-        row.Style = styleSelector.SelectStyle(member, row);
+        if (DataGridControl.RowStyleSelector is { } styleSelector)
+        {
+            row.Style = styleSelector.SelectStyle(member, row);
+        }
+
+        UpdateValueCellTemplate(row);
+    }
+
+    /// <summary>
+    ///     Force the value cell to update its template selector.
+    /// </summary>
+    private void UpdateValueCellTemplate(DataGridRow row)
+    {
+        const int valueColumnIndex = 1;
+        if (DataGridControl.Columns.Count <= valueColumnIndex) return;
+        if (DataGridControl.Columns[valueColumnIndex].GetCellContent(row) is not ContentControl content) return;
+
+        var selector = content.ContentTemplateSelector;
+        content.ContentTemplateSelector = null;
+        content.ContentTemplateSelector = selector;
     }
 }

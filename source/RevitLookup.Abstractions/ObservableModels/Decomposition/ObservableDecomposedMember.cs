@@ -14,7 +14,9 @@ public sealed partial class ObservableDecomposedMember : ObservableObject
     public required string DeclaringTypeName { get; set; }
     public required string DeclaringTypeFullName { get; set; }
     public MemberAttributes MemberAttributes { get; set; }
-    public required ObservableDecomposedValue Value { get; set; }
+
+    [ObservableProperty]
+    public required partial ObservableDecomposedValue Value { get; set; }
 
     [ObservableProperty]
     public partial double ComputationTime { get; set; }
@@ -26,7 +28,7 @@ public sealed partial class ObservableDecomposedMember : ObservableObject
     public partial MemberEvaluationPolicy EvaluationPolicy { get; set; }
 
     /// <summary>
-    ///     The engine origin used to force the evaluation of a deferred member.
+    ///     The engine origin used to evaluate this member on demand.
     /// </summary>
     public DecomposedMember? Member { get; set; }
 }

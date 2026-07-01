@@ -40,7 +40,7 @@ public sealed partial class DecompositionService(ISettingsService settingsServic
     public async Task EvaluateMemberAsync(ObservableDecomposedMember decomposedMember)
     {
         if (decomposedMember.Member is null) return;
-        if (decomposedMember.EvaluationPolicy != MemberEvaluationPolicy.Deferred) return;
+        if (decomposedMember.EvaluationPolicy is MemberEvaluationPolicy.Disabled or MemberEvaluationPolicy.Unsupported) return;
 
         var evaluatedMember = await EvaluateMemberAsyncEvent.RaiseAsync(decomposedMember);
         DecompositionResultMapper.Update(evaluatedMember!, decomposedMember);
@@ -49,7 +49,7 @@ public sealed partial class DecompositionService(ISettingsService settingsServic
     public async Task EvaluateMemberWithTransactionAsync(ObservableDecomposedMember decomposedMember)
     {
         if (decomposedMember.Member is null) return;
-        if (decomposedMember.EvaluationPolicy != MemberEvaluationPolicy.Deferred) return;
+        if (decomposedMember.EvaluationPolicy is MemberEvaluationPolicy.Disabled or MemberEvaluationPolicy.Unsupported) return;
 
         var evaluatedMember = await EvaluateMemberWithTransactionAsyncEvent.RaiseAsync(decomposedMember);
         DecompositionResultMapper.Update(evaluatedMember!, decomposedMember);
