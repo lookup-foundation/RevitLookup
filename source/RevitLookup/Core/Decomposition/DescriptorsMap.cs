@@ -31,6 +31,7 @@ using LookupEngine.Descriptors;
 using RevitLookup.Core.Decomposition.Descriptors;
 using Document = Autodesk.Revit.Creation.Document;
 using EnumerableDescriptor = RevitLookup.Core.Decomposition.Descriptors.EnumerableDescriptor;
+using ObjectDescriptor = RevitLookup.Core.Decomposition.Descriptors.ObjectDescriptor;
 using RibbonItem = Autodesk.Revit.UI.RibbonItem;
 using RibbonPanel = Autodesk.Revit.UI.RibbonPanel;
 
