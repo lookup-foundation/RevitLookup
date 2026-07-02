@@ -190,12 +190,12 @@ public partial class SummaryViewBase : Page, INavigableView<ISummaryViewModel>
     private void InitializeDataGrid(DataGrid dataGrid)
     {
         ApplyGrouping(dataGrid);
+        ApplySorting(dataGrid);
         ValidateTimeColumn(dataGrid);
         ValidateAllocatedColumn(dataGrid);
         CreateGridContextMenu(dataGrid);
         dataGrid.LoadingRow += OnGridRowLoading;
         dataGrid.MouseMove += OnPresenterCursorInteracted;
-        dataGrid.ItemsSourceChanged += ApplySorting;
         dataGrid.Loaded += FixInitialGridColumnSize;
     }
 
@@ -211,10 +211,11 @@ public partial class SummaryViewBase : Page, INavigableView<ISummaryViewModel>
     /// <summary>
     ///     Set DataGrid sorting rules
     /// </summary>
-    private static void ApplySorting(object? sender, EventArgs eventArgs)
+    /// <remarks>
+    ///     Descriptions are stored by the ItemCollection and transferred to every new view on ItemsSource changes
+    /// </remarks>
+    private static void ApplySorting(DataGrid dataGrid)
     {
-        var dataGrid = (DataGrid) sender!;
-
         dataGrid.Items.SortDescriptions.Add(new SortDescription(nameof(ObservableDecomposedMember.Depth), ListSortDirection.Descending));
         dataGrid.Items.SortDescriptions.Add(new SortDescription(nameof(ObservableDecomposedMember.MemberAttributes), ListSortDirection.Ascending));
         dataGrid.Items.SortDescriptions.Add(new SortDescription(nameof(ObservableDecomposedMember.Name), ListSortDirection.Ascending));

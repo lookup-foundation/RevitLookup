@@ -40,6 +40,7 @@ Each state now has its own icon and label, so you can tell at a glance what a ro
 
 ## Improvements
 
+- **Faster object switching**. Sorting rules are no longer re-added to the members table on every selection, so browsing stays fast during long sessions.
 - **Colors shown as HEX**. Color values are now displayed as `#FF7F00` instead of `RGB: 255 127 0`.
 - **Faster Views**. `View.CanCategoryBeHidden`, `View.CanCategoryBeHiddenTemporary`, and `View.IsCategoryOverridable` are now deferred, so opening a View no longer waits on these slow calls.
 - **Smoother geometry visualization**. Mesh vertex normals are now precomputed in a single pass and curve loop vertices are de-duplicated.
