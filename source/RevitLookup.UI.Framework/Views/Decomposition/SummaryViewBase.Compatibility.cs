@@ -44,6 +44,8 @@ public partial class SummaryViewBase
     ///      By default, WPF calculates the column width after adding items to the ItemSource. This fix calculates it on loading
     /// </summary>
     /// <remarks>
+    ///     Presetting the scroll host skips the native discovery that also binds ContentHorizontalOffset,
+    ///     acceptable while the grid horizontal scrolling is disabled.
     ///     https://github.com/dotnet/wpf/blob/main/src/Microsoft.DotNet.Wpf/src/PresentationFramework/System/Windows/Controls/DataGrid.cs#L98
     /// </remarks>
     private static void FixInitialGridColumnSize(object sender, RoutedEventArgs args)
@@ -53,7 +55,8 @@ public partial class SummaryViewBase
         if (passiveScrollViewer is null)
         {
             dataGrid.ApplyTemplate();
-            passiveScrollViewer = dataGrid.FindVisualChild<PassiveScrollViewer>()!;
+            passiveScrollViewer = dataGrid.FindVisualChild<PassiveScrollViewer>();
+            if (passiveScrollViewer is null) return;
         }
 
         var gridColumns = InternalGridColumnsProperty.GetValue(dataGrid);
@@ -64,6 +67,7 @@ public partial class SummaryViewBase
 #endif
         InternalGridInvalidateColumnWidthsComputationMethod.Invoke(gridColumns, null);
 
+        passiveScrollViewer.SizeChanged -= FixCanContentScrollResizing;
         passiveScrollViewer.SizeChanged += FixCanContentScrollResizing;
     }
 
