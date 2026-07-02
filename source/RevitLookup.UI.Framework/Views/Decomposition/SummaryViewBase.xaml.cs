@@ -179,12 +179,12 @@ public partial class SummaryViewBase : Page, INavigableView<ISummaryViewModel>
     private void InitializeDataGrid(DataGrid dataGrid)
     {
         ApplyGrouping(dataGrid);
-        ApplySorting(dataGrid);
         ValidateTimeColumn(dataGrid);
         ValidateAllocatedColumn(dataGrid);
         CreateGridContextMenu(dataGrid);
         dataGrid.LoadingRow += OnGridRowLoading;
         dataGrid.MouseMove += OnPresenterCursorInteracted;
+        dataGrid.ItemsSourceChanged += ApplySorting;
         dataGrid.Loaded += FixInitialGridColumnSize;
     }
 
@@ -201,10 +201,12 @@ public partial class SummaryViewBase : Page, INavigableView<ISummaryViewModel>
     ///     Set DataGrid sorting rules
     /// </summary>
     /// <remarks>
-    ///     Descriptions are stored by the ItemCollection and transferred to every new view on ItemsSource changes
+    ///     Re-applied on every ItemsSource change: <see cref="DataGrid"/> clears <see cref="ItemCollection.SortDescriptions"/> in its ItemsSource coercion callback, so descriptions applied once do not survive object switching.
     /// </remarks>
-    private static void ApplySorting(DataGrid dataGrid)
+    private static void ApplySorting(object? sender, EventArgs eventArgs)
     {
+        var dataGrid = (DataGrid) sender!;
+
         dataGrid.Items.SortDescriptions.Add(new SortDescription(nameof(ObservableDecomposedMember.Depth), ListSortDirection.Descending));
         dataGrid.Items.SortDescriptions.Add(new SortDescription(nameof(ObservableDecomposedMember.MemberAttributes), ListSortDirection.Ascending));
         dataGrid.Items.SortDescriptions.Add(new SortDescription(nameof(ObservableDecomposedMember.Name), ListSortDirection.Ascending));
