@@ -15,6 +15,7 @@
 using System.ComponentModel;
 using System.Windows.Controls;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
+using RevitLookup.UI.Framework.Utils;
 
 namespace RevitLookup.UI.Framework.Views.Decomposition;
 
@@ -42,10 +43,10 @@ public partial class SummaryViewBase
         if (sender is not ObservableDecomposedMember member) return;
         if (args.PropertyName != nameof(ObservableDecomposedMember.Value) && args.PropertyName != nameof(ObservableDecomposedMember.EvaluationPolicy)) return;
         if (DataGridControl.ItemContainerGenerator.ContainerFromItem(member) is not DataGridRow row) return;
-
-        if (DataGridControl.RowStyleSelector is { } styleSelector)
+        
+        if (DataGridControl.RowStyleSelector is not null)
         {
-            row.Style = styleSelector.SelectStyle(member, row);
+            row.Style = DataGridControl.RowStyleSelector.SelectStyle(member, row);
         }
 
         UpdateValueCellTemplate(row);
@@ -58,7 +59,12 @@ public partial class SummaryViewBase
     {
         const int valueColumnIndex = 1;
         if (DataGridControl.Columns.Count <= valueColumnIndex) return;
-        if (DataGridControl.Columns[valueColumnIndex].GetCellContent(row) is not ContentControl content) return;
+
+        var cellPresenter = DataGridControl.Columns[valueColumnIndex].GetCellContent(row);
+        if (cellPresenter is null) return;
+
+        var content = cellPresenter.FindVisualChild<ContentControl>();
+        if (content is null) return;
 
         var selector = content.ContentTemplateSelector;
         content.ContentTemplateSelector = null;
