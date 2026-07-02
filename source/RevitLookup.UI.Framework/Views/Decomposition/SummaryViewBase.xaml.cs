@@ -146,7 +146,13 @@ public partial class SummaryViewBase : Page, INavigableView<ISummaryViewModel>
     {
         var origin = (DependencyObject) args.OriginalSource;
         var treeItem = origin as TreeViewItem ?? origin.FindVisualParent<TreeViewItem>();
-        if (treeItem is null) return;
+        if (treeItem is null)
+        {
+            _capturedTreeItem = null;
+            _capturedTreeItemContext = null;
+            return;
+        }
+
         if (ReferenceEquals(treeItem, _capturedTreeItem) && ReferenceEquals(treeItem.DataContext, _capturedTreeItemContext)) return;
 
         _capturedTreeItem = treeItem;
