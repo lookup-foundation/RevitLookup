@@ -13,6 +13,7 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using System.Windows.Input;
+using Microsoft.Extensions.Logging;
 using RevitLookup.UI.Framework.Views.Windows;
 using Wpf.Ui.Abstractions.Controls;
 
@@ -51,12 +52,21 @@ public partial class SummaryViewBase : INavigationAware
         HandleFocusSearchShortcut(sender, args);
     }
 
-    private void HandleRefreshShortcut(KeyEventArgs args)
+    private async void HandleRefreshShortcut(KeyEventArgs args)
     {
         if (args.Key != Key.F5) return;
 
-        ViewModel.RefreshMembersAsync();
         args.Handled = true;
+
+        try
+        {
+            await ViewModel.RefreshMembersAsync();
+        }
+        catch (Exception exception)
+        {
+            LogRefreshMembersFailed(_logger, exception);
+            _notificationService.ShowError("Failed to refresh members", exception);
+        }
     }
 
     private void HandleFocusSearchShortcut(object sender, KeyEventArgs args)
@@ -72,4 +82,7 @@ public partial class SummaryViewBase : INavigationAware
             SearchBoxControl.Focus();
         }
     }
+
+    [LoggerMessage(LogLevel.Error, "Failed to refresh members")]
+    private static partial void LogRefreshMembersFailed(ILogger<SummaryViewBase> logger, Exception exception);
 }
