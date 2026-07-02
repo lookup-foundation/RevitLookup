@@ -135,6 +135,7 @@ public partial class SummaryViewBase
         }
 
         presenter.Cursor = Cursors.Hand;
+        presenter.PreviewKeyUp -= OnPresenterCursorRestored;
         presenter.PreviewKeyUp += OnPresenterCursorRestored;
     }
 
