@@ -32,6 +32,10 @@ public sealed partial class ColorPickerControl
     private Color _originalColor;
     private Color _currentColor;
 
+    private static readonly Regex HexColorRegex = new("^#?([0-9A-Fa-f]{3}){1,2}$", RegexOptions.Compiled);
+    private static readonly Regex ShortHexColorRegex = new("^#?([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])$", RegexOptions.Compiled);
+    private static readonly ColorConverter DrawingColorConverter = new();
+
     public static readonly DependencyProperty SelectedColorProperty = DependencyProperty.Register(nameof(SelectedColor),
         typeof(Color),
         typeof(ColorPickerControl),
@@ -273,19 +277,15 @@ public sealed partial class ColorPickerControl
         var newValue = ((TextBox) sender).Text;
 
         // support hex with 3 and 6 characters and optional with hashtag
-        var reg = new Regex("^#?([0-9A-Fa-f]{3}){1,2}$");
-
-        if (!reg.IsMatch(newValue))
+        if (!HexColorRegex.IsMatch(newValue))
         {
             return;
         }
 
         if (_ignoreHexChanges) return;
 
-        var converter = new ColorConverter();
-
         // "FormatHexColorString()" is needed to add hashtag if missing and to convert the hex code from three to six characters. Without this we get format exceptions and incorrect color values.
-        var color = (System.Drawing.Color) converter.ConvertFromString(FormatHexColorString(HexCode.Text))!;
+        var color = (System.Drawing.Color) DrawingColorConverter.ConvertFromString(FormatHexColorString(HexCode.Text))!;
 
         _ignoreHexChanges = true;
         SetColorFromTextBoxes(color);
@@ -333,7 +333,7 @@ public sealed partial class ColorPickerControl
         if (hexCodeText.Length is 3 or 4)
         {
             // Hex with or without hashTag and three characters
-            return Regex.Replace(hexCodeText, "^#?([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])$", "#$1$1$2$2$3$3");
+            return ShortHexColorRegex.Replace(hexCodeText, "#$1$1$2$2$3$3");
         }
 
         // Hex with or without hashTag and six characters
