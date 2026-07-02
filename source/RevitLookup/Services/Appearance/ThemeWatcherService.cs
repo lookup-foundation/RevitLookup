@@ -66,7 +66,9 @@ public sealed partial class ThemeWatcherService(ISettingsService settingsService
     public void Watch(FrameworkElement frameworkElement)
     {
         ApplicationThemeManager.Apply(frameworkElement);
+        frameworkElement.Loaded -= OnWatchedElementLoaded;
         frameworkElement.Loaded += OnWatchedElementLoaded;
+        frameworkElement.Unloaded -= OnWatchedElementUnloaded;
         frameworkElement.Unloaded += OnWatchedElementUnloaded;
     }
 

@@ -30,6 +30,7 @@ public sealed partial class RevitLookupView
     private void OnNavigationScrollLoaded(object sender, RoutedEventArgs args)
     {
         var contentPresenter = RootNavigation.FindVisualChild<NavigationViewContentPresenter>()!;
+        contentPresenter.LoadCompleted -= ContentPresenterOnContentRendered;
         contentPresenter.LoadCompleted += ContentPresenterOnContentRendered;
     }
 
