@@ -52,12 +52,15 @@ public partial class SummaryViewBase
     /// <remarks>
     ///     Navigate on Ctrl pressed
     /// </remarks>
-    private void OnTreeItemClicked(object sender, RoutedEventArgs args)
+    private void OnTreeItemClicked(object sender, MouseButtonEventArgs args)
     {
         if ((Keyboard.Modifiers & ModifierKeys.Control) == 0) return;
-        args.Handled = true;
 
         var element = (FrameworkElement) args.OriginalSource;
+        if (element is not TreeViewItem && element.FindVisualParent<TreeViewItem>() is null) return;
+
+        args.Handled = true;
+
         switch (element.DataContext)
         {
             case ObservableDecomposedObject item:

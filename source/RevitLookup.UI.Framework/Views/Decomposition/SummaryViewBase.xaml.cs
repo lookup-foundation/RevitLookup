@@ -16,8 +16,8 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using System.Windows.Input;
 using Microsoft.Extensions.Logging;
 using RevitLookup.Abstractions.ObservableModels.Decomposition;
 using RevitLookup.Abstractions.Services.Presentation;
@@ -40,6 +40,9 @@ public partial class SummaryViewBase : Page, INavigableView<ISummaryViewModel>
     private readonly IWindowIntercomService _intercomService;
     private readonly INotificationService _notificationService;
     private readonly ILogger<SummaryViewBase> _logger;
+
+    private TreeViewItem? _capturedTreeItem;
+    private object? _capturedTreeItemContext;
 
     protected SummaryViewBase(
         IServiceProvider serviceProvider,
@@ -74,7 +77,8 @@ public partial class SummaryViewBase : Page, INavigableView<ISummaryViewModel>
         control.SelectedItemChanged += OnTreeItemSelected;
         control.ItemsSourceChanged += OnTreeSourceChanged;
         control.MouseMove += OnPresenterCursorInteracted;
-        control.ItemContainerGenerator.StatusChanged += OnTreeViewItemGenerated;
+        control.MouseMove += OnTreeItemCaptured;
+        control.PreviewMouseLeftButtonUp += OnTreeItemClicked;
 
         if (control.ItemsSource is not null) OnTreeSourceChanged(control, control.ItemsSource);
     }
@@ -133,50 +137,29 @@ public partial class SummaryViewBase : Page, INavigableView<ISummaryViewModel>
     }
 
     /// <summary>
-    ///     Handle tree view item loaded
-    /// </summary>
-    /// <remarks>
-    ///     TreeView item customization after loading
-    /// </remarks>
-    private void OnTreeViewItemGenerated(object? sender, EventArgs _)
-    {
-        var generator = (ItemContainerGenerator) sender!;
-        if (generator.Status == GeneratorStatus.ContainersGenerated)
-        {
-            foreach (var item in generator.Items)
-            {
-                var treeItem = (ItemsControl) generator.ContainerFromItem(item);
-                if (treeItem is null) continue;
-
-                treeItem.MouseEnter -= OnTreeItemCaptured;
-                treeItem.PreviewMouseLeftButtonUp -= OnTreeItemClicked;
-
-                treeItem.MouseEnter += OnTreeItemCaptured;
-                treeItem.PreviewMouseLeftButtonUp += OnTreeItemClicked;
-
-                if (treeItem.Items.Count > 0)
-                {
-                    treeItem.ItemContainerGenerator.StatusChanged -= OnTreeViewItemGenerated;
-                    treeItem.ItemContainerGenerator.StatusChanged += OnTreeViewItemGenerated;
-                }
-            }
-        }
-    }
-
-    /// <summary>
     ///     Create tree view tooltips, menus
     /// </summary>
-    private void OnTreeItemCaptured(object? sender, RoutedEventArgs args)
+    /// <remarks>
+    ///     Deferred creation for the item under the cursor. Container subscriptions are unreliable with virtualization enabled
+    /// </remarks>
+    private void OnTreeItemCaptured(object sender, MouseEventArgs args)
     {
-        var element = (FrameworkElement) sender!;
-        switch (element.DataContext)
+        var origin = (DependencyObject) args.OriginalSource;
+        var treeItem = origin as TreeViewItem ?? origin.FindVisualParent<TreeViewItem>();
+        if (treeItem is null) return;
+        if (ReferenceEquals(treeItem, _capturedTreeItem) && ReferenceEquals(treeItem.DataContext, _capturedTreeItemContext)) return;
+
+        _capturedTreeItem = treeItem;
+        _capturedTreeItemContext = treeItem.DataContext;
+
+        switch (treeItem.DataContext)
         {
             case ObservableDecomposedObjectsGroup decomposedGroup:
-                CreateTreeTooltip(decomposedGroup, element);
+                CreateTreeTooltip(decomposedGroup, treeItem);
                 break;
             case ObservableDecomposedObject decomposedObject:
-                CreateTreeTooltip(decomposedObject, element);
-                CreateTreeContextMenu(decomposedObject, element);
+                CreateTreeTooltip(decomposedObject, treeItem);
+                CreateTreeContextMenu(decomposedObject, treeItem);
                 break;
         }
     }
