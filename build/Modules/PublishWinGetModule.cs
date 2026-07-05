@@ -4,10 +4,12 @@ using Build.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ModularPipelines.Attributes;
+using ModularPipelines.Configuration;
 using ModularPipelines.Context;
 using ModularPipelines.Git.Extensions;
 using ModularPipelines.GitHub.Attributes;
 using ModularPipelines.GitHub.Extensions;
+using ModularPipelines.Models;
 using ModularPipelines.Modules;
 using Shouldly;
 
@@ -17,9 +19,8 @@ namespace Build.Modules;
 ///     Publish the add-in updates to the WinGet community repository.
 /// </summary>
 /// <remarks>
-///     Only existing packages are updated. First-time registration of a new
-///     <c>LookupFoundation.RevitLookup.{year}</c> package is a one-time manual
-///     step (see <c>docs/winget-publishing.md</c>).
+///     Only existing packages are updated.
+///     First-time registration of a new <c>LookupFoundation.RevitLookup.{year}</c> package is a one-time manual step (see <c>docs/winget-publishing.md</c>).
 /// </remarks>
 [SkipIfNoGitHubToken]
 [DependsOn<ResolveVersioningModule>]
@@ -27,26 +28,32 @@ namespace Build.Modules;
 public sealed partial class PublishWinGetModule(IOptions<BuildOptions> buildOptions, IOptions<PublishOptions> publishOptions) : Module
 {
     private const string PackageIdPrefix = "LookupFoundation.RevitLookup";
-    private const string CreatedWithLabel = "RevitLookup CI/CD";
-    private const string CreatedWithUrl = "https://github.com/lookup-foundation/RevitLookup";
+
+    protected override ModuleConfiguration Configure() => ModuleConfiguration.Create()
+        .WithSkipWhen(async context =>
+        {
+            if (string.IsNullOrEmpty(publishOptions.Value.WinGetToken))
+            {
+                return SkipDecision.Skip("WinGetToken is not provided");
+            }
+
+            var versioningResult = await context.GetModule<ResolveVersioningModule>();
+            var versioning = versioningResult.ValueOrDefault!;
+            if (versioning.IsPrerelease)
+            {
+                return SkipDecision.Skip($"Prerelease version: {versioning.Version}");
+            }
+
+            return SkipDecision.DoNotSkip;
+        })
+        .Build();
 
     protected override async Task ExecuteModuleAsync(IModuleContext context, CancellationToken cancellationToken)
     {
         var wingetToken = publishOptions.Value.WinGetToken;
-        if (string.IsNullOrEmpty(wingetToken))
-        {
-            LogSkippingNoToken(context.Logger);
-            return;
-        }
 
         var versioningResult = await context.GetModule<ResolveVersioningModule>();
         var versioning = versioningResult.ValueOrDefault!;
-
-        if (versioning.IsPrerelease)
-        {
-            LogSkippingPrerelease(context.Logger, versioning.Version);
-            return;
-        }
 
         var outputFolder = context.Git().RootDirectory.GetFolder(buildOptions.Value.OutputDirectory);
         var installers = outputFolder.GetFiles(file => file.Extension == ".msi").ToArray();
@@ -89,8 +96,8 @@ public sealed partial class PublishWinGetModule(IOptions<BuildOptions> buildOpti
                 PackageIdentifier = packageId,
                 Version = packageVersion,
                 Urls = assetUrls,
-                CreatedWith = CreatedWithLabel,
-                CreatedWithUrl = CreatedWithUrl,
+                CreatedWith = "RevitLookup CI/CD",
+                CreatedWithUrl = "https://github.com/lookup-foundation/RevitLookup",
                 Submit = true,
                 Token = wingetToken
             }, cancellationToken);
@@ -98,12 +105,6 @@ public sealed partial class PublishWinGetModule(IOptions<BuildOptions> buildOpti
             context.Summary.KeyValue("Deployment", "WinGet", packageVersion);
         }
     }
-
-    [LoggerMessage(LogLevel.Information, "Skipping WinGet publication: WinGetToken is not provided")]
-    private static partial void LogSkippingNoToken(ILogger logger);
-
-    [LoggerMessage(LogLevel.Information, "Skipping WinGet publication for prerelease: {Version}")]
-    private static partial void LogSkippingPrerelease(ILogger logger, string version);
 
     [LoggerMessage(LogLevel.Warning, "Package {PackageId} is not registered in WinGet, skipping (first release must be published manually)")]
     private static partial void LogPackageNotRegistered(ILogger logger, string packageId);
