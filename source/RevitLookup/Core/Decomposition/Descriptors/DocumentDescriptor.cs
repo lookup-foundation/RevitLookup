@@ -40,7 +40,6 @@ public sealed class DocumentDescriptor : Descriptor, IDescriptorConfigurator
     {
         configuration.Member(nameof(Document.Dispose)).Disable();
         configuration.Member(nameof(Document.Close)).Defer();
-        configuration.Member(nameof(Document.PlanTopologies)).Defer(ResolvePlanTopologies);
         configuration.Member(nameof(Document.GetDefaultElementTypeId)).Resolve(ResolveDefaultElementTypeId);
         configuration.Member(nameof(Document.GetDocumentVersion)).Resolve(() => Document.GetDocumentVersion(_document));
 #if REVIT2024_OR_GREATER
@@ -81,18 +80,6 @@ public sealed class DocumentDescriptor : Descriptor, IDescriptorConfigurator
         configuration.Extension(nameof(CoordinationModelLinkUtils.LinkCoordinationModelFromLocalPath)).NotSupported();
 #endif
         return;
-
-        IVariant ResolvePlanTopologies()
-        {
-            if (_document.IsReadOnly) return Variants.Empty<PlanTopologySet>();
-
-            using var transaction = new Transaction(_document);
-            transaction.Start("Calculating plan topologies");
-            var topologies = _document.PlanTopologies;
-            transaction.Commit();
-
-            return Variants.Value(topologies);
-        }
 
         IVariant ResolveDefaultElementTypeId()
         {
