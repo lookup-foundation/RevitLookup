@@ -1,6 +1,6 @@
 # Changelog
 
-# **2027.0.3-preview.1**
+# **2027.0.3**
 
 ## On-demand member evaluation
 
@@ -18,11 +18,13 @@ Methods that return `void` are now runnable too, handled as deferred members lik
 To evaluate a deferred member, two new commands were added to the row context menu:
 
 - **Evaluate** (`F8`) runs the member.
+
+  ![image](https://github.com/user-attachments/assets/43afb300-12fb-400e-bf88-2c2eccbe4a08)
 - **Evaluate with transaction** (`Alt + F8`) runs the member inside a Revit transaction, which some members require in order to execute. Any changes the member makes are committed to the document.
 
-If you hit a member that should be evaluated automatically, or one that should not, please report it in the **Discussions** for this release.
+  ![image](https://github.com/user-attachments/assets/88d5b411-50f5-4ddc-be29-56eb2c0bb6d2)
 
-![image](https://github.com/user-attachments/assets/2ac6d7b9-05ec-452b-9269-8d0cbd872f91)
+If you hit a member that should be evaluated automatically, or one that should not, please report it in the **Discussions** for this release.
 
 ## Readable value states
 
@@ -40,13 +42,10 @@ Each state now has its own icon and label, so you can tell at a glance what a ro
 
 ## Improvements
 
-- **Smoother tree scrolling**. Tooltips and context menus are now created for the item under the cursor only, instead of re-attaching handlers to every tree item during scrolling.
 - **Colors shown as HEX**. Color values are now displayed as `#FF7F00` instead of `RGB: 255 127 0`.
-- **Faster Views**. `View.CanCategoryBeHidden`, `View.CanCategoryBeHiddenTemporary`, and `View.IsCategoryOverridable` are now deferred, so opening a View no longer waits on these slow calls.
-- **Smoother geometry visualization**. Mesh vertex normals are now precomputed in a single pass and curve loop vertices are de-duplicated.
-- **Lower visualization memory use**. Rendering buffers are now released when a visualization is removed or remapped.
+- **Smoother mesh visualization**. Mesh vertex normals are now precomputed in a single pass and curve loop vertices are de-duplicated.
 - **Faster settings filtering**. The settings filter and configuration lookup were reworked to avoid recompiling expressions and linear scans.
-- **Updated LookupEngine** with the new on-demand evaluation pipeline and engine syntax.
+- **Updated LookupEngine** with the new evaluation pipeline and improved performance.
 
 ## Documentation
 
