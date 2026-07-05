@@ -17,11 +17,9 @@ Methods that return `void` are now runnable too, handled as deferred members lik
 
 To evaluate a deferred member, two new commands were added to the row context menu:
 
-- **Evaluate** (`F8`) runs the member.
-
+- **Evaluate** (`F8`) runs the member.<br/>
   ![image](https://github.com/user-attachments/assets/43afb300-12fb-400e-bf88-2c2eccbe4a08)
-- **Evaluate with transaction** (`Alt + F8`) runs the member inside a Revit transaction, which some members require in order to execute. Any changes the member makes are committed to the document.
-
+- **Evaluate with transaction** (`Alt + F8`) runs the member inside a Revit transaction, which some members require in order to execute. Any changes the member makes are committed to the document.<br/>
   ![image](https://github.com/user-attachments/assets/88d5b411-50f5-4ddc-be29-56eb2c0bb6d2)
 
 If you hit a member that should be evaluated automatically, or one that should not, please report it in the **Discussions** for this release.
@@ -37,7 +35,8 @@ Each state now has its own icon and label, so you can tell at a glance what a ro
 - **Disabled**. A member whose evaluation is permanently disabled.
 - **Unsupported**. A member the engine cannot evaluate (the overload is not supported, for example).
 - **Exception**. A member that threw, marked with an error icon and the message instead of a full red row.
-
+- **Null reference**. A null reference value.
+- **Empty string**. A string with zero length.<br/>
 ![image](https://github.com/user-attachments/assets/10a8a69f-8a20-4847-846d-25fae14d9da1)
 
 ## Improvements

@@ -19,21 +19,20 @@ The table is vertically divided into groups, each providing information about me
 
 For example, the `Id` row in the `Element` group corresponds to the `Id` property of the `Autodesk.Revit.DB.Element` type.
 
-## Value Representation
-
-RevitLookup uses special notations for values representation:
-- **Null reference** indicates a null reference
-- **Empty string** indicates an empty string
-- **Awaiting** indicates a deferred member that has not been evaluated yet
-- **No return value** indicates an evaluated method that returns `void`
-- **Disabled** indicates a member whose evaluation is permanently disabled
-- **Unsupported** indicates a member the engine cannot evaluate
-
 ## Visual Representation
 
 To better understand the API, RevitLookup provides visual representations for certain types. For example, properties representing colors have color indicators directly in the UI:
 
-![image](https://github.com/user-attachments/assets/139dfc1a-d735-4156-8a1e-deec97c2b04b)
+- **Color**. A color value.<br/>
+    ![image](https://github.com/user-attachments/assets/139dfc1a-d735-4156-8a1e-deec97c2b04b)
+- **Awaiting**. A deferred member that has not been evaluated yet.
+- **No return value**. A `void` method that has been successfully evaluated.
+- **Disabled**. A member whose evaluation is permanently disabled.
+- **Unsupported**. A member the engine cannot evaluate (the overload is not supported, for example).
+- **Exception**. A member that threw, marked with an error icon and the message instead of a full red row.
+- **Null reference**. A null reference value.
+- **Empty string**. A string with zero length.<br/>
+    ![image](https://github.com/user-attachments/assets/10a8a69f-8a20-4847-846d-25fae14d9da1)
 
 ## Evaluation Variants
 
@@ -46,14 +45,12 @@ These cases are marked with the `Variants<T>` type and represent a list of possi
 
 RevitLookup automatically evaluates only members it considers safe and fast — those from the `System` and `Autodesk.Revit` namespaces. Slow members, members with side effects on the model, and methods that return `void` are not run automatically when an object opens. They are marked as **Awaiting** in the value column, which keeps opening an object fast and avoids executing model-changing calls without your consent.
 
-![image](https://github.com/user-attachments/assets/REPLACE-WITH-AWAITING-MEMBER-SCREENSHOT)
-
 To evaluate a deferred member, use the row context menu or a keyboard shortcut:
 
-- **Evaluate** (`F8`) runs the member and fills in its value, computation time, and allocated memory.
-- **Evaluate with transaction** (`Alt + F8`) runs the member inside a Revit transaction, which some members require in order to run. Any changes the member makes are committed to the document.
-
-![image](https://github.com/user-attachments/assets/REPLACE-WITH-EVALUATE-CONTEXT-MENU-SCREENSHOT)
+- **Evaluate** (`F8`) runs the member and fills in its value, computation time, and allocated memory.<br/>
+  ![image](https://github.com/user-attachments/assets/43afb300-12fb-400e-bf88-2c2eccbe4a08)
+- **Evaluate with transaction** (`Alt + F8`) runs the member inside a Revit transaction, which some members require in order to run. Any changes the member makes are committed to the document.<br/>
+  ![image](https://github.com/user-attachments/assets/88d5b411-50f5-4ddc-be29-56eb2c0bb6d2)
 
 Methods that return `void` can be invoked this way as well, and show **No return value** once they have been evaluated.
 
@@ -64,7 +61,7 @@ Methods that return `void` can be invoked this way as well, and show **No return
 You may notice that some members are highlighted in color, indicating they contain complex objects or collections of objects.
 Click on these rows to open a new window for further analysis of these objects.
 
-![Revit_8U7PLsALiY](https://github.com/user-attachments/assets/ebb50de2-7d59-4a06-a6cd-2860a86b3c4c)
+![image](https://github.com/user-attachments/assets/ebb50de2-7d59-4a06-a6cd-2860a86b3c4c)
 
 ### Multi-Window Analysis
 
