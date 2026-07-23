@@ -20,7 +20,7 @@ namespace Build.Modules;
 /// </summary>
 /// <remarks>
 ///     Only existing packages are updated.
-///     First-time registration of a new <c>LookupFoundation.RevitLookup.{year}</c> package is a one-time manual step (see <c>docs/winget-publishing.md</c>).
+///     First-time registration of a new <c>LookupFoundation.RevitLookup.{year}</c> package is a one-time manual step.
 /// </remarks>
 [SkipIfNoGitHubToken]
 [DependsOn<ResolveVersioningModule>]

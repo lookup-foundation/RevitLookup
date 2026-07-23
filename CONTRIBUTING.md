@@ -1,6 +1,6 @@
 # Contributing to RevitLookup
 
-Thanks for taking the time to contribute. This guide covers issues and pull requests. For the architecture, conventions, and release process, see the project guidelines in [AGENTS.md](AGENTS.md) and the [docs](docs/) folder.
+Thanks for taking the time to contribute. This guide covers issues and pull requests. For the architecture, conventions, and release process, see the project guidelines in [AGENTS.md](AGENTS.md).
 
 ## Maintainers
 

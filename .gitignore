@@ -11,9 +11,9 @@
 /output/
 
 #AI folders
-.junie/*
-!.junie/AGENTS.md
-.claude/
+.claude/*
+!.claude/skills
+!.claude/settings.json
 
 #User-specific files
 *.user
