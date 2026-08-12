@@ -76,7 +76,7 @@
         <PackageVersion Include="Shouldly" Version="4.3.0"/>
 
         <!-- System Dependencies -->
-        <PackageVersion Include="System.Text.Json" Version="10.0.9"/>
+        <PackageVersion Include="System.Text.Json" Version="10.0.11"/>
     </ItemGroup>
 
     <!-- Development Dependencies -->
