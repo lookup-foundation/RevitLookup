@@ -2,7 +2,6 @@ name: 📃 Documentation Issue
 description: Report issues in our documentation
 labels:
   - documentation 📃
-  - unverified ⌛
 body:
   - type: textarea
     attributes:
