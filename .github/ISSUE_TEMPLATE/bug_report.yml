@@ -6,7 +6,7 @@ labels:
 body:
   - type: markdown
     attributes:
-      value: Please make sure to [search for existing issues](https://github.com/jeremytammik/RevitLookup/issues?q=) before filing a new one!
+      value: Please make sure to [search for existing issues](https://github.com/lookup-foundation/RevitLookup/issues?q=) before filing a new one!
   - type: input
     attributes:
       label: RevitLookup version
