@@ -1,8 +1,8 @@
 name: 🐛 Bug report
 description: Report errors or unexpected behavior
+type: Bug 🐛
 labels:
-  - bug 🐛
-  - unverified ⌛
+  - needs triage 🔍
 body:
   - type: markdown
     attributes:
