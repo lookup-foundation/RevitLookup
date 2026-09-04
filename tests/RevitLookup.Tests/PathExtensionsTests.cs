@@ -5,28 +5,28 @@ namespace RevitLookup.Tests.Unit;
 public sealed class PathExtensionsTests
 {
     [Test]
-    public async Task AppendPath_MultipleSegments_CombinesInOrder()
+    [Arguments(@"C:\root", "child", @"C:\root\child")]
+    [Arguments(@"C:\root", "", @"C:\root")]
+    [Arguments(@"C:\root", @"D:\other", @"D:\other")]
+    public async Task AppendPath_SingleSegment_CombinesWithSource(string source, string segment, string expected)
     {
-        // Arrange
-        const string root = "root";
-
         // Act
-        var combined = root.AppendPath("a", "b", "c");
+        var combined = source.AppendPath(segment);
 
         // Assert
-        await Assert.That(combined).IsEqualTo(Path.Combine("root", "a", "b", "c"));
+        await Assert.That(combined).IsEqualTo(expected);
     }
 
     [Test]
-    public async Task AppendPath_SingleSegment_CombinesWithSource()
+    [Arguments(@"C:\root", new[] { "a", "b", "c" }, @"C:\root\a\b\c")]
+    [Arguments(@"C:\root", new[] { "a", "", "b" }, @"C:\root\a\b")]
+    [Arguments(@"C:\root", new[] { "a", @"D:\other" }, @"D:\other")]
+    public async Task AppendPath_MultipleSegments_CombinesInOrder(string source, string[] segments, string expected)
     {
-        // Arrange
-        const string root = "root";
-
         // Act
-        var combined = root.AppendPath("child");
+        var combined = source.AppendPath(segments);
 
         // Assert
-        await Assert.That(combined).IsEqualTo(Path.Combine("root", "child"));
+        await Assert.That(combined).IsEqualTo(expected);
     }
 }

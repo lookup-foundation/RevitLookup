@@ -5,63 +5,51 @@ namespace RevitLookup.Tests.Unit;
 public sealed class EnumerableExtensionsTests
 {
     [Test]
-    public async Task Random_SingleElement_ReturnsThatElement()
+    [Arguments(new[] { 42 })]
+    [Arguments(new[] { 1, 2, 3, 4, 5 })]
+    [Arguments(new[] { 7, 7, 7 })]
+    public async Task Random_PopulatedCollection_ReturnsContainedElement(int[] source)
     {
-        // Arrange
-        var source = new[] { 42 };
-
         // Act
         var picked = source.Random();
 
         // Assert
-        await Assert.That(picked).IsEqualTo(42);
+        await Assert.That(source).Contains(picked);
     }
 
     [Test]
-    public async Task Random_PopulatedCollection_ReturnsContainedElement()
-    {
-        // Arrange
-        var source = new[] { 1, 2, 3, 4, 5 };
-
-        // Act
-        var picked = source.Random();
-
-        // Assert
-        await Assert.That(source.Contains(picked)).IsTrue();
-    }
-
-    [Test]
-    public async Task Random_EmptyCollection_Throws()
+    public async Task Random_EmptyCollection_ThrowsInvalidOperationException()
     {
         // Arrange
         var source = Array.Empty<int>();
 
-        // Act
-        var threw = false;
-        try
-        {
-            source.Random();
-        }
-        catch (InvalidOperationException)
-        {
-            threw = true;
-        }
-
-        // Assert
-        await Assert.That(threw).IsTrue();
+        // Act, Assert
+        await Assert.That(source.Random).Throws<InvalidOperationException>();
     }
 
     [Test]
-    public async Task Randomize_Collection_PreservesAllElements()
+    [Arguments(new[] { 1 })]
+    [Arguments(new[] { 1, 2, 3, 4, 5 })]
+    [Arguments(new[] { 5, 5, 6 })]
+    public async Task Randomize_Collection_PreservesAllElements(int[] source)
+    {
+        // Act
+        var randomized = source.Randomize();
+
+        // Assert
+        await Assert.That(randomized).IsEquivalentTo(source);
+    }
+
+    [Test]
+    public async Task Randomize_List_ReordersTheSameInstance()
     {
         // Arrange
         var source = new List<int> { 1, 2, 3, 4, 5 };
 
         // Act
-        var result = source.Randomize();
+        var randomized = source.Randomize();
 
         // Assert
-        await Assert.That(result.Count).IsEqualTo(5);
-        await Assert.That(result.OrderBy(value => value).SequenceEqual([1, 2, 3, 4, 5])).IsTrue();
+        await Assert.That(randomized).IsSameReferenceAs(source);
     }
 }
