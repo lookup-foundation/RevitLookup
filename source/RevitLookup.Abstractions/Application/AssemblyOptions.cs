@@ -16,7 +16,7 @@ public sealed class AssemblyOptions
     public required Version Version { get; set; }
 
     /// <summary>
-    ///     Gets or sets a value indicating whether the current installation has administrator-level write access.
+    ///     Gets or sets the set of users the current installation serves.
     /// </summary>
-    public required bool HasAdminAccess { get; set; }
+    public required InstallationScope InstallationScope { get; set; }
 }

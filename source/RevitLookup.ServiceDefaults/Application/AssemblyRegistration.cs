@@ -4,7 +4,6 @@ using System.Runtime.Versioning;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RevitLookup.Abstractions.Application;
-using RevitLookup.ServiceDefaults.FileSystem;
 
 namespace RevitLookup.ServiceDefaults.Application;
 
@@ -18,14 +17,13 @@ public static class AssemblyRegistration
     extension<TBuilder>(TBuilder builder) where TBuilder : IHostApplicationBuilder
     {
         /// <summary>
-        ///     Binds the framework, version, and write-access facts of the running assembly to <see cref="AssemblyOptions" />.
+        ///     Binds the framework, version, and installation scope of the running assembly to <see cref="AssemblyOptions" />.
         /// </summary>
         /// <returns>The <see cref="TBuilder" /> for chaining.</returns>
         public TBuilder ConfigureAssembly()
         {
             var assembly = Assembly.GetExecutingAssembly();
             var assemblyLocation = assembly.Location;
-            var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
             var fileVersion = new Version(FileVersionInfo.GetVersionInfo(assemblyLocation).FileVersion!);
             var targetFrameworkAttribute = assembly.GetCustomAttribute<TargetFrameworkAttribute>()!;
 
@@ -33,7 +31,7 @@ public static class AssemblyRegistration
             {
                 options.Framework = targetFrameworkAttribute.FrameworkDisplayName ?? targetFrameworkAttribute.FrameworkName;
                 options.Version = new Version(fileVersion.Major, fileVersion.Minor, fileVersion.Build);
-                options.HasAdminAccess = assemblyLocation.StartsWith(appDataPath) || !AccessUtils.CheckWriteAccess(assemblyLocation);
+                options.InstallationScope = InstallationScopeResolver.Resolve(assemblyLocation);
             });
 
             return builder;
