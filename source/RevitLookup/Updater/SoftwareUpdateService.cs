@@ -12,7 +12,7 @@ namespace RevitLookup.Updater;
 ///     Checks the GitHub repository for a newer RevitLookup release and downloads it.
 /// </summary>
 /// <param name="httpFactory">The factory that creates the named client the GitHub repository is queried through.</param>
-/// <param name="assemblyOptions">The options that describe the currently running assembly version and access level.</param>
+/// <param name="assemblyOptions">The options that describe the currently running assembly version and installation scope.</param>
 /// <param name="foldersOptions">The options that resolve the downloads folder.</param>
 public sealed class SoftwareUpdateService(
     IHttpClientFactory httpFactory,
@@ -20,6 +20,9 @@ public sealed class SoftwareUpdateService(
     IOptions<ResourceLocationsOptions> foldersOptions)
     : ISoftwareUpdateService
 {
+    private const string MultiUserInstallerTag = "MultiUser";
+    private const string SingleUserInstallerTag = "SingleUser";
+
     private readonly AssemblyOptions _assemblyOptions = assemblyOptions.Value;
     private readonly ResourceLocationsOptions _folderOptions = foldersOptions.Value;
     private readonly Regex _versionRegex = new(@"(\d+\.)+\d+", RegexOptions.Compiled);
@@ -133,7 +136,7 @@ public sealed class SoftwareUpdateService(
                 continue;
             }
 
-            if (!_assemblyOptions.HasAdminAccess && asset.Name.Contains("MultiUser"))
+            if (!MatchesInstallationScope(asset.Name))
             {
                 continue;
             }
@@ -144,6 +147,17 @@ public sealed class SoftwareUpdateService(
         }
 
         return newVersionTag;
+    }
+
+    private bool MatchesInstallationScope(string assetName)
+    {
+        var installerTag = _assemblyOptions.InstallationScope switch
+        {
+            InstallationScope.PerMachine => MultiUserInstallerTag,
+            _ => SingleUserInstallerTag
+        };
+
+        return assetName.Contains(installerTag);
     }
 
     private bool CheckExistingInstaller()
