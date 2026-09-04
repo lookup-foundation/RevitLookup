@@ -27,10 +27,12 @@ public static class InstallationScopeResolver
     ///     <see cref="InstallationScope.PerMachine" /> when <paramref name="path" /> resides in a machine-wide folder;
     ///     otherwise <see cref="InstallationScope.PerUser" />.
     /// </returns>
-    /// <remarks>The resolution reads no file system entry and throws no exception.</remarks>
+    /// <remarks>An empty path serves the current user.</remarks>
     [Pure]
     public static InstallationScope Resolve(string path)
     {
+        ArgumentNullException.ThrowIfNull(path);
+
         foreach (var folder in MachineWideFolders)
         {
             var root = Environment.GetFolderPath(folder);

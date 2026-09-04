@@ -59,6 +59,7 @@ public sealed class InstallationScopeResolverTests
     [Arguments(@"D:\Repositories\RevitLookup\output\RevitLookup.dll")]
     [Arguments(@"C:\Autodesk\Revit\Addins\2027\RevitLookup.dll")]
     [Arguments(@"\\Server\Deployment\RevitLookup\RevitLookup.dll")]
+    [Arguments("")]
     public async Task Resolve_LocationOutsideInstallerTargets_ReportsPerUser(string location)
     {
         // Act
