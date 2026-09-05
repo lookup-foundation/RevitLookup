@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -8,6 +8,7 @@
     <ItemGroup>
         <PackageReference Include="WixSharp.Core"/>
         <PackageReference Include="WixSharp.Msi.Core"/>
+        <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing"/>
     </ItemGroup>
 
 </Project>

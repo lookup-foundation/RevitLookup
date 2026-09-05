@@ -17,6 +17,7 @@ It runs in two hosts from one shared codebase: the production add-in inside `Rev
 * The file suffix of an extension class follows the host phase, never the verb of the method inside. `*Registration.cs` holds everything that runs before `Build()`, whether the method reads `Add*` or `Configure*`. A class that carries a second phase is split into a second file.
 * `*Configuration.cs` names a type that configures something — an `IConfigureOptions<T>` or an equivalent configurator — and never an extension class. `*Extensions.cs` names ordinary extension methods over a domain or framework type.
 * An extension method is declared inside an `extension` block, never with a `this` parameter.
+* The installer manifest carries what changes from release to release. The installer project carries what stays the same across releases.
 
 ## Architecture layout
 
@@ -55,6 +56,7 @@ It runs in two hosts from one shared codebase: the production add-in inside `Rev
 ### Pipeline
 
 * `build` — ModularPipelines build. Builds the bundle/installer, and publishes the release to GitHub and Winget.
+* `install` — WiX# builder that turns the installer manifest written by the pipeline into the MSI packages.
 
 ## Build and verify
 
