@@ -298,7 +298,6 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
     /// <inheritdoc />
     public List<NavigationCardGroup> NavigationGroups { get; }
 
-    /// <inheritdoc />
     [RelayCommand]
     private async Task NavigatePageAsync(string? parameter)
     {
@@ -449,7 +448,6 @@ public sealed partial class DashboardViewModel : IDashboardViewModel
         }
     }
 
-    /// <inheritdoc />
     [RelayCommand]
     private async Task OpenDialogAsync(string parameter)
     {

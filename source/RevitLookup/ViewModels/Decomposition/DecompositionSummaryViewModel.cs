@@ -133,7 +133,6 @@ public sealed partial class DecompositionSummaryViewModel(
         }
     }
 
-    /// <inheritdoc />
     [RelayCommand]
     private async Task ForceEvaluateMemberAsync(ObservableDecomposedMember member)
     {
@@ -148,7 +147,6 @@ public sealed partial class DecompositionSummaryViewModel(
         }
     }
 
-    /// <inheritdoc />
     [RelayCommand]
     private async Task EvaluateMemberWithTransactionAsync(ObservableDecomposedMember member)
     {

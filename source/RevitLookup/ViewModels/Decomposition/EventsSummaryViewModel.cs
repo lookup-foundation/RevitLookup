@@ -113,7 +113,6 @@ public sealed partial class EventsSummaryViewModel(
         return Task.CompletedTask;
     }
 
-    /// <inheritdoc />
     [RelayCommand]
     private async Task ForceEvaluateMemberAsync(ObservableDecomposedMember member)
     {
@@ -128,7 +127,6 @@ public sealed partial class EventsSummaryViewModel(
         }
     }
 
-    /// <inheritdoc />
     [RelayCommand]
     private async Task EvaluateMemberWithTransactionAsync(ObservableDecomposedMember member)
     {

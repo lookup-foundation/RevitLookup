@@ -113,7 +113,6 @@ public sealed partial class RevitSettingsViewModel(
         }
     }
 
-    /// <inheritdoc />
     [RelayCommand]
     private async Task CreateEntryAsync()
     {
@@ -147,14 +146,12 @@ public sealed partial class RevitSettingsViewModel(
         }
     }
 
-    /// <inheritdoc />
     [RelayCommand]
     private void ActivateEntry(ObservableIniEntry entry)
     {
         Task.Run(SaveAsync);
     }
 
-    /// <inheritdoc />
     [RelayCommand]
     private void DeleteEntry(ObservableIniEntry entry)
     {
@@ -163,7 +160,6 @@ public sealed partial class RevitSettingsViewModel(
         Task.Run(SaveAsync);
     }
 
-    /// <inheritdoc />
     [RelayCommand]
     private void RestoreDefault(ObservableIniEntry entry)
     {
@@ -171,7 +167,6 @@ public sealed partial class RevitSettingsViewModel(
         Task.Run(SaveAsync);
     }
 
-    /// <inheritdoc />
     [RelayCommand]
     private void ShowHelp()
     {
@@ -179,7 +174,6 @@ public sealed partial class RevitSettingsViewModel(
         ProcessTasks.StartShell($"https://help.autodesk.com/view/RVT/{version}/ENU/?guid=GUID-9ECD669E-81D3-43E5-9970-9FA1C38E8507");
     }
 
-    /// <inheritdoc />
     [RelayCommand]
     private void OpenSettings()
     {
@@ -193,7 +187,6 @@ public sealed partial class RevitSettingsViewModel(
         ProcessTasks.StartShell(iniFile);
     }
 
-    /// <inheritdoc />
     [RelayCommand(CanExecute = nameof(CanClearFiltersExecute))]
     private void ClearFilters()
     {

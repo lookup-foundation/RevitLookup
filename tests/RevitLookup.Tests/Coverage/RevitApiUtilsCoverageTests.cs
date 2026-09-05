@@ -13,6 +13,8 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using RevitLookup.Tests.Abstractions;
+using RevitLookup.Tests.Artifacts;
+using RevitLookup.Tests.Coverage.Formatters;
 
 namespace RevitLookup.Tests.Coverage;
 
