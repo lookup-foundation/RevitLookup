@@ -8,7 +8,6 @@ namespace Installer;
 ///     The presentation, the target platform, and the directory layout are fixed by the installer.
 /// </remarks>
 [PublicAPI]
-[Serializable]
 public sealed record Manifest
 {
     /// <summary>
@@ -55,7 +54,6 @@ public sealed record Manifest
     ///     Represents the add-in files installed for a single Revit version.
     /// </summary>
     [PublicAPI]
-    [Serializable]
     public sealed record AddinContent
     {
         /// <summary>
@@ -67,6 +65,7 @@ public sealed record Manifest
         /// <summary>
         ///     Gets the file sets installed for the Revit version.
         /// </summary>
+        /// <remarks>The packages install the sets in the order their roles first appear in the manifest.</remarks>
         public required IReadOnlyList<FileSet> Files { get; init; }
     }
 
@@ -74,12 +73,15 @@ public sealed record Manifest
     ///     Represents a set of files selected from a source directory.
     /// </summary>
     [PublicAPI]
-    [Serializable]
     public sealed record FileSet
     {
         /// <summary>
-        ///     Gets the name identifying the file set in the build output.
+        ///     Gets the name of the installation stage the file set belongs to.
         /// </summary>
+        /// <remarks>
+        ///     File sets sharing a role install together, and every role installs after the roles declared before it.
+        ///     A file a running application picks up belongs in a role declared after the roles holding the files it depends on.
+        /// </remarks>
         public required string Role { get; init; }
 
         /// <summary>

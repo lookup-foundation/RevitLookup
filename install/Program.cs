@@ -7,6 +7,7 @@ using WixSharp.Controls;
 var manifestFile = new FileInfo(args[0]);
 var manifest = manifestFile.ReadManifest();
 var contentRoot = manifestFile.Directory!;
+var installOrder = new MediaLayout(manifest.Content);
 
 var project = new Project
 {
@@ -28,6 +29,7 @@ var project = new Project
 };
 
 project.RemoveDialogsBetween(NativeDialogs.WelcomeDlg, NativeDialogs.InstallDirDlg);
+project.WixSourceGenerated += installOrder.WriteToWixSource;
 
 BuildSingleUserMsi();
 BuildMultiUserMsi();
@@ -37,7 +39,7 @@ void BuildSingleUserMsi()
 {
     project.Scope = InstallScope.perUser;
     project.OutFileName = $"{manifest.ProductName}-{manifest.ReleaseVersion}-SingleUser";
-    project.Dirs = manifest.Content.CreateFeatureLayout(contentRoot, InstallScope.perUser);
+    project.Dirs = manifest.Content.CreateFeatureLayout(contentRoot, InstallScope.perUser, installOrder);
     project.BuildMsi();
 }
 
@@ -45,6 +47,6 @@ void BuildMultiUserMsi()
 {
     project.Scope = InstallScope.perMachine;
     project.OutFileName = $"{manifest.ProductName}-{manifest.ReleaseVersion}-MultiUser";
-    project.Dirs = manifest.Content.CreateFeatureLayout(contentRoot, InstallScope.perMachine);
+    project.Dirs = manifest.Content.CreateFeatureLayout(contentRoot, InstallScope.perMachine, installOrder);
     project.BuildMsi();
 }

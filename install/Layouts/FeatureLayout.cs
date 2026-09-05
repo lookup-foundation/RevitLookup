@@ -17,11 +17,12 @@ public static class FeatureLayout
         /// </summary>
         /// <param name="contentRoot">The directory the content base paths are resolved against.</param>
         /// <param name="scope">The <see cref="InstallScope" /> the packages install under.</param>
+        /// <param name="installOrder">The order the file sets install in.</param>
         /// <returns>The <see cref="Dir" /> array the packages install.</returns>
         /// <exception cref="DirectoryNotFoundException">A file set points to a directory that is absent.</exception>
         /// <exception cref="InvalidDataException">A file set selects no files.</exception>
         /// <remarks>One entry is an <see cref="InstallDir" /> holding the path the user can change.</remarks>
-        public Dir[] CreateFeatureLayout(DirectoryInfo contentRoot, InstallScope scope)
+        public Dir[] CreateFeatureLayout(DirectoryInfo contentRoot, InstallScope scope, MediaLayout installOrder)
         {
             var revitFeature = new Feature
             {
@@ -34,7 +35,7 @@ public static class FeatureLayout
             foreach (var addinsRoot in content.GroupBy(addin => ResolveAddinsRoot(addin.RevitVersion, scope)))
             {
                 var versionDirectories = addinsRoot
-                    .Select(addin => CreateVersionDirectory(addin, revitFeature, contentRoot))
+                    .Select(addin => CreateVersionDirectory(addin, revitFeature, contentRoot, installOrder))
                     .Cast<WixEntity>()
                     .ToArray();
 
@@ -50,7 +51,7 @@ public static class FeatureLayout
     /// <summary>
     ///     Creates the directory holding the add-in of a single Revit version.
     /// </summary>
-    private static Dir CreateVersionDirectory(Manifest.AddinContent addin, Feature revitFeature, DirectoryInfo contentRoot)
+    private static Dir CreateVersionDirectory(Manifest.AddinContent addin, Feature revitFeature, DirectoryInfo contentRoot, MediaLayout installOrder)
     {
         var fileVersion = addin.RevitVersion.ToString();
         var feature = new Feature
@@ -63,7 +64,7 @@ public static class FeatureLayout
         revitFeature.Add(feature);
 
         var fileSets = addin.Files
-            .Select(fileSet => CreateFiles(fileSet, feature, contentRoot))
+            .Select(fileSet => CreateFiles(fileSet, feature, contentRoot, installOrder))
             .Cast<WixEntity>()
             .ToArray();
 
@@ -71,9 +72,9 @@ public static class FeatureLayout
     }
 
     /// <summary>
-    ///     Selects the files of a single file set and assigns them to the specified feature.
+    ///     Selects the files of a single file set and assigns them to the specified feature and cabinet.
     /// </summary>
-    private static Files CreateFiles(Manifest.FileSet fileSet, Feature feature, DirectoryInfo contentRoot)
+    private static Files CreateFiles(Manifest.FileSet fileSet, Feature feature, DirectoryInfo contentRoot, MediaLayout installOrder)
     {
         var basePath = Path.GetFullPath(Path.Combine(contentRoot.FullName, fileSet.BasePath));
         if (!Directory.Exists(basePath))
@@ -98,8 +99,13 @@ public static class FeatureLayout
 
         LogSelectedFiles(fileSet, selectedFiles);
 
+        var diskId = installOrder.ResolveDiskId(fileSet.Role);
         var selectedPaths = selectedFiles.ToHashSet(StringComparer.OrdinalIgnoreCase);
-        return new Files(feature, Path.Combine(basePath, "*.*"), path => selectedPaths.Contains(Path.GetFullPath(path)));
+
+        return new Files(feature, Path.Combine(basePath, "*.*"), path => selectedPaths.Contains(Path.GetFullPath(path)))
+        {
+            OnProcess = file => file.AttributesDefinition = $"DiskId={diskId}"
+        };
     }
 
     /// <summary>
