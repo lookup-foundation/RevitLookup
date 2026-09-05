@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
+using System.Text.Json;
 using Build.Options;
 using EnumerableAsyncProcessor.Extensions;
 using Microsoft.Extensions.Options;
@@ -13,23 +14,27 @@ using ModularPipelines.Options;
 using Shouldly;
 using Sourcy.DotNet;
 using File = ModularPipelines.FileSystem.File;
+using InstallerOptions = Build.Options.InstallerOptions;
 
 namespace Build.Modules;
 
 /// <summary>
-///     Represents the pipeline module that creates the MSI installer.
+///     Represents the pipeline module that creates the MSI packages.
 /// </summary>
-/// <param name="buildOptions">The build settings that supply the version mapped to each Revit configuration and the installer output directory.</param>
-[DependsOn<ResolveVersioningModule>]
+/// <param name="buildOptions">The build settings applied to the packaged output.</param>
+/// <param name="installerOptions">The installer settings applied to the produced packages.</param>
 [DependsOn<CompileProjectModule>]
 [DependsOn<SignAssembliesModule>(Optional = true)]
-public sealed class CreateInstallerModule(IOptions<BuildOptions> buildOptions) : Module
+public sealed class CreateInstallerModule(IOptions<BuildOptions> buildOptions, IOptions<InstallerOptions> installerOptions) : Module
 {
+    private static readonly JsonSerializerOptions SerializerOptions = new()
+    {
+        WriteIndented = true,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    };
+
     protected override async Task ExecuteModuleAsync(IModuleContext context, CancellationToken cancellationToken)
     {
-        var versioningResult = await context.GetModule<ResolveVersioningModule>();
-        var versioning = versioningResult.ValueOrDefault!;
-
         var wixTarget = new File(Projects.RevitLookup.FullName);
         var wixInstaller = new File(Projects.Installer.FullName);
         var wixToolFolder = await InstallWixAsync(context, cancellationToken);
@@ -51,18 +56,22 @@ public sealed class CreateInstallerModule(IOptions<BuildOptions> buildOptions) :
             .GetFolders(folder => folder.Name == "publish")
             .ToArray();
 
-        targetDirectories.ShouldNotBeEmpty("No content were found to create an installer");
+        targetDirectories.ShouldNotBeEmpty("No content was found to create an installer");
+
+        var outputFolder = context.Git().RootDirectory.GetFolder(buildOptions.Value.OutputDirectory);
+        if (!outputFolder.Exists)
+        {
+            await outputFolder.CreateAsync(cancellationToken);
+        }
 
         await targetDirectories.ForEachAsync(async targetDirectory =>
             {
-                buildOptions.Value.Versions
-                    .TryGetValue(targetDirectory.Parent!.Name, out var version)
-                    .ShouldBeTrue($"Can't map version for configuration: {targetDirectory.Parent!.Path}");
+                var manifestFile = await WriteManifestAsync(wixTarget.NameWithoutExtension, targetDirectory, outputFolder, cancellationToken);
 
                 await context.Shell.Command.ExecuteCommandLineTool(
                     new GenericCommandLineToolOptions(builderFile.Path)
                     {
-                        Arguments = [version, targetDirectory.Path]
+                        Arguments = [manifestFile.Path]
                     },
                     new CommandExecutionOptions
                     {
@@ -75,7 +84,6 @@ public sealed class CreateInstallerModule(IOptions<BuildOptions> buildOptions) :
             }, cancellationToken)
             .ProcessInParallel();
 
-        var outputFolder = context.Git().RootDirectory.GetFolder(buildOptions.Value.OutputDirectory);
         var outputFiles = outputFolder.GetFiles(file => file.Extension == ".msi").ToArray();
         outputFiles.ShouldNotBeEmpty("Failed to create an installer");
 
@@ -83,6 +91,90 @@ public sealed class CreateInstallerModule(IOptions<BuildOptions> buildOptions) :
         {
             context.Summary.KeyValue("Artifacts", "Installer", outputFile.Path);
         }
+    }
+
+    /// <summary>
+    ///     Writes the manifest describing the installer content compiled for a single Revit configuration.
+    /// </summary>
+    private async Task<File> WriteManifestAsync(string productName, Folder targetDirectory, Folder outputFolder, CancellationToken cancellationToken)
+    {
+        var contentRoot = targetDirectory.Parent!;
+        var configuration = contentRoot.Name;
+
+        buildOptions.Value.Versions
+            .TryGetValue(configuration, out var version)
+            .ShouldBeTrue($"Can't map version for configuration: {configuration}");
+
+        installerOptions.Value.UpgradeCodes
+            .TryGetValue(configuration, out var upgradeCode)
+            .ShouldBeTrue($"Can't map upgrade code for configuration: {configuration}");
+
+        var versionPrefix = ResolveVersionPrefix(version);
+        var manifest = new
+        {
+            ProductName = productName,
+            UpgradeCode = upgradeCode,
+            PackageVersion = ResolveMsiVersion(versionPrefix),
+            ReleaseVersion = version,
+            OutputDirectory = outputFolder.Path,
+            Content = new[]
+            {
+                new
+                {
+                    RevitVersion = versionPrefix.Major,
+                    Files = new[]
+                    {
+                        new
+                        {
+                            Role = "payload",
+                            BasePath = targetDirectory.Name,
+                            Include = new[] { "**" },
+                            Exclude = new[] { "**/*.addin" }
+                        },
+                        new
+                        {
+                            Role = "addin",
+                            BasePath = targetDirectory.Name,
+                            Include = new[] { "**/*.addin" },
+                            Exclude = Array.Empty<string>()
+                        }
+                    }
+                }
+            }
+        };
+
+        var manifestFile = contentRoot.GetFile("installer.manifest.json");
+        var manifestContent = JsonSerializer.Serialize(manifest, SerializerOptions);
+        await manifestFile.WriteAsync(manifestContent, cancellationToken);
+
+        return manifestFile;
+    }
+
+    /// <summary>
+    ///     Resolves the normal part of the specified release version.
+    /// </summary>
+    /// <param name="releaseVersion">The version the release is published under.</param>
+    /// <returns>The version number without its pre-release label.</returns>
+    private static Version ResolveVersionPrefix(string releaseVersion)
+    {
+        var labelIndex = releaseVersion.IndexOf('-');
+        var versionPrefix = labelIndex < 0 ? releaseVersion.AsSpan() : releaseVersion.AsSpan(0, labelIndex);
+
+        return Version.Parse(versionPrefix);
+    }
+
+    /// <summary>
+    ///     Resolves the version written into the MSI database.
+    /// </summary>
+    /// <param name="versionPrefix">The normal part of the release version.</param>
+    /// <returns>The version Windows Installer compares against the installed package.</returns>
+    /// <remarks>
+    ///     The major component of an Autodesk Revit installation is the last two digits of the release year.
+    ///     The add-in installer follows the same pattern.
+    /// </remarks>
+    private static Version ResolveMsiVersion(Version versionPrefix)
+    {
+        return new Version(versionPrefix.Major % 100, versionPrefix.Minor, versionPrefix.Build);
     }
 
     /// <summary>

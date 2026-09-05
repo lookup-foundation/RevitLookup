@@ -14,6 +14,7 @@ builder.Configuration.AddCommandLine(args);
 
 builder.Services.AddOptions<BuildOptions>().Bind(builder.Configuration.GetSection("Build"));
 builder.Services.AddOptions<BundleOptions>().Bind(builder.Configuration.GetSection("Bundle"));
+builder.Services.AddOptions<InstallerOptions>().Bind(builder.Configuration.GetSection("Installer"));
 builder.Services.AddOptions<PublishOptions>().Bind(builder.Configuration.GetSection("Publish"));
 builder.Services.AddOptions<SigningOptions>().Bind(builder.Configuration.GetSection("Signing"));
 
