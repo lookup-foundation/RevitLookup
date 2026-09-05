@@ -94,7 +94,7 @@ public sealed class CreateInstallerModule(IOptions<BuildOptions> buildOptions, I
     }
 
     /// <summary>
-    ///     Writes the manifest describing the installer content compiled for a single Revit configuration.
+    ///     Writes the installer manifest for a single compiled Revit configuration.
     /// </summary>
     private async Task<File> WriteManifestAsync(string productName, Folder targetDirectory, Folder outputFolder, CancellationToken cancellationToken)
     {
@@ -113,8 +113,8 @@ public sealed class CreateInstallerModule(IOptions<BuildOptions> buildOptions, I
         var manifest = new
         {
             ProductName = productName,
+            ProductVersion = ResolveMsiVersion(versionPrefix),
             UpgradeCode = upgradeCode,
-            PackageVersion = ResolveMsiVersion(versionPrefix),
             ReleaseVersion = version,
             OutputDirectory = outputFolder.Path,
             Content = new[]
@@ -129,7 +129,7 @@ public sealed class CreateInstallerModule(IOptions<BuildOptions> buildOptions, I
                             Role = "payload",
                             BasePath = targetDirectory.Name,
                             Include = new[] { "**" },
-                            Exclude = new[] { "**/*.addin" }
+                            Exclude = new[] { "**/*.addin", "**/*.pdb" }
                         },
                         new
                         {

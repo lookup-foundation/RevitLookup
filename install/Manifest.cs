@@ -16,6 +16,15 @@ public sealed record Manifest
     public required string ProductName { get; init; }
 
     /// <summary>
+    ///     Gets the version Windows Installer compares against the installed package when it resolves an upgrade.
+    /// </summary>
+    /// <remarks>
+    ///     The comparison covers the major, minor, and build components; the revision component takes no part in it.
+    ///     The <see href="https://learn.microsoft.com/windows/win32/msi/productversion">ProductVersion</see> property of the MSI database carries the value.
+    /// </remarks>
+    public required Version ProductVersion { get; init; }
+
+    /// <summary>
     ///     Gets the identity shared by every release of the product.
     /// </summary>
     /// <remarks>
@@ -25,18 +34,13 @@ public sealed record Manifest
     public required Guid UpgradeCode { get; init; }
 
     /// <summary>
-    ///     Gets the version written into the MSI database as the <see href="https://learn.microsoft.com/windows/win32/msi/productversion">ProductVersion</see> property.
-    /// </summary>
-    /// <remarks>Windows Installer compares this value against the installed package when it resolves an upgrade.</remarks>
-    public required Version PackageVersion { get; init; }
-
-    /// <summary>
     ///     Gets the version the release is published under.
     /// </summary>
     /// <remarks>The file name of every produced package includes this value.</remarks>
     /// <example>
-    ///     2026.1.3 <br />
-    ///     2026.1.3-beta.2.250101
+    ///     2026.1.3-alpha.1.250101 <br />
+    ///     2026.1.3-beta.2.250101 <br />
+    ///     2026.1.3
     /// </example>
     public required string ReleaseVersion { get; init; }
 
