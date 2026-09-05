@@ -12,7 +12,7 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-namespace RevitLookup.Tests.Unit.Artifacts;
+namespace RevitLookup.Tests.Artifacts;
 
 /// <summary>
 ///     Provides extension methods for <see cref="string" /> to attach it to test output as a file artifact.

@@ -14,7 +14,7 @@
 
 using System.Reflection;
 
-namespace RevitLookup.Tests.Unit.Coverage.Discovery;
+namespace RevitLookup.Tests.Coverage.Discovery;
 
 /// <summary>
 ///     Reads the reflected surface a report renders.

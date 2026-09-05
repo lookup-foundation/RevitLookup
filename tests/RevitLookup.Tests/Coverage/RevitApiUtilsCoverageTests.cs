@@ -12,11 +12,9 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using RevitLookup.Tests.Unit.Abstractions;
-using RevitLookup.Tests.Unit.Artifacts;
-using RevitLookup.Tests.Unit.Coverage.Formatters;
+using RevitLookup.Tests.Abstractions;
 
-namespace RevitLookup.Tests.Unit.Coverage;
+namespace RevitLookup.Tests.Coverage;
 
 /// <summary>
 ///     Reports the Revit API utility methods and the descriptor files resolving them.

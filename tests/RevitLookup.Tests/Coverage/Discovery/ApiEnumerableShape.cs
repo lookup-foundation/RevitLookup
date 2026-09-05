@@ -12,9 +12,9 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using RevitLookup.Tests.Unit.Coverage.Models;
+using RevitLookup.Tests.Coverage.Models;
 
-namespace RevitLookup.Tests.Unit.Coverage.Discovery;
+namespace RevitLookup.Tests.Coverage.Discovery;
 
 /// <summary>
 ///     Represents the reflected shape of a Revit API enumerable.

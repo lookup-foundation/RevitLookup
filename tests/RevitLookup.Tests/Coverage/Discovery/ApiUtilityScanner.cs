@@ -13,9 +13,9 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using System.Reflection;
-using RevitLookup.Tests.Unit.Coverage.Models;
+using RevitLookup.Tests.Coverage.Models;
 
-namespace RevitLookup.Tests.Unit.Coverage.Discovery;
+namespace RevitLookup.Tests.Coverage.Discovery;
 
 /// <summary>
 ///     Discovers the public static utility methods an assembly declares.

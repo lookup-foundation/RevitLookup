@@ -1,7 +1,7 @@
 using RevitLookup.Abstractions.Application;
 using RevitLookup.ServiceDefaults.Application;
 
-namespace RevitLookup.Tests.Unit;
+namespace RevitLookup.Tests;
 
 public sealed class InstallationScopeResolverTests
 {

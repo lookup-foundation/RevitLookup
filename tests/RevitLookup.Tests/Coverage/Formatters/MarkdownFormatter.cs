@@ -13,9 +13,9 @@
 // UNINTERRUPTED OR ERROR FREE.
 
 using System.Text;
-using RevitLookup.Tests.Unit.Coverage.Models;
+using RevitLookup.Tests.Coverage.Models;
 
-namespace RevitLookup.Tests.Unit.Coverage.Formatters;
+namespace RevitLookup.Tests.Coverage.Formatters;
 
 /// <summary>
 ///     Provides extension methods for sequences of <see cref="ApiMethodRow" /> and <see cref="ApiEnumerableRow" /> to render them as Markdown.

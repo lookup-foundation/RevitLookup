@@ -14,7 +14,7 @@
 
 using System.Text.RegularExpressions;
 
-namespace RevitLookup.Tests.Unit.Coverage.Discovery;
+namespace RevitLookup.Tests.Coverage.Discovery;
 
 /// <summary>
 ///     Searches a source tree for the files mentioning a <c>Type.Member</c> name, and reads the types a file matches in a switch.

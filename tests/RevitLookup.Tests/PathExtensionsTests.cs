@@ -1,6 +1,6 @@
 using RevitLookup.ServiceDefaults.FileSystem;
 
-namespace RevitLookup.Tests.Unit;
+namespace RevitLookup.Tests;
 
 public sealed class PathExtensionsTests
 {

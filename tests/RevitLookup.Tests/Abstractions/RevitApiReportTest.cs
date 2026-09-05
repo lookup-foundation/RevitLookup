@@ -15,10 +15,10 @@
 using System.Collections.Concurrent;
 using System.Reflection;
 using Nice3point.TUnit.Revit;
-using RevitLookup.Tests.Unit.Coverage.Discovery;
-using RevitLookup.Tests.Unit.Coverage.Models;
+using RevitLookup.Tests.Coverage.Discovery;
+using RevitLookup.Tests.Coverage.Models;
 
-namespace RevitLookup.Tests.Unit.Abstractions;
+namespace RevitLookup.Tests.Abstractions;
 
 /// <summary>
 ///     Supplies report tests with the reflected surface of an assembly, annotated with the descriptor source files naming each member.

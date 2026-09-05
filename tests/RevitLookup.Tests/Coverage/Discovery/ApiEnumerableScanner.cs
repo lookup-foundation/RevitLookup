@@ -14,9 +14,9 @@
 
 using System.Collections;
 using System.Reflection;
-using RevitLookup.Tests.Unit.Coverage.Models;
+using RevitLookup.Tests.Coverage.Models;
 
-namespace RevitLookup.Tests.Unit.Coverage.Discovery;
+namespace RevitLookup.Tests.Coverage.Discovery;
 
 /// <summary>
 ///     Discovers the enumerables an assembly exposes, and for each one the properties telling whether it contains any elements.

@@ -12,11 +12,9 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-using RevitLookup.Tests.Unit.Abstractions;
-using RevitLookup.Tests.Unit.Artifacts;
-using RevitLookup.Tests.Unit.Coverage.Formatters;
+using RevitLookup.Tests.Abstractions;
 
-namespace RevitLookup.Tests.Unit.Coverage;
+namespace RevitLookup.Tests.Coverage;
 
 /// <summary>
 ///     Reports how <c>EnumerableDescriptor</c> finds out whether each Revit API collection contains any elements.

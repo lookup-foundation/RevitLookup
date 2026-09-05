@@ -12,7 +12,7 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-namespace RevitLookup.Tests.Unit.Coverage.Models;
+namespace RevitLookup.Tests.Coverage.Models;
 
 /// <summary>
 ///     Determines how <c>EnumerableDescriptor</c> finds out whether a Revit API collection contains any elements.

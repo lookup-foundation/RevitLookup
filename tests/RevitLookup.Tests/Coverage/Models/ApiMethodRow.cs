@@ -12,7 +12,7 @@
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 
-namespace RevitLookup.Tests.Unit.Coverage.Models;
+namespace RevitLookup.Tests.Coverage.Models;
 
 /// <summary>
 ///     Represents a single row of the utility method report.

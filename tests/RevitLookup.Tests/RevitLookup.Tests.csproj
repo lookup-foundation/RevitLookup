@@ -5,7 +5,6 @@
         <EnableTUnitPolyfills>false</EnableTUnitPolyfills>
         <Configurations>Debug.R21;Debug.R22;Debug.R23;Debug.R24;Debug.R25;Debug.R26;Debug.R27</Configurations>
         <Configurations>$(Configurations);Release.R21;Release.R22;Release.R23;Release.R24;Release.R25;Release.R26;Release.R27</Configurations>
-        <RootNamespace>RevitLookup.Tests.Unit</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

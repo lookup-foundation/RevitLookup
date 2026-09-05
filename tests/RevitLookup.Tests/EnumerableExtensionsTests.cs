@@ -1,6 +1,6 @@
 using RevitLookup.UI.Framework.Extensions;
 
-namespace RevitLookup.Tests.Unit;
+namespace RevitLookup.Tests;
 
 public sealed class EnumerableExtensionsTests
 {
