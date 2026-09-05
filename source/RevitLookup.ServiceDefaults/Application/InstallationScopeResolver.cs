@@ -6,8 +6,8 @@ namespace RevitLookup.ServiceDefaults.Application;
 ///     Provides methods to resolve the <see cref="InstallationScope" /> an installation serves.
 /// </summary>
 /// <remarks>
-///     The per-machine installer targets <c>%ProgramFiles%</c> for Revit 2027 and newer, and <c>%ProgramData%</c> for earlier versions.
-///     The per-user installer targets <c>%AppData%</c>, and a build output or a manually unpacked release occupies an arbitrary folder.
+///     The scope follows the location of the installed files alone.
+///     A build output and a manually unpacked release serve the current user.
 /// </remarks>
 [PublicAPI]
 public static class InstallationScopeResolver
