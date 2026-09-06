@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using Bogus;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;

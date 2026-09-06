@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using LookupEngine.Abstractions.Configuration;
 using Nice3point.Revit.Toolkit.External;

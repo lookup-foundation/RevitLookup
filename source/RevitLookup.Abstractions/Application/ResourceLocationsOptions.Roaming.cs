@@ -1,4 +1,4 @@
-﻿namespace RevitLookup.Abstractions.Application;
+namespace RevitLookup.Abstractions.Application;
 
 /// <summary>
 ///     Defines storage locations for application data that roams with the user across multiple devices.

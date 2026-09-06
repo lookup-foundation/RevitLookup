@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Input;
 using RevitLookup.UI.Playground.ViewModels.Pages.DesignGuidance;
 

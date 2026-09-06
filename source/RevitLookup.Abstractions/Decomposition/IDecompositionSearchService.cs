@@ -1,4 +1,4 @@
-﻿namespace RevitLookup.Abstractions.Decomposition;
+namespace RevitLookup.Abstractions.Decomposition;
 
 /// <summary>
 ///     Defines a contract that searches decomposed objects and members by a text query.

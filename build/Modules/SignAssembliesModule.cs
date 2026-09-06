@@ -1,4 +1,4 @@
-﻿using Build.Azure;
+using Build.Azure;
 using Build.Azure.Options;
 using Build.Options;
 using Microsoft.Extensions.Logging;

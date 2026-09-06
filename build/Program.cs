@@ -1,4 +1,4 @@
-﻿using Build.Modules;
+using Build.Modules;
 using Build.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

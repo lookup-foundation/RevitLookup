@@ -1,4 +1,4 @@
-﻿using Build.Azure.Options;
+using Build.Azure.Options;
 using ModularPipelines.Context;
 using ModularPipelines.DotNet.Options;
 using ModularPipelines.DotNet.Services;

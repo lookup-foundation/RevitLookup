@@ -1,4 +1,4 @@
-﻿using Bogus;
+using Bogus;
 using RevitLookup.Abstractions.Updater;
 
 namespace RevitLookup.UI.Playground.Mocks.Updater;

@@ -1,4 +1,4 @@
-﻿namespace RevitLookup.Abstractions.Decomposition;
+namespace RevitLookup.Abstractions.Decomposition;
 
 /// <summary>
 ///     Determines which known Revit object is resolved and decomposed.

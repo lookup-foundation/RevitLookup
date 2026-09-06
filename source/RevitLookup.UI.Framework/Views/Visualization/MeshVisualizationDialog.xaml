@@ -1,4 +1,4 @@
-﻿<ui:ContentDialog
+<ui:ContentDialog
     x:Class="RevitLookup.UI.Framework.Views.Visualization.MeshVisualizationDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

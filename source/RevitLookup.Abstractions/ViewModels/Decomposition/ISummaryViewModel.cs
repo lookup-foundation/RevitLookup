@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using RevitLookup.Abstractions.Decomposition;
 
 namespace RevitLookup.Abstractions.ViewModels.Decomposition;

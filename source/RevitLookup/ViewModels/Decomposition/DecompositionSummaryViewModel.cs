@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
 using Autodesk.Revit.Exceptions;
 using Microsoft.Extensions.Logging;

@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using RevitLookup.UI.Framework.Processes;
 
 namespace RevitLookup.UI.Playground.Controls;

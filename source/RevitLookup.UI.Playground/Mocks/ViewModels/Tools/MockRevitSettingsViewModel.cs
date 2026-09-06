@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 using Bogus;
 using CommunityToolkit.Mvvm.ComponentModel;

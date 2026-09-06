@@ -1,4 +1,4 @@
-﻿namespace RevitLookup.UI.Playground.Views.Pages.ProjectControls;
+namespace RevitLookup.UI.Playground.Views.Pages.ProjectControls;
 
 /// <summary>
 ///     Represents a page that demonstrates empty state layouts in the Playground.

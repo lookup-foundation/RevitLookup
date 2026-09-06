@@ -1,4 +1,4 @@
-﻿using RevitLookup.UI.Playground.ViewModels.Pages;
+using RevitLookup.UI.Playground.ViewModels.Pages;
 
 namespace RevitLookup.UI.Playground.Views.Pages;
 

@@ -1,4 +1,4 @@
-﻿using LookupEngine.Abstractions;
+using LookupEngine.Abstractions;
 using RevitLookup.Abstractions.Decomposition;
 using Riok.Mapperly.Abstractions;
 

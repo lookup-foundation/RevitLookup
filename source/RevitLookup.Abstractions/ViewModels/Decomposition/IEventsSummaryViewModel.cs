@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using RevitLookup.Abstractions.Decomposition;
 using Wpf.Ui.Abstractions.Controls;
 

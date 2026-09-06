@@ -1,4 +1,4 @@
-﻿using Build.Options;
+using Build.Options;
 using Microsoft.Extensions.Options;
 using ModularPipelines.Attributes;
 using ModularPipelines.Conditions;

@@ -1,4 +1,4 @@
-﻿namespace RevitLookup.UI.Playground.SampleData;
+namespace RevitLookup.UI.Playground.SampleData;
 
 /// <summary>
 ///     Provides a sample font-icon glyph for the Playground icon gallery.

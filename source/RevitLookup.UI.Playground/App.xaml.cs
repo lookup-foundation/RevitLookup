@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using Microsoft.Extensions.Logging;
 using RevitLookup.UI.Playground.Presentation;
 using RevitLookup.UI.Playground.Views;

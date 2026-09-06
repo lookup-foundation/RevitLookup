@@ -1,4 +1,4 @@
-﻿using System.Windows.Controls;
+using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using RevitLookup.UI.Framework;
 using Wpf.Ui.Abstractions.Controls;

@@ -1,4 +1,4 @@
-﻿namespace Build.Options;
+namespace Build.Options;
 
 /// <summary>
 ///     Information about the Autodesk application package.

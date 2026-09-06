@@ -1,4 +1,4 @@
-﻿namespace RevitLookup.UI.Framework.Extensions;
+namespace RevitLookup.UI.Framework.Extensions;
 
 /// <summary>
 ///     Provides extension methods for <see cref="IEnumerable{T}" /> to pick or reorder its elements at random.

@@ -1,4 +1,4 @@
-﻿using System.Windows.Media;
+using System.Windows.Media;
 using Bogus;
 using CommunityToolkit.Mvvm.ComponentModel;
 using RevitLookup.Abstractions.ViewModels.Visualization;

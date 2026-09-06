@@ -1,4 +1,4 @@
-﻿In Revit, geometry is at the core of every model. 
+In Revit, geometry is at the core of every model. 
 Whether you are dealing with simple shapes or intricate structures, having the ability to visualize geometric elements can significantly improve your workflow, analysis and understanding of the BIM.
 
 Visualization available in the context menu for each object:

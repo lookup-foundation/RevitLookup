@@ -1,4 +1,4 @@
-﻿using System.Windows.Input;
+using System.Windows.Input;
 using Wpf.Ui.Controls;
 
 namespace RevitLookup.Abstractions.Dashboard;

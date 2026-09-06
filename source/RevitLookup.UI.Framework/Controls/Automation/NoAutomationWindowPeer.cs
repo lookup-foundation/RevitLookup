@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Automation.Peers;
 
 namespace RevitLookup.UI.Framework.Controls.Automation;

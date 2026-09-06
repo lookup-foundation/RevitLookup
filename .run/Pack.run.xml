@@ -1,4 +1,4 @@
-﻿<component name="ProjectRunConfigurationManager">
+<component name="ProjectRunConfigurationManager">
     <configuration default="false" name="Pack" type="DotNetProject" factoryName=".NET Project">
         <option name="EXE_PATH" value="$PROJECT_DIR$/build/bin/Release/net10.0/Build.exe"/>
         <option name="PROGRAM_PARAMETERS" value="pack"/>

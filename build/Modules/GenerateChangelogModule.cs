@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Build.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

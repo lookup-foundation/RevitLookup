@@ -1,4 +1,4 @@
-﻿namespace RevitLookup.Abstractions.Presentation;
+namespace RevitLookup.Abstractions.Presentation;
 
 /// <summary>
 ///     Defines a contract that displays notifications to the user.

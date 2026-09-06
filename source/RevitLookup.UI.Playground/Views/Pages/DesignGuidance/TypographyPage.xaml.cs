@@ -1,4 +1,4 @@
-﻿namespace RevitLookup.UI.Playground.Views.Pages.DesignGuidance;
+namespace RevitLookup.UI.Playground.Views.Pages.DesignGuidance;
 
 /// <summary>
 ///     Represents a page that demonstrates the typography styles available in the Playground.

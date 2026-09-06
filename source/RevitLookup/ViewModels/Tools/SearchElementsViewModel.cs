@@ -1,4 +1,4 @@
-﻿using RevitLookup.Abstractions.Decomposition;
+using RevitLookup.Abstractions.Decomposition;
 using RevitLookup.Abstractions.Presentation;
 using RevitLookup.Abstractions.ViewModels.Tools;
 using RevitLookup.Tools.SearchElements;

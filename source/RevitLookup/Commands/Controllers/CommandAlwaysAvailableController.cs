@@ -1,4 +1,4 @@
-﻿using Autodesk.Revit.UI;
+using Autodesk.Revit.UI;
 
 namespace RevitLookup.Commands.Controllers;
 

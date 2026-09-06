@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using RevitLookup.UI.Playground.SampleData;
 using Wpf.Ui.Controls;
 #if NETFRAMEWORK

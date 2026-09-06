@@ -1,4 +1,4 @@
-﻿namespace RevitLookup.Tools.SearchElements;
+namespace RevitLookup.Tools.SearchElements;
 
 /// <summary>
 ///     Provides extension methods for <see cref="Document" /> to search elements by identifier, IFC GUID, or name.

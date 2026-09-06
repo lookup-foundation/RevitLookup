@@ -1,4 +1,4 @@
-﻿using RevitLookup.Abstractions.AboutProgram;
+using RevitLookup.Abstractions.AboutProgram;
 
 namespace RevitLookup.Abstractions.ViewModels.AboutProgram;
 

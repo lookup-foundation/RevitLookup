@@ -1,4 +1,4 @@
-﻿namespace RevitLookup.UI.Framework;
+namespace RevitLookup.UI.Framework;
 
 /// <summary>
 ///     Represents the WPF application that hosts the design-time resources for XAML designer preview.

@@ -1,4 +1,4 @@
-﻿namespace RevitLookup.Abstractions.AboutProgram;
+namespace RevitLookup.Abstractions.AboutProgram;
 
 /// <summary>
 ///     Represents information about a third-party open-source software dependency.

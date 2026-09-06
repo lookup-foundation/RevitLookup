@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using RevitLookup.Abstractions.Dashboard;
 using RevitLookup.Abstractions.Decomposition;

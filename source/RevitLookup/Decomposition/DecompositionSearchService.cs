@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using RevitLookup.Abstractions.Decomposition;
 
 namespace RevitLookup.Decomposition;

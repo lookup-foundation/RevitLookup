@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using LookupEngine;
 using RevitLookup.Abstractions.Decomposition;

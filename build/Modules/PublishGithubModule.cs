@@ -1,4 +1,4 @@
-﻿using Build.Options;
+using Build.Options;
 using EnumerableAsyncProcessor.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

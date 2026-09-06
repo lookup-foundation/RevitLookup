@@ -1,4 +1,4 @@
-﻿namespace RevitLookup.Abstractions.Dashboard;
+namespace RevitLookup.Abstractions.Dashboard;
 
 /// <summary>
 ///     Represents a named group of navigation cards.

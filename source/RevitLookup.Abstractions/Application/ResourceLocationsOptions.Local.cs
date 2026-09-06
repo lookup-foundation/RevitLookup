@@ -1,4 +1,4 @@
-﻿namespace RevitLookup.Abstractions.Application;
+namespace RevitLookup.Abstractions.Application;
 
 /// <summary>
 ///     Resource locations for application data specific to the local machine.

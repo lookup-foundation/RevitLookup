@@ -1,4 +1,4 @@
-﻿namespace RevitLookup.Abstractions.Settings;
+namespace RevitLookup.Abstractions.Settings;
 
 /// <summary>
 ///     Defines a contract that manages the application settings.

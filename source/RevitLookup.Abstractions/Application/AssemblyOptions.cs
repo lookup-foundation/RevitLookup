@@ -1,4 +1,4 @@
-﻿namespace RevitLookup.Abstractions.Application;
+namespace RevitLookup.Abstractions.Application;
 
 /// <summary>
 ///     Represents runtime information about the application assembly.
