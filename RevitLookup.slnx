@@ -180,6 +180,22 @@
     </Project>
   </Folder>
   <Folder Name="/Revit/">
+    <Project Path="source\RevitLookup.Abstractions\RevitLookup.Abstractions.csproj">
+      <BuildType Solution="Debug.R21|*" Project="Debug"/>
+      <BuildType Solution="Debug.R22|*" Project="Debug"/>
+      <BuildType Solution="Debug.R23|*" Project="Debug"/>
+      <BuildType Solution="Debug.R24|*" Project="Debug"/>
+      <BuildType Solution="Debug.R25|*" Project="Debug"/>
+      <BuildType Solution="Debug.R26|*" Project="Debug"/>
+      <BuildType Solution="Debug.R27|*" Project="Debug"/>
+      <BuildType Solution="Release.R21|*" Project="Release"/>
+      <BuildType Solution="Release.R22|*" Project="Release"/>
+      <BuildType Solution="Release.R23|*" Project="Release"/>
+      <BuildType Solution="Release.R24|*" Project="Release"/>
+      <BuildType Solution="Release.R25|*" Project="Release"/>
+      <BuildType Solution="Release.R26|*" Project="Release"/>
+      <BuildType Solution="Release.R27|*" Project="Release"/>
+    </Project>
     <Project Path="source\RevitLookup\RevitLookup.csproj">
       <BuildType Solution="Debug|*" Project="Debug.R27"/>
       <BuildType Solution="Release|*" Project="Release.R27"/>
@@ -196,22 +212,6 @@
     </Project>
   </Folder>
   <Project Path="source/RevitLookup.ServiceDefaults/RevitLookup.ServiceDefaults.csproj">
-    <BuildType Solution="Debug.R21|*" Project="Debug"/>
-    <BuildType Solution="Debug.R22|*" Project="Debug"/>
-    <BuildType Solution="Debug.R23|*" Project="Debug"/>
-    <BuildType Solution="Debug.R24|*" Project="Debug"/>
-    <BuildType Solution="Debug.R25|*" Project="Debug"/>
-    <BuildType Solution="Debug.R26|*" Project="Debug"/>
-    <BuildType Solution="Debug.R27|*" Project="Debug"/>
-    <BuildType Solution="Release.R21|*" Project="Release"/>
-    <BuildType Solution="Release.R22|*" Project="Release"/>
-    <BuildType Solution="Release.R23|*" Project="Release"/>
-    <BuildType Solution="Release.R24|*" Project="Release"/>
-    <BuildType Solution="Release.R25|*" Project="Release"/>
-    <BuildType Solution="Release.R26|*" Project="Release"/>
-    <BuildType Solution="Release.R27|*" Project="Release"/>
-  </Project>
-  <Project Path="source\RevitLookup.Abstractions\RevitLookup.Abstractions.csproj">
     <BuildType Solution="Debug.R21|*" Project="Debug"/>
     <BuildType Solution="Debug.R22|*" Project="Debug"/>
     <BuildType Solution="Debug.R23|*" Project="Debug"/>
