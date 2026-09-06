@@ -66,7 +66,7 @@ Then confirm the Revit year is present in `build/appsettings.json` under `Build.
 
 ### Step 4: Verify the handoff to CI
 
-On the next release, `PublishWinGetModule` finds the now-registered package with `komac list-versions`, builds the asset URLs from the GitHub release, and submits the update; no further `komac new` is needed for that year.
+On the next release, `PublishWinGetModule` syncs the fork with its upstream, finds the now-registered package with `komac list-versions`, builds the asset URLs from the GitHub release, and submits the update; no further `komac new` is needed for that year.
 A package that is still unregistered logs a warning and is skipped, which is the signal the manual step has not completed.
 
 ## Validation

@@ -11,6 +11,7 @@ using ModularPipelines.GitHub.Attributes;
 using ModularPipelines.GitHub.Extensions;
 using ModularPipelines.Models;
 using ModularPipelines.Modules;
+using Octokit;
 using Shouldly;
 
 namespace Build.Modules;
@@ -30,6 +31,9 @@ namespace Build.Modules;
 public sealed partial class PublishWinGetModule(IOptions<BuildOptions> buildOptions, IOptions<PublishOptions> publishOptions) : Module
 {
     private const string PackageIdPrefix = "LookupFoundation.RevitLookup";
+    private const string WinGetRepositoryName = "winget-pkgs";
+    private const string WinGetRepositoryBranch = "master";
+    private const string WinGetClientName = "RevitLookup";
 
     protected override ModuleConfiguration Configure()
     {
@@ -55,7 +59,7 @@ public sealed partial class PublishWinGetModule(IOptions<BuildOptions> buildOpti
 
     protected override async Task ExecuteModuleAsync(IModuleContext context, CancellationToken cancellationToken)
     {
-        var wingetToken = publishOptions.Value.WinGetToken;
+        var wingetToken = publishOptions.Value.WinGetToken!;
 
         var versioningResult = await context.GetModule<ResolveVersioningModule>();
         var versioning = versioningResult.ValueOrDefault!;
@@ -66,6 +70,8 @@ public sealed partial class PublishWinGetModule(IOptions<BuildOptions> buildOpti
 
         var repositoryInfo = context.GitHub().RepositoryInfo;
         var releaseTag = versioning.Version;
+
+        await SyncWinGetForkAsync(context, wingetToken, cancellationToken);
 
         foreach (var (_, packageVersion) in buildOptions.Value.Versions)
         {
@@ -110,6 +116,33 @@ public sealed partial class PublishWinGetModule(IOptions<BuildOptions> buildOpti
             context.Summary.KeyValue("Deployment", "WinGet", packageVersion);
         }
     }
+
+    private static async Task SyncWinGetForkAsync(IModuleContext context, string wingetToken, CancellationToken cancellationToken)
+    {
+        var client = new GitHubClient(new ProductHeaderValue(WinGetClientName))
+        {
+            Credentials = new Credentials(wingetToken)
+        };
+
+        var forkOwner = await client.User.Current();
+        var forkEndpoint = new Uri($"repos/{forkOwner.Login}/{WinGetRepositoryName}/merge-upstream", UriKind.Relative);
+
+        try
+        {
+            await client.Connection.Post(forkEndpoint, new { branch = WinGetRepositoryBranch }, AcceptHeaders.StableVersionJson, cancellationToken);
+            LogForkSynced(context.Logger, forkOwner.Login);
+        }
+        catch (ApiException exception)
+        {
+            LogForkSyncFailed(context.Logger, forkOwner.Login, exception.Message);
+        }
+    }
+
+    [LoggerMessage(LogLevel.Information, "Synced the {Owner}/" + WinGetRepositoryName + " fork with its upstream")]
+    private static partial void LogForkSynced(ILogger logger, string owner);
+
+    [LoggerMessage(LogLevel.Warning, "Failed to sync the {Owner}/" + WinGetRepositoryName + " fork: {Reason}. Komac reports a trailing fork as a missing CreateRef permission")]
+    private static partial void LogForkSyncFailed(ILogger logger, string owner, string reason);
 
     [LoggerMessage(LogLevel.Warning, "Package {PackageId} is not registered in WinGet, skipping (first release must be published manually)")]
     private static partial void LogPackageNotRegistered(ILogger logger, string packageId);
