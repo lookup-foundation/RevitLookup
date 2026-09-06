@@ -1,12 +1,12 @@
 // Copyright (c) Lookup Foundation and Contributors
-// 
+//
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
 // provided that the above copyright notice appears in all copies and
 // that both that copyright notice and the limited warranty and
 // restricted rights notice below appear in all supporting
 // documentation.
-// 
+//
 // THIS PROGRAM IS PROVIDED "AS IS" AND WITH ALL FAULTS.
 // NO IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR USE IS PROVIDED.
 // THERE IS NO GUARANTEE THAT THE OPERATION OF THE PROGRAM WILL BE
@@ -76,9 +76,9 @@ public sealed class ForgeTypeIdDescriptor : Descriptor, IDescriptorConfigurator
 #endif
 #if REVIT2024_OR_GREATER
 #if REVIT2027_OR_GREATER
-        configuration.Extension(nameof(ParameterUtils.DownloadParameterOptions)).Register(ResolveDownloadParameterOptions);
+        configuration.Extension(nameof(ParameterUtils.DownloadParameterOptions)).Defer(ResolveDownloadParameterOptions);
 #else
-        configuration.Extension(nameof(ParameterUtils.DownloadParameterOptions)).Register(() => ParameterUtils.DownloadParameterOptions(_typeId));
+        configuration.Extension(nameof(ParameterUtils.DownloadParameterOptions)).Defer(() => ParameterUtils.DownloadParameterOptions(_typeId));
 #endif
 #endif
 #if REVIT2026_OR_GREATER
@@ -130,11 +130,11 @@ public sealed class ForgeTypeIdDescriptor : Descriptor, IDescriptorConfigurator
     void IDescriptorConfigurator<Document>.Configure(IMemberConfigurator<Document> configuration)
     {
 #if REVIT2027_OR_GREATER
-        configuration.Extension(nameof(ParameterUtils.DownloadParameter)).Register(ResolveDownloadParameter);
-        configuration.Extension(nameof(ParameterUtils.DownloadCompanyName)).Register(ResolveDownloadCompanyName);
+        configuration.Extension(nameof(ParameterUtils.DownloadParameter)).Defer(ResolveDownloadParameter);
+        configuration.Extension(nameof(ParameterUtils.DownloadCompanyName)).Defer(ResolveDownloadCompanyName);
 #else
-        configuration.Extension(nameof(ParameterUtils.DownloadParameter)).Register(context => ParameterUtils.DownloadParameter(context, new ParameterDownloadOptions(), _typeId));
-        configuration.Extension(nameof(ParameterUtils.DownloadCompanyName)).Register(context => ParameterUtils.DownloadCompanyName(context, _typeId));
+        configuration.Extension(nameof(ParameterUtils.DownloadParameter)).Defer(context => ParameterUtils.DownloadParameter(context, new ParameterDownloadOptions(), _typeId));
+        configuration.Extension(nameof(ParameterUtils.DownloadCompanyName)).Defer(context => ParameterUtils.DownloadCompanyName(context, _typeId));
 #endif
 #if REVIT2027_OR_GREATER
         return;
