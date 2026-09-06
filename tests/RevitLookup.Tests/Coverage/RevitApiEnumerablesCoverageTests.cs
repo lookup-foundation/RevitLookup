@@ -34,10 +34,13 @@ public sealed class RevitApiEnumerablesCoverageTests : RevitApiReportTest
     [Test]
     public async Task CoversEveryEnumerable()
     {
+        // Arrange
         var assembly = typeof(Document).Assembly;
 
+        // Act
         var rows = GetEnumerableRows(assembly);
 
+        // Assert
         await Assert.That(rows).IsNotEmpty();
 
         await rows

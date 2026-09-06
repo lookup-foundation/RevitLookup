@@ -29,10 +29,13 @@ public sealed class RevitApiUtilsCoverageTests : RevitApiReportTest
     [Test]
     public async Task CoversEveryStaticMethod()
     {
+        // Arrange
         var assembly = typeof(Document).Assembly;
 
+        // Act
         var rows = GetUtilityMethodRows(assembly);
 
+        // Assert
         await Assert.That(rows).IsNotEmpty();
 
         await rows
