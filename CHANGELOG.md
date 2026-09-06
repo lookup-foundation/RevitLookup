@@ -1,11 +1,23 @@
 # Changelog
 
+# **2027.0.4**
+
+A new minor release with installer fixes and improvements.
+
+- Improved enumeration performance for categories, phases, and family parameters.
+- Deferred the Autodesk Parameters Service members `ParameterUtils.DownloadParameter`, `DownloadCompanyName` and `DownloadParameterOptions`.
+- Replaced `Serilog` with `Microsoft.Extensions.Logging`.
+- Fixed the addin startup under a multi-user installation https://github.com/lookup-foundation/RevitLookup/issues/438
+- Fixed the missing DLL error on installation while Revit is running https://github.com/lookup-foundation/RevitLookup/issues/464
+
+That's all for now. Next up: CLI/NuGet/MCP tools
+
 # **2027.0.3**
 
 ## On-demand member evaluation
 
 Earlier versions evaluated every member as soon as you opened the RevitLookup window.
-That was risky, because RevitLookup would call terminal methods and methods that modify the object without asking, and for large objects you had to wait while hundreds of slow calls ran. 
+That was risky, because RevitLookup would call terminal methods and methods that modify the object without asking, and for large objects you had to wait while hundreds of slow calls ran.
 Methods that return `void` could not be executed at all.
 You could see them in the list, but RevitLookup had no way to run them, so you could never invoke one or confirm it worked.
 
@@ -27,7 +39,7 @@ If you hit a member that should be evaluated automatically, or one that should n
 ## Readable value states
 
 The values table used to render everything as plain text.
-A member that throws an Exception showed a red row spanning the whole width, which was easy to misread and looked broken for anyone running a red system accent color, while special states like "\<null\>" were just more text that blended in with real values. 
+A member that throws an Exception showed a red row spanning the whole width, which was easy to misread and looked broken for anyone running a red system accent color, while special states like "\<null\>" were just more text that blended in with real values.
 Each state now has its own icon and label, so you can tell at a glance what a row actually is:
 
 - **Awaiting**. A deferred member that has not been evaluated yet.
@@ -37,7 +49,7 @@ Each state now has its own icon and label, so you can tell at a glance what a ro
 - **Exception**. A member that threw, marked with an error icon and the message instead of a full red row.
 - **Null reference**. A null reference value.
 - **Empty string**. A string with zero length.<br/>
-![image](https://github.com/user-attachments/assets/10a8a69f-8a20-4847-846d-25fae14d9da1)
+  ![image](https://github.com/user-attachments/assets/10a8a69f-8a20-4847-846d-25fae14d9da1)
 
 ## Improvements
 
@@ -77,12 +89,12 @@ The Revit API has hundreds of static utility methods that were previously hard t
 - **Enabled addin isolation** starting from Revit 2027. Finally, Autodesk fixed it.
 - **Async startup** makes Revit to continue loading while RevitLookup initializes in the background.
 - **Event Monitor** is now faster when inspecting incoming events.
-- **Shortcuts** no longer conflict with user settings. The default shortcut is only applied if the user has not configured one. 
-    There are now two hotkeys to open the Snoop Selection window: `F12` and `SS`. https://github.com/lookup-foundation/RevitLookup/issues/316.
+- **Shortcuts** no longer conflict with user settings. The default shortcut is only applied if the user has not configured one.
+  There are now two hotkeys to open the Snoop Selection window: `F12` and `SS`. https://github.com/lookup-foundation/RevitLookup/issues/316.
 
 ## Postable commands
 
-Postable commands are Revit's built-in UI actions — toolbar buttons, menu items, dialog triggers — that can be invoked programmatically via the PostCommand API. 
+Postable commands are Revit's built-in UI actions — toolbar buttons, menu items, dialog triggers — that can be invoked programmatically via the PostCommand API.
 They're the go-to tool when you need to automate UI behavior that has no direct API equivalent.
 RevitLookup now exposes the full list in one place: browse, search, and execute any Postable command directly.
 
@@ -437,7 +449,7 @@ Updated and improved Summary page components.
 
 RevitLookup now runs on its own [engine](https://github.com/lookup-foundation/LookupEngine).
 The engine can run outside Revit, and can be reused across the entire family of Autodesk products.
-This is a pledge for the future for products like **AutocadLookup**, **InventorLookup** and others. 
+This is a pledge for the future for products like **AutocadLookup**, **InventorLookup** and others.
 
 Isolating the engine also brings many new improvements:
 
@@ -487,7 +499,7 @@ Isolating the engine also brings many new improvements:
 
 - Visualisation now supports the new [CurveLoop](https://github.com/lookup-foundation/RevitLookup/wiki/visualization#curveloop-visualization) type, thanks @JieGou for the implementation!
 
-    ![image](https://github.com/user-attachments/assets/f4d935f5-2cfd-44d2-b1c7-d5fdc07e95a1)
+  ![image](https://github.com/user-attachments/assets/f4d935f5-2cfd-44d2-b1c7-d5fdc07e95a1)
 
 ## Development:
 
@@ -511,7 +523,7 @@ Made with love by @Nice3point 🕊️
 - Fixed placeholder for the Dark theme https://github.com/jeremytammik/RevitLookup/issues/291
 - Fixed the Revit.ini editor filter button name
 - Fixed the Revit.ini editor filter placeholder
-- Disabled the Visual.Enter() method https://github.com/jeremytammik/RevitLookup/issues/292
+- Disabled the Visual.Enter () method https://github.com/jeremytammik/RevitLookup/issues/292
 - Suppressed GenericHost startup messages by @Nefarion in https://github.com/jeremytammik/RevitLookup/pull/294
 
 # 2025-09-22 **2025.0.9**
@@ -672,7 +684,7 @@ Therefore, if your other plugins use `Nice3point.Revit.Toolkit`, it must be upda
 - Added new extensions:
 
   | Type           | Extension                                 | Description                                                                          |
-  |:---------------|-------------------------------------------|--------------------------------------------------------------------------------------|
+      |:---------------|-------------------------------------------|--------------------------------------------------------------------------------------|
   | Element        | GetCuttingSolids                          | Gets all the solids which cut the input element                                      |
   | Element        | GetSolidsBeingCut                         | Get all the solids which are cut by the input element                                |
   | Element        | IsAllowedForSolidCut                      | Validates that the element is eligible for a solid-solid cut                         |
@@ -1406,7 +1418,7 @@ In this release, the entire code base has been completely rewritten from scratch
 * Generic names support
 
   | Before                                                                                                          | Now                                                                                                             |
-                              |-----------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
+                                  |-----------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
   | ![image](https://user-images.githubusercontent.com/20504884/225105646-37f2b052-f3fc-4771-967b-0578a94f9b07.png) | ![image](https://user-images.githubusercontent.com/20504884/225852403-4023c704-1932-471e-9f9f-84f8433013d7.png) |
 
 * Multiple results for methods with overloads
