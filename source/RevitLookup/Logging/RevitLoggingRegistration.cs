@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Nice3point.Revit.Logging;
 
 namespace RevitLookup.Logging;
 
@@ -27,8 +27,7 @@ public static class RevitLoggingRegistration
                 ["Logging:RevitJournal:LogLevel:Default"] = nameof(LogLevel.Error)
             });
 
-            var journalProvider = new RevitJournalLoggerProvider(nameof(RevitLookup));
-            builder.Services.AddSingleton<ILoggerProvider>(journalProvider);
+            builder.Logging.AddRevitJournal(RevitApiContext.Application, options => options.ApplicationName = nameof(RevitLookup));
 
             PresentationTraceSources.ResourceDictionarySource.Switch.Level = SourceLevels.Critical;
 
