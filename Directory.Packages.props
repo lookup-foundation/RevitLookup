@@ -7,7 +7,7 @@
         <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     </PropertyGroup>
 
-    <!-- Revit Dependencies -->
+    <!-- Revit dependencies -->
     <ItemGroup>
         <PackageVersion Include="Nice3point.Revit.Api.RevitAPI" Version="$(RevitVersion).*-*" Condition="$(RevitVersion) != ''"/>
         <PackageVersion Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*-*" Condition="$(RevitVersion) != ''"/>
@@ -41,9 +41,9 @@
         <PackageVersion Include="Nice3point.TUnit.Revit" Version="2027.0.1" Condition="$(RevitVersion) == '2027'"/>
     </ItemGroup>
 
-    <!-- Core Dependencies -->
+    <!-- Core dependencies -->
     <ItemGroup>
-        <!-- Application Hosting -->
+        <!-- Application hosting -->
         <PackageVersion Include="Scrutor" Version="7.0.0"/>
         <PackageVersion Include="Microsoft.Extensions.FileSystemGlobbing" Version="10.0.11"/>
         <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.11"/>
@@ -57,7 +57,7 @@
         <PackageVersion Include="Riok.Mapperly" Version="4.3.1"/>
         <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2"/>
 
-        <!-- Build Automation -->
+        <!-- Build automation -->
         <PackageVersion Include="Autodesk.PackageBuilder" Version="2.0.2"/>
         <PackageVersion Include="AzureSignTool" Version="7.0.1"/>
         <PackageVersion Include="Sourcy.DotNet" Version="1.1.1"/>
@@ -76,11 +76,11 @@
         <PackageVersion Include="Bogus" Version="35.6.5"/>
         <PackageVersion Include="Shouldly" Version="4.3.0"/>
 
-        <!-- System Dependencies -->
+        <!-- System dependencies -->
         <PackageVersion Include="System.Text.Json" Version="10.0.11"/>
     </ItemGroup>
 
-    <!-- Development Dependencies -->
+    <!-- Development dependencies -->
     <ItemGroup>
         <GlobalPackageReference Include="Polyfill" Version="11.2.0"/>
         <GlobalPackageReference Include="JetBrains.Annotations.Sources" Version="2026.2.0"/>

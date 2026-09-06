@@ -23,6 +23,7 @@
     "revit-testing@revit-skills": true,
     "dotnet@revit-skills": true,
     "dotnet-advanced@revit-skills": true,
+    "dotnet-msbuild@dotnet-agent-skills": true,
     "dotnet-test@dotnet-agent-skills": true
   }
 }

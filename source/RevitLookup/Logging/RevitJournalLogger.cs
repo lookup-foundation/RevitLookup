@@ -44,6 +44,6 @@ public sealed partial class RevitJournalLogger(string addinName, string category
     [ExternalEvent(AllowDirectInvocation = true)]
     private static void WriteJournalComment(string comment)
     {
-        RevitContext.UiApplication.Application.WriteJournalComment(comment, true);
+        RevitApiContext.Application.WriteJournalComment(comment, true);
     }
 }

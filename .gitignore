@@ -1,19 +1,21 @@
 #IDE folders
-.idea/
-.vs/
-.vscode/
+*.idea/
+*.vs/
+*.vscode/
 
 #Project-specific folders
 *obj/
 *bin/
+*temp/
 
 #Build output folder
 /output/
+BenchmarkDotNet.Artifacts/
+
+#User-specific files
+*.user
 
 #AI folders
 .claude/*
 !.claude/skills
 !.claude/settings.json
-
-#User-specific files
-*.user

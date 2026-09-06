@@ -24,5 +24,8 @@ enabled = true
 [plugins."dotnet-advanced@revit-skills"]
 enabled = true
 
+[plugins."dotnet-msbuild@dotnet-agent-skills"]
+enabled = true
+
 [plugins."dotnet-test@dotnet-agent-skills"]
 enabled = true
