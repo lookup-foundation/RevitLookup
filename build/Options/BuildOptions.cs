@@ -3,7 +3,7 @@ namespace Build.Options;
 /// <summary>
 ///     Represents the build settings used to compile and package the add-in.
 /// </summary>
-[Serializable]
+[PublicAPI]
 public sealed record BuildOptions
 {
     /// <summary>

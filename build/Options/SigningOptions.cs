@@ -3,7 +3,7 @@ namespace Build.Options;
 /// <summary>
 ///     Represents the Azure Key Vault credentials used to sign build artifacts.
 /// </summary>
-[Serializable]
+[PublicAPI]
 public sealed class SigningOptions
 {
     /// <summary>

@@ -6,7 +6,7 @@ namespace RevitLookup.Abstractions.Settings;
 /// <summary>
 ///     Represents the visualization settings.
 /// </summary>
-[Serializable]
+[PublicAPI]
 public sealed class VisualizationSettings
 {
     /// <summary>
@@ -55,7 +55,7 @@ public sealed class VisualizationSettings
 /// <summary>
 ///     Represents the bounding box visualization settings.
 /// </summary>
-[Serializable]
+[PublicAPI]
 public class BoundingBoxVisualizationSettings
 {
     /// <summary>
@@ -107,7 +107,7 @@ public class BoundingBoxVisualizationSettings
 /// <summary>
 ///     Represents the face visualization settings.
 /// </summary>
-[Serializable]
+[PublicAPI]
 public class FaceVisualizationSettings
 {
     /// <summary>
@@ -171,7 +171,7 @@ public class FaceVisualizationSettings
 /// <summary>
 ///     Represents the mesh visualization settings.
 /// </summary>
-[Serializable]
+[PublicAPI]
 public class MeshVisualizationSettings
 {
     /// <summary>
@@ -235,7 +235,7 @@ public class MeshVisualizationSettings
 /// <summary>
 ///     Represents the polyline visualization settings.
 /// </summary>
-[Serializable]
+[PublicAPI]
 public class PolylineVisualizationSettings
 {
     /// <summary>
@@ -299,7 +299,7 @@ public class PolylineVisualizationSettings
 /// <summary>
 ///     Represents the CurveLoop visualization settings.
 /// </summary>
-[Serializable]
+[PublicAPI]
 public class CurveLoopVisualizationSettings
 {
     /// <summary>
@@ -363,7 +363,7 @@ public class CurveLoopVisualizationSettings
 /// <summary>
 ///     Represents the solid visualization settings.
 /// </summary>
-[Serializable]
+[PublicAPI]
 public sealed class SolidVisualizationSettings
 {
     /// <summary>
@@ -408,7 +408,7 @@ public sealed class SolidVisualizationSettings
 /// <summary>
 ///     Represents the XYZ visualization settings.
 /// </summary>
-[Serializable]
+[PublicAPI]
 public class XyzVisualizationSettings
 {
     /// <summary>

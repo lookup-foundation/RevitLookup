@@ -5,7 +5,7 @@ namespace RevitLookup.Abstractions.Updater;
 /// <summary>
 ///     Represents a release asset from the GitHub releases API.
 /// </summary>
-[Serializable]
+[PublicAPI]
 public sealed class GitHubResponseAsset
 {
     /// <summary>

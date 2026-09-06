@@ -5,7 +5,7 @@ namespace RevitLookup.Abstractions.Settings;
 /// <summary>
 ///     Represents the LookupEngine decomposition settings.
 /// </summary>
-[Serializable]
+[PublicAPI]
 public sealed class DecompositionSettings
 {
     /// <summary>

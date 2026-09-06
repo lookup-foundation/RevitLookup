@@ -8,7 +8,7 @@ namespace RevitLookup.Abstractions.Settings;
 /// <summary>
 ///     Represents the application settings.
 /// </summary>
-[Serializable]
+[PublicAPI]
 public sealed class ApplicationSettings
 {
     /// <summary>

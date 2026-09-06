@@ -3,7 +3,7 @@ namespace RevitLookup.UI.Playground.SampleData;
 /// <summary>
 ///     Provides a sample font-icon glyph for the Playground icon gallery.
 /// </summary>
-[Serializable]
+[PublicAPI]
 public class FontIconData
 {
     /// <summary>

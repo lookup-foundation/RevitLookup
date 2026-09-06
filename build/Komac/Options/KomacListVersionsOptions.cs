@@ -10,7 +10,6 @@ namespace Build.Komac.Options;
 ///     The command lists the published versions of a WinGet package.
 /// </remarks>
 [PublicAPI]
-[Serializable]
 [CliSubCommand("list-versions")]
 public sealed record KomacListVersionsOptions : CommandLineToolOptions
 {

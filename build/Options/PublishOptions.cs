@@ -3,7 +3,7 @@ namespace Build.Options;
 /// <summary>
 ///     Represents the publish settings used to release and distribute the add-in.
 /// </summary>
-[Serializable]
+[PublicAPI]
 public sealed record PublishOptions
 {
     /// <summary>

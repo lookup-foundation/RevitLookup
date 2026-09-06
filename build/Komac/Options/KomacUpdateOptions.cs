@@ -10,7 +10,6 @@ namespace Build.Komac.Options;
 ///     The command submits a new version of an existing WinGet package manifest.
 /// </remarks>
 [PublicAPI]
-[Serializable]
 [CliSubCommand("update")]
 public sealed record KomacUpdateOptions : CommandLineToolOptions
 {

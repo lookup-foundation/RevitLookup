@@ -10,7 +10,6 @@ namespace Build.Azure.Options;
 ///     The command code-signs a set of files with a certificate stored in an Azure Key Vault instance.
 /// </remarks>
 [PublicAPI]
-[Serializable]
 [CliSubCommand("sign")]
 public sealed record AzureSignToolOptions : CommandLineToolOptions
 {
