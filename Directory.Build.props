@@ -13,7 +13,6 @@
     <!-- Polyfill configuration -->
     <PropertyGroup>
         <PolyArgumentExceptions>true</PolyArgumentExceptions>
-        <PolyUseEmbeddedAttribute>true</PolyUseEmbeddedAttribute>
     </PropertyGroup>
 
     <!-- Global usings -->
