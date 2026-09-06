@@ -10,7 +10,7 @@ A new minor release with installer fixes and improvements.
 - Fixed the addin startup under a multi-user installation https://github.com/lookup-foundation/RevitLookup/issues/438
 - Fixed the missing DLL error on installation while Revit is running https://github.com/lookup-foundation/RevitLookup/issues/464
 
-That's all for now. Next up: CLI/NuGet/MCP tools
+That's all for now. Next up: CLI, NuGet, MCP tools, and Avalonia UI
 
 # **2027.0.3**
 
