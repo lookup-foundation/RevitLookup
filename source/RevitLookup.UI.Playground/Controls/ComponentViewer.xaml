@@ -16,7 +16,7 @@
         <ui:TitleBar
             DockPanel.Dock="Top"
             Title="Component preview"
-            Icon="{ui:ImageIcon 'pack://application:,,,/RevitLookup.UI.Framework;component/Resources/Icons/ProductIcon.png'}" />
+            Icon="{ui:ImageIcon 'pack://application:,,,/RevitLookup.UI.Framework;component/Resources/Images/ProductIcon.png'}" />
         <ContentControl
             x:Name="Viewer" />
     </DockPanel>

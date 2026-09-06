@@ -25,7 +25,7 @@ namespace RevitLookup.UI.Framework.Menus;
 [UsableDuringInitialization(true)]
 public sealed class MenusDictionary : ResourceDictionary
 {
-    private const string DictionaryUri = "pack://application:,,,/RevitLookup.UI.Framework;component/Markup/Menu/Menus.xaml";
+    private const string DictionaryUri = "pack://application:,,,/RevitLookup.UI.Framework;component/Menus/Menus.xaml";
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="MenusDictionary" /> class and loads the Menus.xaml resources.
