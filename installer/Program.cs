@@ -18,13 +18,13 @@ var project = new Project
     Platform = Platform.x64,
     UI = WUI.WixUI_InstallDir,
     MajorUpgrade = MajorUpgrade.Default,
-    BackgroundImage = @"install\Resources\Icons\BackgroundImage.png",
-    BannerImage = @"install\Resources\Icons\BannerImage.png",
+    BackgroundImage = @"installer\Resources\Icons\BackgroundImage.png",
+    BannerImage = @"installer\Resources\Icons\BannerImage.png",
     ControlPanelInfo =
     {
         Manufacturer = "Lookup Foundation",
         HelpLink = "https://github.com/lookup-foundation/RevitLookup/issues",
-        ProductIcon = @"install\Resources\Icons\ShellIcon.ico"
+        ProductIcon = @"installer\Resources\Icons\ShellIcon.ico"
     }
 };
 

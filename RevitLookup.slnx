@@ -25,7 +25,7 @@
     <File Path="Directory.Build.props"/>
     <File Path="build\appsettings.json"/>
   </Folder>
-  <Folder Name="/Automation/">
+  <Folder Name="/Build/">
     <Project Path="build\Build.csproj">
       <BuildType Solution="Debug.R21|*" Project="Debug"/>
       <BuildType Solution="Debug.R22|*" Project="Debug"/>
@@ -43,7 +43,9 @@
       <BuildType Solution="Release.R27|*" Project="Release"/>
       <Build Project="false"/>
     </Project>
-    <Project Path="install\Installer.csproj">
+  </Folder>
+  <Folder Name="/Installer/">
+    <Project Path="installer/Installer.csproj">
       <BuildType Solution="Debug.R21|*" Project="Debug"/>
       <BuildType Solution="Debug.R22|*" Project="Debug"/>
       <BuildType Solution="Debug.R23|*" Project="Debug"/>
