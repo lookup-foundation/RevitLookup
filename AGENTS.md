@@ -62,4 +62,4 @@ It runs in two hosts from one shared codebase: the production add-in inside `Rev
 
 * Build: `dotnet build --project source/RevitLookup/RevitLookup.csproj -c Release.R##`, where the `R##` suffix is the Revit year (`R27` targets Revit 2027).
 * Build the Playground: `dotnet run --project source/RevitLookup.UI.Playground -c Debug`.
-* Test: `dotnet test -c Release.R##`; required a matching licensed Revit installation.
+* Test: `dotnet test -c Release.R##`; requires a matching licensed Revit installation.
