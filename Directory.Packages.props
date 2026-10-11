@@ -76,8 +76,8 @@
         <PackageVersion Include="ModularPipelines.Slack" Version="3.2.8"/>
         <PackageVersion Include="Microsoft.VisualStudio.SolutionPersistence" Version="1.0.52"/>
         <PackageVersion Include="ILRepack" Version="2.0.48"/>
-        <PackageVersion Include="WixSharp.Core" Version="2.14.1"/>
-        <PackageVersion Include="WixSharp.Msi.Core" Version="2.14.1"/>
+        <PackageVersion Include="WixSharp.Core" Version="2.14.2"/>
+        <PackageVersion Include="WixSharp.Msi.Core" Version="2.14.2"/>
 
         <!-- Testing -->
         <PackageVersion Include="TUnit" Version="1.73.19"/>
